@@ -169,30 +169,7 @@ export default function RecordGame() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="buy_in" className="text-gray-300">Buy-in ($)</Label>
-                  <Input
-                    id="buy_in"
-                    type="number"
-                    step="0.01"
-                    value={gameData.buy_in}
-                    onChange={(e) => setGameData({...gameData, buy_in: e.target.value})}
-                    className="bg-gray-900 border-gray-700 text-white"
-                    placeholder="0.00"
-                  />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="duration" className="text-gray-300">Duration (minutes)</Label>
-                  <Input
-                    id="duration"
-                    type="number"
-                    value={gameData.duration_minutes}
-                    onChange={(e) => setGameData({...gameData, duration_minutes: e.target.value})}
-                    className="bg-gray-900 border-gray-700 text-white"
-                    placeholder="120"
-                  />
-                </div>
               </div>
 
               <div className="space-y-2">
