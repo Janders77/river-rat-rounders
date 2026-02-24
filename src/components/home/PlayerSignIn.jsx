@@ -72,7 +72,7 @@ export default function PlayerSignIn() {
   }
 
   return (
-    <Card className="bg-[#1A1B20]/80 border-emerald-900/40">
+    <Card className="bg-emerald-900/30 border-emerald-700/50">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           <LogIn className="w-5 h-5 text-emerald-400" /> Sign In to Tonight's Game
