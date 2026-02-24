@@ -58,7 +58,7 @@ export default function Layout({ children, currentPageName }) {
                 <Trophy className="w-6 h-6 text-gray-900" />
               </div>
               <div>
-                <h2 className="font-bold text-xl text-white">Poker Club</h2>
+                <h2 className="font-bold text-xl text-white">River Rat Rounders</h2>
                 <p className="text-xs text-gray-400">Community Rankings</p>
               </div>
             </div>
@@ -97,7 +97,7 @@ export default function Layout({ children, currentPageName }) {
               <SidebarTrigger className="hover:bg-gray-800 p-2 rounded-lg transition-colors">
                 <Menu className="w-5 h-5" />
               </SidebarTrigger>
-              <h1 className="text-xl font-bold text-white">Poker Club</h1>
+              <h1 className="text-xl font-bold text-white">River Rat Rounders</h1>
             </div>
           </header>
 
