@@ -100,7 +100,7 @@ export default function Layout({ children, currentPageName }) {
         </Sidebar>
 
         <main className="flex-1 flex flex-col">
-          <header className="bg-[#1A1B20] border-b border-gray-800 px-6 py-4 lg:hidden">
+          <header className="bg-[#1a3d15]/90 border-b border-green-900/60 px-6 py-4 lg:hidden">
             <div className="flex items-center gap-4">
               <SidebarTrigger className="hover:bg-gray-800 p-2 rounded-lg transition-colors">
                 <Menu className="w-5 h-5" />
