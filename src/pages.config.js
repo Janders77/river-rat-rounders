@@ -51,6 +51,7 @@ import Leaderboard from './pages/Leaderboard';
 import RecordGame from './pages/RecordGame';
 import GameHistory from './pages/GameHistory';
 import Home from './pages/Home';
+import DirectorDashboard from './pages/DirectorDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -59,6 +60,7 @@ export const PAGES = {
     "RecordGame": RecordGame,
     "GameHistory": GameHistory,
     "Home": Home,
+    "DirectorDashboard": DirectorDashboard,
 }
 
 export const pagesConfig = {
