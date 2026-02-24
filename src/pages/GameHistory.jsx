@@ -9,7 +9,6 @@ import { format } from "date-fns";
 export default function GameHistory() {
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filterType, setFilterType] = useState("all");
   const [filterVenue, setFilterVenue] = useState("all");
 
   useEffect(() => {
@@ -26,9 +25,8 @@ export default function GameHistory() {
   const venues = [...new Set(games.map(g => g.location).filter(Boolean))];
 
   const filteredGames = games.filter(game => {
-    const typeMatch = filterType === "all" || game.game_type === filterType;
     const venueMatch = filterVenue === "all" || game.location === filterVenue;
-    return typeMatch && venueMatch;
+    return venueMatch;
   });
 
   return (
@@ -47,19 +45,6 @@ export default function GameHistory() {
 
           <div className="flex flex-wrap items-center gap-3">
             <Filter className="w-5 h-5 text-gray-400" />
-            <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-48 bg-[#1A1B20] border-gray-800 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-[#1A1B20] border-gray-800">
-                <SelectItem value="all">All Game Types</SelectItem>
-                <SelectItem value="Texas Hold'em">Texas Hold'em</SelectItem>
-                <SelectItem value="Omaha">Omaha</SelectItem>
-                <SelectItem value="Seven Card Stud">Seven Card Stud</SelectItem>
-                <SelectItem value="Tournament">Tournament</SelectItem>
-                <SelectItem value="Cash Game">Cash Game</SelectItem>
-              </SelectContent>
-            </Select>
             <Select value={filterVenue} onValueChange={setFilterVenue}>
               <SelectTrigger className="w-48 bg-[#1A1B20] border-gray-800 text-white">
                 <SelectValue placeholder="All Venues" />
