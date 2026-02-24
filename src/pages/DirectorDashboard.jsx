@@ -494,6 +494,90 @@ export default function DirectorDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
+          {/* Winner Photos Tab */}
+          <TabsContent value="photos">
+            <div className="space-y-6">
+              <Card className="bg-[#1A1B20] border-gray-800">
+                <CardHeader>
+                  <CardTitle className="text-white">Upload Winner Photo</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleUploadPhoto} className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-gray-300">Winner Name</Label>
+                        <Input value={photoForm.winner_name}
+                          onChange={e => setPhotoForm({...photoForm, winner_name: e.target.value})}
+                          className="bg-gray-900 border-gray-700 text-white"
+                          placeholder="e.g. John Smith" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-gray-300">Game Date</Label>
+                        <input type="date" value={photoForm.game_date}
+                          onChange={e => setPhotoForm({...photoForm, game_date: e.target.value})}
+                          className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-gray-300">Location</Label>
+                        <Select value={photoForm.location} onValueChange={v => setPhotoForm({...photoForm, location: v})}>
+                          <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
+                          <SelectContent className="bg-gray-900 border-gray-700">
+                            {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc => (
+                              <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-gray-300">Caption (Optional)</Label>
+                        <Input value={photoForm.title}
+                          onChange={e => setPhotoForm({...photoForm, title: e.target.value})}
+                          className="bg-gray-900 border-gray-700 text-white"
+                          placeholder="e.g. Final table champion!" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-gray-300">Photo</Label>
+                      <input type="file" accept="image/*"
+                        onChange={e => setPhotoFile(e.target.files[0])}
+                        className="w-full text-gray-300 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer"
+                        required />
+                    </div>
+                    <Button type="submit" disabled={isUploadingPhoto || !photoFile}
+                      className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-bold">
+                      {isUploadingPhoto ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Uploading...</> : <><ImagePlus className="w-4 h-4 mr-2" />Upload Photo</>}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-[#1A1B20] border-gray-800">
+                <CardHeader>
+                  <CardTitle className="text-white">Winner Photos ({photos.length})</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {photos.map(photo => (
+                      <div key={photo.id} className="relative group rounded-lg overflow-hidden border border-gray-800 bg-gray-900">
+                        <img src={photo.photo_url} alt={photo.title || photo.winner_name || "Winner"} className="w-full aspect-square object-cover" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2">
+                          <div className="text-white text-sm font-bold">{photo.winner_name}</div>
+                          {photo.location && <div className="text-gray-300 text-xs">{photo.location}</div>}
+                          {photo.game_date && <div className="text-gray-400 text-xs">{new Date(photo.game_date).toLocaleDateString()}</div>}
+                          {photo.title && <div className="text-amber-300 text-xs italic mt-1">{photo.title}</div>}
+                        </div>
+                        <button onClick={() => handleDeletePhoto(photo.id)}
+                          className="absolute top-2 right-2 w-7 h-7 bg-red-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700">
+                          <X className="w-4 h-4 text-white" />
+                        </button>
+                      </div>
+                    ))}
+                    {photos.length === 0 && <p className="text-gray-500 text-center py-4 col-span-3">No photos uploaded yet.</p>}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
