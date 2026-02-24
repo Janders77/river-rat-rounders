@@ -32,6 +32,11 @@ const navigationItems = [
     icon: History,
   },
   {
+    title: "Winners Gallery",
+    url: createPageUrl("WinnersGallery"),
+    icon: Image,
+  },
+  {
     title: "Director",
     url: createPageUrl("DirectorDashboard"),
     icon: ShieldAlert,
