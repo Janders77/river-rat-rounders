@@ -50,6 +50,7 @@
 import Leaderboard from './pages/Leaderboard';
 import RecordGame from './pages/RecordGame';
 import GameHistory from './pages/GameHistory';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -57,6 +58,7 @@ export const PAGES = {
     "Leaderboard": Leaderboard,
     "RecordGame": RecordGame,
     "GameHistory": GameHistory,
+    "Home": Home,
 }
 
 export const pagesConfig = {

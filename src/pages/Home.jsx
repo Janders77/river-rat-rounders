@@ -1,0 +1,63 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { Trophy, Plus, History } from "lucide-react";
+
+const navLinks = [
+  {
+    title: "Leaderboard",
+    description: "View community rankings and player stats",
+    icon: Trophy,
+    url: createPageUrl("Leaderboard"),
+    color: "from-amber-500/20 to-amber-600/10 border-amber-500/30 hover:border-amber-500/60",
+    iconColor: "text-amber-400",
+  },
+  {
+    title: "Record Game",
+    description: "Log a new poker game and assign placements",
+    icon: Plus,
+    url: createPageUrl("RecordGame"),
+    color: "from-emerald-500/20 to-emerald-600/10 border-emerald-500/30 hover:border-emerald-500/60",
+    iconColor: "text-emerald-400",
+  },
+  {
+    title: "Game History",
+    description: "Browse all past games and results",
+    icon: History,
+    url: createPageUrl("GameHistory"),
+    color: "from-blue-500/20 to-blue-600/10 border-blue-500/30 hover:border-blue-500/60",
+    iconColor: "text-blue-400",
+  },
+];
+
+export default function Home() {
+  return (
+    <div className="min-h-screen bg-[#16171B] flex flex-col items-center justify-center p-6">
+      <div className="max-w-lg w-full text-center mb-12">
+        <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-xl mx-auto mb-6">
+          <Trophy className="w-11 h-11 text-gray-900" />
+        </div>
+        <h1 className="text-4xl font-bold text-white mb-3">River Rat Rounders</h1>
+        <p className="text-gray-400 text-lg">Your poker community hub</p>
+      </div>
+
+      <div className="max-w-lg w-full space-y-4">
+        {navLinks.map((link) => (
+          <Link
+            key={link.title}
+            to={link.url}
+            className={`flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r ${link.color} transition-all duration-200 group`}
+          >
+            <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+              <link.icon className={`w-6 h-6 ${link.iconColor}`} />
+            </div>
+            <div className="text-left">
+              <div className="font-semibold text-white text-lg group-hover:text-white">{link.title}</div>
+              <div className="text-gray-400 text-sm">{link.description}</div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
