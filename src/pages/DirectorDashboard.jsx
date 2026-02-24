@@ -129,7 +129,7 @@ export default function DirectorDashboard() {
 
   if (currentUser?.role !== "admin") {
     return (
-      <div className="min-h-screen bg-[#16171B] flex flex-col items-center justify-center gap-4 p-6 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 text-center">
         <ShieldAlert className="w-16 h-16 text-red-400" />
         <h1 className="text-2xl font-bold text-white">Access Denied</h1>
         <p className="text-gray-400">This area is for Tournament Directors only.</p>
