@@ -224,6 +224,9 @@ export default function DirectorDashboard() {
             <TabsTrigger value="history" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Trophy className="w-4 h-4 mr-2" /> Games
             </TabsTrigger>
+            <TabsTrigger value="photos" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <ImagePlus className="w-4 h-4 mr-2" /> Photos
+            </TabsTrigger>
           </TabsList>
 
           {/* Sessions Tab */}
