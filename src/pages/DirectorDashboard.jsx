@@ -141,7 +141,7 @@ export default function DirectorDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#16171B] p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-lg">
