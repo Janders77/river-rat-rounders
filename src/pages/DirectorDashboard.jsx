@@ -55,12 +55,14 @@ export default function DirectorDashboard() {
       setIsLoading(false);
       return;
     }
-    const [fetchedUsers, fetchedGames] = await Promise.all([
+    const [fetchedUsers, fetchedGames, fetchedSessions] = await Promise.all([
       User.list(),
-      Game.list("-created_date", 20)
+      Game.list("-created_date", 20),
+      GameSession.list("-session_date", 20)
     ]);
     setUsers(fetchedUsers);
     setGames(fetchedGames);
+    setSessions(fetchedSessions);
     setIsLoading(false);
   };
 
