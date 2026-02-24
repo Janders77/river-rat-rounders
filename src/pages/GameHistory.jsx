@@ -51,9 +51,11 @@ export default function GameHistory() {
               </SelectTrigger>
               <SelectContent className="bg-[#1A1B20] border-gray-800">
                 <SelectItem value="all">All Venues</SelectItem>
-                {venues.map(v => (
-                  <SelectItem key={v} value={v}>{v}</SelectItem>
-                ))}
+                <SelectItem value="Tavern 018 Sunday">Tavern 018 Sunday</SelectItem>
+                <SelectItem value="Tavern 018 Wednesday">Tavern 018 Wednesday</SelectItem>
+                <SelectItem value="East End Grill">East End Grill</SelectItem>
+                <SelectItem value="Habana Club">Habana Club</SelectItem>
+                <SelectItem value="Meddlesome">Meddlesome</SelectItem>
               </SelectContent>
             </Select>
           </div>
