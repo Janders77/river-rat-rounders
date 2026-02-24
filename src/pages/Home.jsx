@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Trophy, Plus, History } from "lucide-react";
+import { Trophy, History } from "lucide-react";
 
 const navLinks = [
   {
@@ -11,14 +11,6 @@ const navLinks = [
     url: createPageUrl("Leaderboard"),
     color: "from-amber-500/20 to-amber-600/10 border-amber-500/30 hover:border-amber-500/60",
     iconColor: "text-amber-400",
-  },
-  {
-    title: "Record Game",
-    description: "Log a new poker game and assign placements",
-    icon: Plus,
-    url: createPageUrl("RecordGame"),
-    color: "from-emerald-500/20 to-emerald-600/10 border-emerald-500/30 hover:border-emerald-500/60",
-    iconColor: "text-emerald-400",
   },
   {
     title: "Game History",
