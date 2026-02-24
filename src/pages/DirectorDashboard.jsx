@@ -184,16 +184,19 @@ export default function DirectorDashboard() {
           </div>
         </div>
 
-        <Tabs defaultValue="record">
-          <TabsList className="bg-gray-800 border-gray-700 mb-6">
+        <Tabs defaultValue="sessions">
+          <TabsList className="bg-gray-800 border-gray-700 mb-6 flex-wrap h-auto gap-1">
+            <TabsTrigger value="sessions" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
+            </TabsTrigger>
             <TabsTrigger value="record" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Plus className="w-4 h-4 mr-2" /> Record Game
             </TabsTrigger>
             <TabsTrigger value="players" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-              <Users className="w-4 h-4 mr-2" /> Player Management
+              <Users className="w-4 h-4 mr-2" /> Players
             </TabsTrigger>
             <TabsTrigger value="history" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-              <Trophy className="w-4 h-4 mr-2" /> Recent Games
+              <Trophy className="w-4 h-4 mr-2" /> Games
             </TabsTrigger>
           </TabsList>
 
