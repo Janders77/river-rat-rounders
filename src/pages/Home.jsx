@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Trophy, History } from "lucide-react";
+import PlayerSignIn from "../components/home/PlayerSignIn";
 
 const navLinks = [
   {
@@ -31,6 +32,10 @@ export default function Home() {
         </div>
         <h1 className="text-4xl font-bold text-white mb-3">River Rat Rounders</h1>
         <p className="text-gray-400 text-lg">Your poker community hub</p>
+      </div>
+
+      <div className="max-w-lg w-full space-y-4 mb-6">
+        <PlayerSignIn />
       </div>
 
       <div className="max-w-lg w-full space-y-4">
