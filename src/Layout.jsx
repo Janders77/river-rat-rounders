@@ -127,6 +127,7 @@ function LayoutInner({ children }) {
           </div>
         </main>
       </div>
+    </>
   );
 }
 
