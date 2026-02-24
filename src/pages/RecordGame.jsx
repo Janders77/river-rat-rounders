@@ -169,65 +169,41 @@ export default function RecordGame() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-gray-300">Players</Label>
-                <div className="grid md:grid-cols-2 gap-3 p-4 bg-gray-900/50 rounded-lg border border-gray-800">
-                  {users.map((user) => (
-                    <div key={user.id} className="flex items-center space-x-3">
-                      <Checkbox
-                        id={`player-${user.id}`}
-                        checked={gameData.players.includes(user.email)}
-                        onCheckedChange={() => togglePlayer(user.email)}
-                        className="border-gray-600"
-                      />
-                      <label
-                        htmlFor={`player-${user.id}`}
-                        className="text-sm text-gray-300 cursor-pointer"
+                <Label className="text-gray-300">Placements</Label>
+                <p className="text-xs text-gray-500">Assign players to their finishing positions. Points: 1st=1000, 2nd=900 … 9th=100</p>
+                <div className="space-y-2">
+                  {PLACE_LABELS.map((label, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className={`w-10 text-sm font-bold text-right shrink-0 ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-gray-300' : i === 2 ? 'text-amber-700' : 'text-gray-500'}`}>
+                        {label}
+                      </div>
+                      <div className="text-xs text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
+                      <Select
+                        value={placements[i]}
+                        onValueChange={(val) => {
+                          const updated = [...placements];
+                          // Clear duplicate from other slots
+                          for (let j = 0; j < updated.length; j++) {
+                            if (updated[j] === val) updated[j] = "";
+                          }
+                          updated[i] = val;
+                          setPlacements(updated);
+                        }}
                       >
-                        {user.full_name || user.email}
-                      </label>
+                        <SelectTrigger className="bg-gray-900 border-gray-700 text-white flex-1">
+                          <SelectValue placeholder={`Select ${label} place`} />
+                        </SelectTrigger>
+                        <SelectContent className="bg-gray-900 border-gray-700">
+                          <SelectItem value={null}>— None —</SelectItem>
+                          {users.map((user) => (
+                            <SelectItem key={user.email} value={user.email}>
+                              {user.full_name || user.email}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   ))}
-                  {users.length === 0 && (
-                    <div className="text-gray-500 col-span-2 text-center py-4">
-                      No users found. Invite players first.
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="winner" className="text-gray-300">Winner</Label>
-                  <Select 
-                    value={gameData.winner_email}
-                    onValueChange={(value) => setGameData({...gameData, winner_email: value})}
-                  >
-                    <SelectTrigger className="bg-gray-900 border-gray-700 text-white">
-                      <SelectValue placeholder="Select winner" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-700">
-                      {gameData.players.map((email) => {
-                        const user = users.find(u => u.email === email);
-                        return (
-                          <SelectItem key={email} value={email}>
-                            {user?.full_name || email}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="points" className="text-gray-300">Points Awarded</Label>
-                  <Input
-                    id="points"
-                    type="number"
-                    value={gameData.points_awarded}
-                    onChange={(e) => setGameData({...gameData, points_awarded: e.target.value})}
-                    className="bg-gray-900 border-gray-700 text-white"
-                    required
-                  />
                 </div>
               </div>
 
