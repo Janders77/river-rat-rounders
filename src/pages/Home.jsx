@@ -39,6 +39,7 @@ export default function Home() {
 
       <div className="max-w-lg w-full space-y-4 mb-6">
         <PlayerSignIn />
+        <PlayerSignUp />
       </div>
 
       <div className="max-w-lg w-full space-y-4">
