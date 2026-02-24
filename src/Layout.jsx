@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Trophy, Plus, History, Menu, Home } from "lucide-react";
+import { Trophy, Plus, History, Menu, Home, ShieldAlert } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
