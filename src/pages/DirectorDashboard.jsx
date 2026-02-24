@@ -251,10 +251,10 @@ export default function DirectorDashboard() {
                         <Select value={newSession.game_type} onValueChange={v => setNewSession({...newSession, game_type: v})}>
                           <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue /></SelectTrigger>
                           <SelectContent className="bg-gray-900 border-gray-700">
-                            {["Texas Hold'em","Omaha","Seven Card Stud","Tournament","Cash Game"].map(t => (
-                              <SelectItem key={t} value={t}>{t}</SelectItem>
-                            ))}
-                          </SelectContent>
+                              {["Main Game","Turbo"].map(t => (
+                                <SelectItem key={t} value={t}>{t}</SelectItem>
+                              ))}
+                            </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2 md:col-span-2">
