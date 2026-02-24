@@ -279,7 +279,7 @@ export default function DirectorDashboard() {
 
               <Card className="bg-[#1A1B20] border-gray-800">
                 <CardHeader>
-                  <CardTitle className="text-white">All Sessions</CardTitle>
+                  <CardTitle className="text-white">All Games</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
