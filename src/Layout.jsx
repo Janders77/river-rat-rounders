@@ -19,7 +19,7 @@ const navigationItems = [
   {
     title: "Home",
     url: createPageUrl("Home"),
-    icon: Trophy,
+    icon: Home,
   },
   {
     title: "Leaderboard",
