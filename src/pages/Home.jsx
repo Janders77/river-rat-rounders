@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { Trophy, History } from "lucide-react";
 
 import PlayerSignIn from "../components/home/PlayerSignIn";
+import PlayerSignUp from "../components/home/PlayerSignUp";
 
 const navLinks = [
   {
