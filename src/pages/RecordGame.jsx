@@ -49,59 +49,54 @@ export default function RecordGame() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (gameData.players.length < 2) {
-      alert("Please select at least 2 players");
+
+    const filledPlacements = placements.filter(p => p !== "");
+    if (filledPlacements.length < 2) {
+      alert("Please assign at least 2 places");
       return;
     }
-    
-    if (!gameData.winner_email) {
-      alert("Please select a winner");
+    if (!placements[0]) {
+      alert("Please assign 1st place (winner)");
       return;
     }
 
     setIsSubmitting(true);
 
-    try {
-      const winner = users.find(u => u.email === gameData.winner_email);
-      
-      await Game.create({
-        ...gameData,
-        winner_name: winner?.full_name || winner?.email,
-        buy_in: parseFloat(gameData.buy_in) || 0,
-        points_awarded: parseInt(gameData.points_awarded),
-        duration_minutes: parseInt(gameData.duration_minutes) || null
-      });
+    const winner = users.find(u => u.email === placements[0]);
 
-      // Update winner stats
-      const newStreak = (winner.current_streak || 0) + 1;
-      await User.update(winner.id, {
-        games_played: (winner.games_played || 0) + 1,
-        total_points: (winner.total_points || 0) + parseInt(gameData.points_awarded),
-        wins: (winner.wins || 0) + 1,
-        current_streak: newStreak,
-        best_streak: Math.max(winner.best_streak || 0, newStreak)
-      });
+    await Game.create({
+      ...gameData,
+      players: filledPlacements,
+      winner_email: placements[0],
+      winner_name: winner?.full_name || winner?.email,
+      points_awarded: POINTS[0],
+    });
 
-      // Update other players stats (reset streak)
-      for (const playerEmail of gameData.players) {
-        if (playerEmail !== gameData.winner_email) {
-          const player = users.find(u => u.email === playerEmail);
-          if (player) {
-            await User.update(player.id, {
-              games_played: (player.games_played || 0) + 1,
-              current_streak: 0
-            });
-          }
-        }
+    // Update all placed players
+    for (let i = 0; i < filledPlacements.length; i++) {
+      const email = filledPlacements[i];
+      const player = users.find(u => u.email === email);
+      if (!player) continue;
+      const pts = POINTS[i] || 0;
+      if (i === 0) {
+        const newStreak = (player.current_streak || 0) + 1;
+        await User.update(player.id, {
+          games_played: (player.games_played || 0) + 1,
+          total_points: (player.total_points || 0) + pts,
+          wins: (player.wins || 0) + 1,
+          current_streak: newStreak,
+          best_streak: Math.max(player.best_streak || 0, newStreak)
+        });
+      } else {
+        await User.update(player.id, {
+          games_played: (player.games_played || 0) + 1,
+          total_points: (player.total_points || 0) + pts,
+          current_streak: 0
+        });
       }
-
-      navigate(createPageUrl("Leaderboard"));
-    } catch (error) {
-      console.error("Error recording game:", error);
-      alert("Failed to record game. Please try again.");
     }
-    
+
+    navigate(createPageUrl("Leaderboard"));
     setIsSubmitting(false);
   };
 
