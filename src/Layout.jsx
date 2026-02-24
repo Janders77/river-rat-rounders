@@ -126,6 +126,13 @@ function LayoutInner({ children }) {
           </div>
         </main>
       </div>
+  );
+}
+
+export default function Layout({ children, currentPageName }) {
+  return (
+    <SidebarProvider>
+      <LayoutInner>{children}</LayoutInner>
     </SidebarProvider>
   );
 }
