@@ -44,11 +44,11 @@ const navigationItems = [
   },
 ];
 
-export default function Layout({ children, currentPageName }) {
+function LayoutInner({ children }) {
   const location = useLocation();
+  const { setOpenMobile } = useSidebar();
 
   return (
-    <SidebarProvider>
       <style>{`
         :root {
           --background: 220 13% 9%;
