@@ -27,10 +27,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#16171B] flex flex-col items-center justify-center p-6">
       <div className="max-w-lg w-full text-center mb-12">
-        <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-xl mx-auto mb-6">
-          <Trophy className="w-11 h-11 text-gray-900" />
-        </div>
-        <h1 className="text-4xl font-bold text-white mb-3">River Rat Rounders</h1>
+        <img
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/515aaf9cc_blackcroppaint.jpeg"
+          alt="River Rat Rounders"
+          className="mx-auto mb-6 w-64 object-contain"
+        />
         <p className="text-gray-400 text-lg">Your poker community hub</p>
       </div>
 
