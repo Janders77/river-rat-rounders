@@ -66,7 +66,7 @@ export default function Leaderboard() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-red-900/30">
+    <div className="min-h-screen p-6 bg-green-900/30">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
