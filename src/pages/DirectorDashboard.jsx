@@ -129,6 +129,27 @@ export default function DirectorDashboard() {
     setGames(prev => prev.filter(g => g.id !== gameId));
   };
 
+  const handleCreateSession = async (e) => {
+    e.preventDefault();
+    setIsCreatingSession(true);
+    await GameSession.create({ ...newSession, is_open: true, signed_in_players: [] });
+    setNewSession({ session_date: new Date().toISOString().split('T')[0], location: "", game_type: "Texas Hold'em" });
+    const updated = await GameSession.list("-session_date", 20);
+    setSessions(updated);
+    setIsCreatingSession(false);
+  };
+
+  const handleToggleSession = async (session) => {
+    await GameSession.update(session.id, { is_open: !session.is_open });
+    setSessions(prev => prev.map(s => s.id === session.id ? { ...s, is_open: !s.is_open } : s));
+  };
+
+  const handleDeleteSession = async (sessionId) => {
+    if (!confirm("Delete this session?")) return;
+    await GameSession.delete(sessionId);
+    setSessions(prev => prev.filter(s => s.id !== sessionId));
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
