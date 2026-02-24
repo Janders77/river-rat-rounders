@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy } from "lucide-react";
 import PlayerRankCard from "../components/leaderboard/PlayerRankCard";
 import StatsGrid from "../components/leaderboard/StatsGrid";
+import VenueStats from "../components/leaderboard/VenueStats";
 import {
   Dialog,
   DialogContent,

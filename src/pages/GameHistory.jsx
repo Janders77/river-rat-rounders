@@ -45,7 +45,7 @@ export default function GameHistory() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Filter className="w-5 h-5 text-gray-400" />
             <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger className="w-48 bg-[#1A1B20] border-gray-800 text-white">
@@ -58,6 +58,17 @@ export default function GameHistory() {
                 <SelectItem value="Seven Card Stud">Seven Card Stud</SelectItem>
                 <SelectItem value="Tournament">Tournament</SelectItem>
                 <SelectItem value="Cash Game">Cash Game</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={filterVenue} onValueChange={setFilterVenue}>
+              <SelectTrigger className="w-48 bg-[#1A1B20] border-gray-800 text-white">
+                <SelectValue placeholder="All Venues" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#1A1B20] border-gray-800">
+                <SelectItem value="all">All Venues</SelectItem>
+                {venues.map(v => (
+                  <SelectItem key={v} value={v}>{v}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -98,6 +109,12 @@ export default function GameHistory() {
 
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
                         <span>{game.players?.length || 0} players</span>
+                        {game.location && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {game.location}
+                          </span>
+                        )}
                         {game.buy_in && (
                           <span className="flex items-center gap-1">
                             <DollarSign className="w-4 h-4" />
