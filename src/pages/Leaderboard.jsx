@@ -82,6 +82,12 @@ export default function Leaderboard() {
 
         {!isLoading && <StatsGrid stats={getStats()} />}
 
+        {!isLoading && games.some(g => g.location) && (
+          <div className="mt-8">
+            <VenueStats games={games} />
+          </div>
+        )}
+
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-white mb-6">Top Players</h2>
           
