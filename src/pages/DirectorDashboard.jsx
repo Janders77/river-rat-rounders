@@ -157,6 +157,25 @@ export default function DirectorDashboard() {
     setSessions(prev => prev.filter(s => s.id !== sessionId));
   };
 
+  const handleUploadPhoto = async (e) => {
+    e.preventDefault();
+    if (!photoFile) return;
+    setIsUploadingPhoto(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file: photoFile });
+    await WinnerPhoto.create({ ...photoForm, photo_url: file_url });
+    setPhotoForm({ title: "", winner_name: "", game_date: new Date().toISOString().split('T')[0], location: "" });
+    setPhotoFile(null);
+    const updated = await WinnerPhoto.list("-created_date", 50);
+    setPhotos(updated);
+    setIsUploadingPhoto(false);
+  };
+
+  const handleDeletePhoto = async (photoId) => {
+    if (!confirm("Delete this photo?")) return;
+    await WinnerPhoto.delete(photoId);
+    setPhotos(prev => prev.filter(p => p.id !== photoId));
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
