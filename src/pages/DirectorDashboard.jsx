@@ -121,7 +121,7 @@ export default function DirectorDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#16171B] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
       </div>
     );
