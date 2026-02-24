@@ -157,6 +157,18 @@ export default function RecordGame() {
                   </Select>
                 </div>
 
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="location" className="text-gray-300">Location / Host's Place</Label>
+                  <Input
+                    id="location"
+                    type="text"
+                    value={gameData.location}
+                    onChange={(e) => setGameData({...gameData, location: e.target.value})}
+                    className="bg-gray-900 border-gray-700 text-white"
+                    placeholder="e.g. Mike's Garage, The Basement..."
+                  />
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="buy_in" className="text-gray-300">Buy-in ($)</Label>
                   <Input
