@@ -36,6 +36,11 @@ const navigationItems = [
     url: createPageUrl("GameHistory"),
     icon: History,
   },
+  {
+    title: "Director",
+    url: createPageUrl("DirectorDashboard"),
+    icon: ShieldAlert,
+  },
 ];
 
 export default function Layout({ children, currentPageName }) {
