@@ -38,15 +38,6 @@ export default function RecordGame() {
     setUsers(fetchedUsers);
   };
 
-  const togglePlayer = (email) => {
-    setGameData(prev => ({
-      ...prev,
-      players: prev.players.includes(email)
-        ? prev.players.filter(p => p !== email)
-        : [...prev.players, email]
-    }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
