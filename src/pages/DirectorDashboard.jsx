@@ -213,7 +213,7 @@ export default function DirectorDashboard() {
         <Tabs defaultValue="sessions">
           <TabsList className="bg-gray-800 border-gray-700 mb-6 flex-wrap h-auto gap-1">
             <TabsTrigger value="sessions" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-              <CalendarPlus className="w-4 h-4 mr-2" /> Games
+              <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
             </TabsTrigger>
             <TabsTrigger value="record" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Plus className="w-4 h-4 mr-2" /> Record Game
