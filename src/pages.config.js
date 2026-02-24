@@ -47,26 +47,26 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import DirectorDashboard from './pages/DirectorDashboard';
 import GameHistory from './pages/GameHistory';
 import Home from './pages/Home';
 import Leaderboard from './pages/Leaderboard';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
-import DirectorDashboard from './pages/DirectorDashboard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "DirectorDashboard": DirectorDashboard,
     "GameHistory": GameHistory,
     "Home": Home,
     "Leaderboard": Leaderboard,
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
-    "DirectorDashboard": DirectorDashboard,
 }
 
 export const pagesConfig = {
-    mainPage: "Leaderboard",
+    mainPage: "Home",
     Pages: PAGES,
     Layout: __Layout,
 };
