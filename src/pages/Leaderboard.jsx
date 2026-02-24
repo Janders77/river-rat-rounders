@@ -40,13 +40,21 @@ export default function Leaderboard() {
 
   const getStats = () => {
     const totalPoints = players.reduce((sum, p) => sum + (p.total_points || 0), 0);
-    const longestStreak = Math.max(...players.map(p => p.best_streak || 0), 0);
     
+    // Count wins per location
+    const locationWins = {};
+    games.forEach(game => {
+      if (game.location) {
+        locationWins[game.location] = (locationWins[game.location] || 0) + 1;
+      }
+    });
+    const topLocation = Object.entries(locationWins).sort(([,a],[,b]) => b - a)[0]?.[0] || null;
+
     return {
       totalPlayers: players.length,
       totalGames: games.length,
       totalPoints,
-      longestStreak
+      topLocation
     };
   };
 

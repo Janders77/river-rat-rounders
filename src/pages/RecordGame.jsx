@@ -19,6 +19,7 @@ export default function RecordGame() {
   const [gameData, setGameData] = useState({
     game_date: new Date().toISOString().split('T')[0],
     game_type: "Texas Hold'em",
+    location: "",
     players: [],
     winner_email: "",
     buy_in: "",

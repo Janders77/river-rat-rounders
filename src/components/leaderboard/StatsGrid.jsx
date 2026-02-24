@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Gamepad2, Trophy, TrendingUp } from "lucide-react";
+import { Users, Gamepad2, Trophy, MapPin } from "lucide-react";
 
 export default function StatsGrid({ stats }) {
   const statCards = [
@@ -23,9 +23,9 @@ export default function StatsGrid({ stats }) {
       color: "from-amber-500 to-amber-600"
     },
     {
-      title: "Active Streak",
-      value: stats.longestStreak,
-      icon: TrendingUp,
+      title: "Top Location",
+      value: stats.topLocation || "N/A",
+      icon: MapPin,
       color: "from-emerald-500 to-emerald-600"
     }
   ];
