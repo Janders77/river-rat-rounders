@@ -234,7 +234,7 @@ export default function DirectorDashboard() {
             <div className="space-y-6">
               <Card className="bg-[#1A1B20] border-gray-800">
                 <CardHeader>
-                  <CardTitle className="text-white">Open a New Session</CardTitle>
+                  <CardTitle className="text-white">Open a New Game</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleCreateSession} className="space-y-4">
