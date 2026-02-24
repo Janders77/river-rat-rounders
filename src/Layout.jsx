@@ -49,6 +49,7 @@ function LayoutInner({ children }) {
   const { setOpenMobile } = useSidebar();
 
   return (
+    <>
       <style>{`
         :root {
           --background: 220 13% 9%;
