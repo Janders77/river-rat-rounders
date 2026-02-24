@@ -48,7 +48,7 @@ export default function PlayerSignIn() {
 
   if (isLoading) {
     return (
-      <Card className="bg-[#1A1B20]/80 border-emerald-900/40">
+      <Card className="bg-emerald-900/30 border-emerald-700/50">
         <CardContent className="flex items-center justify-center py-10">
           <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
         </CardContent>
