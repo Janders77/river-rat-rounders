@@ -27,11 +27,6 @@ const navigationItems = [
     icon: Trophy,
   },
   {
-    title: "Record Game",
-    url: createPageUrl("RecordGame"),
-    icon: Plus,
-  },
-  {
     title: "Game History",
     url: createPageUrl("GameHistory"),
     icon: History,
