@@ -342,7 +342,7 @@ export default function DirectorDashboard() {
                       <Select value={gameData.game_type} onValueChange={v => setGameData({...gameData, game_type: v})}>
                         <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue /></SelectTrigger>
                         <SelectContent className="bg-gray-900 border-gray-700">
-                          {["Texas Hold'em","Omaha","Seven Card Stud","Tournament","Cash Game"].map(t => (
+                          {["Main Game","Turbo"].map(t => (
                             <SelectItem key={t} value={t}>{t}</SelectItem>
                           ))}
                         </SelectContent>
