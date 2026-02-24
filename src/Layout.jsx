@@ -54,6 +54,12 @@ export default function Layout({ children, currentPageName }) {
           --border: 220 13% 20%;
           --accent: 142 76% 36%;
         }
+        .felt-bg {
+          background-color: #1f4d18;
+          background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='%23ffffff08'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='%23ffffff05'/%3E%3C/svg%3E"),
+            radial-gradient(ellipse at center, %232d5a27 0%25, %231a3d15 50%25, %230f2a0a 100%25);
+        }
       `}</style>
       <div className="min-h-screen flex w-full text-gray-100" style={{background: "radial-gradient(ellipse at center, #2d5a27 0%, #1a3d15 50%, #0f2a0a 100%)"}}>
         <Sidebar className="border-r border-green-900/60 bg-[#1a3d15]/90" style={{backdropFilter: "blur(4px)"}}>
