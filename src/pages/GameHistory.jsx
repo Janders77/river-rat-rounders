@@ -7,6 +7,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 
 export default function GameHistory() {
+  React.useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }, []);
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterVenue, setFilterVenue] = useState("all");
@@ -38,7 +44,7 @@ export default function GameHistory() {
               <History className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Game History</h1>
+              <h1 className="text-4xl font-bold text-white" style={{ fontFamily: "'Great Vibes', cursive" }}>Game History</h1>
               <p className="text-gray-400">Complete archive of all poker sessions</p>
             </div>
           </div>
