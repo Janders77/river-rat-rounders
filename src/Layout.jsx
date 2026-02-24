@@ -17,6 +17,11 @@ import {
 
 const navigationItems = [
   {
+    title: "Home",
+    url: createPageUrl("Home"),
+    icon: Trophy,
+  },
+  {
     title: "Leaderboard",
     url: createPageUrl("Leaderboard"),
     icon: Trophy,
