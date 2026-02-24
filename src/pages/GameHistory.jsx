@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Game } from "@/entities/Game";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { History, Trophy, Clock, DollarSign, Filter } from "lucide-react";
+import { History, Trophy, Clock, DollarSign, Filter, MapPin } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 
@@ -10,6 +10,7 @@ export default function GameHistory() {
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterType, setFilterType] = useState("all");
+  const [filterVenue, setFilterVenue] = useState("all");
 
   useEffect(() => {
     loadGames();
@@ -22,9 +23,13 @@ export default function GameHistory() {
     setIsLoading(false);
   };
 
-  const filteredGames = filterType === "all" 
-    ? games 
-    : games.filter(game => game.game_type === filterType);
+  const venues = [...new Set(games.map(g => g.location).filter(Boolean))];
+
+  const filteredGames = games.filter(game => {
+    const typeMatch = filterType === "all" || game.game_type === filterType;
+    const venueMatch = filterVenue === "all" || game.location === filterVenue;
+    return typeMatch && venueMatch;
+  });
 
   return (
     <div className="min-h-screen bg-[#16171B] p-6">
