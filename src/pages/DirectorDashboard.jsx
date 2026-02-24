@@ -35,6 +35,13 @@ export default function DirectorDashboard() {
     notes: ""
   });
   const [placements, setPlacements] = useState(Array(9).fill(""));
+  const [sessions, setSessions] = useState([]);
+  const [newSession, setNewSession] = useState({
+    session_date: new Date().toISOString().split('T')[0],
+    location: "",
+    game_type: "Texas Hold'em"
+  });
+  const [isCreatingSession, setIsCreatingSession] = useState(false);
 
   useEffect(() => {
     loadAll();
