@@ -59,9 +59,12 @@ export default function Layout({ children, currentPageName }) {
         <Sidebar className="border-r border-gray-800 bg-[#1A1B20]">
           <SidebarHeader className="border-b border-gray-800 p-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center shadow-lg">
-                <Trophy className="w-6 h-6 text-gray-900" />
-              </div>
+              <img
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/44bb87bed_riverratslogo_black1PDF.pdf"
+                alt="River Rat Rounders"
+                className="w-12 h-12 rounded-lg object-cover"
+                onError={(e) => { e.target.style.display='none'; }}
+              />
               <div>
                 <h2 className="font-bold text-xl text-white">River Rat Rounders</h2>
                 <p className="text-xs text-gray-400">Community Rankings</p>
