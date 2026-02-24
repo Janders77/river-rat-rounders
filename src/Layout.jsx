@@ -55,8 +55,8 @@ export default function Layout({ children, currentPageName }) {
           --accent: 142 76% 36%;
         }
       `}</style>
-      <div className="min-h-screen flex w-full bg-[#16171B] text-gray-100">
-        <Sidebar className="border-r border-gray-800 bg-[#1A1B20]">
+      <div className="min-h-screen flex w-full text-gray-100" style={{background: "radial-gradient(ellipse at center, #2d5a27 0%, #1a3d15 50%, #0f2a0a 100%)"}}>
+        <Sidebar className="border-r border-green-900/60 bg-[#1a3d15]/90" style={{backdropFilter: "blur(4px)"}}>
           <SidebarHeader className="border-b border-gray-800 p-6">
             <div className="flex items-center gap-3">
               <img
