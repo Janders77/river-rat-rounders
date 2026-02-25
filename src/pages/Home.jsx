@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Trophy, History, Zap, UserPlus } from "lucide-react";
+import { Trophy, History, Zap, UserPlus, CalendarDays } from "lucide-react";
 
 import PlayerSignIn from "../components/home/PlayerSignIn";
 import PlayerSignUp from "../components/home/PlayerSignUp";
