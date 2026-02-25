@@ -71,7 +71,6 @@ export default function DirectorDashboard() {
     const directorCheck = await base44.entities.Director.filter({ email: me.email });
     if (directorCheck.length === 0) {
       setIsLoading(false);
-      navigate(createPageUrl("DirectorSignIn"));
       return;
     }
     
@@ -214,46 +213,18 @@ export default function DirectorDashboard() {
   }
 
   // User must be a designated director to access this page
-  if (!currentUser || !currentUser.email) {
+  if (!currentUser || !directorRole) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 text-center">
         <ShieldAlert className="w-16 h-16 text-red-400" />
         <h1 className="text-2xl font-bold text-white">Access Denied</h1>
-        <p className="text-gray-400">You must be logged in to access the Director Dashboard.</p>
+        <p className="text-gray-400">You are not authorized to access the Director Dashboard.</p>
         <Button onClick={() => navigate(createPageUrl("Home"))} variant="outline" className="border-gray-700 text-gray-300">
           Go Home
         </Button>
       </div>
     );
   }
-  
-  // Redirect to sign-in page for non-authorized directors
-  if (isLoading === false && !currentUser?.email) {
-    return null;
-  }
-  
-  // Show loading while checking director status
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
-      </div>
-    );
-  }
-  
-  // If we got here but user is not authorized, redirect to sign-in
-  const checkDirectorStatus = async () => {
-    const directors = await base44.entities.Director.filter({ email: currentUser?.email });
-    if (directors.length === 0) {
-      navigate(createPageUrl("DirectorSignIn"));
-    }
-  };
-  
-  React.useEffect(() => {
-    if (currentUser?.email && !isLoading) {
-      checkDirectorStatus();
-    }
-  }, [currentUser, isLoading]);
 
   return (
     <div className="min-h-screen p-6">
