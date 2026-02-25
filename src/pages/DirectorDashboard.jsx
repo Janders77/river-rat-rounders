@@ -279,29 +279,39 @@ export default function DirectorDashboard() {
           </div>
         </div>
 
-        <Tabs defaultValue="sessions">
-          <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-3 sm:grid-cols-6 h-auto gap-1">
-            <TabsTrigger value="sessions" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-              <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
-            </TabsTrigger>
-            <TabsTrigger value="record" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-              <Plus className="w-4 h-4 mr-2" /> Record Game
-            </TabsTrigger>
-            <TabsTrigger value="requests" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white relative">
-              <Mail className="w-4 h-4 mr-2" /> Requests
-              {inviteRequests.length > 0 && (
-                <span className="ml-1 bg-amber-400 text-black text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="players" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-              <Users className="w-4 h-4 mr-2" /> Players
-            </TabsTrigger>
+        <Tabs defaultValue={hasPermission(directorRole, "canManageSessions") ? "sessions" : "record"}>
+          <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-2 sm:grid-cols-6 h-auto gap-1">
+            {hasPermission(directorRole, "canManageSessions") && (
+              <TabsTrigger value="sessions" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
+              </TabsTrigger>
+            )}
+            {hasPermission(directorRole, "canRecordGames") && (
+              <TabsTrigger value="record" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                <Plus className="w-4 h-4 mr-2" /> Record Game
+              </TabsTrigger>
+            )}
+            {hasPermission(directorRole, "canApproveRequests") && (
+              <TabsTrigger value="requests" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white relative">
+                <Mail className="w-4 h-4 mr-2" /> Requests
+                {inviteRequests.length > 0 && (
+                  <span className="ml-1 bg-amber-400 text-black text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
+                )}
+              </TabsTrigger>
+            )}
+            {hasPermission(directorRole, "canManagePlayers") && (
+              <TabsTrigger value="players" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                <Users className="w-4 h-4 mr-2" /> Players
+              </TabsTrigger>
+            )}
             <TabsTrigger value="history" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Trophy className="w-4 h-4 mr-2" /> Games
             </TabsTrigger>
-            <TabsTrigger value="photos" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-              <ImagePlus className="w-4 h-4 mr-2" /> Photos
-            </TabsTrigger>
+            {hasPermission(directorRole, "canUploadPhotos") && (
+              <TabsTrigger value="photos" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                <ImagePlus className="w-4 h-4 mr-2" /> Photos
+              </TabsTrigger>
+            )}
           </TabsList>
 
           {/* Sessions Tab */}
