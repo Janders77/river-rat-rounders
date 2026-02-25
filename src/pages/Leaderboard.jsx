@@ -40,9 +40,8 @@ export default function Leaderboard() {
       const d = new Date(now.getFullYear(), now.getMonth() - (i * 3), 1);
       const quarter = Math.floor(d.getMonth() / 3) + 1;
       const year = d.getFullYear();
-      const quarterStr = `${year}-Q${quarter}`;
-      if (quarterStr !== '2025-Q4') {
-        quarters.push(quarterStr);
+      if (year !== 2025) {
+        quarters.push(`${year}-Q${quarter}`);
       }
     }
     return quarters;
