@@ -59,7 +59,7 @@ export default function Home() {
       </div>
 
       <div className="max-w-lg w-full space-y-4">
-        {navLinks.map((link) => (
+        {navLinks.slice(0, 2).map((link) => (
           <Link
             key={link.title}
             to={link.url}
@@ -75,7 +75,7 @@ export default function Home() {
           </Link>
         ))}
 
-        {/* Join the League - terms page first */}
+        {/* Join the League - third card */}
         <Link
           to={createPageUrl("JoinTheLeague")}
           className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-purple-500/30 to-purple-600/20 border-purple-500/40 hover:border-purple-400/70 transition-all duration-200 group"
@@ -88,6 +88,22 @@ export default function Home() {
             <div className="text-gray-400 text-sm">Pay your dues and join the action</div>
           </div>
         </Link>
+
+        {navLinks.slice(2).map((link) => (
+          <Link
+            key={link.title}
+            to={link.url}
+            className={`flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r ${link.color} transition-all duration-200 group`}
+          >
+            <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+              <link.icon className={`w-6 h-6 ${link.iconColor}`} />
+            </div>
+            <div className="text-left">
+              <div className="font-semibold text-white text-lg group-hover:text-white">{link.title}</div>
+              <div className="text-gray-400 text-sm">{link.description}</div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );
