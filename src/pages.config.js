@@ -47,30 +47,32 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import BreakTimeBump from './pages/BreakTimeBump';
 import DirectorDashboard from './pages/DirectorDashboard';
 import GameHistory from './pages/GameHistory';
 import Home from './pages/Home';
+import JoinTheLeague from './pages/JoinTheLeague';
 import Leaderboard from './pages/Leaderboard';
+import LeagueCalendar from './pages/LeagueCalendar';
+import PayMyDues from './pages/PayMyDues';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
-import BreakTimeBump from './pages/BreakTimeBump';
-import PayMyDues from './pages/PayMyDues';
-import JoinTheLeague from './pages/JoinTheLeague';
-import LeagueCalendar from './pages/LeagueCalendar';
+import PlayerDatabase from './pages/PlayerDatabase';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "BreakTimeBump": BreakTimeBump,
     "DirectorDashboard": DirectorDashboard,
     "GameHistory": GameHistory,
     "Home": Home,
+    "JoinTheLeague": JoinTheLeague,
     "Leaderboard": Leaderboard,
+    "LeagueCalendar": LeagueCalendar,
+    "PayMyDues": PayMyDues,
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
-    "BreakTimeBump": BreakTimeBump,
-    "PayMyDues": PayMyDues,
-    "JoinTheLeague": JoinTheLeague,
-    "LeagueCalendar": LeagueCalendar,
+    "PlayerDatabase": PlayerDatabase,
 }
 
 export const pagesConfig = {
