@@ -55,9 +55,9 @@ import JoinTheLeague from './pages/JoinTheLeague';
 import Leaderboard from './pages/Leaderboard';
 import LeagueCalendar from './pages/LeagueCalendar';
 import PayMyDues from './pages/PayMyDues';
+import PlayerDatabase from './pages/PlayerDatabase';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
-import PlayerDatabase from './pages/PlayerDatabase';
 import __Layout from './Layout.jsx';
 
 
@@ -70,9 +70,9 @@ export const PAGES = {
     "Leaderboard": Leaderboard,
     "LeagueCalendar": LeagueCalendar,
     "PayMyDues": PayMyDues,
+    "PlayerDatabase": PlayerDatabase,
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
-    "PlayerDatabase": PlayerDatabase,
 }
 
 export const pagesConfig = {

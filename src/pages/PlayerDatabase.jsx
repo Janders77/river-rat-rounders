@@ -3,8 +3,9 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserPlus, Upload, Trash2, Users, Search } from "lucide-react";
+import { UserPlus, Upload, Users, Search } from "lucide-react";
 import PlayerFilters from "../components/PlayerFilters";
+import PlayerRow from "../components/PlayerRow";
 
 export default function PlayerDatabase() {
   const [players, setPlayers] = useState([]);
