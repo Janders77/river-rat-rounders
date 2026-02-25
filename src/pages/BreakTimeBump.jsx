@@ -61,29 +61,7 @@ export default function BreakTimeBump() {
           </CardContent>
         </Card>
 
-        {/* Instructions */}
-        <Card className="bg-[#1A1B20] border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-white text-base">Steps to Complete Your Bump</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ol className="space-y-3">
-              {[
-                `Send $${BUMP_COST} via Venmo or PayPal to @RiverRatRounders`,
-                'Include your name in the payment note (e.g. "Bump - John Smith")',
-                "Let the Tournament Director know you've paid before the break ends",
-                "Get your chips and get back in the game!",
-              ].map((step, i) => (
-                <li key={i} className="flex gap-3 text-sm text-gray-300">
-                  <span className="w-6 h-6 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
-                    {i + 1}
-                  </span>
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </CardContent>
-        </Card>
+
       </div>
     </div>
   );
