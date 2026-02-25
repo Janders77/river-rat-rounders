@@ -122,6 +122,12 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
         {player.date_joined && (
           <span>{player.date_joined}</span>
         )}
+        <Link
+          to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
+          className="p-2 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-blue-400/10 transition-colors"
+        >
+          <Eye className="w-4 h-4" />
+        </Link>
         <Button
           variant="ghost"
           size="icon"
