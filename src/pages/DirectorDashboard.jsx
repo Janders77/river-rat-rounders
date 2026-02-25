@@ -17,8 +17,6 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldAlert, Plus, Trophy, Loader2, Users, Trash2, CalendarPlus, ImagePlus, X, Mail, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import ManageUsersTab from "@/components/director/ManageUsersTab";
-import CreateDirectorForm from "@/components/director/CreateDirectorForm";
 
 const POINTS = [1000, 900, 800, 700, 600, 500, 400, 200, 100];
 const PLACE_LABELS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
@@ -57,7 +55,7 @@ export default function DirectorDashboard() {
 
   useEffect(() => {
     loadAll();
-  }, [navigate]);
+  }, []);
 
   const getPlayerName = (email) => {
     const user = users.find(u => u.email === email);
@@ -65,76 +63,31 @@ export default function DirectorDashboard() {
   };
 
   const loadAll = async () => {
-    try {
-      setIsLoading(true);
-      const me = await base44.auth.me();
-      setCurrentUser(me);
-      
-      // Check if user is a designated director
-      const directorCheck = await base44.entities.Director.filter({ email: me.email });
-      if (directorCheck.length === 0) {
-        setIsLoading(false);
-        navigate(createPageUrl("DirectorSignIn"));
-        return;
-      }
-      
-      setDirectorRole(directorCheck[0].role);
-      
-      // Load minimal data first with delays to avoid rate limiting
-      try {
-        const fetchedUsers = await User.list();
-        setUsers(fetchedUsers);
-      } catch (e) {
-        console.error("Error loading users:", e);
-        setUsers([]);
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      try {
-        const fetchedGames = await Game.list("-created_date", 20);
-        setGames(fetchedGames);
-      } catch (e) {
-        console.error("Error loading games:", e);
-        setGames([]);
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      try {
-        const fetchedSessions = await GameSession.list("-session_date", 20);
-        setSessions(fetchedSessions);
-      } catch (e) {
-        console.error("Error loading sessions:", e);
-        setSessions([]);
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      try {
-        const fetchedPhotos = await WinnerPhoto.list("-created_date", 50);
-        setPhotos(fetchedPhotos);
-      } catch (e) {
-        console.error("Error loading photos:", e);
-        setPhotos([]);
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      try {
-        const fetchedRequests = await InviteRequest.filter({ status: "pending" }, "-created_date", 50);
-        setInviteRequests(fetchedRequests);
-      } catch (e) {
-        console.error("Error loading requests:", e);
-        setInviteRequests([]);
-      }
-      
+    setIsLoading(true);
+    const me = await base44.auth.me();
+    setCurrentUser(me);
+    
+    // Check if user is a designated director
+    const directorCheck = await base44.entities.Director.filter({ email: me.email });
+    if (directorCheck.length === 0) {
       setIsLoading(false);
-    } catch (error) {
-      console.error("Fatal error in loadAll:", error);
-      setIsLoading(false);
-      navigate(createPageUrl("DirectorSignIn"));
+      return;
     }
+    
+    setDirectorRole(directorCheck[0].role);
+    const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
+      User.list(),
+      Game.list("-created_date", 20),
+      GameSession.list("-session_date", 20),
+      WinnerPhoto.list("-created_date", 50),
+      InviteRequest.filter({ status: "pending" }, "-created_date", 50)
+    ]);
+    setUsers(fetchedUsers);
+    setGames(fetchedGames);
+    setSessions(fetchedSessions);
+    setPhotos(fetchedPhotos);
+    setInviteRequests(fetchedRequests);
+    setIsLoading(false);
   };
 
   const handleRecordGame = async (e) => {
@@ -259,6 +212,26 @@ export default function DirectorDashboard() {
     );
   }
 
+  // User must be a designated director to access this page
+  if (!currentUser || !currentUser.email) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 text-center">
+        <ShieldAlert className="w-16 h-16 text-red-400" />
+        <h1 className="text-2xl font-bold text-white">Access Denied</h1>
+        <p className="text-gray-400">You must be logged in to access the Director Dashboard.</p>
+        <Button onClick={() => navigate(createPageUrl("Home"))} variant="outline" className="border-gray-700 text-gray-300">
+          Go Home
+        </Button>
+      </div>
+    );
+  }
+  
+  // Redirect to sign-in page for non-authorized directors
+  if (isLoading === false && !currentUser?.email) {
+    return null;
+  }
+  
+  // Show loading while checking director status
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -266,6 +239,20 @@ export default function DirectorDashboard() {
       </div>
     );
   }
+  
+  // If we got here but user is not authorized, redirect to sign-in
+  const checkDirectorStatus = async () => {
+    const directors = await base44.entities.Director.filter({ email: currentUser?.email });
+    if (directors.length === 0) {
+      navigate(createPageUrl("DirectorSignIn"));
+    }
+  };
+  
+  React.useEffect(() => {
+    if (currentUser?.email && !isLoading) {
+      checkDirectorStatus();
+    }
+  }, [currentUser, isLoading]);
 
   return (
     <div className="min-h-screen p-6">
@@ -293,7 +280,7 @@ export default function DirectorDashboard() {
         </div>
 
         <Tabs defaultValue={hasPermission(directorRole, "canManageSessions") ? "sessions" : "record"}>
-          <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-2 sm:grid-cols-7 h-auto gap-1">
+          <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-2 sm:grid-cols-6 h-auto gap-1">
             {hasPermission(directorRole, "canManageSessions") && (
               <TabsTrigger value="sessions" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
                 <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
@@ -315,11 +302,6 @@ export default function DirectorDashboard() {
             {hasPermission(directorRole, "canManagePlayers") && (
               <TabsTrigger value="players" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
                 <Users className="w-4 h-4 mr-2" /> Players
-              </TabsTrigger>
-            )}
-            {hasPermission(directorRole, "canManageSessions") && (
-              <TabsTrigger value="manage-users" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-                <Users className="w-4 h-4 mr-2" /> Users
               </TabsTrigger>
             )}
             <TabsTrigger value="history" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
@@ -756,15 +738,6 @@ export default function DirectorDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
-
-          {hasPermission(directorRole, "canManageSessions") && (
-            <TabsContent value="manage-users">
-              <div className="space-y-6">
-                <CreateDirectorForm />
-                <ManageUsersTab users={users} setUsers={setUsers} />
-              </div>
-            </TabsContent>
-          )}
 
           {hasPermission(directorRole, "canUploadPhotos") && (
             <TabsContent value="photos">

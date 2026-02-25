@@ -23,36 +23,26 @@ export default function PlayerSignIn() {
         if (event.type === 'create') return [...prev, event.data].filter(s => s.is_open);
         if (event.type === 'update') {
           if (!event.data.is_open) return prev.filter(s => s.id !== event.id);
-          return prev.map(s => s.id === event.id ? { ...s, ...event.data } : s);
+          return prev.map(s => s.id === event.id ? event.data : s);
         }
         if (event.type === 'delete') return prev.filter(s => s.id !== event.id);
         return prev;
       });
     });
 
-    const unsubscribeUsers = base44.entities.User.subscribe((event) => {
-      setAllUsers(prev => {
-        if (event.type === 'create') return [...prev, event.data];
-        if (event.type === 'update') return prev.map(u => u.id === event.id ? event.data : u);
-        if (event.type === 'delete') return prev.filter(u => u.id !== event.id);
-        return prev;
-      });
-    });
-
-    return () => {
-      unsubscribe();
-      unsubscribeUsers();
-    };
+    return () => unsubscribe();
   }, []);
 
   const loadData = async () => {
     setIsLoading(true);
-    const [me, fetchedSessions] = await Promise.all([
+    const [me, fetchedSessions, fetchedUsers] = await Promise.all([
       base44.auth.me().catch(() => null),
-      base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10)
+      base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10),
+      base44.entities.User.list()
     ]);
     setCurrentUser(me);
     setSessions(fetchedSessions);
+    setAllUsers(fetchedUsers);
     setIsLoading(false);
   };
 
@@ -66,8 +56,8 @@ export default function PlayerSignIn() {
     if (!alreadySigned) {
       const updated = [...(session.signed_in_players || []), currentUser.email];
       await base44.entities.GameSession.update(session.id, { signed_in_players: updated });
-      setSessions(prev => prev.map(s => s.id === session.id ? { ...s, signed_in_players: updated } : s));
     }
+    await loadData();
     setSigningIn(null);
   };
 
