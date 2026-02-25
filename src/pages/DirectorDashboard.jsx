@@ -71,6 +71,7 @@ export default function DirectorDashboard() {
     const directorCheck = await base44.entities.Director.filter({ email: me.email });
     if (directorCheck.length === 0) {
       setIsLoading(false);
+      navigate(createPageUrl("DirectorSignIn"));
       return;
     }
     
