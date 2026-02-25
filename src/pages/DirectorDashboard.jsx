@@ -231,7 +231,7 @@ export default function DirectorDashboard() {
         </div>
 
         <Tabs defaultValue="sessions">
-          <TabsList className="bg-gray-800 border-gray-700 mb-6 flex-wrap h-auto gap-1">
+          <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-3 sm:grid-cols-6 h-auto gap-1">
             <TabsTrigger value="sessions" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
             </TabsTrigger>
