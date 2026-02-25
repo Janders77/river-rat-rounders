@@ -603,8 +603,21 @@ export default function DirectorDashboard() {
                   <CardTitle className="text-white">All Players ({users.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
+                  <div className="relative mb-4">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                    <Input
+                      placeholder="Search by name or email..."
+                      value={playerSearch}
+                      onChange={e => setPlayerSearch(e.target.value)}
+                      className="bg-gray-900 border-gray-700 text-white pl-9"
+                    />
+                  </div>
                   <div className="space-y-3">
-                    {users.map(user => (
+                    {users.filter(u =>
+                      !playerSearch ||
+                      (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
+                      u.email.toLowerCase().includes(playerSearch.toLowerCase())
+                    ).map(user => (
                       <div key={user.id} className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg border border-gray-800">
                         <div>
                           <div className="font-medium text-white">{user.full_name || user.email}</div>
