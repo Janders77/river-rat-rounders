@@ -47,11 +47,16 @@ export default function DirectorSignIn() {
     );
   }
 
-  if (isDirector) {
+  if (directorData) {
     return (
       <div className="min-h-screen p-6 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-gray-400 mb-4">Verified director. Redirecting...</div>
+          <div className="mb-4">
+            <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/40">
+              {directorData.role}
+            </Badge>
+          </div>
+          <div className="text-gray-400">Verified director. Redirecting...</div>
         </div>
       </div>
     );
