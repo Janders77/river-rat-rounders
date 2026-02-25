@@ -601,8 +601,10 @@ export default function DirectorDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
+          )}
 
           {/* Player Management Tab */}
+          {hasPermission(directorRole, "canManagePlayers") && (
           <TabsContent value="players">
             <div className="space-y-6">
               {inviteRequests.length > 0 && (
