@@ -122,9 +122,17 @@ export default function Leaderboard() {
       <Dialog open={!!selectedPlayer} onOpenChange={() => setSelectedPlayer(null)}>
         <DialogContent className="bg-[#1A1B20] border-gray-800 text-white max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">
-              {selectedPlayer?.full_name || selectedPlayer?.email}
-            </DialogTitle>
+            <div className="flex items-center justify-between gap-4">
+              <DialogTitle className="text-2xl font-bold">
+                {selectedPlayer?.full_name || selectedPlayer?.email}
+              </DialogTitle>
+              <Link 
+                to={`${createPageUrl("PlayerProfile")}?email=${selectedPlayer?.email}`}
+                className="text-sm px-3 py-2 bg-amber-500 hover:bg-amber-600 text-black font-semibold rounded-lg transition-colors"
+              >
+                View Full Profile
+              </Link>
+            </div>
           </DialogHeader>
           
           {selectedPlayer && (
