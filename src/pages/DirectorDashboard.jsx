@@ -301,7 +301,7 @@ export default function DirectorDashboard() {
                             </div>
                             {session.signed_in_players?.length > 0 && (
                               <div className="text-xs text-gray-600 mt-1">
-                                {session.signed_in_players.join(", ")}
+                                {session.signed_in_players.map(email => getPlayerName(email)).join(", ")}
                               </div>
                             )}
                             <div className="mt-3 space-y-2">
