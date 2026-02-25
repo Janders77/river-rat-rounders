@@ -59,6 +59,7 @@ import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
 import DirectorDashboard from './pages/DirectorDashboard';
 import DirectorSignIn from './pages/DirectorSignIn';
+import DirectorManagement from './pages/DirectorManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +76,7 @@ export const PAGES = {
     "WinnersGallery": WinnersGallery,
     "DirectorDashboard": DirectorDashboard,
     "DirectorSignIn": DirectorSignIn,
+    "DirectorManagement": DirectorManagement,
 }
 
 export const pagesConfig = {
