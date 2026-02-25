@@ -143,7 +143,11 @@ function LayoutInner({ children }) {
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   )}
-                  {navigationItems.map((item) => (
+                  {navigationItems.map((item) => {
+                    if (item.title === "Manage Directors" && user?.role !== "admin") {
+                      return null;
+                    }
+                    return (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton 
                         asChild 
