@@ -17,20 +17,13 @@ export default function DirectorSignIn() {
   useEffect(() => {
     const checkDirector = async () => {
       try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-
-        // Check if user is designated director
-        const directors = await base44.entities.Director.filter({ email: currentUser.email });
-        if (directors.length > 0) {
-          setDirectorData(directors[0]);
-          // Redirect to director dashboard
-          setTimeout(() => {
-            navigate(createPageUrl("DirectorDashboard"));
-          }, 1000);
-        }
+        await base44.auth.me();
+        // Redirect to director dashboard
+        setTimeout(() => {
+          navigate(createPageUrl("DirectorDashboard"));
+        }, 500);
       } catch (err) {
-        setError("Authentication failed. Please try logging in again.");
+        setError("Authentication required.");
       } finally {
         setLoading(false);
       }
