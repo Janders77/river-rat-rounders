@@ -172,6 +172,9 @@ export default function PlayerDatabase() {
           CSV column order: <span className="text-gray-300 font-mono">number, name, last, email, guards, day</span>
         </div>
 
+        {/* Advanced Filters */}
+        <PlayerFilters filters={filters} setFilters={setFilters} />
+
         {/* Add Player Form */}
         {showForm && (
           <Card className="bg-[#1A1B20] border-gray-700 mb-6">
