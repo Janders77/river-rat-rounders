@@ -38,6 +38,11 @@ const navigationItems = [
     icon: Image,
   },
   {
+    title: "Break Time Bump",
+    url: createPageUrl("BreakTimeBump"),
+    icon: Zap,
+  },
+  {
     title: "Director",
     url: createPageUrl("DirectorDashboard"),
     icon: ShieldAlert,
