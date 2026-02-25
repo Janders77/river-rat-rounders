@@ -17,6 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldAlert, Plus, Trophy, Loader2, Users, Trash2, CalendarPlus, ImagePlus, X, Mail, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import ManageUsersTab from "@/components/director/ManageUsersTab";
+import CreateDirectorForm from "@/components/director/CreateDirectorForm";
 
 const POINTS = [1000, 900, 800, 700, 600, 500, 400, 200, 100];
 const PLACE_LABELS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
@@ -252,7 +254,7 @@ export default function DirectorDashboard() {
         </div>
 
         <Tabs defaultValue={hasPermission(directorRole, "canManageSessions") ? "sessions" : "record"}>
-          <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-2 sm:grid-cols-6 h-auto gap-1">
+          <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-2 sm:grid-cols-7 h-auto gap-1">
             {hasPermission(directorRole, "canManageSessions") && (
               <TabsTrigger value="sessions" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
                 <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
@@ -274,6 +276,11 @@ export default function DirectorDashboard() {
             {hasPermission(directorRole, "canManagePlayers") && (
               <TabsTrigger value="players" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
                 <Users className="w-4 h-4 mr-2" /> Players
+              </TabsTrigger>
+            )}
+            {hasPermission(directorRole, "canManageSessions") && (
+              <TabsTrigger value="manage-users" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                <Users className="w-4 h-4 mr-2" /> Users
               </TabsTrigger>
             )}
             <TabsTrigger value="history" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
@@ -710,6 +717,15 @@ export default function DirectorDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {hasPermission(directorRole, "canManageSessions") && (
+            <TabsContent value="manage-users">
+              <div className="space-y-6">
+                <CreateDirectorForm />
+                <ManageUsersTab users={users} setUsers={setUsers} />
+              </div>
+            </TabsContent>
+          )}
 
           {hasPermission(directorRole, "canUploadPhotos") && (
             <TabsContent value="photos">
