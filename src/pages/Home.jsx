@@ -8,14 +8,6 @@ import PlayerSignUp from "../components/home/PlayerSignUp";
 
 const navLinks = [
   {
-    title: "Break Time Bump",
-    description: "Top up or re-enter during the break",
-    icon: Zap,
-    url: createPageUrl("BreakTimeBump"),
-    color: "from-yellow-500/30 to-yellow-600/20 border-yellow-500/40 hover:border-yellow-400/70",
-    iconColor: "text-yellow-400",
-  },
-  {
     title: "Leaderboard",
     description: "View community rankings and player stats",
     icon: Trophy,
