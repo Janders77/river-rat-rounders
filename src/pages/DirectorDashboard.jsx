@@ -494,6 +494,39 @@ export default function DirectorDashboard() {
           {/* Player Management Tab */}
           <TabsContent value="players">
             <div className="space-y-6">
+              {inviteRequests.length > 0 && (
+                <Card className="bg-[#1A1B20] border-amber-700/50">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                      Pending Invite Requests ({inviteRequests.length})
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {inviteRequests.map(req => (
+                        <div key={req.id} className="flex items-center justify-between p-3 bg-amber-900/20 rounded-lg border border-amber-700/40">
+                          <div>
+                            <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
+                            <div className="text-sm text-gray-400">{req.email}</div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button size="sm" onClick={() => handleApproveRequest(req)}
+                              className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                              Approve & Invite
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={() => handleDeclineRequest(req)}
+                              className="border-red-700 text-red-400 hover:bg-red-900/20">
+                              Decline
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               <Card className="bg-[#1A1B20] border-gray-800">
                 <CardHeader>
                   <CardTitle className="text-white">Invite Player</CardTitle>
