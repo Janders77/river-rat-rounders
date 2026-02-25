@@ -139,6 +139,17 @@ export default function DirectorDashboard() {
     setTimeout(() => setInviteStatus(""), 3000);
   };
 
+  const handleApproveRequest = async (req) => {
+    await base44.users.inviteUser(req.email, "user");
+    await InviteRequest.update(req.id, { status: "approved" });
+    setInviteRequests(prev => prev.filter(r => r.id !== req.id));
+  };
+
+  const handleDeclineRequest = async (req) => {
+    await InviteRequest.update(req.id, { status: "declined" });
+    setInviteRequests(prev => prev.filter(r => r.id !== req.id));
+  };
+
   const handleDeleteGame = async (gameId) => {
     if (!confirm("Delete this game? Player stats will NOT be automatically reversed.")) return;
     await Game.delete(gameId);
