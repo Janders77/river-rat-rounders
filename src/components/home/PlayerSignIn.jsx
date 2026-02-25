@@ -35,14 +35,12 @@ export default function PlayerSignIn() {
 
   const loadData = async () => {
     setIsLoading(true);
-    const [me, fetchedSessions, fetchedUsers] = await Promise.all([
+    const [me, fetchedSessions] = await Promise.all([
       base44.auth.me().catch(() => null),
-      base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10),
-      base44.entities.User.list()
+      base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10)
     ]);
     setCurrentUser(me);
     setSessions(fetchedSessions);
-    setAllUsers(fetchedUsers);
     setIsLoading(false);
   };
 
