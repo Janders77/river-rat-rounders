@@ -58,6 +58,7 @@ import PayMyDues from './pages/PayMyDues';
 import PlayerDatabase from './pages/PlayerDatabase';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
+import DirectorSignIn from './pages/DirectorSignIn';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "PlayerDatabase": PlayerDatabase,
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
+    "DirectorSignIn": DirectorSignIn,
 }
 
 export const pagesConfig = {
