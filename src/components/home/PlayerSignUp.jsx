@@ -3,6 +3,7 @@ import { UserPlus, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
+import { InviteRequest } from "@/entities/InviteRequest";
 
 export default function PlayerSignUp() {
   const [expanded, setExpanded] = useState(false);
