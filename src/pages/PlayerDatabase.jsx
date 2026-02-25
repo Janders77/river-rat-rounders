@@ -100,9 +100,34 @@ export default function PlayerDatabase() {
     e.target.value = "";
   };
 
-  const filtered = players.filter(p =>
-    `${p.player_number} ${p.first_name} ${p.last_name} ${p.email}`.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = players.filter(p => {
+    // Search filter
+    const searchMatch = `${p.player_number} ${p.first_name} ${p.last_name} ${p.email}`.toLowerCase().includes(search.toLowerCase());
+    if (!searchMatch) return false;
+
+    // Guard filter
+    if (filters.guardFilter.enabled) {
+      const guards = p.card_guards || 0;
+      if (filters.guardFilter.operator === ">" && guards <= filters.guardFilter.value) return false;
+      if (filters.guardFilter.operator === "<" && guards >= filters.guardFilter.value) return false;
+      if (filters.guardFilter.operator === "=" && guards !== filters.guardFilter.value) return false;
+    }
+
+    // Date filter
+    if (filters.dateFilter.enabled && p.date_joined) {
+      const playerDate = new Date(p.date_joined);
+      if (filters.dateFilter.type === "range") {
+        if (filters.dateFilter.startDate && playerDate < new Date(filters.dateFilter.startDate)) return false;
+        if (filters.dateFilter.endDate && playerDate > new Date(filters.dateFilter.endDate)) return false;
+      } else if (filters.dateFilter.type === "before") {
+        if (filters.dateFilter.specificDate && playerDate > new Date(filters.dateFilter.specificDate)) return false;
+      } else if (filters.dateFilter.type === "after") {
+        if (filters.dateFilter.specificDate && playerDate < new Date(filters.dateFilter.specificDate)) return false;
+      }
+    }
+
+    return true;
+  });
 
   return (
     <div className="min-h-screen p-6">
