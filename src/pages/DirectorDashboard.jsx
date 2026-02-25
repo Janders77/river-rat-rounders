@@ -468,11 +468,8 @@ export default function DirectorDashboard() {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
+            </TabsContent>
           )}
-
-          {hasPermission(directorRole, "canRecordGames") && (
-            <TabsContent value="record">
             <form onSubmit={handleRecordGame}>
               <Card className="bg-[#1A1B20] border-gray-800">
                 <CardHeader>
