@@ -257,13 +257,25 @@ export default function DirectorDashboard() {
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8 flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-lg">
-            <ShieldAlert className="w-7 h-7 text-white" />
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-lg">
+              <ShieldAlert className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-white">Director Dashboard</h1>
+              <p className="text-gray-400">Tournament Directors only</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-3xl font-bold text-white">Director Dashboard</h1>
-            <p className="text-gray-400">Tournament Directors only</p>
+          <div className="text-right">
+            <div className="text-sm text-gray-400 mb-1">Your Role</div>
+            <div className={`px-3 py-1 rounded-full text-sm font-semibold border ${
+              directorRole === "Head Director" ? "bg-purple-600/20 border-purple-500 text-purple-300" :
+              directorRole === "Tournament Director" ? "bg-blue-600/20 border-blue-500 text-blue-300" :
+              "bg-gray-600/20 border-gray-500 text-gray-300"
+            }`}>
+              {directorRole}
+            </div>
           </div>
         </div>
 
