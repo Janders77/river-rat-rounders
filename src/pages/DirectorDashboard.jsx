@@ -18,7 +18,7 @@ import { ShieldAlert, Plus, Trophy, Loader2, Users, Trash2, CalendarPlus, ImageP
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
-const POINTS = [1000, 900, 800, 700, 600, 500, 400, 200, 100];
+const POINTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
 const PLACE_LABELS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
 
 export default function DirectorDashboard() {
