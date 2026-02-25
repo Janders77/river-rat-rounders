@@ -98,18 +98,18 @@ function LayoutInner({ children }) {
       <div className="min-h-screen flex w-full text-gray-100" style={{background: "radial-gradient(ellipse at center, #2d5a27 0%, #1a3d15 50%, #0f2a0a 100%)"}}>
         <Sidebar className="border-r border-green-900/60 bg-[#1a3d15]/90" style={{backdropFilter: "blur(4px)"}}>
           <SidebarHeader className="border-b border-gray-800 p-6">
-            <div className="flex items-center gap-3">
+            <button onClick={handleLogoClick} className="flex items-center gap-3 w-full hover:opacity-80 transition-opacity">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/44bb87bed_riverratslogo_black1PDF.pdf"
                 alt="River Rat Rounders"
                 className="w-12 h-12 rounded-lg object-cover"
                 onError={(e) => { e.target.style.display='none'; }}
               />
-              <div>
+              <div className="text-left">
               <h2 className="font-bold text-xl text-red-500">River Rat Rounders</h2>
               <p className="text-xs text-gray-400 mt-0.5">Memphis' Freeroll Bar Poker League</p>
               </div>
-            </div>
+            </button>
           </SidebarHeader>
           
           <SidebarContent className="p-4">
