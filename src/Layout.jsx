@@ -43,6 +43,11 @@ const navigationItems = [
     icon: Zap,
   },
   {
+    title: "Calendar",
+    url: createPageUrl("LeagueCalendar"),
+    icon: CalendarDays,
+  },
+  {
     title: "Director",
     url: createPageUrl("DirectorDashboard"),
     icon: ShieldAlert,

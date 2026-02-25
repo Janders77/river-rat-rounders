@@ -31,6 +31,14 @@ const navLinks = [
     color: "from-yellow-500/30 to-yellow-600/20 border-yellow-500/40 hover:border-yellow-400/70",
     iconColor: "text-yellow-400",
   },
+  {
+    title: "Calendar",
+    description: "View upcoming league events and games",
+    icon: CalendarDays,
+    url: createPageUrl("LeagueCalendar"),
+    color: "from-cyan-500/30 to-cyan-600/20 border-cyan-500/40 hover:border-cyan-400/70",
+    iconColor: "text-cyan-400",
+  },
 ];
 
 export default function Home() {
