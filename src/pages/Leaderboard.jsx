@@ -10,25 +10,16 @@ export default function Leaderboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const getCurrentQuarter = () => {
+  function getCurrentQuarter() {
     const now = new Date();
     const quarter = Math.floor(now.getMonth() / 3) + 1;
     const year = now.getFullYear();
     return `${year}-Q${quarter}`;
-  };
+  }
 
-  const getQuarterDates = (quarterStr) => {
-    const [year, quarter] = quarterStr.split('-Q');
-    const q = parseInt(quarter);
-    const startMonth = (q - 1) * 3;
-    const start = new Date(parseInt(year), startMonth, 1);
-    const end = new Date(parseInt(year), startMonth + 3, 0);
-    return { start, end };
-  };
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -58,92 +49,75 @@ export default function Leaderboard() {
     <div className="min-h-screen p-6 bg-green-900/30">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
               <Trophy className="w-7 h-7 text-gray-900" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Leaderboard</h1>
-              <p className="text-gray-400">Community rankings and stats</p>
+              <p className="text-gray-400">Top 100 Players - Current Quarter</p>
             </div>
+          </div>
+
+          <div className="flex gap-2">
+            {getAvailableQuarters().map(q => (
+              <button
+                key={q}
+                onClick={() => setSelectedQuarter(q)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  selectedQuarter === q
+                    ? 'bg-amber-500 text-black'
+                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
+              >
+                {q}
+              </button>
+            ))}
           </div>
         </div>
 
-        {!isLoading && games.some(g => g.location) && (
-          <div className="mt-8">
-            <VenueStats games={games} />
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array(10).fill(0).map((_, i) => (
+              <Skeleton key={i} className="h-16 bg-gray-800" />
+            ))}
+          </div>
+        ) : players.length === 0 ? (
+          <div className="text-center py-16 text-gray-500">
+            <Trophy className="w-16 h-16 mx-auto mb-4 opacity-20" />
+            <p className="text-lg">No players yet</p>
+          </div>
+        ) : (
+          <div className="space-y-2 mt-6">
+            {players.map((player, index) => (
+              <Link
+                key={player.id}
+                to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
+                className="flex items-center justify-between p-4 rounded-lg bg-gray-900/60 border border-gray-800 hover:border-amber-500/50 hover:bg-gray-900 transition-all group"
+              >
+                <div className="flex items-center gap-4 flex-1">
+                  <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center text-gray-900 font-bold text-sm shrink-0 min-w-8">
+                    {index + 1}
+                  </div>
+                  <div className="text-white font-medium group-hover:text-amber-400 transition-colors">
+                    {player.full_name || player.email}
+                  </div>
+                </div>
+                <div className="flex items-center gap-6 text-sm">
+                  <div className="text-right">
+                    <div className="text-gray-400 text-xs">Wins</div>
+                    <div className="text-emerald-400 font-bold text-lg">{player.wins || 0}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-gray-400 text-xs">Points</div>
+                    <div className="text-amber-400 font-bold text-lg">{player.total_points || 0}</div>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         )}
-
-
       </div>
-
-      <Dialog open={!!selectedPlayer} onOpenChange={() => setSelectedPlayer(null)}>
-        <DialogContent className="bg-[#1A1B20] border-gray-800 text-white max-w-2xl">
-          <DialogHeader>
-            <div className="flex items-center justify-between gap-4">
-              <DialogTitle className="text-2xl font-bold">
-                {selectedPlayer?.full_name || selectedPlayer?.email}
-              </DialogTitle>
-              <Link 
-                to={`${createPageUrl("PlayerProfile")}?email=${selectedPlayer?.email}`}
-                className="text-sm px-3 py-2 bg-amber-500 hover:bg-amber-600 text-black font-semibold rounded-lg transition-colors"
-              >
-                View Full Profile
-              </Link>
-            </div>
-          </DialogHeader>
-          
-          {selectedPlayer && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
-                  <div className="text-gray-400 text-sm mb-1">Total Points</div>
-                  <div className="text-2xl font-bold text-amber-400">{selectedPlayer.total_points || 0}</div>
-                </div>
-                <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
-                  <div className="text-gray-400 text-sm mb-1">Games Played</div>
-                  <div className="text-2xl font-bold">{selectedPlayer.games_played || 0}</div>
-                </div>
-                <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
-                  <div className="text-gray-400 text-sm mb-1">Wins</div>
-                  <div className="text-2xl font-bold text-emerald-400">{selectedPlayer.wins || 0}</div>
-                </div>
-                <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
-                  <div className="text-gray-400 text-sm mb-1">Best Streak</div>
-                  <div className="text-2xl font-bold text-orange-400">{selectedPlayer.best_streak || 0}</div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-bold mb-4">Recent Games</h3>
-                <div className="space-y-2">
-                  {getPlayerGames(selectedPlayer.email).map((game) => (
-                    <div key={game.id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <div className="font-medium">{game.game_type}</div>
-                          <div className="text-sm text-gray-400">{new Date(game.game_date).toLocaleDateString()}</div>
-                        </div>
-                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          game.winner_email === selectedPlayer.email 
-                            ? 'bg-emerald-500/20 text-emerald-400' 
-                            : 'bg-gray-700 text-gray-400'
-                        }`}>
-                          {game.winner_email === selectedPlayer.email ? 'Won' : 'Played'}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {getPlayerGames(selectedPlayer.email).length === 0 && (
-                    <div className="text-center py-8 text-gray-500">No games recorded yet</div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
