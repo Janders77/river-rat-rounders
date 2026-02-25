@@ -7,17 +7,19 @@ import { base44 } from "@/api/base44Client";
 export default function PlayerSignUp() {
   const [expanded, setExpanded] = useState(false);
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | done | error
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("loading");
+    const fullName = `${firstName.trim()} ${lastName.trim()}`;
     try {
       await base44.integrations.Core.SendEmail({
         to: "riverratrounders@gmail.com",
-        subject: `New Player Sign-Up Request: ${name}`,
-        body: `A new player has requested to join River Rat Rounders.\n\nName: ${name}\nEmail: ${email}\n\nPlease invite them from the Director Dashboard.`,
+        subject: `New Player Sign-Up Request: ${fullName}`,
+        body: `A new player has requested to join River Rat Rounders.\n\nFirst Name: ${firstName.trim()}\nLast Name: ${lastName.trim()}\nFull Name: ${fullName}\nEmail: ${email}\n\nPlease invite them from the Director Dashboard.`,
       });
       setStatus("done");
     } catch {
