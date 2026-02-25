@@ -79,18 +79,25 @@ export default function DirectorDashboard() {
       }
       
       setDirectorRole(directorCheck[0].role);
-      const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
-        User.list(),
+      
+      // Stagger API calls to avoid rate limiting
+      const fetchedUsers = await User.list();
+      setUsers(fetchedUsers);
+      
+      const [fetchedGames, fetchedSessions] = await Promise.all([
         Game.list("-created_date", 20),
-        GameSession.list("-session_date", 20),
+        GameSession.list("-session_date", 20)
+      ]);
+      setGames(fetchedGames);
+      setSessions(fetchedSessions);
+      
+      const [fetchedPhotos, fetchedRequests] = await Promise.all([
         WinnerPhoto.list("-created_date", 50),
         InviteRequest.filter({ status: "pending" }, "-created_date", 50)
       ]);
-      setUsers(fetchedUsers);
-      setGames(fetchedGames);
-      setSessions(fetchedSessions);
       setPhotos(fetchedPhotos);
       setInviteRequests(fetchedRequests);
+      
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
