@@ -50,7 +50,7 @@ export default function Home() {
           alt="River Rat Rounders"
           className="mx-auto mb-6 w-64 object-contain"
         />
-        <p className="text-gray-400 text-lg">Your poker community hub</p>
+        <p className="text-gray-400 text-lg">Memphis' Freeroll Bar Poker League</p>
       </div>
 
       <div className="max-w-lg w-full space-y-4 mb-6">
