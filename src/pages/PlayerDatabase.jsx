@@ -54,37 +54,36 @@ export default function PlayerDatabase() {
       const lines = ev.target.result.split("\n").map(l => l.trim()).filter(Boolean);
       const header = lines[0].toLowerCase().split(",").map(h => h.trim().replace(/\s+/g, "_"));
 
-      const getIdx = (...names) => {
-        for (const n of names) {
-          const i = header.indexOf(n);
-          if (i !== -1) return i;
-        }
-        return -1;
-      };
+      // Expected columns: number, name, last, email, guards, day
+      const numIdx = header.indexOf("number");
+      const firstIdx = header.indexOf("name");
+      const lastIdx = header.indexOf("last");
+      const emailIdx = header.indexOf("email");
+      const guardsIdx = header.indexOf("guards");
+      const dateIdx = header.indexOf("day");
 
-      const numIdx = getIdx("number", "player_number", "#");
-      const firstIdx = getIdx("first_name", "first");
-      const lastIdx = getIdx("last_name", "last");
-      const emailIdx = getIdx("email");
-      const guardsIdx = getIdx("card_guards", "number_of_card_guards", "guards");
-      const dateIdx = getIdx("date_joined", "date", "joined");
-
-      if (firstIdx === -1 || emailIdx === -1) {
-        setCsvError("CSV must include at least: first name, email. Expected columns: number, first name, last name, email, number of card guards, date joined");
+      if (firstIdx === -1) {
+        setCsvError("CSV must have a 'name' column. Expected: number, name, last, email, guards, day");
         return;
       }
 
       const records = [];
       for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(",").map(c => c.trim());
-        if (!cols[firstIdx] || !cols[emailIdx]) continue;
+        const cols = lines[i].split(",").map(c => c.trim().replace(/^"+|"+$/g, ""));
+        if (!cols[firstIdx]) continue;
+        // Parse date - handle formats like "11/22/2015 9:51"
+        let dateJoined = undefined;
+        if (dateIdx !== -1 && cols[dateIdx]) {
+          const d = new Date(cols[dateIdx]);
+          if (!isNaN(d)) dateJoined = d.toISOString().split("T")[0];
+        }
         records.push({
           player_number: numIdx !== -1 && cols[numIdx] ? parseInt(cols[numIdx]) : undefined,
           first_name: cols[firstIdx],
           last_name: lastIdx !== -1 ? cols[lastIdx] : "",
-          email: cols[emailIdx].toLowerCase(),
+          email: emailIdx !== -1 ? cols[emailIdx].toLowerCase() : "",
           card_guards: guardsIdx !== -1 && cols[guardsIdx] ? parseInt(cols[guardsIdx]) : 0,
-          date_joined: dateIdx !== -1 ? cols[dateIdx] : undefined,
+          date_joined: dateJoined,
         });
       }
 
