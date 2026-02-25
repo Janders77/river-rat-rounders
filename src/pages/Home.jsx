@@ -31,6 +31,14 @@ const navLinks = [
     color: "from-yellow-500/30 to-yellow-600/20 border-yellow-500/40 hover:border-yellow-400/70",
     iconColor: "text-yellow-400",
   },
+  {
+    title: "Pay My Dues",
+    description: "Pay your membership dues",
+    icon: CreditCard,
+    url: createPageUrl("PayMyDues"),
+    color: "from-purple-500/30 to-purple-600/20 border-purple-500/40 hover:border-purple-400/70",
+    iconColor: "text-purple-400",
+  },
 ];
 
 export default function Home() {
