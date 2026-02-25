@@ -32,70 +32,52 @@ export default function DirectorSignIn() {
     setIsSubmitting(false);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen p-6 flex items-center justify-center">
-        <div className="text-gray-400">Loading...</div>
-      </div>
-    );
-  }
-
-  if (directorData) {
-    return (
-      <div className="min-h-screen p-6 flex items-center justify-center">
-        <div className="text-center">
-          <div className="mb-4">
-            <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/40">
-              {directorData.role}
-            </Badge>
-          </div>
-          <div className="text-gray-400">Verified director. Redirecting...</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen p-6 flex items-center justify-center">
       <Card className="w-full max-w-md bg-[#1A1B20] border-gray-800">
         <CardHeader>
-          <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center mb-4">
-            <ShieldAlert className="w-6 h-6 text-red-500" />
+          <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+            <Lock className="w-6 h-6 text-purple-500" />
           </div>
           <CardTitle className="text-white text-2xl">Director Access</CardTitle>
+          <p className="text-gray-400 text-sm mt-2">Enter the director code to access the dashboard</p>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <p className="text-red-400 font-semibold text-sm">Access Denied</p>
-              <p className="text-red-300 text-xs mt-1">
-                {user?.email || "Your account"} is not authorized to access the Director Dashboard.
-              </p>
+              <Input
+                type="password"
+                placeholder="Enter director code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className="bg-gray-900 border-gray-700 text-white text-center text-lg tracking-widest"
+                autoFocus
+              />
             </div>
-          </div>
 
-          <div className="space-y-2 text-sm text-gray-400">
-            <p>Only designated directors can access the Director Dashboard.</p>
-            <p>If you should have director access, please contact the league administrator.</p>
-          </div>
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex gap-3">
+                <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                <p className="text-red-400 text-sm">{error}</p>
+              </div>
+            )}
 
-          <div className="space-y-3">
             <Button
-              onClick={() => navigate(createPageUrl("Home"))}
-              variant="outline"
-              className="w-full border-gray-700 text-gray-300 hover:bg-gray-900"
+              type="submit"
+              disabled={!code || isSubmitting}
+              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold"
             >
-              Back to Home
+              {isSubmitting ? "Verifying..." : "Access Dashboard"}
             </Button>
-            <Button
-              onClick={() => base44.auth.logout()}
-              className="w-full bg-amber-500 hover:bg-amber-600 text-black font-semibold flex items-center justify-center gap-2"
-            >
-              <LogIn className="w-4 h-4" />
-              Sign In as Different User
-            </Button>
-          </div>
+          </form>
+
+          <Button
+            onClick={() => navigate(createPageUrl("Home"))}
+            variant="outline"
+            className="w-full border-gray-700 text-gray-300 hover:bg-gray-900"
+          >
+            Back to Home
+          </Button>
         </CardContent>
       </Card>
     </div>
