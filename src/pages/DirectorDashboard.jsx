@@ -286,7 +286,7 @@ export default function DirectorDashboard() {
                     {sessions.map(session => (
                       <div key={session.id} className="p-4 bg-gray-900/50 rounded-lg border border-gray-800">
                         <div className="flex items-start justify-between gap-2">
-                          <div>
+                          <div className="flex-1 min-w-0">
                             <div className="font-medium text-white">{session.location}</div>
                             <div className="text-sm text-gray-400">
                               {new Date(session.session_date).toLocaleDateString()} · {session.game_type}
@@ -299,6 +299,35 @@ export default function DirectorDashboard() {
                                 {session.signed_in_players.join(", ")}
                               </div>
                             )}
+                            <div className="mt-3 space-y-1">
+                              <label className="text-xs text-amber-400 font-semibold">🃏 Hand of the Week</label>
+                              <Select
+                                value={session.hand_of_week_email || ""}
+                                onValueChange={async (val) => {
+                                  const player = users.find(u => u.email === val);
+                                  await GameSession.update(session.id, {
+                                    hand_of_week_email: val,
+                                    hand_of_week_name: player?.full_name || val
+                                  });
+                                  setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_email: val, hand_of_week_name: player?.full_name || val } : s));
+                                }}
+                              >
+                                <SelectTrigger className="bg-gray-800 border-gray-700 text-white text-sm h-8">
+                                  <SelectValue placeholder="Select player..." />
+                                </SelectTrigger>
+                                <SelectContent className="bg-gray-900 border-gray-700">
+                                  {(session.signed_in_players?.length > 0
+                                    ? users.filter(u => session.signed_in_players.includes(u.email))
+                                    : users
+                                  ).map(u => (
+                                    <SelectItem key={u.email} value={u.email}>{u.full_name || u.email}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              {session.hand_of_week_name && (
+                                <div className="text-xs text-amber-300">Current: {session.hand_of_week_name}</div>
+                              )}
+                            </div>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
                             <Button size="sm" variant="outline"
