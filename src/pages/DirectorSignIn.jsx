@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ShieldAlert, LogIn, AlertCircle } from "lucide-react";
+import { ShieldAlert, AlertCircle, Lock } from "lucide-react";
+
+const DIRECTOR_CODE = "1234"; // Change this to your director code
 
 export default function DirectorSignIn() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [code, setCode] = useState("");
   const [error, setError] = useState("");
-  const [user, setUser] = useState(null);
-  const [directorData, setDirectorData] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const checkDirector = async () => {
-      try {
-        await base44.auth.me();
-        // Redirect to director dashboard
-        setTimeout(() => {
-          navigate(createPageUrl("DirectorDashboard"));
-        }, 500);
-      } catch (err) {
-        setError("Authentication required.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setIsSubmitting(true);
 
-    checkDirector();
-  }, [navigate]);
+    if (code === DIRECTOR_CODE) {
+      sessionStorage.setItem("directorAccess", "true");
+      setTimeout(() => {
+        navigate(createPageUrl("DirectorDashboard"));
+      }, 300);
+    } else {
+      setError("Invalid director code. Please try again.");
+      setCode("");
+    }
+
+    setIsSubmitting(false);
+  };
 
   if (loading) {
     return (
