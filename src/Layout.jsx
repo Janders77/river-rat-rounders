@@ -62,6 +62,18 @@ const navigationItems = [
 function LayoutInner({ children }) {
   const location = useLocation();
   const { setOpenMobile } = useSidebar();
+  const [logoClicks, setLogoClicks] = React.useState(0);
+  const [showSecret, setShowSecret] = React.useState(false);
+
+  const handleLogoClick = () => {
+    const newClicks = logoClicks + 1;
+    setLogoClicks(newClicks);
+    if (newClicks === 4) {
+      setShowSecret(true);
+      setLogoClicks(0);
+      setTimeout(() => setShowSecret(false), 30000);
+    }
+  };
 
   return (
     <>
