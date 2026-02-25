@@ -598,12 +598,11 @@ export default function DirectorDashboard() {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
+            </TabsContent>
           )}
 
-          {/* Player Management Tab */}
           {hasPermission(directorRole, "canManagePlayers") && (
-          <TabsContent value="players">
+            <TabsContent value="players">
             <div className="space-y-6">
               {inviteRequests.length > 0 && (
                 <Card className="bg-[#1A1B20] border-amber-700/50">
