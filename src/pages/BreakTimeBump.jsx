@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Zap, DollarSign, CreditCard, ExternalLink } from "lucide-react";
 
+
 const BUMP_COST = 20;
 
 export default function BreakTimeBump() {
