@@ -61,13 +61,22 @@ export default function PlayerSignUp() {
         <span className="font-semibold text-white">New Player Sign Up</span>
       </div>
       <form onSubmit={handleSubmit} className="space-y-3">
-        <Input
-          placeholder="Your name"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          className="bg-gray-900 border-gray-700 text-white"
-          required
-        />
+        <div className="flex gap-2">
+          <Input
+            placeholder="First name"
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
+            className="bg-gray-900 border-gray-700 text-white"
+            required
+          />
+          <Input
+            placeholder="Last name"
+            value={lastName}
+            onChange={e => setLastName(e.target.value)}
+            className="bg-gray-900 border-gray-700 text-white"
+            required
+          />
+        </div>
         <Input
           type="email"
           placeholder="Your email"
