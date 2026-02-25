@@ -315,6 +315,7 @@ export default function DirectorDashboard() {
           </TabsList>
 
           {/* Sessions Tab */}
+          {hasPermission(directorRole, "canManageSessions") && (
           <TabsContent value="sessions">
             <div className="space-y-6">
               <Card className="bg-[#1A1B20] border-gray-800">
