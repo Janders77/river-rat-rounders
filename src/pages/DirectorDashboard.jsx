@@ -825,8 +825,9 @@ export default function DirectorDashboard() {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+            )}
+            </Tabs>
       </div>
     </div>
   );
