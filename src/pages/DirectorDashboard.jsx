@@ -469,9 +469,12 @@ export default function DirectorDashboard() {
               </Card>
             </div>
             </TabsContent>
-          )}
-            <form onSubmit={handleRecordGame}>
-              <Card className="bg-[#1A1B20] border-gray-800">
+            )}
+
+            {hasPermission(directorRole, "canRecordGames") && (
+            <TabsContent value="record">
+              <form onSubmit={handleRecordGame}>
+                <Card className="bg-[#1A1B20] border-gray-800">
                 <CardHeader>
                   <CardTitle className="text-white">New Game</CardTitle>
                 </CardHeader>
