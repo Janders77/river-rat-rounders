@@ -56,6 +56,7 @@ import WinnersGallery from './pages/WinnersGallery';
 import BreakTimeBump from './pages/BreakTimeBump';
 import PayMyDues from './pages/PayMyDues';
 import JoinTheLeague from './pages/JoinTheLeague';
+import LeagueCalendar from './pages/LeagueCalendar';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "BreakTimeBump": BreakTimeBump,
     "PayMyDues": PayMyDues,
     "JoinTheLeague": JoinTheLeague,
+    "LeagueCalendar": LeagueCalendar,
 }
 
 export const pagesConfig = {
