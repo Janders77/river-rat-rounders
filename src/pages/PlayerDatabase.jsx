@@ -14,6 +14,10 @@ export default function PlayerDatabase() {
   const [adding, setAdding] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [csvError, setCsvError] = useState("");
+  const [filters, setFilters] = useState({
+    guardFilter: { enabled: false, operator: ">", value: 0 },
+    dateFilter: { enabled: false, type: "range", startDate: "", endDate: "", specificDate: "" }
+  });
   const fileInputRef = useRef();
 
   const loadPlayers = async () => {
