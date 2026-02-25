@@ -16,7 +16,7 @@ export default function PlayerDatabase() {
   const fileInputRef = useRef();
 
   const loadPlayers = async () => {
-    const data = await base44.entities.Player.list("player_number", 200);
+    const data = await base44.entities.Player.list("player_number", 10000);
     setPlayers(data);
     setLoading(false);
   };
