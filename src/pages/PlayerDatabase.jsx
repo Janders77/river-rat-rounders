@@ -273,34 +273,15 @@ export default function PlayerDatabase() {
           <div className="text-gray-500 text-center py-12">No players found.</div>
         ) : (
           <div className="space-y-2">
+            {isAdmin && <p className="text-xs text-gray-500 mb-3">💡 Click a row to edit player details</p>}
             {filtered.map((player) => (
-              <div key={player.id} className="flex items-center justify-between p-4 rounded-lg bg-[#1A1B20] border border-gray-800">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold text-sm">
-                    {player.player_number ?? "?"}
-                  </div>
-                  <div>
-                    <div className="text-white font-medium">{player.first_name} {player.last_name}</div>
-                    <div className="text-gray-400 text-sm">{player.email}</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-gray-400">
-                  {player.card_guards > 0 && (
-                    <span className="text-amber-400">🛡️ {player.card_guards} guards</span>
-                  )}
-                  {player.date_joined && (
-                    <span>{player.date_joined}</span>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDelete(player.id)}
-                    className="text-gray-600 hover:text-red-400 hover:bg-red-400/10"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
+              <PlayerRow
+                key={player.id}
+                player={player}
+                isAdmin={isAdmin}
+                onDelete={handleDelete}
+                onUpdate={handleUpdate}
+              />
             ))}
           </div>
         )}
