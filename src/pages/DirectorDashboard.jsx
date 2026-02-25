@@ -4,6 +4,7 @@ import { Game } from "@/entities/Game";
 import { User } from "@/entities/User";
 import { GameSession } from "@/entities/GameSession";
 import { WinnerPhoto } from "@/entities/WinnerPhoto";
+import { InviteRequest } from "@/entities/InviteRequest";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
