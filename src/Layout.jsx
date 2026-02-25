@@ -54,7 +54,7 @@ const navigationItems = [
   },
   {
     title: "Director",
-    url: createPageUrl("DirectorDashboard"),
+    url: createPageUrl("DirectorSignIn"),
     icon: ShieldAlert,
   },
 ];
