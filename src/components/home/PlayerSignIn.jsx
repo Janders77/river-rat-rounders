@@ -4,14 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, Users, Loader2, LogIn, MapPin, Calendar } from "lucide-react";
+import { CheckCircle2, Users, Loader2, LogIn, MapPin, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function PlayerSignIn() {
   const [sessions, setSessions] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [signingIn, setSigningIn] = useState(null);
   const [selectedSession, setSelectedSession] = useState("");
+  const [expandedSession, setExpandedSession] = useState(null);
 
   useEffect(() => {
     loadData();
