@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Zap, DollarSign, CreditCard, CheckCircle2 } from "lucide-react";
+import { Zap, DollarSign, CreditCard, ExternalLink } from "lucide-react";
 
 const BUMP_COST = 20;
 
