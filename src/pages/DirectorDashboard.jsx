@@ -67,16 +67,18 @@ export default function DirectorDashboard() {
       setIsLoading(false);
       return;
     }
-    const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos] = await Promise.all([
+    const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
       User.list(),
       Game.list("-created_date", 20),
       GameSession.list("-session_date", 20),
-      WinnerPhoto.list("-created_date", 50)
+      WinnerPhoto.list("-created_date", 50),
+      InviteRequest.filter({ status: "pending" }, "-created_date", 50)
     ]);
     setUsers(fetchedUsers);
     setGames(fetchedGames);
     setSessions(fetchedSessions);
     setPhotos(fetchedPhotos);
+    setInviteRequests(fetchedRequests);
     setIsLoading(false);
   };
 
