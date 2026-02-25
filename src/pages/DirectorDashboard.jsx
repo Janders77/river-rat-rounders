@@ -80,26 +80,58 @@ export default function DirectorDashboard() {
       
       setDirectorRole(directorCheck[0].role);
       
-      // Stagger API calls to avoid rate limiting
-      const fetchedUsers = await User.list();
-      setUsers(fetchedUsers);
+      // Load minimal data first with delays to avoid rate limiting
+      try {
+        const fetchedUsers = await User.list();
+        setUsers(fetchedUsers);
+      } catch (e) {
+        console.error("Error loading users:", e);
+        setUsers([]);
+      }
       
-      const [fetchedGames, fetchedSessions] = await Promise.all([
-        Game.list("-created_date", 20),
-        GameSession.list("-session_date", 20)
-      ]);
-      setGames(fetchedGames);
-      setSessions(fetchedSessions);
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      const [fetchedPhotos, fetchedRequests] = await Promise.all([
-        WinnerPhoto.list("-created_date", 50),
-        InviteRequest.filter({ status: "pending" }, "-created_date", 50)
-      ]);
-      setPhotos(fetchedPhotos);
-      setInviteRequests(fetchedRequests);
+      try {
+        const fetchedGames = await Game.list("-created_date", 20);
+        setGames(fetchedGames);
+      } catch (e) {
+        console.error("Error loading games:", e);
+        setGames([]);
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      try {
+        const fetchedSessions = await GameSession.list("-session_date", 20);
+        setSessions(fetchedSessions);
+      } catch (e) {
+        console.error("Error loading sessions:", e);
+        setSessions([]);
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      try {
+        const fetchedPhotos = await WinnerPhoto.list("-created_date", 50);
+        setPhotos(fetchedPhotos);
+      } catch (e) {
+        console.error("Error loading photos:", e);
+        setPhotos([]);
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      try {
+        const fetchedRequests = await InviteRequest.filter({ status: "pending" }, "-created_date", 50);
+        setInviteRequests(fetchedRequests);
+      } catch (e) {
+        console.error("Error loading requests:", e);
+        setInviteRequests([]);
+      }
       
       setIsLoading(false);
     } catch (error) {
+      console.error("Fatal error in loadAll:", error);
       setIsLoading(false);
       navigate(createPageUrl("DirectorSignIn"));
     }
