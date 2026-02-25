@@ -299,26 +299,16 @@ export default function DirectorDashboard() {
                                 {session.signed_in_players.join(", ")}
                               </div>
                             )}
-                            <div className="mt-3 space-y-1">
+                            <div className="mt-3 space-y-2">
                               <label className="text-xs text-amber-400 font-semibold">🃏 Hand of the Week</label>
                               <Select
-                                value={session.hand_of_week_email || ""}
+                                value=""
                                 onValueChange={async (val) => {
-                                  if (val === session.hand_of_week_email) return;
+                                  const currentList = session.hand_of_week_emails || [];
+                                  if (currentList.includes(val)) return;
                                   const player = users.find(u => u.email === val);
 
-                                  // Remove 50 pts from previous hand of the week
-                                  if (session.hand_of_week_email) {
-                                    const prevPlayer = users.find(u => u.email === session.hand_of_week_email);
-                                    if (prevPlayer) {
-                                      await base44.entities.User.update(prevPlayer.id, {
-                                        total_points: Math.max(0, (prevPlayer.total_points || 0) - 50)
-                                      });
-                                      setUsers(prev => prev.map(u => u.id === prevPlayer.id ? { ...u, total_points: Math.max(0, (u.total_points || 0) - 50) } : u));
-                                    }
-                                  }
-
-                                  // Award 50 pts to new hand of the week
+                                  // Award 50 pts
                                   if (player) {
                                     await base44.entities.User.update(player.id, {
                                       total_points: (player.total_points || 0) + 50
@@ -326,27 +316,49 @@ export default function DirectorDashboard() {
                                     setUsers(prev => prev.map(u => u.id === player.id ? { ...u, total_points: (u.total_points || 0) + 50 } : u));
                                   }
 
+                                  const newEmails = [...currentList, val];
+                                  const newNames = [...(session.hand_of_week_names || []), player?.full_name || val];
                                   await GameSession.update(session.id, {
-                                    hand_of_week_email: val,
-                                    hand_of_week_name: player?.full_name || val
+                                    hand_of_week_emails: newEmails,
+                                    hand_of_week_names: newNames
                                   });
-                                  setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_email: val, hand_of_week_name: player?.full_name || val } : s));
+                                  setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_emails: newEmails, hand_of_week_names: newNames } : s));
                                 }}
                               >
                                 <SelectTrigger className="bg-gray-800 border-gray-700 text-white text-sm h-8">
-                                  <SelectValue placeholder="Select player..." />
+                                  <SelectValue placeholder="Add player..." />
                                 </SelectTrigger>
                                 <SelectContent className="bg-gray-900 border-gray-700">
                                   {(session.signed_in_players?.length > 0
                                     ? users.filter(u => session.signed_in_players.includes(u.email))
                                     : users
-                                  ).map(u => (
+                                  ).filter(u => !(session.hand_of_week_emails || []).includes(u.email))
+                                   .map(u => (
                                     <SelectItem key={u.email} value={u.email}>{u.full_name || u.email}</SelectItem>
                                   ))}
                                 </SelectContent>
                               </Select>
-                              {session.hand_of_week_name && (
-                                <div className="text-xs text-amber-300">Current: {session.hand_of_week_name}</div>
+                              {(session.hand_of_week_names || []).length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {(session.hand_of_week_emails || []).map((email, idx) => (
+                                    <span key={email} className="flex items-center gap-1 bg-amber-900/40 border border-amber-700 text-amber-300 text-xs rounded-full px-2 py-0.5">
+                                      {session.hand_of_week_names?.[idx] || email}
+                                      <button onClick={async () => {
+                                        const player = users.find(u => u.email === email);
+                                        if (player) {
+                                          await base44.entities.User.update(player.id, {
+                                            total_points: Math.max(0, (player.total_points || 0) - 50)
+                                          });
+                                          setUsers(prev => prev.map(u => u.id === player.id ? { ...u, total_points: Math.max(0, (u.total_points || 0) - 50) } : u));
+                                        }
+                                        const newEmails = (session.hand_of_week_emails || []).filter(e => e !== email);
+                                        const newNames = (session.hand_of_week_names || []).filter((_, i) => i !== idx);
+                                        await GameSession.update(session.id, { hand_of_week_emails: newEmails, hand_of_week_names: newNames });
+                                        setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_emails: newEmails, hand_of_week_names: newNames } : s));
+                                      }} className="ml-1 hover:text-white">×</button>
+                                    </span>
+                                  ))}
+                                </div>
                               )}
                             </div>
                           </div>
