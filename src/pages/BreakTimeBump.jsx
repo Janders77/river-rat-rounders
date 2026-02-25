@@ -6,15 +6,7 @@ import { Zap, DollarSign, CreditCard, ExternalLink } from "lucide-react";
 const BUMP_COST = 20;
 
 export default function BreakTimeBump() {
-  const [copied, setCopied] = useState(null);
-
-  const handleCopy = (text, label) => {
-    navigator.clipboard.writeText(text);
-    setCopied(label);
-    setTimeout(() => setCopied(null), 2000);
-  };
-
-  return (
+    return (
     <div className="min-h-screen p-6">
       <div className="max-w-lg mx-auto">
         {/* Header */}
