@@ -60,6 +60,7 @@ import PayMyDues from './pages/PayMyDues';
 import PlayerDatabase from './pages/PlayerDatabase';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
+import PlayerProfile from './pages/PlayerProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +78,7 @@ export const PAGES = {
     "PlayerDatabase": PlayerDatabase,
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
+    "PlayerProfile": PlayerProfile,
 }
 
 export const pagesConfig = {
