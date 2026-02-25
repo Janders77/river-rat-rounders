@@ -558,8 +558,10 @@ export default function DirectorDashboard() {
               </Card>
             </form>
           </TabsContent>
+          )}
 
           {/* Invite Requests Tab */}
+          {hasPermission(directorRole, "canApproveRequests") && (
           <TabsContent value="requests">
             <Card className="bg-[#1A1B20] border-amber-700/50">
               <CardHeader>
