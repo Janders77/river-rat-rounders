@@ -238,6 +238,12 @@ export default function DirectorDashboard() {
             <TabsTrigger value="record" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Plus className="w-4 h-4 mr-2" /> Record Game
             </TabsTrigger>
+            <TabsTrigger value="requests" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white relative">
+              <Mail className="w-4 h-4 mr-2" /> Requests
+              {inviteRequests.length > 0 && (
+                <span className="ml-1 bg-amber-400 text-black text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="players" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Users className="w-4 h-4 mr-2" /> Players
             </TabsTrigger>
