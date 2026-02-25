@@ -17,6 +17,20 @@ export default function PlayerSignIn() {
 
   useEffect(() => {
     loadData();
+
+    const unsubscribe = base44.entities.GameSession.subscribe((event) => {
+      setSessions(prev => {
+        if (event.type === 'create') return [...prev, event.data].filter(s => s.is_open);
+        if (event.type === 'update') {
+          if (!event.data.is_open) return prev.filter(s => s.id !== event.id);
+          return prev.map(s => s.id === event.id ? event.data : s);
+        }
+        if (event.type === 'delete') return prev.filter(s => s.id !== event.id);
+        return prev;
+      });
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const loadData = async () => {
