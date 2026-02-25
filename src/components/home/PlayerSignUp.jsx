@@ -17,10 +17,11 @@ export default function PlayerSignUp() {
     setStatus("loading");
     const fullName = `${firstName.trim()} ${lastName.trim()}`;
     try {
-      await base44.integrations.Core.SendEmail({
-        to: "riverratrounders@gmail.com",
-        subject: `New Player Sign-Up Request: ${fullName}`,
-        body: `A new player has requested to join River Rat Rounders.\n\nFirst Name: ${firstName.trim()}\nLast Name: ${lastName.trim()}\nFull Name: ${fullName}\nEmail: ${email}\n\nPlease invite them from the Director Dashboard.`,
+      await InviteRequest.create({
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        email: email.trim(),
+        status: "pending"
       });
       setStatus("done");
     } catch {
