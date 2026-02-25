@@ -139,7 +139,7 @@ export default function PlayerDatabase() {
 
         {/* CSV format hint */}
         <div className="mb-4 p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-gray-400 text-xs">
-          CSV column order: <span className="text-gray-300 font-mono">number, first name, last name, email, number of card guards, date joined</span>
+          CSV column order: <span className="text-gray-300 font-mono">number, name, last, email, guards, day</span>
         </div>
 
         {/* Add Player Form */}
