@@ -635,6 +635,10 @@ export default function DirectorDashboard() {
                       </div>
                     ))}
                     {users.length === 0 && <p className="text-gray-500 text-center py-4">No players yet.</p>}
+                    {users.length > 0 && playerSearch && users.filter(u =>
+                      (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
+                      u.email.toLowerCase().includes(playerSearch.toLowerCase())
+                    ).length === 0 && <p className="text-gray-500 text-center py-4">No players match your search.</p>}
                   </div>
                 </CardContent>
               </Card>
