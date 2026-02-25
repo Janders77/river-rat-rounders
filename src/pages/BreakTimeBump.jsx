@@ -48,58 +48,16 @@ export default function BreakTimeBump() {
               How to Pay
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Venmo */}
-            <div className="p-4 rounded-lg bg-blue-900/20 border border-blue-700/40">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-blue-300 text-base">Venmo</div>
-                  <div className="text-blue-200 text-sm mt-0.5">@RiverRatRounders</div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleCopy("@RiverRatRounders", "venmo")}
-                    className="text-xs bg-blue-700/40 hover:bg-blue-700/60 text-blue-200 px-3 py-1.5 rounded-md transition-colors"
-                  >
-                    {copied === "venmo" ? <CheckCircle2 className="w-4 h-4 inline" /> : "Copy"}
-                  </button>
-                  <a
-                    href="https://venmo.com/RiverRatRounders"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md transition-colors"
-                  >
-                    Open
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* PayPal */}
-            <div className="p-4 rounded-lg bg-indigo-900/20 border border-indigo-700/40">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-indigo-300 text-base">PayPal</div>
-                  <div className="text-indigo-200 text-sm mt-0.5">@RiverRatRounders</div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleCopy("@RiverRatRounders", "paypal")}
-                    className="text-xs bg-indigo-700/40 hover:bg-indigo-700/60 text-indigo-200 px-3 py-1.5 rounded-md transition-colors"
-                  >
-                    {copied === "paypal" ? <CheckCircle2 className="w-4 h-4 inline" /> : "Copy"}
-                  </button>
-                  <a
-                    href="https://paypal.me/RiverRatRounders"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md transition-colors"
-                  >
-                    Open
-                  </a>
-                </div>
-              </div>
-            </div>
+          <CardContent>
+            <a
+              href="https://store7781494.ecwid.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-3 w-full p-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 transition-colors text-white font-bold text-base"
+            >
+              <ExternalLink className="w-5 h-5" />
+              Purchase Break Time Bump — $20
+            </a>
           </CardContent>
         </Card>
 
