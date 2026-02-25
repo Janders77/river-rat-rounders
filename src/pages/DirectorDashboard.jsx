@@ -739,9 +739,11 @@ export default function DirectorDashboard() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-          {/* Winner Photos Tab */}
-          <TabsContent value="photos">
+            </TabsContent>
+
+            {/* Winner Photos Tab */}
+            {hasPermission(directorRole, "canUploadPhotos") && (
+            <TabsContent value="photos">
             <div className="space-y-6">
               <Card className="bg-[#1A1B20] border-gray-800">
                 <CardHeader>
