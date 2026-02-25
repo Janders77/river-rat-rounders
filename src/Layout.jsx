@@ -85,7 +85,7 @@ function LayoutInner({ children }) {
               />
               <div>
                 <h2 className="font-bold text-xl text-red-500">River Rat Rounders</h2>
-                <p className="text-xs text-gray-400">Community Rankings</p>
+
               </div>
             </div>
           </SidebarHeader>
