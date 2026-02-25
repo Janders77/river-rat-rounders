@@ -23,6 +23,14 @@ const navLinks = [
     color: "from-blue-500/20 to-blue-600/10 border-blue-500/30 hover:border-blue-500/60",
     iconColor: "text-blue-400",
   },
+  {
+    title: "Break Time Bump",
+    description: "Top up or re-enter during the break",
+    icon: Zap,
+    url: createPageUrl("BreakTimeBump"),
+    color: "from-yellow-500/30 to-yellow-600/20 border-yellow-500/40 hover:border-yellow-400/70",
+    iconColor: "text-yellow-400",
+  },
 ];
 
 export default function Home() {
