@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash2, Check, X } from "lucide-react";
+import { Trash2, Check, X, Eye } from "lucide-react";
 
 export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
   const [editing, setEditing] = useState(false);
