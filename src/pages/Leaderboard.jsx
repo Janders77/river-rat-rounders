@@ -82,8 +82,6 @@ export default function Leaderboard() {
           </div>
         </div>
 
-        {!isLoading && <StatsGrid stats={getStats()} />}
-
         {!isLoading && games.some(g => g.location) && (
           <div className="mt-8">
             <VenueStats games={games} />
