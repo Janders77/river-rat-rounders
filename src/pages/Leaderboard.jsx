@@ -17,54 +17,51 @@ import {
 
 export default function Leaderboard() {
   const [players, setPlayers] = useState([]);
-  const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
 
   useEffect(() => {
     loadData();
   }, []);
 
+  const getCurrentQuarter = () => {
+    const now = new Date();
+    const quarter = Math.floor(now.getMonth() / 3) + 1;
+    const year = now.getFullYear();
+    return `${year}-Q${quarter}`;
+  };
+
+  const getQuarterDates = (quarterStr) => {
+    const [year, quarter] = quarterStr.split('-Q');
+    const q = parseInt(quarter);
+    const startMonth = (q - 1) * 3;
+    const start = new Date(parseInt(year), startMonth, 1);
+    const end = new Date(parseInt(year), startMonth + 3, 0);
+    return { start, end };
+  };
+
   const loadData = async () => {
     setIsLoading(true);
-    const [fetchedPlayers, fetchedGames] = await Promise.all([
-      User.list(),
-      Game.list("-created_date")
-    ]);
+    const fetchedPlayers = await User.list();
     
-    const sortedPlayers = fetchedPlayers.sort((a, b) => 
-      (b.total_points || 0) - (a.total_points || 0)
-    );
+    const sortedPlayers = fetchedPlayers
+      .sort((a, b) => (b.total_points || 0) - (a.total_points || 0))
+      .slice(0, 100);
     
     setPlayers(sortedPlayers);
-    setGames(fetchedGames);
     setIsLoading(false);
   };
 
-  const getStats = () => {
-    const totalPoints = players.reduce((sum, p) => sum + (p.total_points || 0), 0);
-    
-    // Count wins per location
-    const locationWins = {};
-    games.forEach(game => {
-      if (game.location) {
-        locationWins[game.location] = (locationWins[game.location] || 0) + 1;
-      }
-    });
-    const topLocation = Object.entries(locationWins).sort(([,a],[,b]) => b - a)[0]?.[0] || null;
-
-    return {
-      totalPlayers: players.length,
-      totalGames: games.length,
-      totalPoints,
-      topLocation
-    };
-  };
-
-  const getPlayerGames = (playerEmail) => {
-    return games.filter(game => 
-      game.players?.includes(playerEmail)
-    ).slice(0, 5);
+  const getAvailableQuarters = () => {
+    const quarters = [];
+    const now = new Date();
+    for (let i = 0; i < 4; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() - (i * 3), 1);
+      const quarter = Math.floor(d.getMonth() / 3) + 1;
+      const year = d.getFullYear();
+      quarters.push(`${year}-Q${quarter}`);
+    }
+    return quarters;
   };
 
   return (
