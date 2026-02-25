@@ -67,11 +67,9 @@ export default function Home() {
           </Link>
         ))}
 
-        {/* Join the League - external link */}
-        <a
-          href="https://www.paypal.com/webapps/hermes?token=9TF07755UX864373F&useraction=commit&rm=1&wpsFlowRedirectToXorouterSkipHermesStartTime=1771991918905&flowType=WPS&mfid=1771991918693_f471767b38254"
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* Join the League - terms page first */}
+        <Link
+          to={createPageUrl("JoinTheLeague")}
           className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-purple-500/30 to-purple-600/20 border-purple-500/40 hover:border-purple-400/70 transition-all duration-200 group"
         >
           <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
