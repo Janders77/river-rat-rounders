@@ -38,11 +38,6 @@ const navigationItems = [
     icon: Image,
   },
   {
-    title: "Break Time Bump",
-    url: createPageUrl("BreakTimeBump"),
-    icon: Zap,
-  },
-  {
     title: "Calendar",
     url: createPageUrl("LeagueCalendar"),
     icon: CalendarDays,
