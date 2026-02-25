@@ -61,6 +61,10 @@ export default function PlayerDatabase() {
     setPlayers(prev => prev.filter(p => p.id !== id));
   };
 
+  const handleUpdate = (id, updatedData) => {
+    setPlayers(prev => prev.map(p => p.id === id ? { ...p, ...updatedData } : p));
+  };
+
   const handleCSV = (e) => {
     setCsvError("");
     const file = e.target.files[0];
