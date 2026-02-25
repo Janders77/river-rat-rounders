@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { ShieldAlert, LogIn, AlertCircle } from "lucide-react";
 
 export default function DirectorSignIn() {
@@ -11,7 +12,7 @@ export default function DirectorSignIn() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
-  const [isDirector, setIsDirector] = useState(false);
+  const [directorData, setDirectorData] = useState(null);
 
   useEffect(() => {
     const checkDirector = async () => {
@@ -22,7 +23,7 @@ export default function DirectorSignIn() {
         // Check if user is designated director
         const directors = await base44.entities.Director.filter({ email: currentUser.email });
         if (directors.length > 0) {
-          setIsDirector(true);
+          setDirectorData(directors[0]);
           // Redirect to director dashboard
           setTimeout(() => {
             navigate(createPageUrl("DirectorDashboard"));
