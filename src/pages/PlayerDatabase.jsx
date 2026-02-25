@@ -9,14 +9,14 @@ export default function PlayerDatabase() {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [form, setForm] = useState({ first_name: "", last_initial: "", email: "" });
+  const [form, setForm] = useState({ player_number: "", first_name: "", last_name: "", email: "", card_guards: "", date_joined: "" });
   const [adding, setAdding] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [csvError, setCsvError] = useState("");
   const fileInputRef = useRef();
 
   const loadPlayers = async () => {
-    const data = await base44.entities.Player.list("-created_date", 200);
+    const data = await base44.entities.Player.list("player_number", 200);
     setPlayers(data);
     setLoading(false);
   };
@@ -27,11 +27,14 @@ export default function PlayerDatabase() {
     e.preventDefault();
     setAdding(true);
     await base44.entities.Player.create({
+      player_number: form.player_number ? parseInt(form.player_number) : undefined,
       first_name: form.first_name.trim(),
-      last_initial: form.last_initial.trim().slice(0, 1).toUpperCase(),
+      last_name: form.last_name.trim(),
       email: form.email.trim().toLowerCase(),
+      card_guards: form.card_guards ? parseInt(form.card_guards) : 0,
+      date_joined: form.date_joined || undefined,
     });
-    setForm({ first_name: "", last_initial: "", email: "" });
+    setForm({ player_number: "", first_name: "", last_name: "", email: "", card_guards: "", date_joined: "" });
     setShowForm(false);
     setAdding(false);
     loadPlayers();
@@ -49,24 +52,42 @@ export default function PlayerDatabase() {
     const reader = new FileReader();
     reader.onload = async (ev) => {
       const lines = ev.target.result.split("\n").map(l => l.trim()).filter(Boolean);
-      const header = lines[0].toLowerCase().split(",").map(h => h.trim());
-      const firstIdx = header.indexOf("first_name");
-      const lastIdx = header.indexOf("last_initial");
-      const emailIdx = header.indexOf("email");
+      const header = lines[0].toLowerCase().split(",").map(h => h.trim().replace(/\s+/g, "_"));
+
+      const getIdx = (...names) => {
+        for (const n of names) {
+          const i = header.indexOf(n);
+          if (i !== -1) return i;
+        }
+        return -1;
+      };
+
+      const numIdx = getIdx("number", "player_number", "#");
+      const firstIdx = getIdx("first_name", "first");
+      const lastIdx = getIdx("last_name", "last");
+      const emailIdx = getIdx("email");
+      const guardsIdx = getIdx("card_guards", "number_of_card_guards", "guards");
+      const dateIdx = getIdx("date_joined", "date", "joined");
+
       if (firstIdx === -1 || emailIdx === -1) {
-        setCsvError("CSV must have columns: first_name, last_initial, email");
+        setCsvError("CSV must include at least: first name, email. Expected columns: number, first name, last name, email, number of card guards, date joined");
         return;
       }
+
       const records = [];
       for (let i = 1; i < lines.length; i++) {
         const cols = lines[i].split(",").map(c => c.trim());
         if (!cols[firstIdx] || !cols[emailIdx]) continue;
         records.push({
+          player_number: numIdx !== -1 && cols[numIdx] ? parseInt(cols[numIdx]) : undefined,
           first_name: cols[firstIdx],
-          last_initial: lastIdx !== -1 ? (cols[lastIdx] || "").slice(0, 1).toUpperCase() : "",
+          last_name: lastIdx !== -1 ? cols[lastIdx] : "",
           email: cols[emailIdx].toLowerCase(),
+          card_guards: guardsIdx !== -1 && cols[guardsIdx] ? parseInt(cols[guardsIdx]) : 0,
+          date_joined: dateIdx !== -1 ? cols[dateIdx] : undefined,
         });
       }
+
       if (records.length === 0) { setCsvError("No valid rows found in CSV."); return; }
       await base44.entities.Player.bulkCreate(records);
       loadPlayers();
@@ -76,12 +97,12 @@ export default function PlayerDatabase() {
   };
 
   const filtered = players.filter(p =>
-    `${p.first_name} ${p.last_initial} ${p.email}`.toLowerCase().includes(search.toLowerCase())
+    `${p.player_number} ${p.first_name} ${p.last_name} ${p.email}`.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -119,7 +140,7 @@ export default function PlayerDatabase() {
 
         {/* CSV format hint */}
         <div className="mb-4 p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-gray-400 text-xs">
-          CSV format: <span className="text-gray-300 font-mono">first_name, last_initial, email</span>
+          CSV column order: <span className="text-gray-300 font-mono">number, first name, last name, email, number of card guards, date joined</span>
         </div>
 
         {/* Add Player Form */}
@@ -132,6 +153,13 @@ export default function PlayerDatabase() {
               <form onSubmit={handleAdd} className="space-y-3">
                 <div className="flex gap-2">
                   <Input
+                    placeholder="# (number)"
+                    type="number"
+                    value={form.player_number}
+                    onChange={e => setForm(f => ({ ...f, player_number: e.target.value }))}
+                    className="bg-gray-900 border-gray-700 text-white w-28"
+                  />
+                  <Input
                     placeholder="First name"
                     value={form.first_name}
                     onChange={e => setForm(f => ({ ...f, first_name: e.target.value }))}
@@ -139,12 +167,10 @@ export default function PlayerDatabase() {
                     required
                   />
                   <Input
-                    placeholder="Last initial"
-                    value={form.last_initial}
-                    onChange={e => setForm(f => ({ ...f, last_initial: e.target.value.slice(0, 1) }))}
-                    className="bg-gray-900 border-gray-700 text-white w-28"
-                    maxLength={1}
-                    required
+                    placeholder="Last name"
+                    value={form.last_name}
+                    onChange={e => setForm(f => ({ ...f, last_name: e.target.value }))}
+                    className="bg-gray-900 border-gray-700 text-white"
                   />
                 </div>
                 <Input
@@ -155,6 +181,22 @@ export default function PlayerDatabase() {
                   className="bg-gray-900 border-gray-700 text-white"
                   required
                 />
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Card guards"
+                    type="number"
+                    value={form.card_guards}
+                    onChange={e => setForm(f => ({ ...f, card_guards: e.target.value }))}
+                    className="bg-gray-900 border-gray-700 text-white"
+                  />
+                  <Input
+                    placeholder="Date joined"
+                    type="date"
+                    value={form.date_joined}
+                    onChange={e => setForm(f => ({ ...f, date_joined: e.target.value }))}
+                    className="bg-gray-900 border-gray-700 text-white"
+                  />
+                </div>
                 <div className="flex gap-2">
                   <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="flex-1 border-gray-700 text-gray-400">Cancel</Button>
                   <Button type="submit" disabled={adding} className="flex-1 bg-amber-500 hover:bg-amber-600 text-black font-semibold">
@@ -184,25 +226,33 @@ export default function PlayerDatabase() {
           <div className="text-gray-500 text-center py-12">No players found.</div>
         ) : (
           <div className="space-y-2">
-            {filtered.map((player, idx) => (
+            {filtered.map((player) => (
               <div key={player.id} className="flex items-center justify-between p-4 rounded-lg bg-[#1A1B20] border border-gray-800">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold text-sm">
-                    {player.first_name?.[0]?.toUpperCase()}{player.last_initial?.toUpperCase()}
+                    {player.player_number ?? "?"}
                   </div>
                   <div>
-                    <div className="text-white font-medium">{player.first_name} {player.last_initial}.</div>
+                    <div className="text-white font-medium">{player.first_name} {player.last_name}</div>
                     <div className="text-gray-400 text-sm">{player.email}</div>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDelete(player.id)}
-                  className="text-gray-600 hover:text-red-400 hover:bg-red-400/10"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center gap-4 text-sm text-gray-400">
+                  {player.card_guards > 0 && (
+                    <span className="text-amber-400">🛡️ {player.card_guards} guards</span>
+                  )}
+                  {player.date_joined && (
+                    <span>{player.date_joined}</span>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(player.id)}
+                    className="text-gray-600 hover:text-red-400 hover:bg-red-400/10"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
