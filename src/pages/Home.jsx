@@ -79,7 +79,7 @@ export default function Home() {
             <div className="font-semibold text-white text-lg">Join the League</div>
             <div className="text-gray-400 text-sm">Pay your dues and join the action</div>
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   );
