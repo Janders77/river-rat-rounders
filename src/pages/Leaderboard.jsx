@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { User } from "@/entities/User";
-import { Game } from "@/entities/Game";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy } from "lucide-react";
 import { createPageUrl } from "@/utils";
-import PlayerRankCard from "../components/leaderboard/PlayerRankCard";
-import StatsGrid from "../components/leaderboard/StatsGrid";
-import VenueStats from "../components/leaderboard/VenueStats";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 export default function Leaderboard() {
   const [players, setPlayers] = useState([]);
