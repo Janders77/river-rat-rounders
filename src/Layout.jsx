@@ -116,6 +116,23 @@ function LayoutInner({ children }) {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
+                  {showSecret && (
+                    <SidebarMenuItem key="break-time-bump">
+                      <SidebarMenuButton 
+                        asChild 
+                        className={`hover:bg-gray-800 transition-all duration-200 rounded-lg mb-2 ${
+                          location.pathname === createPageUrl("BreakTimeBump")
+                            ? 'bg-gradient-to-r from-amber-500/20 to-amber-600/20 text-amber-400 border-l-2 border-amber-500' 
+                            : 'text-gray-400'
+                        }`}
+                      >
+                        <Link to={createPageUrl("BreakTimeBump")} onClick={() => setOpenMobile(false)} className="flex items-center gap-3 px-4 py-3">
+                          <Zap className="w-5 h-5" />
+                          <span className="font-medium">Break Time Bump</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )}
                   {navigationItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton 
