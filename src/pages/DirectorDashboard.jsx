@@ -44,6 +44,7 @@ export default function DirectorDashboard() {
     game_type: "Texas Hold'em"
   });
   const [isCreatingSession, setIsCreatingSession] = useState(false);
+  const [inviteRequests, setInviteRequests] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [photoForm, setPhotoForm] = useState({ title: "", winner_name: "", game_date: new Date().toISOString().split('T')[0], location: "" });
   const [photoFile, setPhotoFile] = useState(null);
