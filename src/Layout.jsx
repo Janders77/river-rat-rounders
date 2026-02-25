@@ -84,7 +84,7 @@ function LayoutInner({ children }) {
                 onError={(e) => { e.target.style.display='none'; }}
               />
               <div>
-                <h2 className="font-bold text-xl text-white">River Rat Rounders</h2>
+                <h2 className="font-bold text-xl text-red-500">River Rat Rounders</h2>
                 <p className="text-xs text-gray-400">Community Rankings</p>
               </div>
             </div>
