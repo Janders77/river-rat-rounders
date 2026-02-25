@@ -64,7 +64,10 @@ export default function DirectorDashboard() {
     setIsLoading(true);
     const me = await base44.auth.me();
     setCurrentUser(me);
-    if (me?.role !== "admin") {
+    
+    // Check if user is a designated director
+    const directorCheck = await base44.entities.Director.filter({ email: me.email });
+    if (directorCheck.length === 0) {
       setIsLoading(false);
       return;
     }
