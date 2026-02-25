@@ -65,6 +65,15 @@ function LayoutInner({ children }) {
   const { setOpenMobile } = useSidebar();
   const [logoClicks, setLogoClicks] = React.useState(0);
   const [showSecret, setShowSecret] = React.useState(false);
+  const [user, setUser] = React.useState(null);
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+    };
+    fetchUser();
+  }, []);
 
   const handleLogoClick = () => {
     const newClicks = logoClicks + 1;
