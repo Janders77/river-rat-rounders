@@ -23,14 +23,26 @@ export default function PlayerSignIn() {
         if (event.type === 'create') return [...prev, event.data].filter(s => s.is_open);
         if (event.type === 'update') {
           if (!event.data.is_open) return prev.filter(s => s.id !== event.id);
-          return prev.map(s => s.id === event.id ? event.data : s);
+          return prev.map(s => s.id === event.id ? { ...s, ...event.data } : s);
         }
         if (event.type === 'delete') return prev.filter(s => s.id !== event.id);
         return prev;
       });
     });
 
-    return () => unsubscribe();
+    const unsubscribeUsers = base44.entities.User.subscribe((event) => {
+      setAllUsers(prev => {
+        if (event.type === 'create') return [...prev, event.data];
+        if (event.type === 'update') return prev.map(u => u.id === event.id ? event.data : u);
+        if (event.type === 'delete') return prev.filter(u => u.id !== event.id);
+        return prev;
+      });
+    });
+
+    return () => {
+      unsubscribe();
+      unsubscribeUsers();
+    };
   }, []);
 
   const loadData = async () => {
