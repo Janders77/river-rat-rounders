@@ -54,6 +54,7 @@ import Leaderboard from './pages/Leaderboard';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
 import BreakTimeBump from './pages/BreakTimeBump';
+import PayMyDues from './pages/PayMyDues';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +66,7 @@ export const PAGES = {
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
     "BreakTimeBump": BreakTimeBump,
+    "PayMyDues": PayMyDues,
 }
 
 export const pagesConfig = {
