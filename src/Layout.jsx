@@ -57,6 +57,11 @@ const navigationItems = [
     url: createPageUrl("DirectorSignIn"),
     icon: ShieldAlert,
   },
+  {
+    title: "Manage Directors",
+    url: createPageUrl("DirectorManagement"),
+    icon: ShieldAlert,
+  },
 ];
 
 function LayoutInner({ children }) {
