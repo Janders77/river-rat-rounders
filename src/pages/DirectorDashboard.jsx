@@ -554,9 +554,10 @@ export default function DirectorDashboard() {
                     {isSubmitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Recording...</> : <><Trophy className="w-4 h-4 mr-2" />Record Game</>}
                   </Button>
                 </CardContent>
-              </Card>
-            </form>
-            </TabsContent>
+                </Card>
+                </form>
+                </TabsContent>
+                )}
           )}
 
           {hasPermission(directorRole, "canApproveRequests") && (
