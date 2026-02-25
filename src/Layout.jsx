@@ -48,6 +48,11 @@ const navigationItems = [
     icon: CalendarDays,
   },
   {
+    title: "Player Database",
+    url: createPageUrl("PlayerDatabase"),
+    icon: Database,
+  },
+  {
     title: "Director",
     url: createPageUrl("DirectorDashboard"),
     icon: ShieldAlert,
