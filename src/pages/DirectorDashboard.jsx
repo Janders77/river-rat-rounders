@@ -52,6 +52,11 @@ export default function DirectorDashboard() {
     loadAll();
   }, []);
 
+  const getPlayerName = (email) => {
+    const user = users.find(u => u.email === email);
+    return user?.full_name || email;
+  };
+
   const loadAll = async () => {
     setIsLoading(true);
     const me = await base44.auth.me();
