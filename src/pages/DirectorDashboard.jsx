@@ -54,8 +54,14 @@ export default function DirectorDashboard() {
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
   useEffect(() => {
+    // Check if director is signed in
+    const directorSignedIn = localStorage.getItem("directorSignedIn");
+    if (directorSignedIn !== "true") {
+      navigate(createPageUrl("DirectorSignIn"));
+      return;
+    }
     loadAll();
-  }, []);
+  }, [navigate]);
 
   const getPlayerName = (email) => {
     const user = users.find(u => u.email === email);
