@@ -24,6 +24,7 @@ const PLACE_LABELS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9
 export default function DirectorDashboard() {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
+  const [directorRole, setDirectorRole] = useState(null);
   const [users, setUsers] = useState([]);
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
