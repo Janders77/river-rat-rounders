@@ -71,7 +71,7 @@ function LayoutInner({ children }) {
     if (newClicks === 4) {
       setShowSecret(true);
       setLogoClicks(0);
-      setTimeout(() => setShowSecret(false), 30000);
+      setTimeout(() => setShowSecret(false), 15000);
     }
   };
 
