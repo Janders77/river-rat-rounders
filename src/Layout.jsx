@@ -163,7 +163,8 @@ function LayoutInner({ children }) {
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                  ))}
+                    );
+                  })}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
