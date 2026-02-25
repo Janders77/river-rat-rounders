@@ -15,11 +15,21 @@ export default function PlayerDatabase() {
   const [adding, setAdding] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [csvError, setCsvError] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const [filters, setFilters] = useState({
     guardFilter: { enabled: false, operator: ">", value: 0 },
     dateFilter: { enabled: false, type: "range", startDate: "", endDate: "", specificDate: "" }
   });
   const fileInputRef = useRef();
+
+  // Check if user is admin
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const user = await base44.auth.me();
+      setIsAdmin(user?.role === "admin");
+    };
+    checkAdmin();
+  }, []);
 
   const loadPlayers = async () => {
     const data = await base44.entities.Player.list("player_number", 10000);
