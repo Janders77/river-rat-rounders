@@ -24,13 +24,8 @@ export default function BreakTimeBump() {
           <CardHeader>
             <CardTitle className="text-white text-lg">What is a Break Time Bump?</CardTitle>
           </CardHeader>
-          <CardContent className="text-gray-300 space-y-2 text-sm leading-relaxed">
-            <p>
-              A <span className="text-amber-400 font-semibold">Break Time Bump</span> lets you top up your chip stack or re-enter the game during the scheduled break.
-            </p>
-            <p>
-              Simply pay <span className="text-amber-400 font-bold">${BUMP_COST}</span> via Venmo or PayPal before the break ends, then let the director know — and you're back in action!
-            </p>
+          <CardContent className="text-gray-300 text-sm leading-relaxed">
+            <p>A <span className="text-amber-400 font-semibold">Break Time Bump</span> allows you to get back in the action if you bust or want to add on during the break.</p>
           </CardContent>
         </Card>
 
