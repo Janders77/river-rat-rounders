@@ -304,7 +304,28 @@ export default function DirectorDashboard() {
                               <Select
                                 value={session.hand_of_week_email || ""}
                                 onValueChange={async (val) => {
+                                  if (val === session.hand_of_week_email) return;
                                   const player = users.find(u => u.email === val);
+
+                                  // Remove 50 pts from previous hand of the week
+                                  if (session.hand_of_week_email) {
+                                    const prevPlayer = users.find(u => u.email === session.hand_of_week_email);
+                                    if (prevPlayer) {
+                                      await base44.entities.User.update(prevPlayer.id, {
+                                        total_points: Math.max(0, (prevPlayer.total_points || 0) - 50)
+                                      });
+                                      setUsers(prev => prev.map(u => u.id === prevPlayer.id ? { ...u, total_points: Math.max(0, (u.total_points || 0) - 50) } : u));
+                                    }
+                                  }
+
+                                  // Award 50 pts to new hand of the week
+                                  if (player) {
+                                    await base44.entities.User.update(player.id, {
+                                      total_points: (player.total_points || 0) + 50
+                                    });
+                                    setUsers(prev => prev.map(u => u.id === player.id ? { ...u, total_points: (u.total_points || 0) + 50 } : u));
+                                  }
+
                                   await GameSession.update(session.id, {
                                     hand_of_week_email: val,
                                     hand_of_week_name: player?.full_name || val
