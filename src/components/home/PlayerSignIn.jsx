@@ -102,10 +102,31 @@ export default function PlayerSignIn() {
               </Badge>
             </div>
 
-            <div className="flex items-center gap-2 text-sm text-gray-400">
+            <button
+              className="flex items-center gap-2 text-sm text-gray-400 hover:text-emerald-400 transition-colors w-full text-left"
+              onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
+            >
               <Users className="w-4 h-4" />
               <span>{session.signed_in_players?.length || 0} signed in</span>
-            </div>
+              {session.signed_in_players?.length > 0 && (
+                expandedSession === session.id
+                  ? <ChevronUp className="w-3 h-3 ml-1" />
+                  : <ChevronDown className="w-3 h-3 ml-1" />
+              )}
+            </button>
+            {expandedSession === session.id && session.signed_in_players?.length > 0 && (
+              <div className="bg-gray-800/60 rounded-lg p-3 space-y-1.5">
+                {session.signed_in_players.map(email => {
+                  const user = allUsers.find(u => u.email === email);
+                  return (
+                    <div key={email} className="flex items-center gap-2 text-sm text-gray-300">
+                      <div className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                      {user?.full_name || email}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
             {isSignedIn(session) ? (
               <div className="flex items-center gap-2 text-emerald-400 font-medium text-sm">
