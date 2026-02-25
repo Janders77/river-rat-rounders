@@ -88,33 +88,7 @@ export default function Leaderboard() {
           </div>
         )}
 
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Top Players</h2>
-          
-          {isLoading ? (
-            <div className="space-y-4">
-              {Array(5).fill(0).map((_, i) => (
-                <Skeleton key={i} className="h-24 bg-gray-800" />
-              ))}
-            </div>
-          ) : players.length === 0 ? (
-            <div className="text-center py-16 text-gray-500">
-              <Trophy className="w-16 h-16 mx-auto mb-4 opacity-20" />
-              <p className="text-lg">No players yet. Start recording games!</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {players.map((player, index) => (
-                <PlayerRankCard
-                  key={player.id}
-                  player={player}
-                  rank={index + 1}
-                  onClick={() => setSelectedPlayer(player)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+
       </div>
 
       <Dialog open={!!selectedPlayer} onOpenChange={() => setSelectedPlayer(null)}>
