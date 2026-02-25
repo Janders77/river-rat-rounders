@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShieldAlert, AlertCircle, Lock } from "lucide-react";
 
-const DIRECTOR_CODE = "1234"; // Change this to your director code
+const DIRECTOR_CODE = "8533"; // Change this to your director code
 
 export default function DirectorSignIn() {
   const navigate = useNavigate();
