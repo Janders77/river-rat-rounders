@@ -709,6 +709,7 @@ export default function DirectorDashboard() {
               </Card>
             </div>
           </TabsContent>
+          )}
 
           {/* Recent Games Tab */}
           <TabsContent value="history">
