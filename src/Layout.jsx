@@ -184,8 +184,8 @@ function LayoutInner({ children }) {
               </SidebarTrigger>
               <h1 className="text-xl font-bold text-white">River Rat Rounders</h1>
             </div>
-            <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors">
-              RRR
+            <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center font-bold text-white text-sm shadow-lg">
+              RR
             </a>
           </header>
 
