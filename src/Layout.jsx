@@ -191,12 +191,12 @@ function LayoutInner({ children }) {
         </Sidebar>
 
         <main className="flex-1 flex flex-col">
-          <header className="bg-gradient-to-r from-green-500/15 to-green-600/10 border-b border-green-500/25 px-6 py-4 lg:hidden flex items-center justify-between">
-            <SidebarTrigger className="hover:bg-gray-800 w-12 h-12 rounded-lg transition-colors flex items-center justify-center">
+          <header className="bg-gradient-to-r from-green-500/15 to-green-600/10 border-b border-green-500/25 px-6 py-4 lg:hidden flex items-center justify-center relative">
+            <SidebarTrigger className="hover:bg-gray-800 w-12 h-12 rounded-lg transition-colors flex items-center justify-center absolute left-6">
               <Menu className="w-5 h-5" />
             </SidebarTrigger>
-            <h1 className="text-xl font-bold text-white flex-1 text-center">River Rat Rounders</h1>
-            <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+            <h1 className="text-xl font-bold text-white">River Rat Rounders</h1>
+            <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity absolute right-6">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/a6c1792b1_red2012-2.jpg"
                 alt="River Rat Rounders"
