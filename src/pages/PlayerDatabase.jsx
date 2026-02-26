@@ -148,7 +148,7 @@ export default function PlayerDatabase() {
     <div className="min-h-screen p-3 sm:p-6 bg-green-900/30 overflow-hidden w-full">
       <div className="w-full max-w-3xl mx-auto overflow-hidden">
         {/* Header */}
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="mb-4 flex items-center justify-between gap-2 w-full">
           <div className="flex items-center gap-3">
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/34ac77100_red2012-2.jpg"
