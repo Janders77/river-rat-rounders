@@ -126,13 +126,36 @@ export default function PlayerProfile() {
 
         {/* Player Header */}
         <div className="bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/30 rounded-xl p-8 mb-8">
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">{player.full_name || player.email}</h1>
-              <p className="text-gray-400 text-lg">{player.email}</p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-5">
+              {/* Profile Photo */}
+              <div className="relative shrink-0">
+                {player.profile_image_url ? (
+                  <img src={player.profile_image_url} alt={player.full_name} className="w-20 h-20 rounded-full object-cover border-4 border-amber-500/50" />
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-gray-700 border-4 border-amber-500/50 flex items-center justify-center text-3xl font-bold text-gray-400">
+                    {(player.full_name || player.email || "?")[0].toUpperCase()}
+                  </div>
+                )}
+                {isOwnProfile && (
+                  <>
+                    <button
+                      onClick={() => fileInputRef.current.click()}
+                      className="absolute bottom-0 right-0 w-7 h-7 bg-amber-500 hover:bg-amber-600 rounded-full flex items-center justify-center transition-colors"
+                    >
+                      {uploadingPhoto ? <Loader2 className="w-3.5 h-3.5 text-black animate-spin" /> : <Camera className="w-3.5 h-3.5 text-black" />}
+                    </button>
+                    <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+                  </>
+                )}
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold text-white mb-2">{player.full_name || player.email}</h1>
+                <p className="text-gray-400 text-lg">{player.email}</p>
+              </div>
             </div>
             {stats.rank && (
-              <div className="text-center">
+              <div className="text-center shrink-0">
                 <div className="text-5xl font-bold text-amber-400">#{stats.rank}</div>
                 <div className="text-gray-400 text-sm mt-1">Current Rank</div>
               </div>
