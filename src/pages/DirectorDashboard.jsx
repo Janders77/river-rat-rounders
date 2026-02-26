@@ -458,7 +458,8 @@ export default function DirectorDashboard() {
                           <div className="flex items-center gap-2 shrink-0">
                             <Button size="sm" variant="outline"
                               className={session.is_open ? "border-emerald-600 text-emerald-400 hover:bg-emerald-900/20" : "border-gray-700 text-gray-500 hover:bg-gray-800"}
-                              onClick={() => handleToggleSession(session)}>
+                              onClick={() => handleToggleSession(session)}
+                              title={session.is_open ? "A game with placements must be recorded before closing" : "Reopen this session"}>
                               {session.is_open ? "Close" : "Reopen"}
                             </Button>
                             <Button size="icon" variant="ghost"
