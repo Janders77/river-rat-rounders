@@ -150,9 +150,11 @@ export default function PlayerDatabase() {
         {/* Header */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shrink-0">
-              <Users className="w-6 h-6 text-black" />
-            </div>
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/34ac77100_red2012-2.jpg"
+              alt="River Rat Rounders"
+              className="w-12 h-12 rounded-full object-cover shrink-0"
+            />
             <div>
               <h1 className="text-2xl font-bold text-white">Player Database</h1>
               <p className="text-gray-400 text-sm">{players.length} players registered</p>
