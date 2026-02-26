@@ -34,6 +34,42 @@ const navLinks = [
 ];
 
 export default function Home() {
+  const [user, setUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+      setLoading(false);
+    };
+    checkAuth();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#16171B] flex items-center justify-center">
+        <div className="text-gray-400">Loading...</div>
+      </div>
+    );
+  }
+
+  if (user) {
+    return (
+      <div className="min-h-screen bg-[#16171B] flex flex-col items-center justify-center p-6">
+        <div className="max-w-lg w-full text-center">
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/515aaf9cc_blackcroppaint.jpeg"
+            alt="River Rat Rounders"
+            className="mx-auto mb-6 w-64 object-contain"
+          />
+          <h1 className="text-2xl font-bold text-white mb-2">Welcome, {user.full_name}!</h1>
+          <p className="text-gray-400 text-lg mb-8">Use the navigation menu to explore the league.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#16171B] flex flex-col items-center justify-center p-6">
       <div className="max-w-lg w-full text-center mb-12">
