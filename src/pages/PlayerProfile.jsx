@@ -30,6 +30,7 @@ export default function PlayerProfile() {
       return;
     }
     setUser(currentUser);
+    setFullName(currentUser.full_name || "");
     setProfileImageUrl(currentUser.profile_image_url || "");
 
     const players = await base44.entities.Player.filter({ email: currentUser.email });
