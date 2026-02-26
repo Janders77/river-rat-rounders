@@ -35,8 +35,9 @@ export default function PlayerFilters({ filters, setFilters }) {
         </div>
       </button>
 
-      {open && <div className="px-4 pb-4 space-y-4 border-t border-gray-700 pt-3">
-      <div className="grid grid-cols-1 gap-4">
+      {open && (
+        <div className="px-4 pb-4 space-y-4 border-t border-gray-700 pt-3">
+        <div className="grid grid-cols-1 gap-4">
         {/* Card Guards Filter */}
         <div className="space-y-2">
           <label className="text-gray-300 text-xs font-medium">Card Guards</label>
