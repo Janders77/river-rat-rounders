@@ -21,27 +21,32 @@ Deno.serve(async (req) => {
       emailGroups[player.email].push(player);
     });
 
-    // Find and delete duplicates
-    let deletedCount = 0;
-    const duplicates = [];
-
+    // Find duplicates first
+    const duplicateEmails = [];
     for (const email in emailGroups) {
-      const players = emailGroups[email];
-      if (players.length > 1) {
-        // Sort by created_date, keep the first one, delete the rest
+      if (emailGroups[email].length > 1) {
+        duplicateEmails.push(email);
+      }
+    }
+
+    // Delete in small batches
+    let deletedCount = 0;
+    const batchSize = 10;
+
+    for (let b = 0; b < duplicateEmails.length; b += batchSize) {
+      const batch = duplicateEmails.slice(b, b + batchSize);
+      
+      for (const email of batch) {
+        const players = emailGroups[email];
         players.sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
-        duplicates.push({
-          email,
-          kept: players[0].id,
-          deleted: players.slice(1).map(p => p.id)
-        });
 
         for (let i = 1; i < players.length; i++) {
           await base44.asServiceRole.entities.Player.delete(players[i].id);
           deletedCount++;
-          await new Promise(resolve => setTimeout(resolve, 200));
         }
       }
+
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     return Response.json({
