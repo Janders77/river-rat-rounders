@@ -82,6 +82,11 @@ function LayoutInner({ children }) {
     const fetchUser = async () => {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
+      
+      const players = await base44.entities.Player.filter({ email: currentUser.email });
+      if (players.length > 0) {
+        setPlayer(players[0]);
+      }
     };
     fetchUser();
   }, []);
