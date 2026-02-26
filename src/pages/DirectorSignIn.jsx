@@ -21,7 +21,9 @@ export default function DirectorSignIn() {
     setIsSubmitting(true);
 
     if (code === DIRECTOR_CODE) {
-      sessionStorage.setItem("directorAccess", "true");
+      const expiresAt = Date.now() + SESSION_DURATION_MS;
+      localStorage.setItem("directorAccess", "true");
+      localStorage.setItem("directorAccessExpiry", expiresAt.toString());
       setTimeout(() => {
         navigate(createPageUrl("DirectorDashboard"));
       }, 300);
