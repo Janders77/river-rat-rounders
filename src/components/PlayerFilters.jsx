@@ -171,8 +171,9 @@ export default function PlayerFilters({ filters, setFilters }) {
             </div>
           )}
         </div>
-      </div>
-      </div>}
+        </div>
+        </div>
+      )}
     </div>
   );
 }
