@@ -67,6 +67,19 @@ export default function Home() {
             className="mx-auto mb-8 w-64 object-contain"
           />
           <div className="space-y-6">
+            <Link
+              to={createPageUrl("JoinTheLeague")}
+              className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-purple-500/30 to-purple-600/20 border-purple-500/40 hover:border-purple-400/70 transition-all duration-200 group"
+            >
+              <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+                <UserPlus className="w-6 h-6 text-purple-400" />
+              </div>
+              <div className="text-left">
+                <div className="font-semibold text-white text-lg">Join the League</div>
+                <div className="text-gray-400 text-sm">Pay your dues and join the action</div>
+              </div>
+            </Link>
+
             {navLinks.map((link) => (
               <Link
                 key={link.title}
