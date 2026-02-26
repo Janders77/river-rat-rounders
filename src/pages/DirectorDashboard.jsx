@@ -40,10 +40,17 @@ export default function DirectorDashboard() {
   });
   const [placements, setPlacements] = useState(Array(9).fill(""));
   const [sessions, setSessions] = useState([]);
+  const getAutoLocation = (dateStr) => {
+    const day = new Date(dateStr + 'T12:00:00').getDay(); // 0=Sun, 3=Wed
+    if (day === 0) return "Tavern 018 Sunday";
+    if (day === 3) return "Tavern 018 Wednesday";
+    return "";
+  };
+
   const [newSession, setNewSession] = useState({
     session_date: new Date().toISOString().split('T')[0],
-    location: "",
-    game_type: "Texas Hold'em"
+    location: getAutoLocation(new Date().toISOString().split('T')[0]),
+    game_type: "Main Game"
   });
   const [isCreatingSession, setIsCreatingSession] = useState(false);
   const [inviteRequests, setInviteRequests] = useState([]);
