@@ -284,9 +284,9 @@ export default function DirectorDashboard() {
           {hasPermission(directorRole, "canManageSessions") && (
           <TabsContent value="sessions">
             <div className="space-y-6">
-              <Card className="bg-[#1A1B20] border-gray-800">
+              <Card className="bg-[#1A1B20] border-emerald-800/50">
                 <CardHeader>
-                  <CardTitle className="text-white">Open a New Game</CardTitle>
+                  <CardTitle className="text-emerald-400">Open a New Game</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleCreateSession} className="space-y-4">
