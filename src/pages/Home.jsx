@@ -12,8 +12,8 @@ const navLinks = [
     description: "View community rankings and player stats",
     icon: Trophy,
     url: createPageUrl("Leaderboard"),
-    color: "from-red-600/30 to-red-700/20 border-red-600/40 hover:border-red-500/70",
-    iconColor: "text-red-400",
+    color: "from-yellow-500/30 to-yellow-600/20 border-yellow-500/40 hover:border-yellow-400/70",
+    iconColor: "text-yellow-400",
   },
   {
     title: "Game History",
