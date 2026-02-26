@@ -55,6 +55,12 @@ const navigationItems = [
     icon: MapPin,
   },
   {
+    title: "Player Database",
+    url: createPageUrl("PlayerDatabase"),
+    icon: Database,
+    adminOnly: true,
+  },
+  {
     title: "Director",
     url: createPageUrl("DirectorSignIn"),
     icon: ShieldAlert,
