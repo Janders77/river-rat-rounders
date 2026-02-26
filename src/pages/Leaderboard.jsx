@@ -23,7 +23,7 @@ export default function Leaderboard() {
 
   const loadData = async () => {
     setIsLoading(true);
-    const fetchedPlayers = await User.list();
+    const fetchedPlayers = await base44.entities.User.list();
     
     const sortedPlayers = fetchedPlayers
       .filter(p => p.full_name && p.full_name.trim())
