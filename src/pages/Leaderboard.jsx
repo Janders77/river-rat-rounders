@@ -25,7 +25,7 @@ export default function Leaderboard() {
   const loadData = async () => {
     setIsLoading(true);
     const [fetchedPlayers, fetchedPlayerRecords] = await Promise.all([
-      base44.entities.User.list(),
+      base44.entities.User.list().catch(() => []),
       base44.entities.Player.list()
     ]);
     
