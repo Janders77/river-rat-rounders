@@ -54,13 +54,13 @@ import DirectorSignIn from './pages/DirectorSignIn';
 import GameHistory from './pages/GameHistory';
 import Home from './pages/Home';
 import JoinTheLeague from './pages/JoinTheLeague';
-import Leaderboard from './pages/Leaderboard';
 import LeagueCalendar from './pages/LeagueCalendar';
 import PayMyDues from './pages/PayMyDues';
 import PlayerDatabase from './pages/PlayerDatabase';
 import PlayerProfile from './pages/PlayerProfile';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
+import Leaderboard from './pages/Leaderboard';
 import __Layout from './Layout.jsx';
 
 
@@ -72,13 +72,13 @@ export const PAGES = {
     "GameHistory": GameHistory,
     "Home": Home,
     "JoinTheLeague": JoinTheLeague,
-    "Leaderboard": Leaderboard,
     "LeagueCalendar": LeagueCalendar,
     "PayMyDues": PayMyDues,
     "PlayerDatabase": PlayerDatabase,
     "PlayerProfile": PlayerProfile,
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
+    "Leaderboard": Leaderboard,
 }
 
 export const pagesConfig = {

@@ -26,6 +26,7 @@ export default function Leaderboard() {
     const fetchedPlayers = await User.list();
     
     const sortedPlayers = fetchedPlayers
+      .filter(p => p.full_name && p.full_name.trim())
       .sort((a, b) => (b.total_points || 0) - (a.total_points || 0))
       .slice(0, 100);
     
