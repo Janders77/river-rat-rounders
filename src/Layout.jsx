@@ -24,6 +24,11 @@ const navigationItems = [
     icon: Home,
   },
   {
+    title: "My Profile",
+    url: createPageUrl("PlayerProfile"),
+    icon: Trophy,
+  },
+  {
     title: "Leaderboard",
     url: createPageUrl("Leaderboard"),
     icon: Trophy,
