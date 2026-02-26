@@ -97,14 +97,22 @@ export default function PlayerDatabase() {
       }
 
       const records = [];
+      let skippedRows = 0;
       for (let i = 1; i < lines.length; i++) {
         const cols = lines[i].split(",").map(c => c.trim().replace(/^"+|"+$/g, ""));
-        if (!cols[firstIdx]) continue;
-        // Parse date - handle formats like "11/22/2015 9:51"
+        if (!cols[firstIdx]) {
+          skippedRows++;
+          continue;
+        }
+        // Parse date - handle multiple formats like "11/22/2015 9:51" and "2/17/2017"
         let dateJoined = undefined;
         if (dateIdx !== -1 && cols[dateIdx]) {
-          const d = new Date(cols[dateIdx]);
-          if (!isNaN(d)) dateJoined = d.toISOString().split("T")[0];
+          const dateStr = cols[dateIdx].trim();
+          // Try parsing with Date constructor (handles "11/22/2015 9:51" and "2/17/2017")
+          const d = new Date(dateStr);
+          if (!isNaN(d)) {
+            dateJoined = d.toISOString().split("T")[0];
+          }
         }
         records.push({
            player_number: numIdx !== -1 && cols[numIdx] ? parseInt(cols[numIdx]) : undefined,
@@ -115,6 +123,10 @@ export default function PlayerDatabase() {
            date_joined: dateJoined,
          });
       }
+
+      console.log("Total rows:", lines.length - 1);
+      console.log("Valid rows:", records.length);
+      console.log("Skipped rows:", skippedRows);
 
       if (records.length === 0) { setCsvError("No valid rows found in CSV."); return; }
 
