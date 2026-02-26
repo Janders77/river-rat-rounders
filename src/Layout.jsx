@@ -162,7 +162,7 @@ function LayoutInner({ children }) {
                     </SidebarMenuItem>
                   )}
                   {navigationItems.map((item) => {
-                    if ((item.title === "Manage Directors") && user?.role !== "admin") {
+                    if (item.adminOnly && user?.role !== "admin") {
                       return null;
                     }
                     return (
