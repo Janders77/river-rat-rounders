@@ -31,19 +31,12 @@ export default function BreakTimeBump() {
 
         {/* Price */}
         <div className="flex items-center justify-center gap-3 mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-          <DollarSign className="w-6 h-6 text-amber-400" />
           <span className="text-2xl font-bold text-amber-400">${BUMP_COST}.00</span>
           <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/40">Per Bump</Badge>
         </div>
 
         {/* Payment Options */}
         <Card className="bg-[#1A1B20] border-gray-800 mb-6">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-emerald-400" />
-              How to Pay
-            </CardTitle>
-          </CardHeader>
           <CardContent>
             <a
               href="https://store7781494.ecwid.com"
