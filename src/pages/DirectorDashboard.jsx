@@ -192,6 +192,17 @@ export default function DirectorDashboard() {
   };
 
   const handleToggleSession = async (session) => {
+    // If trying to close, ensure a game has been recorded for this session date & location
+    if (session.is_open) {
+      const matchingGame = games.find(g =>
+        g.game_date === session.session_date &&
+        g.location === session.location
+      );
+      if (!matchingGame) {
+        alert("Cannot close this session until a game has been recorded for this date and location with all placements filled in the 'Record Game' tab.");
+        return;
+      }
+    }
     await GameSession.update(session.id, { is_open: !session.is_open });
     setSessions(prev => prev.map(s => s.id === session.id ? { ...s, is_open: !s.is_open } : s));
   };
