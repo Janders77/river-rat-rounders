@@ -175,7 +175,14 @@ function LayoutInner({ children }) {
                       </SidebarMenuItem>
                     );
                   })}
-                  <SidebarMenuItem key="sign-out" className="mt-auto pt-4 border-t border-gray-800">
+                  <SidebarMenuItem key="user-welcome" className="mt-auto pt-4 border-t border-gray-800">
+                    {user && (
+                      <div className="px-4 py-3 text-gray-400 text-sm">
+                        Welcome, <span className="text-gray-200 font-medium">{user.full_name}</span>
+                      </div>
+                    )}
+                  </SidebarMenuItem>
+                  <SidebarMenuItem key="sign-out">
                     <SidebarMenuButton 
                       onClick={() => {
                         localStorage.removeItem("playerEmail");
