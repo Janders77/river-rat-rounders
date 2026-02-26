@@ -58,17 +58,35 @@ export default function Home() {
   }
 
   if (loggedInPlayer) {
-    const playerName = localStorage.getItem("playerName") || "Player";
     return (
       <div className="min-h-screen bg-[#16171B] flex flex-col items-center justify-center p-6">
-        <div className="max-w-lg w-full text-center">
+        <div className="max-w-lg w-full">
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/515aaf9cc_blackcroppaint.jpeg"
             alt="River Rat Rounders"
-            className="mx-auto mb-6 w-64 object-contain"
+            className="mx-auto mb-8 w-64 object-contain"
           />
-          <h1 className="text-2xl font-bold text-white mb-2">Welcome, {playerName.split(' ')[0]}!</h1>
-          <p className="text-gray-400 text-lg mb-8">Use the navigation menu to explore the league.</p>
+          <div className="space-y-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.title}
+                to={link.url}
+                className={`flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r ${link.color} transition-all duration-200 group`}
+              >
+                <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+                  {link.image ? (
+                    <img src={link.image} alt={link.title} className="w-10 h-10 object-contain" />
+                  ) : (
+                    <link.icon className={`w-6 h-6 ${link.iconColor}`} />
+                  )}
+                </div>
+                <div className="text-left">
+                  <div className="font-semibold text-white text-lg group-hover:text-white">{link.title}</div>
+                  <div className="text-gray-400 text-sm">{link.description}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     );
