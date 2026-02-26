@@ -41,8 +41,12 @@ Deno.serve(async (req) => {
         players.sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
 
         for (let i = 1; i < players.length; i++) {
-          await base44.asServiceRole.entities.Player.delete(players[i].id);
-          deletedCount++;
+          try {
+            await base44.asServiceRole.entities.Player.delete(players[i].id);
+            deletedCount++;
+          } catch (e) {
+            console.log(`Could not delete ${players[i].id}: ${e.message}`);
+          }
         }
       }
 
