@@ -29,14 +29,17 @@ export default function PlayerProfile() {
 
   const loadData = async () => {
     setLoading(true);
-    const [fetchedPlayers, fetchedGames, me] = await Promise.all([
+    const [fetchedPlayers, fetchedGames, me, fetchedPlayerRecords] = await Promise.all([
       base44.entities.User.list(),
       base44.entities.Game.list("-created_date"),
-      base44.auth.me().catch(() => null)
+      base44.auth.me().catch(() => null),
+      base44.entities.Player.list()
     ]);
     setCurrentUser(me);
 
     const currentPlayer = fetchedPlayers.find(p => p.email === playerEmail);
+    const record = fetchedPlayerRecords.find(p => p.email === playerEmail);
+    setPlayerRecord(record || null);
     const playerGames = fetchedGames.filter(g => g.players?.includes(playerEmail));
     
     const sortedPlayers = fetchedPlayers.sort((a, b) => 
