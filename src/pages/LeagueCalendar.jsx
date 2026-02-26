@@ -177,9 +177,15 @@ export default function LeagueCalendar() {
                 </div>
               </div>
               <Input
-                placeholder="Location"
+                placeholder="Location (e.g. Tavern 018)"
                 value={form.location}
                 onChange={e => setForm({ ...form, location: e.target.value })}
+                className="bg-gray-900 border-gray-700 text-white"
+              />
+              <Input
+                placeholder="Address (e.g. 123 Main St, Memphis, TN)"
+                value={form.address}
+                onChange={e => setForm({ ...form, address: e.target.value })}
                 className="bg-gray-900 border-gray-700 text-white"
               />
               <Select value={form.event_type} onValueChange={v => setForm({ ...form, event_type: v })}>
