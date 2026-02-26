@@ -22,8 +22,10 @@ const emptyForm = {
   event_date: "",
   event_time: "",
   location: "",
+  address: "",
   description: "",
   event_type: "Regular Game",
+  image_urls: [],
 };
 
 export default function LeagueCalendar() {
