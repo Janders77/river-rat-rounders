@@ -173,7 +173,9 @@ function LayoutInner({ children }) {
                   <SidebarMenuItem key="sign-out" className="mt-auto pt-4 border-t border-gray-800">
                     <SidebarMenuButton 
                       onClick={() => {
-                        base44.auth.logout();
+                        localStorage.removeItem("playerEmail");
+                        localStorage.removeItem("playerName");
+                        window.location.href = createPageUrl("Home");
                         setOpenMobile(false);
                       }}
                       className="hover:bg-red-900/30 transition-all duration-200 rounded-lg text-red-400"

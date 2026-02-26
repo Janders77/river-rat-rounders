@@ -6,6 +6,7 @@ import { base44 } from "@/api/base44Client";
 
 import PlayerSignIn from "../components/home/PlayerSignIn";
 import PlayerSignUp from "../components/home/PlayerSignUp";
+import LoginCard from "../components/home/LoginCard";
 
 const navLinks = [
   {
@@ -35,20 +36,15 @@ const navLinks = [
 ];
 
 export default function Home() {
-  const [user, setUser] = React.useState(null);
+  const [loggedInPlayer, setLoggedInPlayer] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-      } catch (error) {
-        setUser(null);
-      }
-      setLoading(false);
-    };
-    checkAuth();
+    const storedEmail = localStorage.getItem("playerEmail");
+    if (storedEmail) {
+      setLoggedInPlayer(storedEmail);
+    }
+    setLoading(false);
   }, []);
 
   if (loading) {
@@ -59,7 +55,8 @@ export default function Home() {
     );
   }
 
-  if (user) {
+  if (loggedInPlayer) {
+    const playerName = localStorage.getItem("playerName") || "Player";
     return (
       <div className="min-h-screen bg-[#16171B] flex flex-col items-center justify-center p-6">
         <div className="max-w-lg w-full text-center">
@@ -68,7 +65,7 @@ export default function Home() {
             alt="River Rat Rounders"
             className="mx-auto mb-6 w-64 object-contain"
           />
-          <h1 className="text-2xl font-bold text-white mb-2">Welcome, {user.full_name.split(' ')[0]}!</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">Welcome, {playerName.split(' ')[0]}!</h1>
           <p className="text-gray-400 text-lg mb-8">Use the navigation menu to explore the league.</p>
         </div>
       </div>
@@ -84,6 +81,10 @@ export default function Home() {
           className="mx-auto mb-6 w-64 object-contain"
         />
         <p className="text-gray-400 text-lg">Memphis' Freeroll Bar Poker League</p>
+      </div>
+
+      <div className="max-w-lg w-full mb-8">
+        <LoginCard onLoginSuccess={() => setLoggedInPlayer(true)} />
       </div>
 
       <div className="max-w-lg w-full space-y-6 mb-6">

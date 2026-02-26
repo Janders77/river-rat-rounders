@@ -3,7 +3,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Trophy, Target, Flame, Camera, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Trophy, Target, Flame, Camera, Loader2, Lock } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PlayerProfile() {
@@ -17,6 +18,12 @@ export default function PlayerProfile() {
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
   const fileInputRef = useRef();
 
   useEffect(() => {
@@ -118,6 +125,36 @@ export default function PlayerProfile() {
     setUploadingPhoto(false);
   };
 
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setPasswordError("");
+    setPasswordSuccess("");
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      await base44.entities.Player.update(playerRecord.id, { password: newPassword });
+      setPasswordSuccess("Password changed successfully!");
+      setNewPassword("");
+      setConfirmPassword("");
+      setShowPasswordForm(false);
+      setTimeout(() => setPasswordSuccess(""), 3000);
+    } catch (err) {
+      setPasswordError("Failed to update password");
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   const stats = getStats();
 
   return (
@@ -170,6 +207,81 @@ export default function PlayerProfile() {
             )}
           </div>
         </div>
+
+        {/* Password Change Section */}
+        {isOwnProfile && (
+          <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 mb-8">
+            <button
+              onClick={() => setShowPasswordForm(!showPasswordForm)}
+              className="flex items-center gap-2 text-white font-semibold hover:text-amber-400 transition-colors w-full justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <Lock className="w-5 h-5" />
+                Change Password
+              </div>
+              <span className="text-sm text-gray-400">{showPasswordForm ? '▼' : '▶'}</span>
+            </button>
+
+            {showPasswordForm && (
+              <form onSubmit={handlePasswordChange} className="mt-4 space-y-3 pt-4 border-t border-gray-700">
+                {passwordSuccess && (
+                  <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm">
+                    {passwordSuccess}
+                  </div>
+                )}
+                {passwordError && (
+                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                    {passwordError}
+                  </div>
+                )}
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">New Password</label>
+                  <Input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    className="bg-gray-800 border-gray-700 text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">Confirm Password</label>
+                  <Input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                    className="bg-gray-800 border-gray-700 text-white"
+                    required
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setShowPasswordForm(false);
+                      setNewPassword("");
+                      setConfirmPassword("");
+                      setPasswordError("");
+                    }}
+                    className="flex-1 border-gray-700 text-gray-400"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={changingPassword}
+                    className="flex-1 bg-amber-500 hover:bg-amber-600 text-black font-semibold"
+                  >
+                    {changingPassword ? "Updating..." : "Update Password"}
+                  </Button>
+                </div>
+              </form>
+            )}
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
