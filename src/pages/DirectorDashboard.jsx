@@ -317,7 +317,10 @@ export default function DirectorDashboard() {
                       <div className="space-y-2">
                         <label className="text-gray-300 text-sm">Date</label>
                         <input type="date" value={newSession.session_date}
-                          onChange={e => setNewSession({...newSession, session_date: e.target.value})}
+                          onChange={e => {
+                            const d = e.target.value;
+                            setNewSession({...newSession, session_date: d, location: getAutoLocation(d)});
+                          }}
                           className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm"
                           required />
                       </div>
