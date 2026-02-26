@@ -323,8 +323,20 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
                   <MapPin className="w-3 h-3" /> {event.location}
                 </div>
               )}
+              {event.address && (
+                <div className="flex items-center gap-1 text-gray-500 text-xs mb-1">
+                  <MapPin className="w-3 h-3" /> {event.address}
+                </div>
+              )}
               {event.description && (
                 <p className="text-gray-400 text-sm mt-2">{event.description}</p>
+              )}
+              {event.image_urls?.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {event.image_urls.map((url, idx) => (
+                    <img key={idx} src={url} alt="" className="w-24 h-24 object-cover rounded-lg border border-gray-700" />
+                  ))}
+                </div>
               )}
             </div>
           </div>
