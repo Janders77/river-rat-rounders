@@ -107,13 +107,13 @@ export default function PlayerDatabase() {
           if (!isNaN(d)) dateJoined = d.toISOString().split("T")[0];
         }
         records.push({
-          player_number: numIdx !== -1 && cols[numIdx] ? parseInt(cols[numIdx]) : undefined,
-          first_name: cols[firstIdx],
-          last_name: lastIdx !== -1 ? cols[lastIdx] : "",
-          email: emailIdx !== -1 ? cols[emailIdx].toLowerCase() : "",
-          card_guards: guardsIdx !== -1 && cols[guardsIdx] ? parseInt(cols[guardsIdx]) : 0,
-          date_joined: dateJoined,
-        });
+           player_number: numIdx !== -1 && cols[numIdx] ? parseInt(cols[numIdx]) : undefined,
+           first_name: cols[firstIdx],
+           last_name: lastIdx !== -1 ? cols[lastIdx] : "",
+           email: emailIdx !== -1 && cols[emailIdx] ? cols[emailIdx].toLowerCase() : "",
+           card_guards: guardsIdx !== -1 && cols[guardsIdx] ? parseInt(cols[guardsIdx]) : 0,
+           date_joined: dateJoined,
+         });
       }
 
       if (records.length === 0) { setCsvError("No valid rows found in CSV."); return; }
