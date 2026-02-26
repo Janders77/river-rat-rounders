@@ -72,11 +72,10 @@ export default function PlayerSignUp() {
             required
           />
           <Input
-            placeholder="Last initial"
+            placeholder="Last name"
             value={lastName}
-            onChange={e => setLastName(e.target.value.slice(0, 1))}
+            onChange={e => setLastName(e.target.value)}
             className="bg-gray-900 border-gray-700 text-white"
-            maxLength={1}
             required
           />
         </div>
