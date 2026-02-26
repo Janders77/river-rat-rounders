@@ -125,9 +125,9 @@ export default function PlayerProfile() {
         </Button>
 
         {/* Player Header */}
-        <div className="bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/30 rounded-xl p-8 mb-8">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-5">
+        <div className="bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/30 rounded-xl p-6 mb-8">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full sm:w-auto">
               {/* Profile Photo */}
               <div className="relative shrink-0">
                 {player.profile_image_url ? (
@@ -149,14 +149,14 @@ export default function PlayerProfile() {
                   </>
                 )}
               </div>
-              <div>
-                <h1 className="text-4xl font-bold text-white mb-2">{player.full_name || player.email}</h1>
-                <p className="text-gray-400 text-lg">{player.email}</p>
+              <div className="text-center sm:text-left">
+                <h1 className="text-2xl sm:text-4xl font-bold text-white mb-1 break-words">{player.full_name || player.email}</h1>
+                <p className="text-gray-400 text-sm sm:text-lg break-all">{player.email}</p>
               </div>
             </div>
             {stats.rank && (
               <div className="text-center shrink-0">
-                <div className="text-5xl font-bold text-amber-400">#{stats.rank}</div>
+                <div className="text-4xl sm:text-5xl font-bold text-amber-400">#{stats.rank}</div>
                 <div className="text-gray-400 text-sm mt-1">Current Rank</div>
               </div>
             )}
