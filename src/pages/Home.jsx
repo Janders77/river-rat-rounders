@@ -86,7 +86,7 @@ export default function Home() {
       </div>
 
       <div className="max-w-lg w-full mb-8">
-        <LoginCard onLoginSuccess={() => setLoggedInPlayer(true)} />
+        <LoginCard onLoginSuccess={() => checkLoginStatus()} />
       </div>
 
       <div className="max-w-lg w-full space-y-6 mb-6">
