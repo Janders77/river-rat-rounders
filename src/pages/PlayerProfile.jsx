@@ -160,7 +160,18 @@ export default function PlayerProfile() {
                   <Button
                     onClick={async () => {
                       setNameUpdateStatus("loading");
+                      const nameParts = fullName.trim().split(/\s+/);
+                      const firstName = nameParts[0] || "";
+                      const lastName = nameParts.slice(1).join(" ") || "";
+                      
                       await base44.auth.updateMe({ full_name: fullName });
+                      if (playerData) {
+                        await base44.entities.Player.update(playerData.id, {
+                          first_name: firstName,
+                          last_name: lastName
+                        });
+                      }
+                      
                       setUser({ ...user, full_name: fullName });
                       setNameUpdateStatus("done");
                       setEditingName(false);
