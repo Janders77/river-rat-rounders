@@ -26,9 +26,10 @@ const navLinks = [
   {
     title: "Calendar",
     description: "View upcoming league events and games",
-    image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/a3b694bce_red2012-2.jpg",
+    icon: CalendarDays,
     url: createPageUrl("LeagueCalendar"),
     color: "from-cyan-500/30 to-cyan-600/20 border-cyan-500/40 hover:border-cyan-400/70",
+    iconColor: "text-cyan-400",
   },
 ];
 
