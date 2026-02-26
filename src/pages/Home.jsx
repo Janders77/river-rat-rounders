@@ -75,7 +75,7 @@ export default function Home() {
               className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-green-500/30 to-green-600/20 border-green-500/40 hover:border-green-400/70 transition-all duration-200 group"
             >
               <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
-                <UserPlus className="w-6 h-6 text-purple-400" />
+                <UserPlus className="w-6 h-6 text-green-400" />
               </div>
               <div className="text-left">
                 <div className="font-semibold text-white text-lg">Join the League</div>
