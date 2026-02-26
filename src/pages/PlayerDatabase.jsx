@@ -195,13 +195,13 @@ export default function PlayerDatabase() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleAdd} className="space-y-3">
-                <div className="flex gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   <Input
                     placeholder="# (number)"
                     type="number"
                     value={form.player_number}
                     onChange={e => setForm(f => ({ ...f, player_number: e.target.value }))}
-                    className="bg-gray-900 border-gray-700 text-white w-28"
+                    className="bg-gray-900 border-gray-700 text-white col-span-2 sm:col-span-1"
                   />
                   <Input
                     placeholder="First name"
