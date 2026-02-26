@@ -40,8 +40,12 @@ export default function Home() {
 
   React.useEffect(() => {
     const checkAuth = async () => {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (error) {
+        setUser(null);
+      }
       setLoading(false);
     };
     checkAuth();
