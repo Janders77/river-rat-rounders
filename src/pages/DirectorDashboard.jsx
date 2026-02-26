@@ -40,17 +40,10 @@ export default function DirectorDashboard() {
   });
   const [placements, setPlacements] = useState(Array(9).fill(""));
   const [sessions, setSessions] = useState([]);
-  const getAutoLocation = (dateStr) => {
-    const day = new Date(dateStr + 'T12:00:00').getDay(); // 0=Sun, 3=Wed
-    if (day === 0) return "Tavern 018 Sunday";
-    if (day === 3) return "Tavern 018 Wednesday";
-    return "";
-  };
-
   const [newSession, setNewSession] = useState({
     session_date: new Date().toISOString().split('T')[0],
-    location: getAutoLocation(new Date().toISOString().split('T')[0]),
-    game_type: "Main Game"
+    location: "",
+    game_type: "Texas Hold'em"
   });
   const [isCreatingSession, setIsCreatingSession] = useState(false);
   const [inviteRequests, setInviteRequests] = useState([]);
@@ -110,11 +103,7 @@ export default function DirectorDashboard() {
   const handleRecordGame = async (e) => {
     e.preventDefault();
     const filledPlacements = placements.filter(p => p !== "");
-    if (!placements[0]) {
-      alert("Please assign 1st place (winner)");
-      return;
-    }
-    if (filledPlacements.length < 2) {
+    if (filledPlacements.length < 2 || !placements[0]) {
       alert("Please assign at least 1st and 2nd place");
       return;
     }
@@ -196,17 +185,6 @@ export default function DirectorDashboard() {
   };
 
   const handleToggleSession = async (session) => {
-    // If trying to close, ensure a game has been recorded for this session date & location
-    if (session.is_open) {
-      const matchingGame = games.find(g =>
-        g.game_date === session.session_date &&
-        g.location === session.location
-      );
-      if (!matchingGame) {
-        alert("Cannot close this session until a game has been recorded for this date and location with all placements filled in the 'Record Game' tab.");
-        return;
-      }
-    }
     await GameSession.update(session.id, { is_open: !session.is_open });
     setSessions(prev => prev.map(s => s.id === session.id ? { ...s, is_open: !s.is_open } : s));
   };
@@ -332,10 +310,7 @@ export default function DirectorDashboard() {
                       <div className="space-y-2">
                         <label className="text-gray-300 text-sm">Date</label>
                         <input type="date" value={newSession.session_date}
-                          onChange={e => {
-                            const d = e.target.value;
-                            setNewSession({...newSession, session_date: d, location: getAutoLocation(d)});
-                          }}
+                          onChange={e => setNewSession({...newSession, session_date: e.target.value})}
                           className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm"
                           required />
                       </div>
@@ -351,7 +326,7 @@ export default function DirectorDashboard() {
                         </Select>
                       </div>
                       <div className="space-y-2 md:col-span-2">
-                        <label className="text-gray-300 text-sm">Location {newSession.location && <span className="text-emerald-400 text-xs">(auto-detected)</span>}</label>
+                        <label className="text-gray-300 text-sm">Location</label>
                         <Select value={newSession.location} onValueChange={v => setNewSession({...newSession, location: v})}>
                           <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
                           <SelectContent className="bg-gray-900 border-gray-700">
@@ -458,8 +433,7 @@ export default function DirectorDashboard() {
                           <div className="flex items-center gap-2 shrink-0">
                             <Button size="sm" variant="outline"
                               className={session.is_open ? "border-emerald-600 text-emerald-400 hover:bg-emerald-900/20" : "border-gray-700 text-gray-500 hover:bg-gray-800"}
-                              onClick={() => handleToggleSession(session)}
-                              title={session.is_open ? "A game with placements must be recorded before closing" : "Reopen this session"}>
+                              onClick={() => handleToggleSession(session)}>
                               {session.is_open ? "Close" : "Reopen"}
                             </Button>
                             <Button size="icon" variant="ghost"

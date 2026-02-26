@@ -33,33 +33,8 @@ export default function PlayerSignIn() {
     return () => unsubscribe();
   }, []);
 
-  const getAutoLocation = (dateStr) => {
-    const day = new Date(dateStr + 'T12:00:00').getDay();
-    if (day === 0) return "Tavern 018 Sunday";
-    if (day === 3) return "Tavern 018 Wednesday";
-    return null;
-  };
-
-  const ensureTodaySession = async () => {
-    const today = new Date().toISOString().split('T')[0];
-    const location = getAutoLocation(today);
-    if (!location) return; // Only auto-create on Sun/Wed
-
-    const existing = await base44.entities.GameSession.filter({ session_date: today, location });
-    if (existing.length === 0) {
-      await base44.entities.GameSession.create({
-        session_date: today,
-        location,
-        game_type: "Main Game",
-        is_open: true,
-        signed_in_players: []
-      });
-    }
-  };
-
   const loadData = async () => {
     setIsLoading(true);
-    await ensureTodaySession();
     const [me, fetchedSessions, fetchedUsers] = await Promise.all([
       base44.auth.me().catch(() => null),
       base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10),
