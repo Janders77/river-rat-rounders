@@ -45,7 +45,7 @@ export default function BreakTimeBump() {
               className="flex items-center justify-center gap-3 w-full p-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 transition-colors text-white font-bold text-base"
             >
               <ExternalLink className="w-5 h-5" />
-              Purchase Break Time Bump
+              Break Time Bump
             </a>
           </CardContent>
         </Card>
