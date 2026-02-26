@@ -14,6 +14,9 @@ export default function PlayerProfile() {
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [imageUploadStatus, setImageUploadStatus] = useState("idle");
   const [imageFile, setImageFile] = useState(null);
+  const [editingName, setEditingName] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [nameUpdateStatus, setNameUpdateStatus] = useState("idle");
 
   useEffect(() => {
     loadUserData();
