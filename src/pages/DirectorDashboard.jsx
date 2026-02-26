@@ -351,7 +351,7 @@ export default function DirectorDashboard() {
                         </Select>
                       </div>
                       <div className="space-y-2 md:col-span-2">
-                        <label className="text-gray-300 text-sm">Location</label>
+                        <label className="text-gray-300 text-sm">Location {newSession.location && <span className="text-emerald-400 text-xs">(auto-detected)</span>}</label>
                         <Select value={newSession.location} onValueChange={v => setNewSession({...newSession, location: v})}>
                           <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
                           <SelectContent className="bg-gray-900 border-gray-700">
