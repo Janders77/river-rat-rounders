@@ -48,11 +48,7 @@ const navigationItems = [
     url: createPageUrl("LeagueCalendar"),
     icon: CalendarDays,
   },
-  {
-    title: "Player Database",
-    url: createPageUrl("PlayerDatabase"),
-    icon: Database,
-  },
+
   {
     title: "Locations",
     url: createPageUrl("Locations"),
