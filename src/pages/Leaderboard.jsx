@@ -43,7 +43,7 @@ export default function Leaderboard() {
   const getPlayerName = (player) => {
     const record = playerRecords.find(r => r.email === player.email);
     if (record) return `${record.first_name || ""} ${record.last_name || ""}`.trim();
-    return player.full_name || player.email;
+    return player.full_name || "";
   };
 
   const getAvailableQuarters = () => {
