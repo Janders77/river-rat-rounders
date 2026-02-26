@@ -127,7 +127,7 @@ export default function PlayerFilters({ filters, setFilters }) {
           {filters.dateFilter.enabled && (
             <div className="ml-6 space-y-2">
               {filters.dateFilter.type === "range" && (
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Input
                     type="date"
                     value={filters.dateFilter.startDate}
