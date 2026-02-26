@@ -102,6 +102,18 @@ export default function PlayerProfile() {
     );
   }
 
+  const isOwnProfile = currentUser?.email === playerEmail;
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingPhoto(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    await base44.auth.updateMe({ profile_image_url: file_url });
+    setPlayer(prev => ({ ...prev, profile_image_url: file_url }));
+    setUploadingPhoto(false);
+  };
+
   const stats = getStats();
 
   return (
