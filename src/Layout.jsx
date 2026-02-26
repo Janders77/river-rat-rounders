@@ -49,6 +49,11 @@ const navigationItems = [
     icon: Database,
   },
   {
+    title: "Locations",
+    url: createPageUrl("Locations"),
+    icon: MapPin,
+  },
+  {
     title: "Director",
     url: createPageUrl("DirectorSignIn"),
     icon: ShieldAlert,
