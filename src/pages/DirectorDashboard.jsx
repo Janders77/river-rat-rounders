@@ -57,6 +57,45 @@ export default function DirectorDashboard() {
     loadAll();
   }, []);
 
+  // Real-time subscriptions for game sessions and games
+  useEffect(() => {
+    const unsubscribeSessions = base44.entities.GameSession.subscribe((event) => {
+      if (event.type === 'create') {
+        setSessions(prev => [event.data, ...prev]);
+      } else if (event.type === 'update') {
+        setSessions(prev => prev.map(s => s.id === event.id ? event.data : s));
+      } else if (event.type === 'delete') {
+        setSessions(prev => prev.filter(s => s.id !== event.id));
+      }
+    });
+
+    const unsubscribeGames = base44.entities.Game.subscribe((event) => {
+      if (event.type === 'create') {
+        setGames(prev => [event.data, ...prev]);
+      } else if (event.type === 'update') {
+        setGames(prev => prev.map(g => g.id === event.id ? event.data : g));
+      } else if (event.type === 'delete') {
+        setGames(prev => prev.filter(g => g.id !== event.id));
+      }
+    });
+
+    const unsubscribeInvites = base44.entities.InviteRequest.subscribe((event) => {
+      if (event.type === 'create') {
+        setInviteRequests(prev => [event.data, ...prev]);
+      } else if (event.type === 'update') {
+        setInviteRequests(prev => prev.map(r => r.id === event.id ? event.data : r));
+      } else if (event.type === 'delete') {
+        setInviteRequests(prev => prev.filter(r => r.id !== event.id));
+      }
+    });
+
+    return () => {
+      unsubscribeSessions();
+      unsubscribeGames();
+      unsubscribeInvites();
+    };
+  }, []);
+
   const getPlayerName = (email) => {
     const user = users.find(u => u.email === email);
     return user?.full_name || email;
