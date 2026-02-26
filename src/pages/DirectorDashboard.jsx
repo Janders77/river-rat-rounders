@@ -168,9 +168,7 @@ export default function DirectorDashboard() {
     setInviteRequests(prev => prev.filter(r => r.id !== req.id));
   };
 
-  const handleDeleteGame = async (gameId) => {
-    if (!confirm("Delete this game? Player stats will NOT be automatically reversed.")) return;
-    await Game.delete(gameId);
+  const handleDeleteGame = (gameId) => {
     setGames(prev => prev.filter(g => g.id !== gameId));
   };
 
