@@ -45,12 +45,12 @@ export default function Home() {
         <p className="text-gray-400 text-lg">Memphis' Freeroll Bar Poker League</p>
       </div>
 
-      <div className="max-w-lg w-full space-y-4 mb-6">
+      <div className="max-w-lg w-full space-y-6 mb-6">
         <PlayerSignIn />
         <PlayerSignUp />
       </div>
 
-      <div className="max-w-lg w-full space-y-4">
+      <div className="max-w-lg w-full space-y-6">
         {/* Join the League - first card */}
         <Link
           to={createPageUrl("JoinTheLeague")}
