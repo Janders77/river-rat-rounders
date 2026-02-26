@@ -36,19 +36,17 @@ export default function BreakTimeBump() {
         </div>
 
         {/* Payment Options */}
-        <Card className="bg-[#1A1B20] border-gray-800 mb-6">
-          <CardContent>
-            <a
-              href="https://store7781494.ecwid.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 w-full p-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 transition-colors text-white font-bold text-base"
-            >
-              <ExternalLink className="w-5 h-5" />
-              Break Time Bump
-            </a>
-          </CardContent>
-        </Card>
+        <div className="flex justify-center mb-6">
+          <a
+            href="https://store7781494.ecwid.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-3 px-8 py-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 transition-colors text-white font-bold text-base"
+          >
+            <ExternalLink className="w-5 h-5" />
+            Break Time Bump
+          </a>
+        </div>
 
 
       </div>
