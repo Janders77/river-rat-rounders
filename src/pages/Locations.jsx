@@ -180,7 +180,7 @@ export default function Locations() {
             <p className="text-lg">No locations added yet</p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2 justify-items-center">
             {locations.map(loc => (
               <div key={loc.id}>
                 {editingId === loc.id ? (
