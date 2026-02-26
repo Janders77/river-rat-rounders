@@ -189,7 +189,7 @@ export default function PlayerDatabase() {
 
         {/* Add Player Form */}
         {showForm && (
-          <Card className="bg-[#1A1B20] border-gray-700 mb-6">
+          <Card className="bg-gray-900/60 border-gray-700 mb-4">
             <CardHeader>
               <CardTitle className="text-white text-base">New Player</CardTitle>
             </CardHeader>
