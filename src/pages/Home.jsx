@@ -72,7 +72,7 @@ export default function Home() {
 
             <Link
               to={createPageUrl("JoinTheLeague")}
-              className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-purple-500/30 to-purple-600/20 border-purple-500/40 hover:border-purple-400/70 transition-all duration-200 group"
+              className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-green-500/30 to-green-600/20 border-green-500/40 hover:border-green-400/70 transition-all duration-200 group"
             >
               <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
                 <UserPlus className="w-6 h-6 text-purple-400" />
