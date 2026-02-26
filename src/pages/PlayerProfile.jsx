@@ -11,6 +11,7 @@ export default function PlayerProfile() {
   const navigate = useNavigate();
   const playerEmail = searchParams.get("email");
   const [player, setPlayer] = useState(null);
+  const [playerRecord, setPlayerRecord] = useState(null);
   const [games, setGames] = useState([]);
   const [allPlayers, setAllPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
