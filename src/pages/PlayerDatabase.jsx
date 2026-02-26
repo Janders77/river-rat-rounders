@@ -145,12 +145,12 @@ export default function PlayerDatabase() {
   });
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-4 sm:p-6 bg-green-900/30">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shrink-0">
               <Users className="w-6 h-6 text-black" />
             </div>
             <div>
@@ -161,7 +161,8 @@ export default function PlayerDatabase() {
           <div className="flex gap-2">
             <Button
               variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800"
+              size="sm"
+              className="border-gray-600 text-gray-300 hover:bg-gray-800 flex-1 sm:flex-none"
               onClick={() => fileInputRef.current.click()}
             >
               <Upload className="w-4 h-4 mr-2" />
@@ -169,7 +170,8 @@ export default function PlayerDatabase() {
             </Button>
             <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={handleCSV} />
             <Button
-              className="bg-amber-500 hover:bg-amber-600 text-black font-semibold"
+              size="sm"
+              className="bg-amber-500 hover:bg-amber-600 text-black font-semibold flex-1 sm:flex-none"
               onClick={() => setShowForm(!showForm)}
             >
               <UserPlus className="w-4 h-4 mr-2" />
