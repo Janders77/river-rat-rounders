@@ -40,12 +40,14 @@ export default function Home() {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const storedEmail = localStorage.getItem("playerEmail");
-    if (storedEmail) {
-      setLoggedInPlayer(storedEmail);
-    }
-    setLoading(false);
+    checkLoginStatus();
   }, []);
+
+  const checkLoginStatus = () => {
+    const storedEmail = localStorage.getItem("playerEmail");
+    setLoggedInPlayer(storedEmail || null);
+    setLoading(false);
+  };
 
   if (loading) {
     return (
