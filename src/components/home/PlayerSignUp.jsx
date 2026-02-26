@@ -48,8 +48,8 @@ export default function PlayerSignUp() {
 
   if (status === "done") {
     return (
-      <div className="w-full flex flex-col items-center gap-3 p-6 rounded-xl border border-emerald-600/40 bg-gradient-to-r from-emerald-600/20 to-emerald-700/10 text-center">
-        <CheckCircle2 className="w-10 h-10 text-emerald-400" />
+      <div className="w-full flex flex-col items-center gap-3 p-6 rounded-xl border border-red-600/40 bg-gradient-to-r from-red-600/20 to-red-700/10 text-center">
+        <CheckCircle2 className="w-10 h-10 text-red-400" />
         <p className="text-white font-semibold">Request Sent!</p>
         <p className="text-gray-400 text-sm">The director will send you an invite to join soon.</p>
       </div>
