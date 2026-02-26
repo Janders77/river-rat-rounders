@@ -64,7 +64,7 @@ export default function Home() {
             alt="River Rat Rounders"
             className="mx-auto mb-6 w-64 object-contain"
           />
-          <h1 className="text-2xl font-bold text-white mb-2">Welcome, {user.full_name}!</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">Welcome, {user.full_name.split(' ')[0]}!</h1>
           <p className="text-gray-400 text-lg mb-8">Use the navigation menu to explore the league.</p>
         </div>
       </div>
