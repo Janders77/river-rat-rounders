@@ -178,12 +178,10 @@ function LayoutInner({ children }) {
 
         <main className="flex-1 flex flex-col">
           <header className="bg-[#1a3d15]/90 border-b border-green-900/60 px-6 py-4 lg:hidden flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <SidebarTrigger className="hover:bg-gray-800 p-4 rounded-lg transition-colors">
-                <Menu className="w-7 h-7" />
-              </SidebarTrigger>
-              <h1 className="text-xl font-bold text-white">River Rat Rounders</h1>
-            </div>
+            <SidebarTrigger className="hover:bg-gray-800 w-12 h-12 rounded-lg transition-colors flex items-center justify-center">
+              <Menu className="w-5 h-5" />
+            </SidebarTrigger>
+            <h1 className="text-xl font-bold text-white flex-1 text-center">River Rat Rounders</h1>
             <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/a6c1792b1_red2012-2.jpg"
