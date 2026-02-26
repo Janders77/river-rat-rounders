@@ -66,9 +66,9 @@ export default function PlayerSignIn() {
 
   if (isLoading) {
     return (
-      <Card className="bg-emerald-900/30 border-emerald-700/50">
+      <Card className="bg-green-500/15 border-green-500/25">
         <CardContent className="flex items-center justify-center py-10">
-          <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
+          <Loader2 className="w-6 h-6 animate-spin text-green-400" />
         </CardContent>
       </Card>
     );
@@ -76,10 +76,10 @@ export default function PlayerSignIn() {
 
   if (sessions.length === 0) {
     return (
-      <Card className="bg-emerald-900/30 border-emerald-700/50">
+      <Card className="bg-green-500/15 border-green-500/25">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
-            <LogIn className="w-5 h-5 text-emerald-400" /> Sign In to Tonight's Game
+            <LogIn className="w-5 h-5 text-green-400" /> Sign In to Tonight's Game
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -90,7 +90,7 @@ export default function PlayerSignIn() {
   }
 
   return (
-    <Card className="bg-emerald-900/30 border-emerald-700/50">
+    <Card className="bg-green-500/15 border-green-500/25">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           <LogIn className="w-5 h-5 text-emerald-400" /> Sign In to Tonight's Game
