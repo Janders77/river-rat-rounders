@@ -102,31 +102,31 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
   return (
     <div
       onClick={() => isAdmin && setEditing(true)}
-      className={`p-4 rounded-lg bg-[#1A1B20] border border-gray-800 ${
+      className={`p-2.5 rounded-lg bg-[#1A1B20] border border-gray-800 ${
         isAdmin ? "cursor-pointer hover:border-amber-500/30 transition-colors" : ""
       }`}
     >
-      <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold text-sm shrink-0">
+      <div className="flex items-center gap-2 min-w-0">
+        <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold text-xs shrink-0">
           {player.player_number ?? "?"}
         </div>
-        <div className="flex-1 min-w-0 overflow-hidden">
-          <div className="text-white font-medium truncate">{player.first_name} {player.last_name}</div>
-          <div className="text-gray-400 text-xs break-all">{player.email}</div>
+        <div className="flex-1 min-w-0">
+          <div className="text-white font-medium text-sm truncate">{player.first_name} {player.last_name}</div>
+          <div className="text-gray-400 text-xs truncate">{player.email}</div>
           {(player.card_guards > 0 || player.date_joined) && (
-            <div className="flex flex-wrap gap-2 mt-0.5 text-xs text-gray-500">
+            <div className="flex flex-wrap gap-1.5 mt-0.5 text-xs text-gray-500">
               {player.card_guards > 0 && <span className="text-amber-400">🛡️ {player.card_guards}</span>}
               {player.date_joined && <span>{new Date(player.date_joined).toLocaleDateString("en-US", {month:"short", year:"numeric"})}</span>}
             </div>
           )}
         </div>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center shrink-0">
           <Link
             to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
             onClick={e => e.stopPropagation()}
-            className="p-2 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-blue-400/10 transition-colors"
+            className="p-1.5 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-blue-400/10 transition-colors"
           >
-            <Eye className="w-4 h-4" />
+            <Eye className="w-3.5 h-3.5" />
           </Link>
           {isAdmin && (
             <Button
@@ -136,9 +136,9 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
                 e.stopPropagation();
                 onDelete(player.id);
               }}
-              className="text-gray-600 hover:text-red-400 hover:bg-red-400/10"
+              className="text-gray-600 hover:text-red-400 hover:bg-red-400/10 h-7 w-7"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-3.5 h-3.5" />
             </Button>
           )}
         </div>
