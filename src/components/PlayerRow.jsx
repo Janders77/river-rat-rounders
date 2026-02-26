@@ -114,9 +114,9 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
           <div className="text-white font-medium">{player.first_name} {player.last_name}</div>
           <div className="text-gray-400 text-xs truncate">{player.email}</div>
           {(player.card_guards > 0 || player.date_joined) && (
-            <div className="flex flex-wrap gap-2 mt-1 text-xs text-gray-500">
-              {player.card_guards > 0 && <span className="text-amber-400">🛡️ {player.card_guards} guards</span>}
-              {player.date_joined && <span>{player.date_joined}</span>}
+            <div className="flex flex-wrap gap-2 mt-0.5 text-xs text-gray-500">
+              {player.card_guards > 0 && <span className="text-amber-400">🛡️ {player.card_guards}</span>}
+              {player.date_joined && <span>{new Date(player.date_joined).toLocaleDateString("en-US", {month:"short", year:"numeric"})}</span>}
             </div>
           )}
         </div>
