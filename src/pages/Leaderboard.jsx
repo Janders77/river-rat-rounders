@@ -101,6 +101,13 @@ export default function Leaderboard() {
                   <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center text-gray-900 font-bold text-sm shrink-0 min-w-8">
                     {index + 1}
                   </div>
+                  {player.profile_image_url ? (
+                    <img src={player.profile_image_url} alt={player.full_name} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold shrink-0">
+                      {(player.full_name || player.email || "?")[0].toUpperCase()}
+                    </div>
+                  )}
                   <div className="text-white font-medium group-hover:text-amber-400 transition-colors">
                     {player.full_name || player.email}
                   </div>
