@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Trophy, History, Zap, UserPlus, CalendarDays } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 import PlayerSignIn from "../components/home/PlayerSignIn";
 import PlayerSignUp from "../components/home/PlayerSignUp";
