@@ -102,41 +102,51 @@ export default function DirectorDashboard() {
   };
 
   const loadAll = async () => {
-    setIsLoading(true);
+   setIsLoading(true);
 
-    // Check director session expiry
-    const expiry = localStorage.getItem("directorAccessExpiry");
-    if (!expiry || Date.now() > parseInt(expiry)) {
-      localStorage.removeItem("directorAccess");
-      localStorage.removeItem("directorAccessExpiry");
-      navigate(createPageUrl("DirectorSignIn"));
-      return;
-    }
+   // Check director session expiry
+   const expiry = localStorage.getItem("directorAccessExpiry");
+   if (!expiry || Date.now() > parseInt(expiry)) {
+     localStorage.removeItem("directorAccess");
+     localStorage.removeItem("directorAccessExpiry");
+     navigate(createPageUrl("DirectorSignIn"));
+     return;
+   }
 
-    const me = await base44.auth.me();
-    setCurrentUser(me);
-    
-    // Check if user is a designated director
-    const directorCheck = await base44.entities.Director.filter({ email: me.email });
-    if (directorCheck.length === 0) {
-      setIsLoading(false);
-      return;
-    }
-    
-    setDirectorRole(directorCheck[0].role);
-    const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
-      User.list(),
-      Game.list("-created_date", 20),
-      GameSession.list("-session_date", 20),
-      WinnerPhoto.list("-created_date", 50),
-      InviteRequest.filter({ status: "pending" }, "-created_date", 50)
-    ]);
-    setUsers(fetchedUsers);
-    setGames(fetchedGames);
-    setSessions(fetchedSessions);
-    setPhotos(fetchedPhotos);
-    setInviteRequests(fetchedRequests);
-    setIsLoading(false);
+   const me = await base44.auth.me();
+   setCurrentUser(me);
+
+   // Check if user is a designated director
+   const directorCheck = await base44.entities.Director.filter({ email: me.email });
+   if (directorCheck.length === 0) {
+     setIsLoading(false);
+     return;
+   }
+
+   setDirectorRole(directorCheck[0].role);
+   const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
+     User.list(),
+     Game.list("-created_date", 20),
+     GameSession.list("-session_date", 20),
+     WinnerPhoto.list("-created_date", 50),
+     InviteRequest.filter({ status: "pending" }, "-created_date", 50)
+   ]);
+   setUsers(fetchedUsers);
+   setGames(fetchedGames);
+   setSessions(fetchedSessions);
+   setPhotos(fetchedPhotos);
+   setInviteRequests(fetchedRequests);
+
+   // Subscribe to user updates for real-time player data
+   base44.entities.User.subscribe((event) => {
+     if (event.type === 'update') {
+       setUsers(prev => prev.map(u => u.id === event.id ? event.data : u));
+     } else if (event.type === 'create') {
+       setUsers(prev => [event.data, ...prev]);
+     }
+   });
+
+   setIsLoading(false);
   };
 
   const handleRecordGame = async (e) => {
