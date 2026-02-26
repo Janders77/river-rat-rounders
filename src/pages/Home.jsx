@@ -14,7 +14,7 @@ const navLinks = [
     description: "View community rankings and player stats",
     icon: Trophy,
     url: createPageUrl("Leaderboard"),
-    color: "from-green-500/30 to-green-600/20 border-green-500/40 hover:border-green-400/70",
+    color: "from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50",
     iconColor: "text-green-400",
   },
   {
@@ -22,7 +22,7 @@ const navLinks = [
     description: "Browse all past games and results",
     icon: History,
     url: createPageUrl("GameHistory"),
-    color: "from-green-500/30 to-green-600/20 border-green-500/40 hover:border-green-400/70",
+    color: "from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50",
     iconColor: "text-green-400",
   },
   {
@@ -30,7 +30,7 @@ const navLinks = [
     description: "View upcoming league events and games",
     icon: CalendarDays,
     url: createPageUrl("LeagueCalendar"),
-    color: "from-green-500/30 to-green-600/20 border-green-500/40 hover:border-green-400/70",
+    color: "from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50",
     iconColor: "text-green-400",
   },
 ];
