@@ -208,23 +208,23 @@ export default function PlayerProfile() {
           ) : (
             <div className="space-y-3">
               {games.map((game) => (
-                <div key={game.id} className="bg-gray-900/50 p-5 rounded-lg border border-gray-800 hover:border-gray-700 transition-colors">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <div className="font-semibold text-white text-lg">{game.game_type}</div>
-                      <div className="text-sm text-gray-400">
-                        {new Date(game.game_date).toLocaleDateString()} at {game.location}
-                      </div>
-                    </div>
-                    <div className={`px-4 py-2 rounded-full font-semibold flex items-center gap-2 ${
-                      game.winner_email === playerEmail 
-                        ? 'bg-emerald-500/20 text-emerald-400' 
-                        : 'bg-gray-700/50 text-gray-400'
-                    }`}>
-                      {game.winner_email === playerEmail && <Flame className="w-4 h-4" />}
-                      {game.winner_email === playerEmail ? 'Won' : 'Played'}
-                    </div>
-                  </div>
+                <div key={game.id} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800 hover:border-gray-700 transition-colors">
+                 <div className="flex flex-wrap justify-between items-start gap-2 mb-3">
+                   <div className="min-w-0">
+                     <div className="font-semibold text-white text-base">{game.game_type}</div>
+                     <div className="text-sm text-gray-400 break-words">
+                       {new Date(game.game_date).toLocaleDateString()} · {game.location}
+                     </div>
+                   </div>
+                   <div className={`px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 text-sm shrink-0 ${
+                     game.winner_email === playerEmail 
+                       ? 'bg-emerald-500/20 text-emerald-400' 
+                       : 'bg-gray-700/50 text-gray-400'
+                   }`}>
+                     {game.winner_email === playerEmail && <Flame className="w-3.5 h-3.5" />}
+                     {game.winner_email === playerEmail ? 'Won' : 'Played'}
+                   </div>
+                 </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                     {game.buy_in && (
                       <div>
