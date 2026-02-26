@@ -154,7 +154,11 @@ export default function PlayerProfile() {
                 )}
               </div>
               <div className="text-center sm:text-left">
-                <h1 className="text-2xl sm:text-4xl font-bold text-white mb-1 break-words">{player.full_name || player.email}</h1>
+                <h1 className="text-2xl sm:text-4xl font-bold text-white mb-1 break-words">
+                  {playerRecord
+                    ? `${playerRecord.first_name || ""} ${playerRecord.last_name || ""}`.trim()
+                    : (player.full_name || player.email)}
+                </h1>
                 <p className="text-gray-400 text-sm sm:text-lg break-all">{player.email}</p>
               </div>
             </div>
