@@ -170,6 +170,18 @@ function LayoutInner({ children }) {
                       </SidebarMenuItem>
                     );
                   })}
+                  <SidebarMenuItem key="sign-out" className="mt-auto pt-4 border-t border-gray-800">
+                    <SidebarMenuButton 
+                      onClick={() => {
+                        base44.auth.logout();
+                        setOpenMobile(false);
+                      }}
+                      className="hover:bg-red-900/30 transition-all duration-200 rounded-lg text-red-400"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      <span className="font-medium">Sign Out</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
