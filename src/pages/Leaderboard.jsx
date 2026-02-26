@@ -52,8 +52,8 @@ export default function Leaderboard() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Trophy className="w-7 h-7 text-gray-900" />
+            <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg">
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/db52ea530_red2012-2.jpg" alt="River Rat Rounders" className="w-full h-full object-cover" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Leaderboard</h1>
