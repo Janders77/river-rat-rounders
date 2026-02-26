@@ -14,6 +14,9 @@ export default function PlayerProfile() {
   const [games, setGames] = useState([]);
   const [allPlayers, setAllPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const fileInputRef = useRef();
 
   useEffect(() => {
     if (!playerEmail) {
