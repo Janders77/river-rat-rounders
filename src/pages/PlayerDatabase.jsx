@@ -135,6 +135,7 @@ export default function PlayerDatabase() {
       for (let i = 0; i < records.length; i += batchSize) {
         const batch = records.slice(i, i + batchSize);
         await base44.entities.Player.bulkCreate(batch);
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
       loadPlayers();
     };
