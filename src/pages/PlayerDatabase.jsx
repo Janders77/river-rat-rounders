@@ -25,8 +25,12 @@ export default function PlayerDatabase() {
   // Check if user is admin
   useEffect(() => {
     const checkAdmin = async () => {
-      const user = await base44.auth.me();
-      setIsAdmin(user?.role === "admin");
+      try {
+        const user = await base44.auth.me();
+        setIsAdmin(user?.role === "admin");
+      } catch (error) {
+        setIsAdmin(false);
+      }
     };
     checkAdmin();
   }, []);
