@@ -110,7 +110,7 @@ export default function Leaderboard() {
                     </div>
                   )}
                   <div className="text-white font-medium group-hover:text-amber-400 transition-colors">
-                    {player.full_name || player.email}
+                    {player.full_name}
                   </div>
                 </div>
                 <div className="flex items-center gap-6 text-sm">
