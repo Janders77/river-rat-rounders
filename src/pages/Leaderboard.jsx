@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { User } from "@/entities/User";
+import { base44 } from "@/api/base44Client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy } from "lucide-react";
 import { createPageUrl } from "@/utils";
@@ -23,12 +23,27 @@ export default function Leaderboard() {
 
   const loadData = async () => {
     setIsLoading(true);
-    const fetchedPlayers = await User.list();
-    
-    const sortedPlayers = fetchedPlayers
+    const [fetchedUsers, fetchedPlayers] = await Promise.all([
+      base44.entities.User.list(),
+      base44.entities.Player.list("player_number", 10000),
+    ]);
+
+    // Build a lookup map from email -> player db name
+    const playerMap = {};
+    fetchedPlayers.forEach(p => {
+      if (p.email) {
+        playerMap[p.email.toLowerCase()] = `${p.first_name || ""} ${p.last_name || ""}`.trim();
+      }
+    });
+
+    const sortedPlayers = fetchedUsers
       .sort((a, b) => (b.total_points || 0) - (a.total_points || 0))
-      .slice(0, 100);
-    
+      .slice(0, 100)
+      .map(u => ({
+        ...u,
+        display_name: playerMap[u.email?.toLowerCase()] || u.full_name || u.email
+      }));
+
     setPlayers(sortedPlayers);
     setIsLoading(false);
   };
@@ -102,14 +117,14 @@ export default function Leaderboard() {
                     {index + 1}
                   </div>
                   {player.profile_image_url ? (
-                    <img src={player.profile_image_url} alt={player.full_name} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                    <img src={player.profile_image_url} alt={player.display_name} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
                   ) : (
                     <div className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold shrink-0">
-                      {(player.full_name || player.email || "?")[0].toUpperCase()}
+                      {(player.display_name || "?")[0].toUpperCase()}
                     </div>
                   )}
                   <div className="text-white font-medium group-hover:text-amber-400 transition-colors">
-                    {player.full_name || player.email}
+                    {player.display_name}
                   </div>
                 </div>
                 <div className="flex items-center gap-6 text-sm">
