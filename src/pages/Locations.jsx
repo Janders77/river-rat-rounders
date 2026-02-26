@@ -153,9 +153,10 @@ export default function Locations() {
           {isAdmin && !showAddForm && !editingId && (
             <Button
               onClick={() => setShowAddForm(true)}
+              size="sm"
               className="bg-amber-500 hover:bg-amber-600 text-black font-semibold"
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="w-4 h-4 mr-1" />
               Add Location
             </Button>
           )}
