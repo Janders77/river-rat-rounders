@@ -94,7 +94,7 @@ export default function PlayerSignUp() {
             Cancel
           </Button>
           <Button type="submit" disabled={status === "loading"}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white">
+            className="flex-1 bg-red-600 hover:bg-red-700 text-white">
             {status === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Request Invite"}
           </Button>
         </div>
