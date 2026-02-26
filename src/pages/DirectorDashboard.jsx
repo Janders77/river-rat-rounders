@@ -187,9 +187,7 @@ export default function DirectorDashboard() {
     setSessions(prev => prev.map(s => s.id === session.id ? { ...s, is_open: !s.is_open } : s));
   };
 
-  const handleDeleteSession = async (sessionId) => {
-    if (!confirm("Delete this session?")) return;
-    await GameSession.delete(sessionId);
+  const handleDeleteSession = (sessionId) => {
     setSessions(prev => prev.filter(s => s.id !== sessionId));
   };
 
