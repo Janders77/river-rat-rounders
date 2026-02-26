@@ -145,8 +145,8 @@ export default function PlayerDatabase() {
   });
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 bg-green-900/30">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen p-3 sm:p-6 bg-green-900/30 overflow-x-hidden">
+      <div className="max-w-3xl mx-auto w-full">
         {/* Header */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
