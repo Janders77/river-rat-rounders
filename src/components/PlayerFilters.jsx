@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function PlayerFilters({ filters, setFilters }) {
+  const [open, setOpen] = useState(false);
   const hasActiveFilters = filters.guardFilter.enabled || filters.dateFilter.enabled;
 
   const clearFilters = () => {
@@ -15,23 +16,27 @@ export default function PlayerFilters({ filters, setFilters }) {
   };
 
   return (
-    <div className="mb-6 p-4 rounded-lg bg-gray-800/50 border border-gray-700 space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-white font-semibold text-sm">Advanced Filters</h3>
-        {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={clearFilters}
-            className="text-gray-400 hover:text-red-400 h-7 px-2"
-          >
-            <X className="w-4 h-4 mr-1" />
-            Clear All
-          </Button>
-        )}
-      </div>
+    <div className="mb-4 rounded-lg bg-gray-800/50 border border-gray-700">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-4 py-3 text-white text-sm font-semibold"
+      >
+        <span>Advanced Filters {hasActiveFilters && <span className="text-amber-400 ml-1">●</span>}</span>
+        <div className="flex items-center gap-2">
+          {hasActiveFilters && (
+            <button
+              onClick={(e) => { e.stopPropagation(); clearFilters(); }}
+              className="text-gray-400 hover:text-red-400 flex items-center gap-1 text-xs"
+            >
+              <X className="w-3 h-3" /> Clear
+            </button>
+          )}
+          {open ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+        </div>
+      </button>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {open && <div className="px-4 pb-4 space-y-4 border-t border-gray-700 pt-3">
+      <div className="grid grid-cols-1 gap-4">
         {/* Card Guards Filter */}
         <div className="space-y-2">
           <label className="text-gray-300 text-xs font-medium">Card Guards</label>
