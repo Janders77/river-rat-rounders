@@ -205,6 +205,30 @@ export default function LeagueCalendar() {
                 className="bg-gray-900 border-gray-700 text-white"
                 rows={3}
               />
+              {/* Image Upload */}
+              <div>
+                <label className="text-gray-400 text-xs mb-2 block">Event Images</label>
+                <label className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-dashed border-gray-600 hover:border-cyan-500 text-gray-400 hover:text-cyan-400 transition-colors w-fit text-sm ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
+                  <Upload className="w-4 h-4" />
+                  {uploadingImage ? "Uploading..." : "Upload Images"}
+                  <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+                </label>
+                {form.image_urls?.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {form.image_urls.map((url, idx) => (
+                      <div key={idx} className="relative group">
+                        <img src={url} alt="" className="w-20 h-20 object-cover rounded-lg border border-gray-700" />
+                        <button
+                          onClick={() => removeImage(idx)}
+                          className="absolute -top-1 -right-1 bg-red-600 rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-3 h-3 text-white" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
               <div className="flex gap-3 justify-end">
                 <Button variant="ghost" onClick={handleCancel} className="text-gray-400 gap-2">
                   <X className="w-4 h-4" /> Cancel
