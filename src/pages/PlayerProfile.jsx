@@ -28,10 +28,12 @@ export default function PlayerProfile() {
 
   const loadData = async () => {
     setLoading(true);
-    const [fetchedPlayers, fetchedGames] = await Promise.all([
+    const [fetchedPlayers, fetchedGames, me] = await Promise.all([
       base44.entities.User.list(),
-      base44.entities.Game.list("-created_date")
+      base44.entities.Game.list("-created_date"),
+      base44.auth.me().catch(() => null)
     ]);
+    setCurrentUser(me);
 
     const currentPlayer = fetchedPlayers.find(p => p.email === playerEmail);
     const playerGames = fetchedGames.filter(g => g.players?.includes(playerEmail));
