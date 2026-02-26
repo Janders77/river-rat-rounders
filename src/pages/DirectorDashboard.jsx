@@ -193,7 +193,6 @@ export default function DirectorDashboard() {
     setPlacements(Array(9).fill(""));
     setGameData({ game_date: new Date().toISOString().split('T')[0], game_type: "Texas Hold'em", location: "", notes: "" });
     setIsSubmitting(false);
-    await loadAll();
     alert("Game recorded successfully!");
   };
 
