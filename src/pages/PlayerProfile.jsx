@@ -148,7 +148,58 @@ export default function PlayerProfile() {
           <div className="space-y-4">
             <div>
               <label className="text-gray-400 text-sm">Full Name</label>
-              <div className="text-white font-medium">{user.full_name}</div>
+              {editingName ? (
+                <div className="flex gap-2 mt-2">
+                  <Input
+                    type="text"
+                    value={fullName}
+                    onChange={e => setFullName(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white flex-1"
+                    disabled={nameUpdateStatus === "loading"}
+                  />
+                  <Button
+                    onClick={async () => {
+                      setNameUpdateStatus("loading");
+                      await base44.auth.updateMe({ full_name: fullName });
+                      setUser({ ...user, full_name: fullName });
+                      setNameUpdateStatus("done");
+                      setEditingName(false);
+                      setTimeout(() => setNameUpdateStatus("idle"), 2000);
+                    }}
+                    className="bg-green-600 hover:bg-green-700"
+                    disabled={nameUpdateStatus === "loading"}
+                  >
+                    {nameUpdateStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setFullName(user.full_name);
+                      setEditingName(false);
+                    }}
+                    variant="outline"
+                    className="border-gray-700"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="text-white font-medium">{user.full_name}</div>
+                  <Button
+                    onClick={() => setEditingName(true)}
+                    variant="outline"
+                    size="sm"
+                    className="border-gray-700 text-gray-400 hover:text-white"
+                  >
+                    Edit
+                  </Button>
+                </div>
+              )}
+              {nameUpdateStatus === "done" && (
+                <p className="text-green-400 text-sm mt-2 flex items-center gap-1">
+                  <CheckCircle2 className="w-4 h-4" /> Name updated
+                </p>
+              )}
             </div>
             <div>
               <label className="text-gray-400 text-sm">Email</label>
