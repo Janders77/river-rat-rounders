@@ -117,7 +117,13 @@ export default function PlayerDatabase() {
       }
 
       if (records.length === 0) { setCsvError("No valid rows found in CSV."); return; }
-      await base44.entities.Player.bulkCreate(records);
+
+      // Batch insert in chunks of 500 to avoid timeout
+      const batchSize = 500;
+      for (let i = 0; i < records.length; i += batchSize) {
+        const batch = records.slice(i, i + batchSize);
+        await base44.entities.Player.bulkCreate(batch);
+      }
       loadPlayers();
     };
     reader.readAsText(file);
