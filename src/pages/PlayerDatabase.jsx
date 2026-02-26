@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserPlus, Upload, Users, Search } from "lucide-react";
+import { createPageUrl } from "@/utils";
 import PlayerFilters from "../components/PlayerFilters";
 import PlayerRow from "../components/PlayerRow";
 
