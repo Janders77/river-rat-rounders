@@ -184,13 +184,8 @@ function LayoutInner({ children }) {
               </SidebarTrigger>
               <h1 className="text-xl font-bold text-white">River Rat Rounders</h1>
             </div>
-            <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
-              <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/44bb87bed_riverratslogo_black1PDF.pdf"
-                alt="River Rat Rounders"
-                className="w-10 h-10 rounded-lg object-cover"
-                onError={(e) => { e.target.style.display='none'; }}
-              />
+            <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors">
+              RRR
             </a>
           </header>
 
