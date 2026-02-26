@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
         for (let i = 1; i < players.length; i++) {
           await base44.asServiceRole.entities.Player.delete(players[i].id);
           deletedCount++;
-          await new Promise(resolve => setTimeout(resolve, 50));
+          await new Promise(resolve => setTimeout(resolve, 200));
         }
       }
     }
