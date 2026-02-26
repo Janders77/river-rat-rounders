@@ -102,17 +102,17 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
   return (
     <div
       onClick={() => isAdmin && setEditing(true)}
-      className={`p-2.5 rounded-lg bg-[#1A1B20] border border-gray-800 ${
+      className={`p-2.5 rounded-lg bg-[#1A1B20] border border-gray-800 w-full overflow-hidden ${
         isAdmin ? "cursor-pointer hover:border-amber-500/30 transition-colors" : ""
       }`}
     >
-      <div className="flex items-center gap-2 min-w-0">
+      <div className="flex items-center gap-2 w-full overflow-hidden">
         <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold text-xs shrink-0">
           {player.player_number ?? "?"}
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 overflow-hidden">
           <div className="text-white font-medium text-sm truncate">{player.first_name} {player.last_name}</div>
-          <div className="text-gray-400 text-xs truncate">{player.email}</div>
+          <div className="text-gray-400 text-xs truncate overflow-hidden">{player.email}</div>
           {(player.card_guards > 0 || player.date_joined) && (
             <div className="flex flex-wrap gap-1.5 mt-0.5 text-xs text-gray-500">
               {player.card_guards > 0 && <span className="text-amber-400">🛡️ {player.card_guards}</span>}
