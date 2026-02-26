@@ -64,6 +64,16 @@ export default function DirectorDashboard() {
 
   const loadAll = async () => {
     setIsLoading(true);
+
+    // Check director session expiry
+    const expiry = localStorage.getItem("directorAccessExpiry");
+    if (!expiry || Date.now() > parseInt(expiry)) {
+      localStorage.removeItem("directorAccess");
+      localStorage.removeItem("directorAccessExpiry");
+      navigate(createPageUrl("DirectorSignIn"));
+      return;
+    }
+
     const me = await base44.auth.me();
     setCurrentUser(me);
     
