@@ -160,24 +160,24 @@ export default function PlayerDatabase() {
               <p className="text-gray-400 text-sm">{players.length} players registered</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 shrink-0">
             <Button
               variant="outline"
               size="sm"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800 flex-1 sm:flex-none"
+              className="border-gray-600 text-gray-300 hover:bg-gray-800 px-2"
               onClick={() => fileInputRef.current.click()}
             >
-              <Upload className="w-4 h-4 mr-2" />
-              Import CSV
+              <Upload className="w-4 h-4" />
+              <span className="hidden sm:inline ml-1">Import CSV</span>
             </Button>
             <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={handleCSV} />
             <Button
               size="sm"
-              className="bg-amber-500 hover:bg-amber-600 text-black font-semibold flex-1 sm:flex-none"
+              className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2"
               onClick={() => setShowForm(!showForm)}
             >
-              <UserPlus className="w-4 h-4 mr-2" />
-              Add Player
+              <UserPlus className="w-4 h-4" />
+              <span className="hidden sm:inline ml-1">Add Player</span>
             </Button>
           </div>
         </div>
