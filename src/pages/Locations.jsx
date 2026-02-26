@@ -182,7 +182,7 @@ export default function Locations() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 justify-items-center">
             {locations.map(loc => (
-              <div key={loc.id}>
+              <div key={loc.id} className="w-full">
                 {editingId === loc.id ? (
                   <LocationForm
                     title="Edit Location"
