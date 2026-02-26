@@ -149,15 +149,15 @@ export default function PlayerDatabase() {
       <div className="w-full max-w-3xl mx-auto overflow-hidden">
         {/* Header */}
         <div className="mb-4 flex items-center justify-between gap-2 w-full">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 min-w-0">
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/34ac77100_red2012-2.jpg"
               alt="River Rat Rounders"
-              className="w-12 h-12 rounded-full object-cover shrink-0"
+              className="w-9 h-9 rounded-full object-cover shrink-0"
             />
-            <div>
-              <h1 className="text-2xl font-bold text-white">Player Database</h1>
-              <p className="text-gray-400 text-sm">{players.length} players registered</p>
+            <div className="min-w-0">
+              <h1 className="text-lg font-bold text-white leading-tight">Player Database</h1>
+              <p className="text-gray-400 text-xs">{players.length} players</p>
             </div>
           </div>
           <div className="flex gap-2 shrink-0">
