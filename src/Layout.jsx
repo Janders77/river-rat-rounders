@@ -76,6 +76,7 @@ function LayoutInner({ children }) {
   const [logoClicks, setLogoClicks] = React.useState(0);
   const [showSecret, setShowSecret] = React.useState(false);
   const [user, setUser] = React.useState(null);
+  const [player, setPlayer] = React.useState(null);
 
   React.useEffect(() => {
     const fetchUser = async () => {
