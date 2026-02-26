@@ -27,9 +27,13 @@ export default function PlayerDatabase() {
     const checkAdmin = async () => {
       try {
         const user = await base44.auth.me();
-        setIsAdmin(user?.role === "admin");
+        if (user?.role !== "admin") {
+          window.location.href = createPageUrl("Home");
+          return;
+        }
+        setIsAdmin(true);
       } catch (error) {
-        setIsAdmin(false);
+        window.location.href = createPageUrl("Home");
       }
     };
     checkAdmin();
