@@ -329,13 +329,13 @@ export default function DirectorDashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-[#1A1B20] border-gray-800">
+              <Card className="bg-[#1A1B20] border-emerald-800/50">
                 <CardHeader>
-                  <CardTitle className="text-white">All Games</CardTitle>
+                  <CardTitle className="text-emerald-400">Open Games</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {sessions.map(session => (
+                    {sessions.filter(session => session.is_open).map(session => (
                       <div key={session.id} className="p-4 bg-gray-900/50 rounded-lg border border-gray-800">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1 min-w-0">
