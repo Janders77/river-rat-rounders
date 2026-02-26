@@ -67,6 +67,23 @@ export default function LeagueCalendar() {
     loadData();
   };
 
+  const handleImageUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setUploadingImage(true);
+    const urls = [];
+    for (const file of files) {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      urls.push(file_url);
+    }
+    setForm(prev => ({ ...prev, image_urls: [...(prev.image_urls || []), ...urls] }));
+    setUploadingImage(false);
+  };
+
+  const removeImage = (idx) => {
+    setForm(prev => ({ ...prev, image_urls: prev.image_urls.filter((_, i) => i !== idx) }));
+  };
+
   const handleEdit = (event) => {
     setEditingEvent(event);
     setForm({
@@ -74,8 +91,10 @@ export default function LeagueCalendar() {
       event_date: event.event_date || "",
       event_time: event.event_time || "",
       location: event.location || "",
+      address: event.address || "",
       description: event.description || "",
       event_type: event.event_type || "Regular Game",
+      image_urls: event.image_urls || [],
     });
     setShowForm(true);
   };
