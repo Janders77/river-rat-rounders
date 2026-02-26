@@ -429,7 +429,7 @@ export default function DirectorDashboard() {
                         </div>
                       </div>
                     ))}
-                    {sessions.length === 0 && <p className="text-gray-500 text-center py-4">No sessions yet.</p>}
+                    {sessions.filter(session => session.is_open).length === 0 && <p className="text-gray-500 text-center py-4">No open games.</p>}
                   </div>
                 </CardContent>
               </Card>
