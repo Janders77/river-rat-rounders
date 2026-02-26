@@ -67,6 +67,9 @@ export default function Home() {
             className="mx-auto mb-8 w-64 object-contain"
           />
           <div className="space-y-6">
+            <PlayerSignIn />
+            <PlayerSignUp />
+
             <Link
               to={createPageUrl("JoinTheLeague")}
               className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-purple-500/30 to-purple-600/20 border-purple-500/40 hover:border-purple-400/70 transition-all duration-200 group"
