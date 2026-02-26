@@ -110,7 +110,11 @@ export default function DirectorDashboard() {
   const handleRecordGame = async (e) => {
     e.preventDefault();
     const filledPlacements = placements.filter(p => p !== "");
-    if (filledPlacements.length < 2 || !placements[0]) {
+    if (!placements[0]) {
+      alert("Please assign 1st place (winner)");
+      return;
+    }
+    if (filledPlacements.length < 2) {
       alert("Please assign at least 1st and 2nd place");
       return;
     }
