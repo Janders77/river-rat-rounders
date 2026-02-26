@@ -7,6 +7,7 @@ import { createPageUrl } from "@/utils";
 
 export default function Leaderboard() {
   const [players, setPlayers] = useState([]);
+  const [playerRecords, setPlayerRecords] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
 
