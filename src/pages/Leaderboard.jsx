@@ -24,8 +24,13 @@ export default function Leaderboard() {
 
   const loadData = async () => {
     setIsLoading(true);
-    const fetchedPlayers = await base44.entities.User.list();
+    const [fetchedPlayers, fetchedPlayerRecords] = await Promise.all([
+      base44.entities.User.list(),
+      base44.entities.Player.list()
+    ]);
     
+    setPlayerRecords(fetchedPlayerRecords);
+
     const sortedPlayers = fetchedPlayers
       .filter(p => p.full_name && p.full_name.trim())
       .sort((a, b) => (b.total_points || 0) - (a.total_points || 0))
@@ -33,6 +38,12 @@ export default function Leaderboard() {
     
     setPlayers(sortedPlayers);
     setIsLoading(false);
+  };
+
+  const getPlayerName = (player) => {
+    const record = playerRecords.find(r => r.email === player.email);
+    if (record) return `${record.first_name || ""} ${record.last_name || ""}`.trim();
+    return player.full_name || player.email;
   };
 
   const getAvailableQuarters = () => {
