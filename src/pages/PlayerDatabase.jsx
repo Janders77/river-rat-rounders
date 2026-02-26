@@ -271,8 +271,8 @@ export default function PlayerDatabase() {
         ) : filtered.length === 0 ? (
           <div className="text-gray-500 text-center py-12">No players found.</div>
         ) : (
-          <div className="space-y-2">
-            {isAdmin && <p className="text-xs text-gray-500 mb-3">💡 Click a row to edit player details</p>}
+          <div className="space-y-1.5 w-full overflow-hidden">
+            {isAdmin && <p className="text-xs text-gray-500 mb-2">💡 Click a row to edit</p>}
             {filtered.map((player) => (
               <PlayerRow
                 key={player.id}
