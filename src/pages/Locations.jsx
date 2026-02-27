@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Clock, Plus, Trash2, Camera, Loader2, X, Pencil } from "lucide-react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 const emptyForm = { name: "", address: "", game_time: "", description: "", image_url: "" };
 

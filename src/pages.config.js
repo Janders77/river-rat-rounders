@@ -56,13 +56,13 @@ import Home from './pages/Home';
 import JoinTheLeague from './pages/JoinTheLeague';
 import Leaderboard from './pages/Leaderboard';
 import LeagueCalendar from './pages/LeagueCalendar';
+import LocationLeaderboard from './pages/LocationLeaderboard';
 import Locations from './pages/Locations';
 import PayMyDues from './pages/PayMyDues';
 import PlayerDatabase from './pages/PlayerDatabase';
 import PlayerProfile from './pages/PlayerProfile';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
-import LocationLeaderboard from './pages/LocationLeaderboard';
 import __Layout from './Layout.jsx';
 
 
@@ -76,13 +76,13 @@ export const PAGES = {
     "JoinTheLeague": JoinTheLeague,
     "Leaderboard": Leaderboard,
     "LeagueCalendar": LeagueCalendar,
+    "LocationLeaderboard": LocationLeaderboard,
     "Locations": Locations,
     "PayMyDues": PayMyDues,
     "PlayerDatabase": PlayerDatabase,
     "PlayerProfile": PlayerProfile,
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
-    "LocationLeaderboard": LocationLeaderboard,
 }
 
 export const pagesConfig = {
