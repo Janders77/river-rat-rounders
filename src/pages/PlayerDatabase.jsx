@@ -87,16 +87,16 @@ export default function PlayerDatabase() {
       const lines = ev.target.result.split("\n").map(l => l.trim()).filter(Boolean);
       const header = lines[0].toLowerCase().split(",").map(h => h.trim().replace(/\s+/g, "_"));
 
-      // Expected columns: number, name, last, email, guards, day
+      // Expected columns: number, first_name, last_name, email, card_guards, day
       const numIdx = header.indexOf("number");
-      const firstIdx = header.indexOf("name");
-      const lastIdx = header.indexOf("last");
+      const firstIdx = header.findIndex(h => h === "first_name" || h === "first");
+      const lastIdx = header.findIndex(h => h === "last_name" || h === "last");
       const emailIdx = header.indexOf("email");
-      const guardsIdx = header.indexOf("guards");
+      const guardsIdx = header.findIndex(h => h === "card_guards" || h === "guards");
       const dateIdx = header.indexOf("day");
 
       if (firstIdx === -1) {
-        setCsvError("CSV must have a 'name' column. Expected: number, name, last, email, guards, day");
+        setCsvError("CSV must have a 'first_name' column. Expected: number, first_name, last_name, email, card_guards, day");
         return;
       }
 
