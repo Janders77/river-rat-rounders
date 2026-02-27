@@ -220,11 +220,12 @@ export default function Leaderboard() {
                      <div className="text-amber-400 font-bold text-lg">{player.quarterlyPoints}</div>
                    </div>
                  </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+                 </Link>
+                 );
+                 })}
+                 </div>
+                 )}
+                 </div>
+                 </div>
+                 );
+                 }
