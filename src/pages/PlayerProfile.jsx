@@ -164,15 +164,19 @@ export default function PlayerProfile() {
                       const firstName = nameParts[0] || "";
                       const lastName = nameParts.slice(1).join(" ") || "";
                       
-                      await base44.auth.updateMe({ full_name: fullName });
+                      await base44.auth.updateMe({ full_name: fullName.trim() });
                       if (playerData) {
                         await base44.entities.Player.update(playerData.id, {
                           first_name: firstName,
                           last_name: lastName
                         });
+                        // Update localStorage so sidebar and other components stay in sync
+                        localStorage.setItem("playerName", fullName.trim());
                       }
                       
-                      setUser({ ...user, full_name: fullName });
+                      const refreshed = await base44.auth.me();
+                      setUser(refreshed);
+                      setFullName(refreshed.full_name || fullName.trim());
                       setNameUpdateStatus("done");
                       setEditingName(false);
                       setTimeout(() => setNameUpdateStatus("idle"), 2000);
