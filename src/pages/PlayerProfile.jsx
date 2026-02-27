@@ -30,12 +30,26 @@ export default function PlayerProfile() {
       return;
     }
     setUser(currentUser);
-    setFullName(currentUser.full_name || "");
     setProfileImageUrl(currentUser.profile_image_url || "");
 
     const players = await base44.entities.Player.filter({ email: currentUser.email });
     if (players.length > 0) {
-      setPlayerData(players[0]);
+      const p = players[0];
+      setPlayerData(p);
+      // Use player first/last name as the canonical display name
+      const playerName = [p.first_name, p.last_name].filter(Boolean).join(" ").trim();
+      const displayName = playerName || currentUser.full_name || "";
+      setFullName(displayName);
+      // If the auth full_name differs, sync it
+      if (displayName && displayName !== currentUser.full_name) {
+        await base44.auth.updateMe({ full_name: displayName });
+        setUser({ ...currentUser, full_name: displayName });
+      } else {
+        setUser(currentUser);
+      }
+    } else {
+      setFullName(currentUser.full_name || "");
+      setUser(currentUser);
     }
     setLoading(false);
   };
