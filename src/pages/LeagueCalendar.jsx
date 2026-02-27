@@ -341,11 +341,11 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
             </div>
           </div>
           {isAdmin && (
-            <div className="flex gap-2 shrink-0">
-              <button onClick={() => onEdit(event)} className="text-gray-500 hover:text-cyan-400 transition-colors">
+            <div className="flex gap-2 shrink-0 self-start">
+              <button onClick={() => onEdit(event)} className="text-gray-500 hover:text-cyan-400 transition-colors p-1">
                 <Edit2 className="w-4 h-4" />
               </button>
-              <button onClick={() => onDelete(event.id)} className="text-gray-500 hover:text-red-400 transition-colors">
+              <button onClick={() => onDelete(event.id)} className="text-gray-500 hover:text-red-400 transition-colors p-1">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
