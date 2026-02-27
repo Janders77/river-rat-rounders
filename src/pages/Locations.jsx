@@ -263,10 +263,13 @@ export default function Locations() {
                       )}
                     </CardContent>
                   </Card>
-                )}
-              </div>
-            ))}
-          </div>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         )}
       </div>
     </div>
