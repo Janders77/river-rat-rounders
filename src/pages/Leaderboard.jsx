@@ -117,13 +117,27 @@ export default function Leaderboard() {
             ))}
           </div>
         ) : players.length === 0 ? (
-          <div className="text-center py-16 text-gray-500">
-            <Trophy className="w-16 h-16 mx-auto mb-4 opacity-20" />
-            <p className="text-lg">No players yet</p>
-          </div>
-        ) : (
-          <div className="space-y-2 mt-6">
-            {players.map((player, index) => (
+           <div className="text-center py-16 text-gray-500">
+             <Trophy className="w-16 h-16 mx-auto mb-4 opacity-20" />
+             <p className="text-lg">No players yet</p>
+           </div>
+         ) : (
+           <div className="space-y-2 mt-6">
+             {quarterlyRecord && (
+               <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-2">
+                 <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/30 rounded-lg p-4">
+                   <div className="text-amber-400 text-xs font-semibold mb-1">Most Points</div>
+                   <div className="text-white font-bold text-lg">{quarterlyRecord.most_points_player_name || "TBD"}</div>
+                   <div className="text-amber-300 text-sm">{quarterlyRecord.most_points_total || 0} pts</div>
+                 </div>
+                 <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 rounded-lg p-4">
+                   <div className="text-emerald-400 text-xs font-semibold mb-1">Most Wins</div>
+                   <div className="text-white font-bold text-lg">{quarterlyRecord.most_wins_player_name || "TBD"}</div>
+                   <div className="text-emerald-300 text-sm">{quarterlyRecord.most_wins_total || 0} wins</div>
+                 </div>
+               </div>
+             )}
+             {getSortedPlayers().map((player, index) => (
               <Link
                 key={player.id}
                 to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
