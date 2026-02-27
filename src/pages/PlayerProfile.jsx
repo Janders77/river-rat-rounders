@@ -147,36 +147,40 @@ export default function PlayerProfile() {
               )}
             </div>
             <div className="flex-1">
-              <div className="relative">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  id="profile-image-input"
-                  disabled={imageUploadStatus === "loading"}
-                />
-                <label htmlFor="profile-image-input">
-                  <Button
-                    as="div"
-                    className="bg-green-600 hover:bg-green-700 text-white cursor-pointer flex items-center gap-2"
-                    disabled={imageUploadStatus === "loading"}
-                  >
-                    {imageUploadStatus === "loading" ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Upload className="w-4 h-4" />
-                    )}
-                    {imageUploadStatus === "loading" ? "Uploading..." : "Upload Photo"}
-                  </Button>
-                </label>
-              </div>
-              {imageUploadStatus === "done" && (
-                <p className="text-green-400 text-sm mt-2 flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4" /> Photo updated
-                </p>
+              {isOwnProfile && (
+                <>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="profile-image-input"
+                      disabled={imageUploadStatus === "loading"}
+                    />
+                    <label htmlFor="profile-image-input">
+                      <Button
+                        as="div"
+                        className="bg-green-600 hover:bg-green-700 text-white cursor-pointer flex items-center gap-2"
+                        disabled={imageUploadStatus === "loading"}
+                      >
+                        {imageUploadStatus === "loading" ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Upload className="w-4 h-4" />
+                        )}
+                        {imageUploadStatus === "loading" ? "Uploading..." : "Upload Photo"}
+                      </Button>
+                    </label>
+                  </div>
+                  {imageUploadStatus === "done" && (
+                    <p className="text-green-400 text-sm mt-2 flex items-center gap-1">
+                      <CheckCircle2 className="w-4 h-4" /> Photo updated
+                    </p>
+                  )}
+                  <p className="text-gray-400 text-sm mt-2">JPG, PNG or GIF. Max 10MB.</p>
+                </>
               )}
-              <p className="text-gray-400 text-sm mt-2">JPG, PNG or GIF. Max 10MB.</p>
             </div>
           </div>
         </div>
