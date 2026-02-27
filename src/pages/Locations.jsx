@@ -193,9 +193,33 @@ export default function Locations() {
             <p className="text-lg">No locations added yet</p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 justify-items-center">
-            {locations.map(loc => (
-              <div key={loc.id} className="w-full">
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="locations" type="LOCATION">
+              {(provided, snapshot) => (
+                <div
+                  className="grid gap-6 md:grid-cols-2 justify-items-center"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  style={{
+                    backgroundColor: snapshot.isDraggingOver ? "rgba(217, 119, 6, 0.1)" : "transparent",
+                    borderRadius: "8px",
+                    padding: "8px",
+                    transition: "background-color 0.2s"
+                  }}
+                >
+                  {locations.map((loc, index) => (
+                    <Draggable key={loc.id} draggableId={loc.id} index={index}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="w-full"
+                          style={{
+                            opacity: snapshot.isDragging ? 0.5 : 1,
+                            ...provided.draggableProps.style
+                          }}
+                        >
                 {editingId === loc.id ? (
                   <LocationForm
                     title="Edit Location"
