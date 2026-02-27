@@ -10,7 +10,8 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const dryRun = body.dry_run !== false; // default to dry_run = true for safety
+    const dryRun = body.dry_run !== false;
+    const limit = body.limit || 100; // delete at most this many per run
 
     // Fetch all players in batches
     let allPlayers = [];
@@ -28,7 +29,7 @@ Deno.serve(async (req) => {
 
     const toDelete = new Set();
 
-    // Group by player_number - keep record with password or oldest
+    // Group by player_number
     const numberGroups = {};
     allPlayers.forEach(p => {
       if (p.player_number == null) return;
@@ -47,7 +48,7 @@ Deno.serve(async (req) => {
       for (let i = 1; i < group.length; i++) toDelete.add(group[i].id);
     }
 
-    // Group by email - keep record with password or oldest
+    // Group by email
     const emailGroups = {};
     allPlayers.forEach(p => {
       const email = (p.email || '').toLowerCase().trim();
@@ -67,39 +68,42 @@ Deno.serve(async (req) => {
       for (let i = 1; i < group.length; i++) toDelete.add(group[i].id);
     }
 
-    const idsToDelete = [...toDelete];
-    console.log(`Duplicates found: ${idsToDelete.length}, dry_run: ${dryRun}`);
+    const allIds = [...toDelete];
+    const idsToDelete = allIds.slice(0, limit);
+    console.log(`Total duplicates: ${allIds.length}, deleting this run: ${idsToDelete.length}, dry_run: ${dryRun}`);
 
     if (dryRun) {
       return Response.json({
         dry_run: true,
         totalFetched: allPlayers.length,
-        duplicatesFound: idsToDelete.length,
-        message: `Would delete ${idsToDelete.length} duplicate records. Call with {"dry_run": false} to actually delete.`
+        duplicatesFound: allIds.length,
+        message: `Would delete ${allIds.length} duplicate records. Call with {"dry_run": false, "limit": 100} to delete in batches.`
       });
     }
 
-    // Delete slowly - 1 per second to avoid rate limits
     let deletedCount = 0;
     let failedCount = 0;
     for (let i = 0; i < idsToDelete.length; i++) {
       try {
         await base44.asServiceRole.entities.Player.delete(idsToDelete[i]);
         deletedCount++;
-        console.log(`Deleted ${deletedCount}/${idsToDelete.length}`);
       } catch (e) {
         failedCount++;
-        console.log(`Failed to delete ${idsToDelete[i]}: ${e.message}`);
+        console.log(`Failed: ${idsToDelete[i]}: ${e.message}`);
       }
-      await new Promise(r => setTimeout(r, 1000)); // 1 second between each delete
+      await new Promise(r => setTimeout(r, 800));
     }
 
     return Response.json({
       success: true,
       totalFetched: allPlayers.length,
-      duplicatesFound: idsToDelete.length,
-      deletedCount,
-      failedCount,
+      totalDuplicates: allIds.length,
+      deletedThisRun: deletedCount,
+      failedThisRun: failedCount,
+      remaining: allIds.length - deletedCount,
+      message: allIds.length - deletedCount > 0
+        ? `Run again to delete more. ${allIds.length - deletedCount} duplicates remaining.`
+        : 'All duplicates deleted!'
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
