@@ -22,6 +22,7 @@ export default function LocationLeaderboard() {
   const [locationName, setLocationName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
+  const [availableLocations, setAvailableLocations] = useState([]);
 
   function getCurrentQuarter() {
     const now = new Date();
