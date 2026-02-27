@@ -14,7 +14,7 @@ const navLinks = [
     description: "View community rankings and player stats",
     icon: Trophy,
     url: createPageUrl("Leaderboard"),
-    color: "from-white/10 to-white/5 border-white/10 hover:border-white/20",
+    color: "from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50",
     iconColor: "text-green-400",
   },
   {
@@ -22,7 +22,7 @@ const navLinks = [
     description: "Browse all past games and results",
     icon: History,
     url: createPageUrl("GameHistory"),
-    color: "from-white/10 to-white/5 border-white/10 hover:border-white/20",
+    color: "from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50",
     iconColor: "text-green-400",
   },
   {
@@ -30,7 +30,7 @@ const navLinks = [
     description: "View upcoming league events and games",
     icon: CalendarDays,
     url: createPageUrl("LeagueCalendar"),
-    color: "from-white/10 to-white/5 border-white/10 hover:border-white/20",
+    color: "from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50",
     iconColor: "text-green-400",
   },
 ];
@@ -71,7 +71,7 @@ export default function Home() {
 
             <Link
               to={createPageUrl("JoinTheLeague")}
-              className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-white/10 to-white/5 border-white/10 hover:border-white/20 transition-all duration-200 group"
+              className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50 transition-all duration-200 group"
             >
               <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
                 <UserPlus className="w-6 h-6 text-green-400" />
