@@ -293,9 +293,9 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
   return (
     <Card className={`border ${highlight ? "bg-[#1A1B20] border-gray-700" : "bg-[#16171B] border-gray-800"}`}>
       <CardContent className="pt-4 pb-4">
-        <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
+        <div className="flex flex-col gap-3">
           <div className="flex gap-4 items-start w-full">
-            <div className="text-center min-w-[48px]">
+            <div className="text-center flex-shrink-0 w-[48px]">
               <div className="text-xs text-gray-400 uppercase">
                 {format(parseISO(event.event_date), "MMM")}
               </div>
