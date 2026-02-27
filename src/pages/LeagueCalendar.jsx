@@ -156,14 +156,14 @@ export default function LeagueCalendar() {
                 onChange={e => setForm({ ...form, title: e.target.value })}
                 className="bg-gray-900 border-gray-700 text-white"
               />
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="text-gray-400 text-xs mb-1 block">Date *</label>
                   <Input
                     type="date"
                     value={form.event_date}
                     onChange={e => setForm({ ...form, event_date: e.target.value })}
-                    className="bg-gray-900 border-gray-700 text-white"
+                    className="bg-gray-900 border-gray-700 text-white w-full"
                   />
                 </div>
                 <div>
@@ -172,7 +172,7 @@ export default function LeagueCalendar() {
                     placeholder="e.g. 7:00 PM"
                     value={form.event_time}
                     onChange={e => setForm({ ...form, event_time: e.target.value })}
-                    className="bg-gray-900 border-gray-700 text-white"
+                    className="bg-gray-900 border-gray-700 text-white w-full"
                   />
                 </div>
               </div>
