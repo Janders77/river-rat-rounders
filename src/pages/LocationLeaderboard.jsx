@@ -146,21 +146,38 @@ export default function LocationLeaderboard() {
             </div>
           </div>
 
-          <div className="flex gap-2 flex-wrap">
-            {getAvailableQuarters().map(q => (
-              <button
-                key={q}
-                onClick={() => setSelectedQuarter(q)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  selectedQuarter === q
-                    ? 'bg-amber-500 text-black'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                {q}
-              </button>
-            ))}
-          </div>
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex gap-2 flex-wrap">
+              {getAvailableQuarters().map(q => (
+                <button
+                  key={q}
+                  onClick={() => setSelectedQuarter(q)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    selectedQuarter === q
+                      ? 'bg-amber-500 text-black'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+            <Select value={location || ""} onValueChange={(value) => {
+              window.location.href = `${createPageUrl("LocationLeaderboard")}?location=${encodeURIComponent(value)}`;
+            }}>
+              <SelectTrigger className="w-56 bg-gray-800 border-gray-700">
+                <MapPin className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Select Location" />
+              </SelectTrigger>
+              <SelectContent>
+                {availableLocations.map(loc => (
+                  <SelectItem key={loc} value={loc}>
+                    {loc}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+           </div>
         </div>
 
         {isLoading ? (
