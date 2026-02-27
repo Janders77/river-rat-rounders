@@ -79,6 +79,13 @@ export default function RecordGame() {
           current_streak: newStreak,
           best_streak: Math.max(player.best_streak || 0, newStreak)
         });
+        // Add 1 card guard for 1st place winner
+        const playerRecord = await base44.entities.Player.filter({ email: email });
+        if (playerRecord.length > 0) {
+          await base44.entities.Player.update(playerRecord[0].id, {
+            card_guards: (playerRecord[0].card_guards || 0) + 1
+          });
+        }
       } else {
         await User.update(player.id, {
           games_played: (player.games_played || 0) + 1,
