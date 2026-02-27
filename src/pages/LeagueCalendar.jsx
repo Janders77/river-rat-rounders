@@ -334,7 +334,7 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
               {event.image_urls?.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
                   {event.image_urls.map((url, idx) => (
-                    <img key={idx} src={url} alt="" className="max-w-sm rounded-lg border border-gray-700" />
+                    <img key={idx} src={url} alt="" className="max-w-xs sm:max-w-sm rounded-lg border border-gray-700" />
                   ))}
                 </div>
               )}
