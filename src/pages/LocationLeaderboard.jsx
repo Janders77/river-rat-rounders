@@ -2,8 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Trophy, ChevronLeft } from "lucide-react";
+import { Trophy, ChevronLeft, MapPin } from "lucide-react";
 import { createPageUrl } from "@/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function LocationLeaderboard() {
   const [searchParams] = useSearchParams();
