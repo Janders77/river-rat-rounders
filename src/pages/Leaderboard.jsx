@@ -113,6 +113,52 @@ export default function Leaderboard() {
     return quarters;
   };
 
+  const getLocationStats = () => {
+    if (!selectedLocation || locationGames.length === 0) return null;
+
+    const locationStats = {};
+
+    locationGames.forEach(game => {
+      if (!locationStats[game.winner_email]) {
+        locationStats[game.winner_email] = {
+          email: game.winner_email,
+          name: game.winner_name,
+          points: 0,
+          wins: 0
+        };
+      }
+      locationStats[game.winner_email].points += game.points_awarded || 0;
+      locationStats[game.winner_email].wins += 1;
+    });
+
+    const stats = Object.values(locationStats);
+    const mostPoints = [...stats].sort((a, b) => b.points - a.points)[0];
+    const mostWins = [...stats].sort((a, b) => b.wins - a.wins)[0];
+
+    return { mostPoints, mostWins, allStats: stats };
+  };
+
+  const getLocationLeaderboard = () => {
+    if (!selectedLocation || locationGames.length === 0) return [];
+
+    const locationStats = {};
+
+    locationGames.forEach(game => {
+      if (!locationStats[game.winner_email]) {
+        locationStats[game.winner_email] = {
+          email: game.winner_email,
+          name: game.winner_name,
+          points: 0,
+          wins: 0
+        };
+      }
+      locationStats[game.winner_email].points += game.points_awarded || 0;
+      locationStats[game.winner_email].wins += 1;
+    });
+
+    return Object.values(locationStats).sort((a, b) => b.points - a.points);
+  };
+
   return (
     <div className="min-h-screen p-6 bg-green-900/30">
       <div className="max-w-7xl mx-auto">
