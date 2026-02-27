@@ -181,10 +181,14 @@ export default function Leaderboard() {
                  </div>
                </div>
              )}
-             {getSortedPlayers().map((player, index) => (
+             {getSortedPlayers().map((player, index) => {
+               const playerLink = selectedLocation 
+                 ? `${createPageUrl("LocationLeaderboard")}?location=${encodeURIComponent(selectedLocation)}&email=${player.email}`
+                 : `${createPageUrl("PlayerProfile")}?email=${player.email}`;
+               return (
               <Link
                 key={player.id}
-                to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
+                to={playerLink}
                 className="glass-link flex items-center justify-between p-4 rounded-lg border border-gray-800 hover:border-amber-500/50 transition-all group"
               >
                 <div className="flex items-center gap-4 flex-1">
