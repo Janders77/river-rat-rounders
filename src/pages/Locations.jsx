@@ -220,52 +220,54 @@ export default function Locations() {
                             ...provided.draggableProps.style
                           }}
                         >
-                {editingId === loc.id ? (
-                  <LocationForm
-                    title="Edit Location"
-                    initial={{ name: loc.name, address: loc.address, game_time: loc.game_time, description: loc.description, image_url: loc.image_url }}
-                    onSave={handleEdit}
-                    onCancel={() => setEditingId(null)}
-                  />
-                ) : (
-                  <Card className="bg-gray-900/70 border-gray-800 overflow-hidden">
-                    {loc.image_url && (
-                      <img src={loc.image_url} alt={loc.name} className="w-full h-48 object-cover" />
-                    )}
-                    <CardContent className="p-5">
-                      <div className="flex items-start justify-between">
-                        <h3 className="text-xl font-bold text-white mb-3">{loc.name}</h3>
-                        {isAdmin && (
-                          <div className="flex gap-2 ml-2 shrink-0">
-                            <button onClick={() => { setEditingId(loc.id); setShowAddForm(false); }} className="text-gray-500 hover:text-amber-400 transition-colors">
-                              <Pencil className="w-4 h-4" />
-                            </button>
-                            <button onClick={() => handleDelete(loc.id)} className="text-gray-500 hover:text-red-400 transition-colors">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                      {loc.address && (
-                        <div className="flex items-start gap-2 text-gray-400 mb-2">
-                          <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-amber-500" />
-                          <span className="text-sm">{loc.address}</span>
+                          {editingId === loc.id ? (
+                            <LocationForm
+                              title="Edit Location"
+                              initial={{ name: loc.name, address: loc.address, game_time: loc.game_time, description: loc.description, image_url: loc.image_url }}
+                              onSave={handleEdit}
+                              onCancel={() => setEditingId(null)}
+                            />
+                          ) : (
+                            <Card className="bg-gray-900/70 border-gray-800 overflow-hidden">
+                              {loc.image_url && (
+                                <img src={loc.image_url} alt={loc.name} className="w-full h-48 object-cover" />
+                              )}
+                              <CardContent className="p-5">
+                                <div className="flex items-start justify-between">
+                                  <h3 className="text-xl font-bold text-white mb-3">{loc.name}</h3>
+                                  {isAdmin && (
+                                    <div className="flex gap-2 ml-2 shrink-0">
+                                      <button onClick={() => { setEditingId(loc.id); setShowAddForm(false); }} className="text-gray-500 hover:text-amber-400 transition-colors">
+                                        <Pencil className="w-4 h-4" />
+                                      </button>
+                                      <button onClick={() => handleDelete(loc.id)} className="text-gray-500 hover:text-red-400 transition-colors">
+                                        <Trash2 className="w-4 h-4" />
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                                {loc.address && (
+                                  <div className="flex items-start gap-2 text-gray-400 mb-2">
+                                    <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-amber-500" />
+                                    <span className="text-sm">{loc.address}</span>
+                                  </div>
+                                )}
+                                {loc.game_time && (
+                                  <div className="flex items-center gap-2 text-gray-400 mb-2">
+                                    <Clock className="w-4 h-4 shrink-0 text-amber-500" />
+                                    <span className="text-sm">{loc.game_time}</span>
+                                  </div>
+                                )}
+                                {loc.description && (
+                                  <p className="text-gray-500 text-sm mt-3 leading-relaxed">{loc.description}</p>
+                                )}
+                              </CardContent>
+                            </Card>
+                          )}
                         </div>
                       )}
-                      {loc.game_time && (
-                        <div className="flex items-center gap-2 text-gray-400 mb-2">
-                          <Clock className="w-4 h-4 shrink-0 text-amber-500" />
-                          <span className="text-sm">{loc.game_time}</span>
-                        </div>
-                      )}
-                      {loc.description && (
-                        <p className="text-gray-500 text-sm mt-3 leading-relaxed">{loc.description}</p>
-                      )}
-                    </CardContent>
-                  </Card>
-                        )}
-                      </div>
-                    ))}
+                    </Draggable>
+                  ))}
                 </div>
               )}
             </Droppable>
