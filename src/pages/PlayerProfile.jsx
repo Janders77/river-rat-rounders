@@ -136,53 +136,42 @@ export default function PlayerProfile() {
         </div>
 
         {/* Profile Picture Section */}
-        <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-8 mb-8">
-          <h2 className="text-lg font-semibold text-white mb-4">Profile Picture</h2>
-          <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-full border-2 border-gray-700 overflow-hidden bg-gray-800 flex items-center justify-center shrink-0">
+        <div className="flex justify-center mb-8">
+          <div className="relative">
+            <div className="w-40 h-40 rounded-full border-4 border-gray-700 overflow-hidden bg-gray-800 flex items-center justify-center">
               {profileImageUrl ? (
                 <img src={profileImageUrl} alt={user.full_name} className="w-full h-full object-cover" />
               ) : (
-                <div className="text-gray-500 text-2xl">{user.full_name?.[0]?.toUpperCase() || "?"}</div>
+                <div className="text-gray-500 text-6xl">{user.full_name?.[0]?.toUpperCase() || "?"}</div>
               )}
             </div>
-            <div className="flex-1">
-              {isOwnProfile && (
-                <>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="profile-image-input"
-                      disabled={imageUploadStatus === "loading"}
-                    />
-                    <label htmlFor="profile-image-input">
-                      <Button
-                        as="div"
-                        className="bg-green-600 hover:bg-green-700 text-white cursor-pointer flex items-center gap-2"
-                        disabled={imageUploadStatus === "loading"}
-                      >
-                        {imageUploadStatus === "loading" ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Upload className="w-4 h-4" />
-                        )}
-                        {imageUploadStatus === "loading" ? "Uploading..." : "Upload Photo"}
-                      </Button>
-                    </label>
+            {isOwnProfile && (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="profile-image-input"
+                  disabled={imageUploadStatus === "loading"}
+                />
+                <label htmlFor="profile-image-input" className="absolute bottom-0 right-0 cursor-pointer">
+                  <div className="w-10 h-10 bg-green-600 hover:bg-green-700 rounded-full flex items-center justify-center border-2 border-gray-900 shadow-lg">
+                    {imageUploadStatus === "loading" ? (
+                      <Loader2 className="w-5 h-5 text-white animate-spin" />
+                    ) : (
+                      <Edit2 className="w-5 h-5 text-white" />
+                    )}
                   </div>
-                  {imageUploadStatus === "done" && (
-                    <p className="text-green-400 text-sm mt-2 flex items-center gap-1">
-                      <CheckCircle2 className="w-4 h-4" /> Photo updated
-                    </p>
-                  )}
-                  <p className="text-gray-400 text-sm mt-2">JPG, PNG or GIF. Max 10MB.</p>
-                </>
-              )}
-            </div>
+                </label>
+              </>
+            )}
           </div>
+          {imageUploadStatus === "done" && (
+            <p className="text-green-400 text-sm mt-4 flex items-center justify-center gap-1">
+              <CheckCircle2 className="w-4 h-4" /> Photo updated
+            </p>
+          )}
         </div>
 
         {/* User Information Section */}
