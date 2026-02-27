@@ -8,6 +8,8 @@ import { createPageUrl } from "@/utils";
 export default function Leaderboard() {
   const [players, setPlayers] = useState([]);
   const [playerRecords, setPlayerRecords] = useState([]);
+  const [quarterlyStats, setQuarterlyStats] = useState([]);
+  const [quarterlyRecord, setQuarterlyRecord] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
 
@@ -20,7 +22,7 @@ export default function Leaderboard() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [selectedQuarter]);
 
   const loadData = async () => {
     setIsLoading(true);
