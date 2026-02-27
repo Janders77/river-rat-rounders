@@ -140,7 +140,7 @@ export default function Leaderboard() {
               <DropdownMenuContent align="end" className="bg-gray-900 border-gray-800">
                 <DropdownMenuItem
                   onClick={() => setSelectedLocation(null)}
-                  className={selectedLocation === null ? "bg-amber-500/20" : ""}
+                  className={`text-white ${selectedLocation === null ? "bg-amber-500/20" : ""}`}
                 >
                   Overall
                 </DropdownMenuItem>
@@ -148,7 +148,7 @@ export default function Leaderboard() {
                   <DropdownMenuItem
                     key={location.id}
                     onClick={() => setSelectedLocation(location.name)}
-                    className={selectedLocation === location.name ? "bg-amber-500/20" : ""}
+                    className={`text-white ${selectedLocation === location.name ? "bg-amber-500/20" : ""}`}
                   >
                     {location.name}
                   </DropdownMenuItem>
