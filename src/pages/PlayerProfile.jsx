@@ -329,8 +329,9 @@ export default function PlayerProfile() {
               </p>
             )}
           </form>
-        </div>
-      </div>
-    </div>
-  );
-}
+          </div>
+          )}
+          </div>
+          </div>
+          );
+          }
