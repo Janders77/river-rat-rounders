@@ -189,7 +189,7 @@ export default function PlayerDatabase() {
             />
             <div className="min-w-0">
               <h1 className="text-lg font-bold text-white leading-tight">Player Database</h1>
-              <p className="text-gray-400 text-xs">{players.length} players</p>
+              <p className="text-gray-400 text-xs">{totalCount ?? players.length} players</p>
             </div>
           </div>
           <div className="flex gap-2 shrink-0">
