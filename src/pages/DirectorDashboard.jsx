@@ -695,17 +695,17 @@ export default function DirectorDashboard() {
                       (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
                       u.email.toLowerCase().includes(playerSearch.toLowerCase())
                     ).map(user => (
-                      <div key={user.id} className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg border border-gray-800">
-                        <div>
-                          <div className="font-medium text-white">{user.full_name || user.email}</div>
-                          <div className="text-sm text-gray-400">{user.email}</div>
+                      <div key={user.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0">
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium text-white truncate">{user.full_name || user.email}</div>
+                          <div className="text-sm text-gray-400 truncate">{user.email}</div>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap justify-between sm:justify-end">
                           <div className="text-right text-sm">
                             <div className="text-amber-400 font-bold">{user.total_points || 0} pts</div>
-                            <div className="text-gray-500">{user.games_played || 0} games</div>
+                            <div className="text-gray-500 text-xs">{user.games_played || 0} games</div>
                           </div>
-                          <Badge variant="outline" className={user.role === "admin" ? "border-purple-500 text-purple-400" : "border-gray-600 text-gray-400"}>
+                          <Badge variant="outline" className={`shrink-0 ${user.role === "admin" ? "border-purple-500 text-purple-400" : "border-gray-600 text-gray-400"}`}>
                             {user.role === "admin" ? "Director" : "Player"}
                           </Badge>
                         </div>
