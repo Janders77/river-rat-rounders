@@ -112,52 +112,49 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          <div className="flex gap-2 flex-wrap mb-6">
-            {getAvailableQuarters().map(q => (
-              <button
-                key={q}
-                onClick={() => setSelectedQuarter(q)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  selectedQuarter === q
-                    ? 'bg-amber-500 text-black'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                {q}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <label className="text-sm text-gray-400 font-medium flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
-              Filter by Location
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              <button
-                onClick={() => setSelectedLocation(null)}
-                className={`px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                  selectedLocation === null
-                    ? 'bg-amber-500 text-black'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                Overall
-              </button>
-              {locations.map(location => (
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex gap-2 flex-wrap">
+              {getAvailableQuarters().map(q => (
                 <button
-                  key={location.id}
-                  onClick={() => setSelectedLocation(location.name)}
-                  className={`px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                    selectedLocation === location.name
+                  key={q}
+                  onClick={() => setSelectedQuarter(q)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    selectedQuarter === q
                       ? 'bg-amber-500 text-black'
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                   }`}
                 >
-                  {location.name}
+                  {q}
                 </button>
               ))}
             </div>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="gap-2 border-gray-800 text-gray-300 hover:text-white">
+                  <MapPin className="w-4 h-4" />
+                  {selectedLocation || "All Locations"}
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-gray-900 border-gray-800">
+                <DropdownMenuItem
+                  onClick={() => setSelectedLocation(null)}
+                  className={selectedLocation === null ? "bg-amber-500/20" : ""}
+                >
+                  Overall
+                </DropdownMenuItem>
+                {locations.map(location => (
+                  <DropdownMenuItem
+                    key={location.id}
+                    onClick={() => setSelectedLocation(location.name)}
+                    className={selectedLocation === location.name ? "bg-amber-500/20" : ""}
+                  >
+                    {location.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
