@@ -19,6 +19,7 @@ export default function PlayerProfile() {
   const [editingName, setEditingName] = useState(false);
   const [fullName, setFullName] = useState("");
   const [nameUpdateStatus, setNameUpdateStatus] = useState("idle");
+  const [isOwnProfile, setIsOwnProfile] = useState(true);
 
   useEffect(() => {
     loadUserData();
@@ -26,32 +27,45 @@ export default function PlayerProfile() {
 
   const loadUserData = async () => {
     setLoading(true);
+    const params = new URLSearchParams(window.location.search);
+    const viewingEmail = params.get("email");
+    
     const currentUser = await base44.auth.me();
     if (!currentUser) {
       window.location.href = "/";
       return;
     }
-    setUser(currentUser);
-    setProfileImageUrl(currentUser.profile_image_url || "");
 
-    const players = await base44.entities.Player.filter({ email: currentUser.email });
+    // Determine which user's profile to show
+    const emailToLoad = viewingEmail || currentUser.email;
+    const isOwnProf = emailToLoad === currentUser.email;
+    setIsOwnProfile(isOwnProf);
+
+    const players = await base44.entities.Player.filter({ email: emailToLoad });
     if (players.length > 0) {
       const p = players[0];
       setPlayerData(p);
-      // Use player first/last name as the canonical display name
       const playerName = [p.first_name, p.last_name].filter(Boolean).join(" ").trim();
-      const displayName = playerName || currentUser.full_name || "";
-      setFullName(displayName);
-      // If the auth full_name differs, sync it
-      if (displayName && displayName !== currentUser.full_name) {
-        await base44.auth.updateMe({ full_name: displayName });
-        setUser({ ...currentUser, full_name: displayName });
-      } else {
+      setFullName(playerName || "");
+      
+      // Create a user object for display
+      const displayUser = {
+        ...currentUser,
+        email: emailToLoad,
+        full_name: playerName || ""
+      };
+      
+      // Only fetch actual auth user data if viewing own profile
+      if (isOwnProf) {
+        setProfileImageUrl(currentUser.profile_image_url || "");
         setUser(currentUser);
+      } else {
+        setUser(displayUser);
+        setProfileImageUrl("");
       }
     } else {
-      setFullName(currentUser.full_name || "");
       setUser(currentUser);
+      setFullName("");
     }
     setLoading(false);
   };
