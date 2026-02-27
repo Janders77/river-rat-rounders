@@ -69,6 +69,16 @@ export default function Leaderboard() {
     setIsLoading(false);
   };
 
+  const loadLocationData = async () => {
+    if (!selectedLocation) {
+      setLocationGames([]);
+      return;
+    }
+    
+    const games = await base44.entities.Game.filter({ location: selectedLocation }).catch(() => []);
+    setLocationGames(games);
+  };
+
   const getPlayerName = (player) => {
     const record = playerRecords.find(r => r.email === player.email);
     if (record) return `${record.first_name || ""} ${record.last_name || ""}`.trim();
