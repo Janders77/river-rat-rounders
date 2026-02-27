@@ -110,7 +110,14 @@ export default function PlayerProfile() {
   return (
     <div className="min-h-screen bg-[#16171B] p-6">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-8">Player Profile</h1>
+        <div className="flex items-center gap-3 mb-8">
+          <Link to={createPageUrl("Leaderboard")}>
+            <Button variant="outline" size="icon" className="border-gray-700 text-gray-400 hover:text-white">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <h1 className="text-3xl font-bold text-white">Player Profile</h1>
+        </div>
 
         {/* Profile Picture Section */}
         <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-8 mb-8">
