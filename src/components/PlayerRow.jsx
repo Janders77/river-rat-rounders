@@ -102,11 +102,11 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
   return (
     <div
       onClick={() => isAdmin && setEditing(true)}
-      className={`p-2.5 rounded-lg bg-[#1A1B20] border border-gray-800 w-full overflow-hidden ${
+      className={`p-2 rounded-lg bg-[#1A1B20] border border-gray-800 w-full overflow-hidden ${
         isAdmin ? "cursor-pointer hover:border-amber-500/30 transition-colors" : ""
       }`}
     >
-      <div className="flex items-center gap-2 w-full overflow-hidden">
+      <div className="flex items-center gap-1.5 w-full overflow-hidden">
         <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold shrink-0" style={{fontSize: player.player_number >= 1000 ? "10px" : player.player_number >= 100 ? "11px" : "13px", letterSpacing: "0", fontFamily: "monospace"}}>
           {player.player_number ?? "?"}
         </div>
