@@ -72,6 +72,7 @@ export default function PlayerProfile() {
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
+    if (!isOwnProfile) return;
     if (!newPassword || !confirmPassword) {
       setPasswordStatus("error");
       return;
@@ -90,6 +91,7 @@ export default function PlayerProfile() {
   };
 
   const handleImageUpload = async (e) => {
+    if (!isOwnProfile) return;
     const file = e.target.files?.[0];
     if (!file) return;
 
