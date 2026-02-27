@@ -1,11 +1,43 @@
+
 @layer components {
   .card {
-    backdrop-filter: blur(12px) saturate(1.4) !important;
-    -webkit-backdrop-filter: blur(12px) saturate(1.4) !important;
+    backdrop-filter: blur(16px) saturate(1.6) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(1.6) !important;
     box-shadow:
-      0 4px 24px 0 rgba(0,0,0,0.18),
-      inset 0 1px 0 rgba(255,255,255,0.08),
-      inset 0 -1px 0 rgba(0,0,0,0.12) !important;
-    border-top: 1px solid rgba(255,255,255,0.10) !important;
+      0 8px 32px rgba(0,0,0,0.32),
+      0 2px 8px rgba(0,0,0,0.18),
+      inset 0 1.5px 0 rgba(255,255,255,0.13),
+      inset 0 -1px 0 rgba(0,0,0,0.18) !important;
+    border-top: 1.5px solid rgba(255,255,255,0.13) !important;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .card:hover {
+    box-shadow:
+      0 12px 40px rgba(0,0,0,0.38),
+      0 3px 12px rgba(0,0,0,0.22),
+      inset 0 1.5px 0 rgba(255,255,255,0.16),
+      inset 0 -1px 0 rgba(0,0,0,0.18) !important;
+    transform: translateY(-1px);
+  }
+
+  .glass-link {
+    backdrop-filter: blur(16px) saturate(1.6);
+    -webkit-backdrop-filter: blur(16px) saturate(1.6);
+    background: linear-gradient(135deg, rgba(34,197,94,0.10) 0%, rgba(22,163,74,0.07) 100%);
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.28),
+      inset 0 1.5px 0 rgba(255,255,255,0.13),
+      inset 0 -1px 0 rgba(0,0,0,0.18);
+    border-top: 1.5px solid rgba(255,255,255,0.13);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .glass-link:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 40px rgba(0,0,0,0.35),
+      inset 0 1.5px 0 rgba(255,255,255,0.18),
+      inset 0 -1px 0 rgba(0,0,0,0.18);
   }
 }
