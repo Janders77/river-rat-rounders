@@ -55,13 +55,13 @@ export default function PlayerProfile() {
         full_name: playerName || ""
       };
       
-      // Only fetch actual auth user data if viewing own profile
+      // Set profile image from Player entity or auth user
       if (isOwnProf) {
-        setProfileImageUrl(currentUser.profile_image_url || "");
+        setProfileImageUrl(currentUser.profile_image_url || p.profile_picture || "");
         setUser(currentUser);
       } else {
         setUser(displayUser);
-        setProfileImageUrl("");
+        setProfileImageUrl(p.profile_picture || "");
       }
     } else {
       setUser(currentUser);
