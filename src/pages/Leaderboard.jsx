@@ -34,6 +34,10 @@ export default function Leaderboard() {
     loadData();
   }, [selectedQuarter]);
 
+  useEffect(() => {
+    loadLocationData();
+  }, [selectedLocation, selectedQuarter]);
+
   const loadData = async () => {
     setIsLoading(true);
     const [fetchedPlayers, fetchedPlayerRecords, fetchedQuarterlyStats, fetchedQuarterlyRecord, fetchedLocations] = await Promise.all([
