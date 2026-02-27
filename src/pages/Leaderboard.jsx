@@ -28,16 +28,26 @@ export default function Leaderboard() {
 
   const loadData = async () => {
     setIsLoading(true);
-    const [fetchedPlayers, fetchedPlayerRecords, fetchedQuarterlyStats, fetchedQuarterlyRecord] = await Promise.all([
+    const [fetchedPlayers, fetchedPlayerRecords, fetchedQuarterlyStats, fetchedQuarterlyRecord, fetchedLocations] = await Promise.all([
       base44.entities.User.list().catch(() => []),
       base44.entities.Player.list(),
       base44.entities.QuarterlyStats.filter({ quarter: selectedQuarter }).catch(() => []),
-      base44.entities.QuarterlyRecord.filter({ quarter: selectedQuarter }).catch(() => [])
+      base44.entities.QuarterlyRecord.filter({ quarter: selectedQuarter }).catch(() => []),
+      base44.entities.Location.list().catch(() => [])
     ]);
     
     setPlayerRecords(fetchedPlayerRecords);
     setQuarterlyStats(fetchedQuarterlyStats);
     setQuarterlyRecord(fetchedQuarterlyRecord[0] || null);
+    
+    // Sort locations by day of week
+    const locationsByDay = fetchedLocations.sort((a, b) => {
+      const dayOrder = { "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6 };
+      const dayA = Object.keys(dayOrder).find(day => a.game_time?.includes(day)) || 7;
+      const dayB = Object.keys(dayOrder).find(day => b.game_time?.includes(day)) || 7;
+      return (dayOrder[dayA] || 7) - (dayOrder[dayB] || 7);
+    });
+    setLocations(locationsByDay);
 
     const sortedPlayers = fetchedPlayers
       .filter(p => p.full_name && p.full_name.trim())
