@@ -105,7 +105,7 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap mb-6">
             {getAvailableQuarters().map(q => (
               <button
                 key={q}
@@ -119,6 +119,38 @@ export default function Leaderboard() {
                 {q}
               </button>
             ))}
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <label className="text-sm text-gray-400 font-medium flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              Filter by Location
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              <button
+                onClick={() => setSelectedLocation(null)}
+                className={`px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                  selectedLocation === null
+                    ? 'bg-amber-500 text-black'
+                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
+              >
+                Overall
+              </button>
+              {locations.map(location => (
+                <button
+                  key={location.id}
+                  onClick={() => setSelectedLocation(location.name)}
+                  className={`px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedLocation === location.name
+                      ? 'bg-amber-500 text-black'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  {location.name}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
