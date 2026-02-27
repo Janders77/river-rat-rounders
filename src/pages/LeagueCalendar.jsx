@@ -123,20 +123,20 @@ export default function LeagueCalendar() {
     <div className="min-h-screen p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
               <CalendarDays className="w-7 h-7 text-white" />
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-white">League Calendar</h1>
+            <div className="min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">League Calendar</h1>
               <p className="text-gray-400 text-sm">Upcoming events & games</p>
             </div>
           </div>
           {isAdmin && !showForm && (
             <Button
               onClick={() => setShowForm(true)}
-              className="bg-cyan-600 hover:bg-cyan-700 text-white gap-2"
+              className="bg-cyan-600 hover:bg-cyan-700 text-white gap-2 w-full sm:w-auto"
             >
               <Plus className="w-4 h-4" /> Add Event
             </Button>
