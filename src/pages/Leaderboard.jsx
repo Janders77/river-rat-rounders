@@ -26,16 +26,19 @@ export default function Leaderboard() {
 
   const loadData = async () => {
     setIsLoading(true);
-    const [fetchedPlayers, fetchedPlayerRecords] = await Promise.all([
+    const [fetchedPlayers, fetchedPlayerRecords, fetchedQuarterlyStats, fetchedQuarterlyRecord] = await Promise.all([
       base44.entities.User.list().catch(() => []),
-      base44.entities.Player.list()
+      base44.entities.Player.list(),
+      base44.entities.QuarterlyStats.filter({ quarter: selectedQuarter }).catch(() => []),
+      base44.entities.QuarterlyRecord.filter({ quarter: selectedQuarter }).catch(() => [])
     ]);
     
     setPlayerRecords(fetchedPlayerRecords);
+    setQuarterlyStats(fetchedQuarterlyStats);
+    setQuarterlyRecord(fetchedQuarterlyRecord[0] || null);
 
     const sortedPlayers = fetchedPlayers
       .filter(p => p.full_name && p.full_name.trim())
-      .sort((a, b) => (b.total_points || 0) - (a.total_points || 0))
       .slice(0, 100);
     
     setPlayers(sortedPlayers);
