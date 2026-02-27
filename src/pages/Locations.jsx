@@ -106,6 +106,18 @@ export default function Locations() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
+  const handleDragEnd = async (result) => {
+    const { source, destination } = result;
+    if (!destination) return;
+    if (source.index === destination.index) return;
+
+    const reorderedLocations = Array.from(locations);
+    const [movedLocation] = reorderedLocations.splice(source.index, 1);
+    reorderedLocations.splice(destination.index, 0, movedLocation);
+    
+    setLocations(reorderedLocations);
+  };
+
   useEffect(() => {
     loadData();
   }, []);
