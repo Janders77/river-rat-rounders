@@ -191,7 +191,7 @@ export default function PlayerProfile() {
           <div className="space-y-4">
             <div>
               <label className="text-gray-400 text-sm">Full Name</label>
-              {editingName ? (
+              {editingName && isOwnProfile ? (
                 <div className="flex gap-2 mt-2">
                   <Input
                     type="text"
@@ -206,7 +206,7 @@ export default function PlayerProfile() {
                       const nameParts = fullName.trim().split(/\s+/);
                       const firstName = nameParts[0] || "";
                       const lastName = nameParts.slice(1).join(" ") || "";
-                      
+
                       await base44.auth.updateMe({ full_name: fullName.trim() });
                       if (playerData) {
                         await base44.entities.Player.update(playerData.id, {
@@ -216,7 +216,7 @@ export default function PlayerProfile() {
                         // Update localStorage so sidebar and other components stay in sync
                         localStorage.setItem("playerName", fullName.trim());
                       }
-                      
+
                       const refreshed = await base44.auth.me();
                       setUser(refreshed);
                       setFullName(refreshed.full_name || fullName.trim());
@@ -243,14 +243,16 @@ export default function PlayerProfile() {
               ) : (
                 <div className="flex items-center justify-between">
                   <div className="text-white font-medium">{user.full_name}</div>
-                  <Button
-                    onClick={() => setEditingName(true)}
-                    variant="outline"
-                    size="sm"
-                    className="border-gray-700 text-gray-400 hover:text-white"
-                  >
-                    Edit
-                  </Button>
+                  {isOwnProfile && (
+                    <Button
+                      onClick={() => setEditingName(true)}
+                      variant="outline"
+                      size="sm"
+                      className="border-gray-700 text-gray-400 hover:text-white"
+                    >
+                      Edit
+                    </Button>
+                  )}
                 </div>
               )}
               {nameUpdateStatus === "done" && (
