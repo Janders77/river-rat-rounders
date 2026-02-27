@@ -8,13 +8,14 @@ import PlayerSignIn from "../components/home/PlayerSignIn";
 import PlayerSignUp from "../components/home/PlayerSignUp";
 import LoginCard from "../components/home/LoginCard";
 
+const cardClass = "flex items-center gap-4 p-5 rounded-xl border border-green-500/25 bg-gradient-to-br from-green-500/15 to-green-600/10 hover:border-green-400/50 hover:from-green-500/25 hover:to-green-600/15 transition-all duration-200 group";
+
 const navLinks = [
   {
     title: "Leaderboard",
     description: "View community rankings and player stats",
     icon: Trophy,
     url: createPageUrl("Leaderboard"),
-    color: "from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50",
     iconColor: "text-green-400",
   },
   {
@@ -22,7 +23,6 @@ const navLinks = [
     description: "Browse all past games and results",
     icon: History,
     url: createPageUrl("GameHistory"),
-    color: "from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50",
     iconColor: "text-green-400",
   },
   {
@@ -30,7 +30,6 @@ const navLinks = [
     description: "View upcoming league events and games",
     icon: CalendarDays,
     url: createPageUrl("LeagueCalendar"),
-    color: "from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50",
     iconColor: "text-green-400",
   },
 ];
