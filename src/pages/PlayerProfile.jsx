@@ -281,9 +281,10 @@ export default function PlayerProfile() {
         </div>
 
         {/* Password Change Section */}
-        <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-8">
-          <h2 className="text-lg font-semibold text-white mb-4">Change Password</h2>
-          <form onSubmit={handlePasswordChange} className="space-y-4">
+         {isOwnProfile && (
+         <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-8">
+           <h2 className="text-lg font-semibold text-white mb-4">Change Password</h2>
+           <form onSubmit={handlePasswordChange} className="space-y-4">
             <div>
               <label className="text-gray-400 text-sm block mb-2">New Password</label>
               <Input
