@@ -163,15 +163,15 @@ export default function Leaderboard() {
                   </div>
                 </div>
                 <div className="flex items-center gap-6 text-sm">
-                  <div className="text-right">
-                    <div className="text-gray-400 text-xs">Wins</div>
-                    <div className="text-emerald-400 font-bold text-lg">{player.wins || 0}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-gray-400 text-xs">Points</div>
-                    <div className="text-amber-400 font-bold text-lg">{player.total_points || 0}</div>
-                  </div>
-                </div>
+                   <div className="text-right">
+                     <div className="text-gray-400 text-xs">Wins</div>
+                     <div className="text-emerald-400 font-bold text-lg">{player.quarterlyWins}</div>
+                   </div>
+                   <div className="text-right">
+                     <div className="text-gray-400 text-xs">Points</div>
+                     <div className="text-amber-400 font-bold text-lg">{player.quarterlyPoints}</div>
+                   </div>
+                 </div>
               </Link>
             ))}
           </div>
