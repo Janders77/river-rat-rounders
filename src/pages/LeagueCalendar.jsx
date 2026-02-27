@@ -306,9 +306,9 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
                 {format(parseISO(event.event_date), "yyyy")}
               </div>
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-1">
-                <span className="font-semibold text-white">{event.title}</span>
+                <span className="font-semibold text-white break-words">{event.title}</span>
                 <Badge className={`text-xs border ${EVENT_TYPE_COLORS[event.event_type] || EVENT_TYPE_COLORS["Other"]}`}>
                   {event.event_type}
                 </Badge>
