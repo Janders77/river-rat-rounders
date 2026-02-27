@@ -51,6 +51,22 @@ export default function Leaderboard() {
     return player.full_name || "";
   };
 
+  const getQuarterlyStats = (playerEmail) => {
+    const stat = quarterlyStats.find(s => s.player_email === playerEmail);
+    return stat || { points: 0, wins: 0 };
+  };
+
+  const getSortedPlayers = () => {
+    return players
+      .map(player => ({
+        ...player,
+        quarterlyPoints: getQuarterlyStats(player.email).points,
+        quarterlyWins: getQuarterlyStats(player.email).wins
+      }))
+      .sort((a, b) => b.quarterlyPoints - a.quarterlyPoints)
+      .slice(0, 100);
+  };
+
   const getAvailableQuarters = () => {
     const quarters = [];
     const now = new Date();
