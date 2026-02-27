@@ -27,8 +27,9 @@ export default function RecordGame() {
   // placements[0] = 1st place email, placements[1] = 2nd, etc.
   const [placements, setPlacements] = useState(Array(9).fill(""));
 
-  const POINTS = [1000, 900, 800, 700, 600, 500, 400, 200, 100];
-  const PLACE_LABELS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
+  const isTurbo = gameData.game_type === "Turbo";
+  const POINTS = isTurbo ? [500, 250] : [1000, 900, 800, 700, 600, 500, 400, 200, 100];
+  const PLACE_LABELS = isTurbo ? ["1st", "2nd"] : ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
 
   useEffect(() => {
     loadUsers();
