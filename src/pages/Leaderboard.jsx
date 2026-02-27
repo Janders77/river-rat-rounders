@@ -49,13 +49,11 @@ export default function Leaderboard() {
   const getAvailableQuarters = () => {
     const quarters = [];
     const now = new Date();
-    for (let i = 0; i < 4; i++) {
-      const d = new Date(now.getFullYear(), now.getMonth() - (i * 3), 1);
-      const quarter = Math.floor(d.getMonth() / 3) + 1;
-      const year = d.getFullYear();
-      if (year !== 2025) {
-        quarters.push(`${year}-Q${quarter}`);
-      }
+    const currentYear = now.getFullYear();
+    const currentQuarter = Math.floor(now.getMonth() / 3) + 1;
+    
+    for (let q = 1; q <= currentQuarter; q++) {
+      quarters.push(`${currentYear}-Q${q}`);
     }
     return quarters;
   };
