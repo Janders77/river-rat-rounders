@@ -71,15 +71,7 @@ export default function Home() {
 
             <Link
               to={createPageUrl("JoinTheLeague")}
-              style={{
-                background: "linear-gradient(135deg, rgba(34,197,94,0.10) 0%, rgba(22,163,74,0.07) 100%)",
-                backdropFilter: "blur(16px) saturate(1.6)",
-                WebkitBackdropFilter: "blur(16px) saturate(1.6)",
-                boxShadow: "0 8px 32px rgba(0,0,0,0.28), inset 0 1.5px 0 rgba(255,255,255,0.13), inset 0 -1px 0 rgba(0,0,0,0.18)",
-                borderTop: "1.5px solid rgba(255,255,255,0.13)",
-                transform: "perspective(600px) rotateX(0deg)",
-              }}
-              className="flex items-center gap-4 p-5 rounded-xl border border-green-500/25 hover:border-green-400/50 transition-all duration-200 group hover:scale-[1.02] hover:-translate-y-0.5"
+              className="flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r from-green-500/15 to-green-600/10 border-green-500/25 hover:border-green-400/50 transition-all duration-200 group"
             >
               <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
                 <UserPlus className="w-6 h-6 text-green-400" />
@@ -94,14 +86,7 @@ export default function Home() {
               <Link
                 key={link.title}
                 to={link.url}
-                style={{
-                  background: "linear-gradient(135deg, rgba(34,197,94,0.10) 0%, rgba(22,163,74,0.07) 100%)",
-                  backdropFilter: "blur(16px) saturate(1.6)",
-                  WebkitBackdropFilter: "blur(16px) saturate(1.6)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.28), inset 0 1.5px 0 rgba(255,255,255,0.13), inset 0 -1px 0 rgba(0,0,0,0.18)",
-                  borderTop: "1.5px solid rgba(255,255,255,0.13)",
-                }}
-                className={`flex items-center gap-4 p-5 rounded-xl border border-green-500/25 hover:border-green-400/50 transition-all duration-200 group hover:scale-[1.02] hover:-translate-y-0.5`}
+                className={`flex items-center gap-4 p-5 rounded-xl border bg-gradient-to-r ${link.color} transition-all duration-200 group`}
               >
                 <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
                   {link.image ? (
