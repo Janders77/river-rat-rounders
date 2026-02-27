@@ -54,12 +54,7 @@ const navigationItems = [
     url: createPageUrl("Locations"),
     icon: MapPin,
   },
-  {
-    title: "Admin Dashboard",
-    url: createPageUrl("AdminDashboard"),
-    icon: BarChart3,
-    adminOnly: true,
-  },
+
   {
     title: "Player Database",
     url: createPageUrl("PlayerDatabase"),
