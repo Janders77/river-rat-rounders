@@ -17,6 +17,7 @@ export default function PlayerDatabase() {
   const [showForm, setShowForm] = useState(false);
   const [csvError, setCsvError] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [totalCount, setTotalCount] = useState(null);
   const [filters, setFilters] = useState({
     guardFilter: { enabled: false, operator: ">", value: 0 },
     dateFilter: { enabled: false, type: "range", startDate: "", endDate: "", specificDate: "" }
