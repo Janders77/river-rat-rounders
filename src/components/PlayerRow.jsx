@@ -107,7 +107,7 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
       }`}
     >
       <div className="flex items-center gap-2 w-full overflow-hidden">
-        <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold text-xs shrink-0">
+        <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold shrink-0" style={{fontSize: player.player_number >= 1000 ? "10px" : player.player_number >= 100 ? "11px" : "13px", letterSpacing: "0", fontFamily: "monospace"}}>
           {player.player_number ?? "?"}
         </div>
         <div className="flex-1 min-w-0 overflow-hidden">
