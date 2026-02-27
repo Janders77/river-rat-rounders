@@ -10,6 +10,8 @@ export default function Leaderboard() {
   const [playerRecords, setPlayerRecords] = useState([]);
   const [quarterlyStats, setQuarterlyStats] = useState([]);
   const [quarterlyRecord, setQuarterlyRecord] = useState(null);
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
 
