@@ -129,8 +129,8 @@ export default function LeagueCalendar() {
               <CalendarDays className="w-7 h-7 text-white" />
             </div>
             <div className="min-w-0">
-              <h1 className="text-2xl sm:text-3xl font-bold text-white">League Calendar</h1>
-              <p className="text-gray-400 text-sm">Upcoming events & games</p>
+              <h1 className="text-xl sm:text-3xl font-bold text-white">League Calendar</h1>
+              <p className="text-gray-400 text-xs sm:text-sm">Upcoming events & games</p>
             </div>
           </div>
           {isAdmin && !showForm && (
@@ -295,46 +295,46 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
       <CardContent className="pt-4 pb-4">
         <div className="flex flex-col gap-3">
           <div className="flex gap-4 items-start w-full">
-            <div className="text-center flex-shrink-0 w-[48px]">
-              <div className="text-xs text-gray-400 uppercase">
-                {format(parseISO(event.event_date), "MMM")}
-              </div>
-              <div className="text-2xl font-bold text-white leading-tight">
-                {format(parseISO(event.event_date), "d")}
-              </div>
-              <div className="text-xs text-gray-500">
-                {format(parseISO(event.event_date), "yyyy")}
-              </div>
-            </div>
+            <div className="text-center flex-shrink-0 w-[40px]">
+               <div className="text-[10px] text-gray-400 uppercase">
+                 {format(parseISO(event.event_date), "MMM")}
+               </div>
+               <div className="text-lg sm:text-2xl font-bold text-white leading-tight">
+                 {format(parseISO(event.event_date), "d")}
+               </div>
+               <div className="text-[10px] text-gray-500">
+                 {format(parseISO(event.event_date), "yyyy")}
+               </div>
+             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap mb-1">
-                <span className="font-semibold text-white break-words">{event.title}</span>
-                <Badge className={`text-xs border ${EVENT_TYPE_COLORS[event.event_type] || EVENT_TYPE_COLORS["Other"]}`}>
+               <div className="flex items-center gap-1 sm:gap-2 flex-wrap mb-1">
+                 <span className="font-semibold text-sm sm:text-base text-white break-words">{event.title}</span>
+                 <Badge className={`text-[10px] sm:text-xs border ${EVENT_TYPE_COLORS[event.event_type] || EVENT_TYPE_COLORS["Other"]}`}>
                   {event.event_type}
                 </Badge>
               </div>
               {event.event_time && (
-                <div className="flex items-center gap-1 text-gray-400 text-sm mb-1">
-                  <Clock className="w-3 h-3" /> {event.event_time}
+                <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm mb-0.5 sm:mb-1">
+                  <Clock className="w-3 h-3 flex-shrink-0" /> <span className="truncate">{event.event_time}</span>
                 </div>
               )}
               {event.location && (
-                <div className="flex items-center gap-1 text-gray-400 text-sm mb-1">
-                  <MapPin className="w-3 h-3" /> {event.location}
+                <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm mb-0.5 sm:mb-1">
+                  <MapPin className="w-3 h-3 flex-shrink-0" /> <span className="truncate">{event.location}</span>
                 </div>
               )}
               {event.address && (
-                <div className="flex items-center gap-1 text-gray-500 text-xs mb-1">
-                  <MapPin className="w-3 h-3" /> {event.address}
+                <div className="flex items-center gap-1 text-gray-500 text-[10px] sm:text-xs mb-0.5 sm:mb-1">
+                  <MapPin className="w-3 h-3 flex-shrink-0" /> <span className="truncate">{event.address}</span>
                 </div>
               )}
               {event.description && (
-                <p className="text-gray-400 text-sm mt-2">{event.description}</p>
+                <p className="text-gray-400 text-xs sm:text-sm mt-1 sm:mt-2">{event.description}</p>
               )}
               {event.image_urls?.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-wrap gap-2 mt-2 sm:mt-3">
                   {event.image_urls.map((url, idx) => (
-                    <img key={idx} src={url} alt="" className="max-w-xs sm:max-w-sm rounded-lg border border-gray-700" />
+                    <img key={idx} src={url} alt="" className="max-w-[120px] sm:max-w-xs rounded-lg border border-gray-700" />
                   ))}
                 </div>
               )}
