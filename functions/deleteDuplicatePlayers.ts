@@ -9,55 +9,90 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    // Fetch all players
-    const allPlayers = await base44.asServiceRole.entities.Player.list('created_date', 10000);
+    // Fetch all players in batches
+    let allPlayers = [];
+    let skip = 0;
+    const batchSize = 500;
+    while (true) {
+      const batch = await base44.asServiceRole.entities.Player.list('created_date', batchSize, skip);
+      allPlayers = allPlayers.concat(batch);
+      if (batch.length < batchSize) break;
+      skip += batchSize;
+    }
 
-    // Group players by email
-    const emailGroups = {};
+    console.log(`Total players fetched: ${allPlayers.length}`);
+
+    // Group players by player_number (primary key for duplicates)
+    const numberGroups = {};
     allPlayers.forEach(player => {
-      if (!emailGroups[player.email]) {
-        emailGroups[player.email] = [];
-      }
-      emailGroups[player.email].push(player);
+      const key = player.player_number;
+      if (key == null) return;
+      if (!numberGroups[key]) numberGroups[key] = [];
+      numberGroups[key].push(player);
     });
 
-    // Find duplicates first
-    const duplicateEmails = [];
-    for (const email in emailGroups) {
-      if (emailGroups[email].length > 1) {
-        duplicateEmails.push(email);
+    // Also group by email for email-based duplicates
+    const emailGroups = {};
+    allPlayers.forEach(player => {
+      const email = (player.email || '').toLowerCase().trim();
+      if (!email) return;
+      if (!emailGroups[email]) emailGroups[email] = [];
+      emailGroups[email].push(player);
+    });
+
+    const toDelete = new Set();
+
+    // Find duplicate player_numbers - keep the one with a password or the oldest
+    for (const key in numberGroups) {
+      const group = numberGroups[key];
+      if (group.length <= 1) continue;
+      // Keep: prefer record with password, then oldest created_date
+      group.sort((a, b) => {
+        if (a.password && !b.password) return -1;
+        if (!a.password && b.password) return 1;
+        return new Date(a.created_date) - new Date(b.created_date);
+      });
+      for (let i = 1; i < group.length; i++) {
+        toDelete.add(group[i].id);
       }
     }
 
-    // Delete in small batches
-    let deletedCount = 0;
-    const batchSize = 10;
-
-    for (let b = 0; b < duplicateEmails.length; b += batchSize) {
-      const batch = duplicateEmails.slice(b, b + batchSize);
-      
-      for (const email of batch) {
-        const players = emailGroups[email];
-        players.sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
-
-        for (let i = 1; i < players.length; i++) {
-          try {
-            await base44.asServiceRole.entities.Player.delete(players[i].id);
-            deletedCount++;
-          } catch (e) {
-            console.log(`Could not delete ${players[i].id}: ${e.message}`);
-          }
-        }
+    // Find duplicate emails - keep the one with a password or the oldest
+    for (const email in emailGroups) {
+      const group = emailGroups[email];
+      if (group.length <= 1) continue;
+      group.sort((a, b) => {
+        if (a.password && !b.password) return -1;
+        if (!a.password && b.password) return 1;
+        return new Date(a.created_date) - new Date(b.created_date);
+      });
+      for (let i = 1; i < group.length; i++) {
+        toDelete.add(group[i].id);
       }
+    }
 
-      await new Promise(resolve => setTimeout(resolve, 500));
+    console.log(`Records to delete: ${toDelete.size}`);
+
+    // Delete in small batches
+    const idsToDelete = [...toDelete];
+    let deletedCount = 0;
+    for (let i = 0; i < idsToDelete.length; i++) {
+      try {
+        await base44.asServiceRole.entities.Player.delete(idsToDelete[i]);
+        deletedCount++;
+      } catch (e) {
+        console.log(`Could not delete ${idsToDelete[i]}: ${e.message}`);
+      }
+      // Small pause every 50 deletes
+      if (i % 50 === 49) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
     }
 
     return Response.json({
       success: true,
+      totalFetched: allPlayers.length,
       deletedCount,
-      duplicateGroups: duplicates.length,
-      details: duplicates
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
