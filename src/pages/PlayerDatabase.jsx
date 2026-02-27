@@ -42,6 +42,9 @@ export default function PlayerDatabase() {
 
   const loadPlayers = async () => {
     const data = await base44.entities.Player.list("player_number", 10000);
+    // Also fetch the highest player number to get the true total count
+    const newest = await base44.entities.Player.list("-player_number", 1);
+    setTotalCount(newest.length > 0 ? newest[0].player_number : data.length);
     setPlayers(data);
     setLoading(false);
   };
