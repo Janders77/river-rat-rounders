@@ -32,8 +32,15 @@ export default function LocationLeaderboard() {
   }
 
   useEffect(() => {
+    loadLocations();
     loadData();
   }, [selectedQuarter, location]);
+
+  const loadLocations = async () => {
+    const locations = await base44.entities.Location.list().catch(() => []);
+    const locationNames = locations.map(l => l.name);
+    setAvailableLocations(locationNames);
+  };
 
   const loadData = async () => {
     setIsLoading(true);
