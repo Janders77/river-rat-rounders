@@ -45,7 +45,7 @@ export default function LoginCard({ onLoginSuccess }) {
   };
 
   return (
-    <Card className="bg-green-900/30 border-green-700/50 w-full max-w-md">
+    <Card className="bg-gradient-to-br from-green-500/20 to-green-700/10 border-green-500/25 w-full max-w-md">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           <LogIn className="w-5 h-5 text-green-400" /> Player Login
