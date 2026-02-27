@@ -108,7 +108,7 @@ export default function Leaderboard() {
               <Link
                 key={player.id}
                 to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
-                className="flex items-center justify-between p-4 rounded-lg bg-gray-900/60 border border-gray-800 hover:border-amber-500/50 hover:bg-gray-900 transition-all group"
+                className="glass-link flex items-center justify-between p-4 rounded-lg border border-gray-800 hover:border-amber-500/50 transition-all group"
               >
                 <div className="flex items-center gap-4 flex-1">
                   <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center text-gray-900 font-bold text-sm shrink-0 min-w-8">
