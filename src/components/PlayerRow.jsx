@@ -106,16 +106,16 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
         isAdmin ? "cursor-pointer hover:border-red-400/70" : ""
       }`}
     >
-      <div className="flex items-center gap-1.5 w-full overflow-hidden">
+      <div className="flex items-center gap-1.5 w-full min-w-0">
         <div className="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold shrink-0" style={{fontSize: player.player_number >= 1000 ? "9px" : player.player_number >= 100 ? "10px" : "12px", letterSpacing: "0", fontFamily: "monospace"}}>
           {player.player_number ?? "?"}
         </div>
-        <div className="flex-1 min-w-0 overflow-hidden">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-white font-medium text-sm truncate">{player.first_name} {player.last_name}</span>
-            {player.card_guards > 0 && <span className="text-amber-400 text-xs shrink-0">🛡️ {player.card_guards}</span>}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="text-white font-medium text-sm truncate min-w-0">{player.first_name} {player.last_name}</span>
+            {player.card_guards > 0 && <span className="text-amber-400 text-xs shrink-0">🛡️{player.card_guards}</span>}
           </div>
-          <div className="text-gray-400 text-xs truncate">{player.email}</div>
+          <div className="text-gray-400 text-xs truncate w-full">{player.email}</div>
         </div>
         <div className="flex items-center shrink-0">
           {isAdmin && (
