@@ -78,170 +78,119 @@ export default function DirectorManagement() {
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8 flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-lg">
-            <ShieldAlert className="w-7 h-7 text-white" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-white">Director Management</h1>
-            <p className="text-gray-400">Manage tournament directors and their roles</p>
-          </div>
+        <div className="mb-6 flex items-center gap-3">
+          <ShieldAlert className="w-8 h-8 text-red-500" />
+          <h1 className="text-2xl font-bold text-white">Director Management</h1>
         </div>
 
-        <Card className="bg-[#1A1B20] border-gray-800 mb-8">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Plus className="w-5 h-5" /> Add New Director
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleAddDirector} className="space-y-4">
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <label className="text-gray-300 text-sm">Email *</label>
-                  <Input
-                    type="email"
-                    placeholder="director@example.com"
-                    value={newDirector.email}
-                    onChange={e => setNewDirector({...newDirector, email: e.target.value})}
-                    className="bg-gray-900 border-gray-700 text-white"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-gray-300 text-sm">Full Name</label>
-                  <Input
-                    placeholder="John Doe"
-                    value={newDirector.full_name}
-                    onChange={e => setNewDirector({...newDirector, full_name: e.target.value})}
-                    className="bg-gray-900 border-gray-700 text-white"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-gray-300 text-sm">Role *</label>
-                  <Select value={newDirector.role} onValueChange={v => setNewDirector({...newDirector, role: v})}>
-                    <SelectTrigger className="bg-gray-900 border-gray-700 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-700">
-                      {DIRECTOR_ROLES.map(role => (
-                        <SelectItem key={role} value={role}>{role}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <Button 
-                type="submit" 
-                disabled={isSubmitting || !newDirector.email}
-                className="w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white"
-              >
-                {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
-                Add Director
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        {/* Add Director Form */}
+        <div className="rounded-xl border border-red-500/30 bg-gradient-to-br from-red-950/30 to-red-900/10 p-4 mb-6 overflow-hidden">
+          <form onSubmit={handleAddDirector} className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <Input
+                type="email"
+                placeholder="Email *"
+                value={newDirector.email}
+                onChange={e => setNewDirector({...newDirector, email: e.target.value})}
+                className="bg-black/30 border-red-500/30 text-white placeholder:text-gray-500"
+                required
+              />
+              <Input
+                placeholder="Full Name"
+                value={newDirector.full_name}
+                onChange={e => setNewDirector({...newDirector, full_name: e.target.value})}
+                className="bg-black/30 border-red-500/30 text-white placeholder:text-gray-500"
+              />
+              <Select value={newDirector.role} onValueChange={v => setNewDirector({...newDirector, role: v})}>
+                <SelectTrigger className="bg-black/30 border-red-500/30 text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-900 border-gray-700">
+                  {DIRECTOR_ROLES.map(role => (
+                    <SelectItem key={role} value={role}>{role}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button
+              type="submit"
+              disabled={isSubmitting || !newDirector.email}
+              className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white"
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
+              Add Director
+            </Button>
+          </form>
+        </div>
 
-        <Card className="bg-[#1A1B20] border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-white">All Directors ({directors.length})</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {directors.map(director => (
-                <div key={director.id} className="p-4 bg-gray-900/50 rounded-lg border border-gray-800 flex items-center justify-between">
-                  {editingId === director.id ? (
-                    <div className="flex-1 space-y-3">
-                      <div className="grid md:grid-cols-3 gap-3">
-                        <Input
-                          type="email"
-                          value={editData.email}
-                          onChange={e => setEditData({...editData, email: e.target.value})}
-                          className="bg-gray-800 border-gray-700 text-white"
-                        />
-                        <Input
-                          value={editData.full_name || ""}
-                          onChange={e => setEditData({...editData, full_name: e.target.value})}
-                          className="bg-gray-800 border-gray-700 text-white"
-                          placeholder="Full name"
-                        />
-                        <Select value={editData.role} onValueChange={v => setEditData({...editData, role: v})}>
-                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-900 border-gray-700">
-                            {DIRECTOR_ROLES.map(role => (
-                              <SelectItem key={role} value={role}>{role}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="flex gap-2 justify-end">
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          onClick={() => setEditingId(null)}
-                          className="border-gray-700 text-gray-300"
-                        >
-                          <X className="w-4 h-4 mr-1" /> Cancel
-                        </Button>
-                        <Button
-                          size="sm"
-                          disabled={isSubmitting}
-                          onClick={handleSaveEdit}
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                        >
-                          <Check className="w-4 h-4 mr-1" /> Save
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex-1">
-                        <div className="font-medium text-white">{director.full_name || director.email}</div>
-                        <div className="text-sm text-gray-400">{director.email}</div>
-                        <div className="mt-2">
-                          <Badge className={
-                            director.role === "Head Director" ? "bg-purple-600/20 border-purple-500 text-purple-300" :
-                            director.role === "Tournament Director" ? "bg-blue-600/20 border-blue-500 text-blue-300" :
-                            "bg-gray-600/20 border-gray-500 text-gray-300"
-                          }>
-                            {director.role}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => {
-                            setEditingId(director.id);
-                            setEditData(director);
-                          }}
-                          className="text-blue-400 hover:text-blue-300 hover:bg-blue-900/20"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => handleDeleteDirector(director.id)}
-                          className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </>
-                  )}
+        {/* Directors List */}
+        <div className="space-y-2 overflow-hidden">
+          {directors.map(director => (
+            <div key={director.id} className="px-3 py-2 rounded-lg border border-red-500/25 bg-gradient-to-r from-red-950/30 to-red-900/10 overflow-hidden">
+              {editingId === director.id ? (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <Input
+                      type="email"
+                      value={editData.email}
+                      onChange={e => setEditData({...editData, email: e.target.value})}
+                      className="bg-black/30 border-red-500/30 text-white text-sm"
+                    />
+                    <Input
+                      value={editData.full_name || ""}
+                      onChange={e => setEditData({...editData, full_name: e.target.value})}
+                      className="bg-black/30 border-red-500/30 text-white text-sm"
+                      placeholder="Full name"
+                    />
+                    <Select value={editData.role} onValueChange={v => setEditData({...editData, role: v})}>
+                      <SelectTrigger className="bg-black/30 border-red-500/30 text-white text-sm">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-900 border-gray-700">
+                        {DIRECTOR_ROLES.map(role => (
+                          <SelectItem key={role} value={role}>{role}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex gap-2 justify-end">
+                    <Button size="sm" variant="outline" onClick={() => setEditingId(null)} className="border-gray-700 text-gray-300 h-7 text-xs">
+                      <X className="w-3 h-3 mr-1" /> Cancel
+                    </Button>
+                    <Button size="sm" disabled={isSubmitting} onClick={handleSaveEdit} className="bg-emerald-600 hover:bg-emerald-700 text-white h-7 text-xs">
+                      <Check className="w-3 h-3 mr-1" /> Save
+                    </Button>
+                  </div>
                 </div>
-              ))}
-              {directors.length === 0 && (
-                <p className="text-gray-500 text-center py-8">No directors yet. Add one above!</p>
+              ) : (
+                <div className="flex items-center justify-between gap-2 min-w-0">
+                  <div className="min-w-0 flex-1 overflow-hidden">
+                    <div className="text-white text-sm font-medium truncate">{director.full_name || director.email}</div>
+                    <div className="text-gray-400 text-xs truncate">{director.email}</div>
+                    <Badge className={`mt-1 text-xs ${
+                      director.role === "Head Director" ? "bg-red-600/20 border-red-500/50 text-red-300" :
+                      director.role === "Tournament Director" ? "bg-red-800/20 border-red-700/50 text-red-400" :
+                      "bg-gray-600/20 border-gray-500/50 text-gray-300"
+                    }`}>
+                      {director.role}
+                    </Badge>
+                  </div>
+                  <div className="flex gap-1 shrink-0">
+                    <Button size="icon" variant="ghost" onClick={() => { setEditingId(director.id); setEditData(director); }} className="text-gray-400 hover:text-white hover:bg-white/10 h-7 w-7">
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={() => handleDeleteDirector(director.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 h-7 w-7">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </div>
               )}
             </div>
-          </CardContent>
-        </Card>
+          ))}
+          {directors.length === 0 && (
+            <p className="text-gray-500 text-center py-8">No directors yet. Add one above!</p>
+          )}
+        </div>
       </div>
     </div>
   );

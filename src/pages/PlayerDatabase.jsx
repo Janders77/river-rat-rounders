@@ -226,9 +226,6 @@ export default function PlayerDatabase() {
           <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">{csvError}</div>
         )}
 
-        {/* Advanced Filters */}
-        <PlayerFilters filters={filters} setFilters={setFilters} />
-
         {/* Add Player Form */}
         {showForm && (
           <Card className="bg-gray-900/60 border-gray-700 mb-4">
