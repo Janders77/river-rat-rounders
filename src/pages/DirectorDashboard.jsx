@@ -306,10 +306,10 @@ export default function DirectorDashboard() {
               </TabsTrigger>
             )}
             {hasPermission(directorRole, "canApproveRequests") && (
-              <TabsTrigger value="requests" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white relative">
+              <TabsTrigger value="requests" className="data-[state=active]:bg-red-600 data-[state=active]:text-white relative">
                 <Mail className="w-4 h-4 mr-2" /> Requests
                 {inviteRequests.length > 0 && (
-                  <span className="ml-1 bg-amber-400 text-black text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
+                  <span className="ml-1 bg-red-400 text-white text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
                 )}
               </TabsTrigger>
             )}
@@ -694,20 +694,15 @@ export default function DirectorDashboard() {
                       (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
                       u.email.toLowerCase().includes(playerSearch.toLowerCase())
                     ).map(user => (
-                      <div key={user.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0">
-                        <div className="min-w-0 flex-1">
+                      <div key={user.id} className="flex items-center justify-between gap-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0 overflow-hidden">
+                        <div className="min-w-0 flex-1 overflow-hidden">
                           <div className="font-medium text-white truncate">{user.full_name || user.email}</div>
-                          <div className="text-sm text-gray-400 truncate">{user.email}</div>
+                          <div className="text-xs text-gray-400 truncate">{user.email}</div>
+                          <div className="text-xs text-amber-400 font-bold mt-0.5">{user.total_points || 0} pts · {user.games_played || 0} games</div>
                         </div>
-                        <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap justify-between sm:justify-end">
-                          <div className="text-right text-sm">
-                            <div className="text-amber-400 font-bold">{user.total_points || 0} pts</div>
-                            <div className="text-gray-500 text-xs">{user.games_played || 0} games</div>
-                          </div>
-                          <Badge variant="outline" className={`shrink-0 ${user.role === "admin" ? "border-purple-500 text-purple-400" : "border-gray-600 text-gray-400"}`}>
-                            {user.role === "admin" ? "Director" : "Player"}
-                          </Badge>
-                        </div>
+                        <Badge variant="outline" className={`shrink-0 text-xs ${user.role === "admin" ? "border-red-500 text-red-400" : "border-gray-600 text-gray-400"}`}>
+                          {user.role === "admin" ? "Director" : "Player"}
+                        </Badge>
                       </div>
                     ))}
                     {users.length === 0 && <p className="text-gray-500 text-center py-4">No players yet.</p>}
