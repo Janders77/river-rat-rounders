@@ -193,8 +193,8 @@ export default function Locations() {
             <p className="text-lg">No locations added yet</p>
           </div>
         ) : (
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="locations" type="LOCATION">
+          <DragDropContext onDragEnd={isAdmin ? handleDragEnd : () => {}}>
+            <Droppable droppableId="locations" type="LOCATION" isDropDisabled={!isAdmin}>
               {(provided, snapshot) => (
                 <div
                   className="grid gap-6 md:grid-cols-2 justify-items-center"
@@ -208,12 +208,12 @@ export default function Locations() {
                   }}
                 >
                   {locations.map((loc, index) => (
-                    <Draggable key={loc.id} draggableId={loc.id} index={index}>
+                    <Draggable key={loc.id} draggableId={loc.id} index={index} isDragDisabled={!isAdmin}>
                       {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
-                          {...provided.dragHandleProps}
+                          {...(isAdmin ? provided.dragHandleProps : {})}
                           className="w-full"
                           style={{
                             opacity: snapshot.isDragging ? 0.5 : 1,
