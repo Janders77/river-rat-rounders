@@ -142,7 +142,7 @@ export default function PlayerProfile() {
               {profileImageUrl ? (
                 <img src={profileImageUrl} alt={user.full_name} className="w-full h-full object-cover" />
               ) : (
-                <div className="text-gray-500 text-6xl">{user.full_name?.[0]?.toUpperCase() || "?"}</div>
+                <div className="text-gray-500 text-6xl">{(fullName || user.full_name)?.[0]?.toUpperCase() || "?"}</div>
               )}
             </div>
             {isOwnProfile && (
@@ -231,7 +231,7 @@ export default function PlayerProfile() {
                 </div>
               ) : (
                 <div className="flex items-center justify-between">
-                  <div className="text-white font-medium">{user.full_name}</div>
+                  <div className="text-white font-medium">{fullName || user.full_name}</div>
                   {isOwnProfile && (
                     <Button
                       onClick={() => setEditingName(true)}
