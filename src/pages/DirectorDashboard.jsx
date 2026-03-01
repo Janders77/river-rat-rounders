@@ -116,9 +116,17 @@ export default function DirectorDashboard() {
    const me = await base44.auth.me();
    setCurrentUser(me);
 
-   // Check if user is a designated director
-   const directorCheck = await base44.entities.Director.filter({ email: me.email });
-   if (directorCheck.length === 0) {
+   // Check director by auth email OR playerEmail stored in localStorage
+   const playerEmail = localStorage.getItem("playerEmail");
+   const emailsToCheck = [...new Set([me.email, playerEmail].filter(Boolean))];
+   
+   let directorRecord = null;
+   for (const email of emailsToCheck) {
+     const check = await base44.entities.Director.filter({ email });
+     if (check.length > 0) { directorRecord = check[0]; break; }
+   }
+   
+   if (!directorRecord) {
      setIsLoading(false);
      return;
    }
