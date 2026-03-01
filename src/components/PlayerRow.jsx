@@ -102,45 +102,40 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
   return (
     <div
       onClick={() => isAdmin && setEditing(true)}
-      className={`p-2 rounded-lg bg-transparent border border-red-500/30 w-full overflow-hidden transition-colors ${
+      className={`px-2 py-1.5 rounded-lg bg-transparent border border-red-500/30 w-full overflow-hidden transition-colors ${
         isAdmin ? "cursor-pointer hover:border-red-400/70" : ""
       }`}
     >
-      <div className="flex items-center gap-1.5 w-full min-w-0">
-        <div className="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold shrink-0" style={{fontSize: player.player_number >= 1000 ? "9px" : player.player_number >= 100 ? "10px" : "12px", letterSpacing: "0", fontFamily: "monospace"}}>
+      <div className="flex items-center gap-1.5 w-full min-w-0 overflow-hidden">
+        <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold shrink-0" style={{fontSize: player.player_number >= 1000 ? "8px" : player.player_number >= 100 ? "9px" : "11px", fontFamily: "monospace"}}>
           {player.player_number ?? "?"}
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span className="text-white font-medium text-sm truncate min-w-0">{player.first_name} {player.last_name}</span>
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <div className="flex items-center gap-1 min-w-0 overflow-hidden">
+            <span className="text-white font-medium text-xs truncate">{player.first_name} {player.last_name}</span>
             {player.card_guards > 0 && <span className="text-amber-400 text-xs shrink-0">🛡️{player.card_guards}</span>}
           </div>
-          <div className="text-gray-400 text-xs truncate w-full">{player.email}</div>
+          <div className="text-gray-500 text-xs truncate overflow-hidden" style={{maxWidth: "100%"}}>{player.email}</div>
         </div>
-        <div className="flex items-center shrink-0">
-          {isAdmin && (
-            <>
-              <Link
-                to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
-                onClick={e => e.stopPropagation()}
-                className="p-1.5 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-blue-400/10 transition-colors"
-              >
-                <Eye className="w-3.5 h-3.5" />
-              </Link>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(player.id);
-                }}
-                className="text-gray-600 hover:text-red-400 hover:bg-red-400/10 h-7 w-7"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </Button>
-            </>
-          )}
-        </div>
+        {isAdmin && (
+          <div className="flex items-center shrink-0 gap-0">
+            <Link
+              to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
+              onClick={e => e.stopPropagation()}
+              className="p-1 rounded text-gray-500 hover:text-blue-400 transition-colors"
+            >
+              <Eye className="w-3 h-3" />
+            </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => { e.stopPropagation(); onDelete(player.id); }}
+              className="text-gray-600 hover:text-red-400 hover:bg-red-400/10 h-6 w-6"
+            >
+              <Trash2 className="w-3 h-3" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
