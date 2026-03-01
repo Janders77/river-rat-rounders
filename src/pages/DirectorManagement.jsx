@@ -149,9 +149,63 @@ export default function DirectorManagement() {
             </div>
           ))}
           {directors.length === 0 && (
-            <p className="text-gray-500 text-center py-8">No directors yet. Add one above!</p>
+            <p className="text-gray-500 text-center py-8">No directors yet.</p>
           )}
         </div>
+
+        {/* Add Director Section */}
+        {showAddForm ? (
+          <div className="mt-4 rounded-xl border border-red-500/30 bg-gradient-to-br from-red-950/30 to-red-900/10 p-4 overflow-hidden">
+            <form onSubmit={async (e) => { await handleAddDirector(e); setShowAddForm(false); }} className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <Input
+                  type="email"
+                  placeholder="Email *"
+                  value={newDirector.email}
+                  onChange={e => setNewDirector({...newDirector, email: e.target.value})}
+                  className="bg-black/30 border-red-500/30 text-white placeholder:text-gray-500"
+                  required
+                />
+                <Input
+                  placeholder="Full Name"
+                  value={newDirector.full_name}
+                  onChange={e => setNewDirector({...newDirector, full_name: e.target.value})}
+                  className="bg-black/30 border-red-500/30 text-white placeholder:text-gray-500"
+                />
+                <Select value={newDirector.role} onValueChange={v => setNewDirector({...newDirector, role: v})}>
+                  <SelectTrigger className="bg-black/30 border-red-500/30 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-900 border-gray-700">
+                    {DIRECTOR_ROLES.map(role => (
+                      <SelectItem key={role} value={role}>{role}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || !newDirector.email}
+                  className="flex-1 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white"
+                >
+                  {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
+                  Add Director
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setShowAddForm(false)} className="border-gray-700 text-gray-300">
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <Button
+            onClick={() => setShowAddForm(true)}
+            className="mt-4 w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white"
+          >
+            <Plus className="w-4 h-4 mr-2" /> Add Director
+          </Button>
+        )}
       </div>
     </div>
   );
