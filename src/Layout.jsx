@@ -188,7 +188,7 @@ function LayoutInner({ children }) {
                           asChild 
                           className={`group relative overflow-hidden transition-all duration-200 rounded-lg mb-1 ${
                             location.pathname === item.url 
-                              ? 'bg-gradient-to-r from-amber-500/20 to-amber-600/10 text-amber-400 border-l-2 border-amber-500' 
+                              ? 'bg-gradient-to-r from-green-500/20 to-green-600/10 text-green-400 border-l-2 border-green-500' 
                               : 'text-gray-400 hover:text-red-400 hover:bg-red-950/30 hover:border-l-2 hover:border-red-500 border-l-2 border-transparent'
                           }`}
                         >

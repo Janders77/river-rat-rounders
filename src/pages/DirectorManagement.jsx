@@ -17,6 +17,7 @@ export default function DirectorManagement() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newDirector, setNewDirector] = useState({ email: "", full_name: "", role: "Tournament Director" });
   const [editData, setEditData] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   useEffect(() => {
     loadData();
