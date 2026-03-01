@@ -131,7 +131,7 @@ export default function DirectorDashboard() {
      return;
    }
 
-   setDirectorRole(directorCheck[0].role);
+   setDirectorRole(directorRecord.role);
    const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
      User.list(),
      Game.list("-created_date", 20),
