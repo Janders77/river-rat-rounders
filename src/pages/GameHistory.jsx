@@ -49,13 +49,13 @@ export default function GameHistory() {
               <SelectTrigger className="w-48 bg-[#1A1B20] border-gray-800 text-white">
                 <SelectValue placeholder="All Venues" />
               </SelectTrigger>
-              <SelectContent className="bg-[#1A1B20] border-gray-800">
-                <SelectItem value="all">All Venues</SelectItem>
-                <SelectItem value="Tavern 018 Sunday">Tavern 018 Sunday</SelectItem>
-                <SelectItem value="Tavern 018 Wednesday">Tavern 018 Wednesday</SelectItem>
-                <SelectItem value="East End Grill">East End Grill</SelectItem>
-                <SelectItem value="Habana Club">Habana Club</SelectItem>
-                <SelectItem value="Meddlesome">Meddlesome</SelectItem>
+              <SelectContent className="bg-[#1A1B20] border-gray-800 text-white">
+                <SelectItem value="all" className="text-white focus:text-white focus:bg-gray-700">All Venues</SelectItem>
+                <SelectItem value="Tavern 018 Sunday" className="text-white focus:text-white focus:bg-gray-700">Tavern 018 Sunday</SelectItem>
+                <SelectItem value="Tavern 018 Wednesday" className="text-white focus:text-white focus:bg-gray-700">Tavern 018 Wednesday</SelectItem>
+                <SelectItem value="East End Grill" className="text-white focus:text-white focus:bg-gray-700">East End Grill</SelectItem>
+                <SelectItem value="Habana Club" className="text-white focus:text-white focus:bg-gray-700">Habana Club</SelectItem>
+                <SelectItem value="Meddlesome" className="text-white focus:text-white focus:bg-gray-700">Meddlesome</SelectItem>
               </SelectContent>
             </Select>
           </div>

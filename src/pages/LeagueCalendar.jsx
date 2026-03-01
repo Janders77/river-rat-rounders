@@ -291,7 +291,7 @@ export default function LeagueCalendar() {
 
 function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
   return (
-    <Card className={`border ${highlight ? "bg-[#1A1B20] border-gray-700" : "bg-[#16171B] border-gray-800"}`}>
+    <Card className={`border bg-transparent ${highlight ? "border-red-500/40" : "border-red-500/20"}`}>
       <CardContent className="pt-4 pb-4">
         <div className="flex flex-col gap-3">
           <div className="flex gap-4 items-start w-full">
