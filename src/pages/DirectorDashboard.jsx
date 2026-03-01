@@ -571,8 +571,7 @@ export default function DirectorDashboard() {
                 </Card>
                 </form>
                 </TabsContent>
-                )}
-          )}
+            )}
 
           {hasPermission(directorRole, "canApproveRequests") && (
             <TabsContent value="requests">
