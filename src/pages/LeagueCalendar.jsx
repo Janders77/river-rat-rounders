@@ -292,64 +292,61 @@ export default function LeagueCalendar() {
 function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
   return (
     <Card className={`border bg-transparent ${highlight ? "border-red-500/40" : "border-red-500/20"}`}>
-      <CardContent className="pt-4 pb-4">
-        <div className="flex flex-col gap-3">
-          <div className="flex gap-4 items-start w-full">
-            <div className="text-center flex-shrink-0 w-[40px]">
-               <div className="text-[10px] text-gray-400 uppercase">
-                 {format(parseISO(event.event_date), "MMM")}
-               </div>
-               <div className="text-lg sm:text-2xl font-bold text-white leading-tight">
-                 {format(parseISO(event.event_date), "d")}
-               </div>
-               <div className="text-[10px] text-gray-500">
-                 {format(parseISO(event.event_date), "yyyy")}
-               </div>
-             </div>
-            <div className="flex-1 min-w-0">
-               <div className="flex items-center gap-1 sm:gap-2 flex-wrap mb-1">
-                 <span className="font-semibold text-sm sm:text-base text-white break-words">{event.title}</span>
-                 <Badge className={`text-[10px] sm:text-xs border ${EVENT_TYPE_COLORS[event.event_type] || EVENT_TYPE_COLORS["Other"]}`}>
+      <CardContent className="p-3">
+        <div className="flex gap-3 items-start">
+          {/* Date block */}
+          <div className="text-center flex-shrink-0 w-[36px] pt-0.5">
+            <div className="text-[9px] text-gray-400 uppercase leading-none">{format(parseISO(event.event_date), "MMM")}</div>
+            <div className="text-xl font-bold text-white leading-tight">{format(parseISO(event.event_date), "d")}</div>
+            <div className="text-[9px] text-gray-500 leading-none">{format(parseISO(event.event_date), "yyyy")}</div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-1">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="font-semibold text-sm text-white">{event.title}</span>
+                <Badge className={`text-[9px] border px-1 py-0 ${EVENT_TYPE_COLORS[event.event_type] || EVENT_TYPE_COLORS["Other"]}`}>
                   {event.event_type}
                 </Badge>
               </div>
+              {isAdmin && (
+                <div className="flex gap-1 flex-shrink-0">
+                  <button onClick={() => onEdit(event)} className="text-gray-500 hover:text-cyan-400 transition-colors p-0.5">
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button onClick={() => onDelete(event.id)} className="text-gray-500 hover:text-red-400 transition-colors p-0.5">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1">
               {event.event_time && (
-                <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm mb-0.5 sm:mb-1">
-                  <Clock className="w-3 h-3 flex-shrink-0" /> <span className="truncate">{event.event_time}</span>
+                <div className="flex items-center gap-1 text-gray-400 text-xs">
+                  <Clock className="w-3 h-3 flex-shrink-0" /><span>{event.event_time}</span>
                 </div>
               )}
               {event.location && (
-                <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm mb-0.5 sm:mb-1">
-                  <MapPin className="w-3 h-3 flex-shrink-0" /> <span className="truncate">{event.location}</span>
-                </div>
-              )}
-              {event.address && (
-                <div className="flex items-center gap-1 text-gray-500 text-[10px] sm:text-xs mb-0.5 sm:mb-1">
-                  <MapPin className="w-3 h-3 flex-shrink-0" /> <span className="truncate">{event.address}</span>
-                </div>
-              )}
-              {event.description && (
-                <p className="text-gray-400 text-xs sm:text-sm mt-1 sm:mt-2">{event.description}</p>
-              )}
-              {event.image_urls?.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2 sm:mt-3">
-                  {event.image_urls.map((url, idx) => (
-                    <img key={idx} src={url} alt="" className="max-w-[120px] sm:max-w-xs rounded-lg border border-gray-700" />
-                  ))}
+                <div className="flex items-center gap-1 text-gray-400 text-xs">
+                  <MapPin className="w-3 h-3 flex-shrink-0" /><span className="truncate">{event.location}</span>
                 </div>
               )}
             </div>
+            {event.address && (
+              <div className="text-gray-500 text-[10px] mt-0.5 truncate">{event.address}</div>
+            )}
+            {event.description && (
+              <p className="text-gray-400 text-xs mt-1">{event.description}</p>
+            )}
+            {event.image_urls?.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {event.image_urls.map((url, idx) => (
+                  <img key={idx} src={url} alt="" className="max-w-[100px] rounded-lg border border-gray-700" />
+                ))}
+              </div>
+            )}
           </div>
-          {isAdmin && (
-            <div className="flex gap-2 shrink-0 self-start">
-              <button onClick={() => onEdit(event)} className="text-gray-500 hover:text-cyan-400 transition-colors p-1">
-                <Edit2 className="w-4 h-4" />
-              </button>
-              <button onClick={() => onDelete(event.id)} className="text-gray-500 hover:text-red-400 transition-colors p-1">
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          )}
         </div>
       </CardContent>
     </Card>
