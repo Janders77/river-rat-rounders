@@ -184,10 +184,10 @@ function LayoutInner({ children }) {
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
                           asChild 
-                          className={`hover:bg-gray-800 hover:text-red-500 transition-all duration-200 rounded-lg mb-2 ${
+                          className={`group relative overflow-hidden transition-all duration-200 rounded-lg mb-1 ${
                             location.pathname === item.url 
-                              ? 'bg-gradient-to-r from-amber-500/20 to-amber-600/20 text-amber-400 border-l-2 border-amber-500' 
-                              : 'text-gray-400'
+                              ? 'bg-gradient-to-r from-amber-500/20 to-amber-600/10 text-amber-400 border-l-2 border-amber-500' 
+                              : 'text-gray-400 hover:text-red-400 hover:bg-red-950/30 hover:border-l-2 hover:border-red-500 border-l-2 border-transparent'
                           }`}
                         >
                           <Link to={item.url} onClick={() => setOpenMobile(false)} className="flex items-center gap-3 px-4 py-3">
