@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserPlus, Upload, Users, Search } from "lucide-react";
 import { createPageUrl } from "@/utils";
-import PlayerFilters from "../components/PlayerFilters";
 import PlayerRow from "../components/PlayerRow";
 
 export default function PlayerDatabase() {
@@ -18,10 +17,6 @@ export default function PlayerDatabase() {
   const [csvError, setCsvError] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [totalCount, setTotalCount] = useState(null);
-  const [filters, setFilters] = useState({
-    guardFilter: { enabled: false, operator: ">", value: 0 },
-    dateFilter: { enabled: false, type: "range", startDate: "", endDate: "", specificDate: "" }
-  });
   const fileInputRef = useRef();
 
   // Check if user is admin
