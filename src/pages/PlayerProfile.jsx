@@ -227,7 +227,7 @@ export default function PlayerProfile() {
                 </div>
               ) : (
                 <div className="flex items-center justify-between">
-                  <div className="text-white font-medium">{fullName || user.full_name}</div>
+                  <div className="text-white font-medium">{fullName || "—"}</div>
                   {isOwnProfile && (
                     <Button
                       onClick={() => setEditingName(true)}
