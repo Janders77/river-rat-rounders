@@ -191,6 +191,11 @@ function LayoutInner({ children }) {
                       </div>
                     )}
                   </SidebarMenuItem>
+                  <SidebarMenuItem key="copyright">
+                    <div className="px-4 py-2 text-[10px] text-gray-600 leading-tight">
+                      © {new Date().getFullYear()} River Rat Rounders. All rights reserved.
+                    </div>
+                  </SidebarMenuItem>
                   <SidebarMenuItem key="sign-out">
                     <SidebarMenuButton 
                       onClick={() => {
