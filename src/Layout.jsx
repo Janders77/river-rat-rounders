@@ -54,6 +54,11 @@ const navigationItems = [
     url: createPageUrl("Locations"),
     icon: MapPin,
   },
+  {
+    title: "Community",
+    url: createPageUrl("Community"),
+    icon: Users,
+  },
 
   {
     title: "Player Database",
