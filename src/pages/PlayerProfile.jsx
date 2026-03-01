@@ -46,18 +46,19 @@ export default function PlayerProfile() {
       const p = players[0];
       setPlayerData(p);
       // Always prefer the Player entity name over the auth user name
+      // Always build name from first_name + last_name only — never from auth full_name (it can be the email)
       const playerName = [p.first_name, p.last_name].filter(Boolean).join(" ").trim();
-      const displayName = playerName || currentUser.full_name || "";
-      setFullName(displayName);
+      setFullName(playerName);
       
       // Set profile image - prefer Player.profile_picture, fall back to auth profile_image_url
       const imageUrl = p.profile_picture || currentUser.profile_image_url || "";
       setProfileImageUrl(imageUrl);
       
-      setUser({ ...currentUser, email: emailToLoad, full_name: displayName });
+      setUser({ ...currentUser, email: emailToLoad });
     } else {
       setUser(currentUser);
-      setFullName(currentUser.full_name || "");
+      // Even in fallback, don't show email as name
+      setFullName("");
       setProfileImageUrl(currentUser.profile_image_url || "");
     }
     setLoading(false);
