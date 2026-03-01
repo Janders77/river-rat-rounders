@@ -84,46 +84,6 @@ export default function DirectorManagement() {
           <h1 className="text-2xl font-bold text-white">Director Management</h1>
         </div>
 
-        {/* Add Director Form */}
-        <div className="rounded-xl border border-red-500/30 bg-gradient-to-br from-red-950/30 to-red-900/10 p-4 mb-6 overflow-hidden">
-          <form onSubmit={handleAddDirector} className="space-y-3">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <Input
-                type="email"
-                placeholder="Email *"
-                value={newDirector.email}
-                onChange={e => setNewDirector({...newDirector, email: e.target.value})}
-                className="bg-black/30 border-red-500/30 text-white placeholder:text-gray-500"
-                required
-              />
-              <Input
-                placeholder="Full Name"
-                value={newDirector.full_name}
-                onChange={e => setNewDirector({...newDirector, full_name: e.target.value})}
-                className="bg-black/30 border-red-500/30 text-white placeholder:text-gray-500"
-              />
-              <Select value={newDirector.role} onValueChange={v => setNewDirector({...newDirector, role: v})}>
-                <SelectTrigger className="bg-black/30 border-red-500/30 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-gray-700">
-                  {DIRECTOR_ROLES.map(role => (
-                    <SelectItem key={role} value={role}>{role}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button
-              type="submit"
-              disabled={isSubmitting || !newDirector.email}
-              className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white"
-            >
-              {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
-              Add Director
-            </Button>
-          </form>
-        </div>
-
         {/* Directors List */}
         <div className="space-y-2 overflow-hidden">
           {directors.map(director => (
