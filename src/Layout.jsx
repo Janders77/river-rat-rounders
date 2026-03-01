@@ -205,6 +205,11 @@ function LayoutInner({ children }) {
                       <span className="font-medium">Sign Out</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
+                  <SidebarMenuItem key="copyright">
+                    <div className="px-4 pt-1 pb-3 text-[9px] text-gray-600 text-center whitespace-nowrap">
+                      © {new Date().getFullYear()} River Rat Rounders
+                    </div>
+                  </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
