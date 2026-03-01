@@ -37,10 +37,10 @@ export default function DirectorSignIn() {
 
   return (
     <div className="min-h-screen p-6 flex items-center justify-center">
-      <Card className="w-full max-w-md bg-[#1A1B20] border-gray-800">
+      <Card className="w-full max-w-md bg-transparent border border-red-500/40 backdrop-blur-sm">
         <CardHeader>
-          <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
-            <Lock className="w-6 h-6 text-purple-500" />
+          <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center mb-4">
+            <Lock className="w-6 h-6 text-red-500" />
           </div>
           <CardTitle className="text-white text-2xl">Director Access</CardTitle>
           <p className="text-gray-400 text-sm mt-2">Enter the director code to access the dashboard</p>
@@ -68,7 +68,7 @@ export default function DirectorSignIn() {
             <Button
               type="submit"
               disabled={!code || isSubmitting}
-              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold"
+              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold"
             >
               {isSubmitting ? "Verifying..." : "Access Dashboard"}
             </Button>
