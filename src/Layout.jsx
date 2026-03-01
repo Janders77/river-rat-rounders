@@ -170,7 +170,7 @@ function LayoutInner({ children }) {
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton 
                           asChild 
-                          className={`hover:bg-gray-800 transition-all duration-200 rounded-lg mb-2 ${
+                          className={`hover:bg-gray-800 hover:text-red-500 transition-all duration-200 rounded-lg mb-2 ${
                             location.pathname === item.url 
                               ? 'bg-gradient-to-r from-amber-500/20 to-amber-600/20 text-amber-400 border-l-2 border-amber-500' 
                               : 'text-gray-400'
