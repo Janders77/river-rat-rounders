@@ -332,9 +332,9 @@ export default function DirectorDashboard() {
           {hasPermission(directorRole, "canManageSessions") && (
           <TabsContent value="sessions">
             <div className="space-y-6">
-              <Card className="bg-[#1A1B20] border-emerald-800/50">
-                <CardHeader>
-                  <CardTitle className="text-emerald-400">Open a New Game</CardTitle>
+              <Card className="bg-transparent border border-red-500/40">
+                 <CardHeader>
+                   <CardTitle className="text-emerald-400">Open a New Game</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleCreateSession} className="space-y-4">
@@ -377,9 +377,9 @@ export default function DirectorDashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-[#1A1B20] border-emerald-800/50">
-                <CardHeader>
-                  <CardTitle className="text-emerald-400">Open Games</CardTitle>
+              <Card className="bg-transparent border border-red-500/40">
+                 <CardHeader>
+                   <CardTitle className="text-emerald-400">Open Games</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -488,7 +488,7 @@ export default function DirectorDashboard() {
             {hasPermission(directorRole, "canRecordGames") && (
             <TabsContent value="record">
               <form onSubmit={handleRecordGame}>
-                <Card className="bg-[#1A1B20] border-gray-800">
+                <Card className="bg-transparent border border-red-500/40">
                 <CardHeader>
                   <CardTitle className="text-white">New Game</CardTitle>
                 </CardHeader>
@@ -576,7 +576,7 @@ export default function DirectorDashboard() {
 
           {hasPermission(directorRole, "canApproveRequests") && (
             <TabsContent value="requests">
-            <Card className="bg-[#1A1B20] border-amber-700/50">
+            <Card className="bg-transparent border border-red-500/40">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <Mail className="w-5 h-5 text-amber-400" />
@@ -620,7 +620,7 @@ export default function DirectorDashboard() {
             <TabsContent value="players">
             <div className="space-y-6">
               {inviteRequests.length > 0 && (
-                <Card className="bg-[#1A1B20] border-amber-700/50">
+                <Card className="bg-transparent border border-red-500/40">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
@@ -652,7 +652,7 @@ export default function DirectorDashboard() {
                 </Card>
               )}
 
-              <Card className="bg-[#1A1B20] border-gray-800">
+              <Card className="bg-transparent border border-red-500/40">
                 <CardHeader>
                   <CardTitle className="text-white">Invite Player</CardTitle>
                 </CardHeader>
@@ -675,7 +675,7 @@ export default function DirectorDashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-[#1A1B20] border-gray-800">
+              <Card className="bg-transparent border border-red-500/40">
                 <CardHeader>
                   <CardTitle className="text-white">All Players ({users.length})</CardTitle>
                 </CardHeader>
@@ -725,7 +725,7 @@ export default function DirectorDashboard() {
 
           {/* Recent Games Tab */}
           <TabsContent value="history">
-            <Card className="bg-[#1A1B20] border-gray-800">
+            <Card className="bg-transparent border border-red-500/40">
               <CardHeader>
                 <CardTitle className="text-white">Recent Games</CardTitle>
               </CardHeader>
@@ -756,7 +756,7 @@ export default function DirectorDashboard() {
           {hasPermission(directorRole, "canUploadPhotos") && (
             <TabsContent value="photos">
               <div className="space-y-6">
-                <Card className="bg-[#1A1B20] border-gray-800">
+                <Card className="bg-transparent border border-red-500/40">
                   <CardHeader>
                     <CardTitle className="text-white">Upload Winner Photo</CardTitle>
                   </CardHeader>
@@ -810,7 +810,7 @@ export default function DirectorDashboard() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-[#1A1B20] border-gray-800">
+                <Card className="bg-transparent border border-red-500/40">
                   <CardHeader>
                     <CardTitle className="text-white">Winner Photos ({photos.length})</CardTitle>
                   </CardHeader>
