@@ -184,24 +184,27 @@ export default function PlayerProfile() {
                   />
                   <Button
                     onClick={async () => {
+                      const trimmed = fullName.trim();
+                      const nameParts = trimmed.split(/\s+/);
+                      if (nameParts.length < 2 || !nameParts[0] || !nameParts[1]) {
+                        setNameUpdateStatus("error");
+                        return;
+                      }
                       setNameUpdateStatus("loading");
-                      const nameParts = fullName.trim().split(/\s+/);
-                      const firstName = nameParts[0] || "";
-                      const lastName = nameParts.slice(1).join(" ") || "";
+                      const firstName = nameParts[0];
+                      const lastName = nameParts.slice(1).join(" ");
 
-                      await base44.auth.updateMe({ full_name: fullName.trim() });
                       if (playerData) {
                         await base44.entities.Player.update(playerData.id, {
                           first_name: firstName,
                           last_name: lastName
                         });
-                        // Update localStorage so sidebar and other components stay in sync
-                        localStorage.setItem("playerName", fullName.trim());
+                        localStorage.setItem("playerName", trimmed);
                       }
+                      await base44.auth.updateMe({ full_name: trimmed });
 
-                      const refreshed = await base44.auth.me();
-                      setUser(refreshed);
-                      setFullName(refreshed.full_name || fullName.trim());
+                      setUser(prev => ({ ...prev, full_name: trimmed }));
+                      setFullName(trimmed);
                       setNameUpdateStatus("done");
                       setEditingName(false);
                       setTimeout(() => setNameUpdateStatus("idle"), 2000);
