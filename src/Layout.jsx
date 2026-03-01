@@ -80,6 +80,7 @@ function LayoutInner({ children }) {
   const [showSecret, setShowSecret] = React.useState(false);
   const [user, setUser] = React.useState(null);
   const [player, setPlayer] = React.useState(null);
+  const [profileImageUrl, setProfileImageUrl] = React.useState("");
 
   React.useEffect(() => {
     const fetchUser = async () => {
