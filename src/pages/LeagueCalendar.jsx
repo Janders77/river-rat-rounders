@@ -243,7 +243,6 @@ export default function LeagueCalendar() {
 
         {/* Upcoming Events */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-white mb-4">Upcoming</h2>
           {isLoading ? (
             <div className="text-gray-500 text-center py-8">Loading...</div>
           ) : upcomingEvents.length === 0 ? (
