@@ -245,6 +245,11 @@ export default function PlayerProfile() {
                   <CheckCircle2 className="w-4 h-4" /> Name updated
                 </p>
               )}
+              {nameUpdateStatus === "error" && (
+                <p className="text-red-400 text-sm mt-2 flex items-center gap-1">
+                  <AlertCircle className="w-4 h-4" /> Please enter both a first and last name
+                </p>
+              )}
             </div>
             <div>
               <label className="text-gray-400 text-sm">Email</label>
