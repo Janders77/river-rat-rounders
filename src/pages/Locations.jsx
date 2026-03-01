@@ -32,7 +32,7 @@ function LocationForm({ initial, onSave, onCancel, title }) {
   };
 
   return (
-    <Card className="bg-gray-900/80 border-amber-500/30 mb-8">
+    <Card className="bg-transparent border border-red-500/40 mb-8">
       <CardContent className="p-6">
         <h2 className="text-white font-bold text-lg mb-4">{title}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -228,7 +228,7 @@ export default function Locations() {
                               onCancel={() => setEditingId(null)}
                             />
                           ) : (
-                            <Card className="bg-gray-900/70 border-gray-800 overflow-hidden">
+                            <Card className="bg-transparent border border-red-500/40 overflow-hidden">
                               {loc.image_url && (
                                 <img src={loc.image_url} alt={loc.name} className="w-full h-48 object-cover" />
                               )}

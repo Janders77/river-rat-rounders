@@ -124,7 +124,7 @@ export default function PlayerProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-[#16171B] p-6">
+    <div className="min-h-screen p-6" style={{background: "radial-gradient(ellipse at center, #2d5a27 0%, #1a3d15 50%, #0f2a0a 100%)"}}>
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
           <Link to={createPageUrl("Leaderboard")}>
@@ -175,7 +175,7 @@ export default function PlayerProfile() {
         </div>
 
         {/* User Information Section */}
-        <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-8 mb-8">
+        <div className="bg-transparent border border-red-500/40 rounded-xl p-8 mb-8">
           <h2 className="text-lg font-semibold text-white mb-4">Account Information</h2>
           <div className="space-y-4">
             <div>
@@ -271,7 +271,7 @@ export default function PlayerProfile() {
 
         {/* Password Change Section */}
          {isOwnProfile && (
-         <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-8">
+         <div className="bg-transparent border border-red-500/40 rounded-xl p-8">
            <h2 className="text-lg font-semibold text-white mb-4">Change Password</h2>
            <form onSubmit={handlePasswordChange} className="space-y-4">
             <div>
