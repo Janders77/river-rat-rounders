@@ -156,11 +156,11 @@ export default function PlayerProfile() {
                   disabled={imageUploadStatus === "loading"}
                 />
                 <label htmlFor="profile-image-input" className="absolute bottom-0 right-0 cursor-pointer">
-                  <div className="w-10 h-10 bg-green-600 hover:bg-green-700 rounded-full flex items-center justify-center border-2 border-gray-900 shadow-lg">
+                  <div className="w-7 h-7 bg-green-600 hover:bg-green-700 rounded-full flex items-center justify-center border-2 border-gray-900 shadow-lg">
                     {imageUploadStatus === "loading" ? (
-                      <Loader2 className="w-5 h-5 text-white animate-spin" />
+                      <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
                     ) : (
-                      <Edit2 className="w-5 h-5 text-white" />
+                      <Edit2 className="w-3.5 h-3.5 text-white" />
                     )}
                   </div>
                 </label>
