@@ -38,7 +38,7 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
 
   if (editing && isAdmin) {
     return (
-      <div className="p-4 rounded-lg bg-[#1A1B20] border border-amber-500/50 space-y-3">
+      <div className="p-4 rounded-lg bg-transparent border border-amber-500/50 space-y-3">
         <div className="flex gap-3">
           <Input
             placeholder="First name"
