@@ -284,7 +284,7 @@ export default function DirectorDashboard() {
     <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center shadow-lg">
             <ShieldAlert className="w-7 h-7 text-white" />
           </div>
           <div>
@@ -296,12 +296,12 @@ export default function DirectorDashboard() {
         <Tabs defaultValue={hasPermission(directorRole, "canManageSessions") ? "sessions" : "record"}>
           <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-2 sm:grid-cols-6 h-auto gap-1">
             {hasPermission(directorRole, "canManageSessions") && (
-              <TabsTrigger value="sessions" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <TabsTrigger value="sessions" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
                 <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
               </TabsTrigger>
             )}
             {hasPermission(directorRole, "canRecordGames") && (
-              <TabsTrigger value="record" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <TabsTrigger value="record" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
                 <Plus className="w-4 h-4 mr-2" /> Record Game
               </TabsTrigger>
             )}
@@ -314,15 +314,15 @@ export default function DirectorDashboard() {
               </TabsTrigger>
             )}
             {hasPermission(directorRole, "canManagePlayers") && (
-              <TabsTrigger value="players" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <TabsTrigger value="players" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
                 <Users className="w-4 h-4 mr-2" /> Players
               </TabsTrigger>
             )}
-            <TabsTrigger value="history" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+            <TabsTrigger value="history" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
               <Trophy className="w-4 h-4 mr-2" /> Games
             </TabsTrigger>
             {hasPermission(directorRole, "canUploadPhotos") && (
-              <TabsTrigger value="photos" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <TabsTrigger value="photos" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
                 <ImagePlus className="w-4 h-4 mr-2" /> Photos
               </TabsTrigger>
             )}
@@ -564,7 +564,7 @@ export default function DirectorDashboard() {
                   </div>
 
                   <Button type="submit" disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white">
+                    className="w-full bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white">
                     {isSubmitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Recording...</> : <><Trophy className="w-4 h-4 mr-2" />Record Game</>}
                   </Button>
                 </CardContent>
@@ -666,7 +666,7 @@ export default function DirectorDashboard() {
                       required
                     />
                     <Button type="submit" disabled={inviteStatus === "sending"}
-                      className="bg-purple-600 hover:bg-purple-700 text-white">
+                      className="bg-red-600 hover:bg-red-700 text-white">
                       {inviteStatus === "sending" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Invite"}
                     </Button>
                   </form>
@@ -798,7 +798,7 @@ export default function DirectorDashboard() {
                         <Label className="text-gray-300">Photo</Label>
                         <input type="file" accept="image/*"
                           onChange={e => setPhotoFile(e.target.files[0])}
-                          className="w-full text-gray-300 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer"
+                          className="w-full text-gray-300 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer"
                           required />
                       </div>
                       <Button type="submit" disabled={isUploadingPhoto || !photoFile}
