@@ -125,20 +125,34 @@ function LayoutInner({ children }) {
         }
       `}</style>
       <div className="min-h-screen flex w-full text-gray-100" style={{background: "radial-gradient(ellipse at center, #2d5a27 0%, #1a3d15 50%, #0f2a0a 100%)"}}>
-        <Sidebar className="border-r border-green-900/60 bg-[#1a3d15]/90" style={{backdropFilter: "blur(4px)"}}>
-          <SidebarHeader className="border-b border-gray-800 p-6">
-            <button onClick={handleLogoClick} className="flex items-center gap-3 w-full hover:opacity-80 transition-opacity">
-              <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/44bb87bed_riverratslogo_black1PDF.pdf"
-                alt="River Rat Rounders"
-                className="w-12 h-12 rounded-lg object-cover"
-                onError={(e) => { e.target.style.display='none'; }}
-              />
-              <div className="text-left">
-              <h2 className="font-bold text-xl text-red-500">River Rat Rounders</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Memphis' Freeroll Bar Poker League</p>
-              </div>
-            </button>
+        <Sidebar className="border-r border-green-900/60" style={{background: "linear-gradient(180deg, #0d2810 0%, #1a3d15 30%, #142e10 70%, #0a1f08 100%)", backdropFilter: "blur(8px)"}}>
+          <SidebarHeader className="border-b border-green-900/40 p-5" style={{background: "linear-gradient(135deg, rgba(20,60,16,0.95) 0%, rgba(10,30,8,0.98) 100%)", boxShadow: "0 4px 24px rgba(34,197,94,0.10), 0 1px 0 rgba(255,255,255,0.05)"}}>
+            <div className="flex items-center justify-between w-full gap-2">
+              <button onClick={handleLogoClick} className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-90 transition-opacity">
+                <div style={{filter: "drop-shadow(0 0 10px rgba(220,38,38,0.5)) drop-shadow(0 0 20px rgba(220,38,38,0.2))"}}>
+                  <img
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/44bb87bed_riverratslogo_black1PDF.pdf"
+                    alt="River Rat Rounders"
+                    className="w-11 h-11 rounded-lg object-cover flex-shrink-0"
+                    onError={(e) => { e.target.style.display='none'; }}
+                  />
+                </div>
+                <div className="text-left min-w-0">
+                  <h2 className="font-bold text-lg text-red-500 leading-tight" style={{textShadow: "0 0 12px rgba(220,38,38,0.4)"}}>River Rat Rounders</h2>
+                  <p className="text-[10px] text-gray-500 mt-0.5 truncate">Memphis' Freeroll Bar Poker League</p>
+                </div>
+              </button>
+              {profileImageUrl && (
+                <div className="flex-shrink-0">
+                  <img
+                    src={profileImageUrl}
+                    alt="Profile"
+                    className="w-9 h-9 rounded-full object-cover border-2 border-green-700/60 shadow-lg"
+                    style={{boxShadow: "0 0 8px rgba(34,197,94,0.3)"}}
+                  />
+                </div>
+              )}
+            </div>
           </SidebarHeader>
           
           <SidebarContent className="p-4">
