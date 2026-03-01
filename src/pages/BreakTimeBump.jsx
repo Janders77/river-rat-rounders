@@ -16,7 +16,7 @@ export default function BreakTimeBump() {
             <Zap className="w-9 h-9 text-black" />
           </div>
           <h1 className="text-3xl font-bold text-white">Break Time Bump</h1>
-          <p className="text-gray-400 mt-2">Top-up or re-enter during the break</p>
+          <p className="text-gray-400 mt-2">Get back in the action during the break</p>
         </div>
 
         {/* What is it */}
