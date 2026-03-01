@@ -45,27 +45,20 @@ export default function PlayerProfile() {
     if (players.length > 0) {
       const p = players[0];
       setPlayerData(p);
+      // Always prefer the Player entity name over the auth user name
       const playerName = [p.first_name, p.last_name].filter(Boolean).join(" ").trim();
-      setFullName(playerName || "");
+      const displayName = playerName || currentUser.full_name || "";
+      setFullName(displayName);
       
-      // Create a user object for display
-      const displayUser = {
-        ...currentUser,
-        email: emailToLoad,
-        full_name: playerName || ""
-      };
+      // Set profile image - prefer Player.profile_picture, fall back to auth profile_image_url
+      const imageUrl = p.profile_picture || currentUser.profile_image_url || "";
+      setProfileImageUrl(imageUrl);
       
-      // Set profile image from Player entity or auth user
-      if (isOwnProf) {
-        setProfileImageUrl(currentUser.profile_image_url || p.profile_picture || "");
-        setUser(currentUser);
-      } else {
-        setUser(displayUser);
-        setProfileImageUrl(p.profile_picture || "");
-      }
+      setUser({ ...currentUser, email: emailToLoad, full_name: displayName });
     } else {
       setUser(currentUser);
-      setFullName("");
+      setFullName(currentUser.full_name || "");
+      setProfileImageUrl(currentUser.profile_image_url || "");
     }
     setLoading(false);
   };
