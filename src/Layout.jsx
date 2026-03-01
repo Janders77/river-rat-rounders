@@ -90,6 +90,7 @@ function LayoutInner({ children }) {
       const players = await base44.entities.Player.filter({ email: currentUser.email });
       if (players.length > 0) {
         setPlayer(players[0]);
+        setProfileImageUrl(currentUser.profile_image_url || players[0].profile_picture || "");
       }
     };
     fetchUser();
