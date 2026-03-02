@@ -50,7 +50,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#16171B] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d3a 50%, #1a1a2e 100%)"}}>
         <div className="text-gray-400">Loading...</div>
       </div>
     );
