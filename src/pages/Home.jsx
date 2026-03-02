@@ -8,7 +8,7 @@ import PlayerSignIn from "../components/home/PlayerSignIn";
 import PlayerSignUp from "../components/home/PlayerSignUp";
 import LoginCard from "../components/home/LoginCard";
 
-const cardClass = "flex items-center gap-4 p-5 rounded-xl border border-green-500/25 bg-gradient-to-r from-green-500/15 to-green-600/10 hover:border-green-400/50 hover:from-green-500/25 hover:to-green-600/15 transition-all duration-200 group";
+const cardClass = "flex items-center gap-4 p-5 rounded-xl border border-red-900/40 bg-gradient-to-r from-red-900/20 to-red-950/60 hover:border-red-800/60 hover:from-red-900/30 hover:to-red-950/80 transition-all duration-200 group";
 
 const navLinks = [
   {
