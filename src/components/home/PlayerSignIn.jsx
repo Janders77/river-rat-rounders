@@ -151,7 +151,7 @@ export default function PlayerSignIn() {
               <Button
                 onClick={() => handleSignIn(session)}
                 disabled={signingIn === session.id}
-                className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white"
+                className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white"
               >
                 {signingIn === session.id ? (
                   <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing in...</>
