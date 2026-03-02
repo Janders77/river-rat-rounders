@@ -19,9 +19,19 @@ export default function GameHistory() {
 
   const loadGames = async () => {
     setIsLoading(true);
-    const fetchedGames = await Game.list("-game_date");
+    const [fetchedGames, fetchedPlayers] = await Promise.all([
+      Game.list("-game_date"),
+      Player.list().catch(() => [])
+    ]);
     setGames(fetchedGames);
+    setAllPlayers(fetchedPlayers);
     setIsLoading(false);
+  };
+
+  const getPlayerName = (email) => {
+    const player = allPlayers.find(p => p.email === email);
+    if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim();
+    return email[0]?.toUpperCase() || "?";
   };
 
   const venues = [...new Set(games.map(g => g.location).filter(Boolean))];
