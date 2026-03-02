@@ -80,7 +80,7 @@ export default function Community() {
   const rejectedPosts = posts.filter(p => p.status === "rejected");
 
   return (
-    <div className="min-h-screen p-4 md:p-6">
+    <div className="min-h-screen p-4 md:p-6" style={{background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d3a 50%, #1a1a2e 100%)"}}>
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
