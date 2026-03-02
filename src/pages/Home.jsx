@@ -63,7 +63,7 @@ export default function Home() {
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/515aaf9cc_blackcroppaint.jpeg"
             alt="River Rat Rounders"
-            className="mx-auto mb-8 w-64 object-contain"
+            className="mx-auto mb-8 w-64 object-contain mix-blend-screen"
           />
           <div className="space-y-6">
             <PlayerSignIn />
