@@ -134,7 +134,7 @@ export default function PlayerSignIn() {
                   const user = allUsers.find(u => u.email === email);
                   return (
                     <div key={email} className="flex items-center gap-2 text-sm text-gray-300">
-                      <div className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                      <div className="w-2 h-2 rounded-full bg-red-400 shrink-0" />
                       {user?.full_name || email}
                     </div>
                   );
