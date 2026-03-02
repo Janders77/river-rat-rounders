@@ -36,6 +36,7 @@ export default function LeagueCalendar() {
   const [form, setForm] = useState(emptyForm);
   const [user, setUser] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [today, setToday] = useState(new Date());
 
   useEffect(() => {
     loadData();
