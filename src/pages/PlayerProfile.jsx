@@ -200,6 +200,7 @@ export default function PlayerProfile() {
                           first_name: firstName,
                           last_name: lastName
                         });
+                        setPlayerData(prev => ({ ...prev, first_name: firstName, last_name: lastName }));
                         localStorage.setItem("playerName", trimmed);
                       }
                       await base44.auth.updateMe({ full_name: trimmed });
