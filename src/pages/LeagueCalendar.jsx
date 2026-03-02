@@ -114,11 +114,11 @@ export default function LeagueCalendar() {
 
   const upcomingEvents = events.filter(e => {
     const d = parseISO(e.event_date);
-    return isFuture(d) || isToday(d);
+    return isFuture(d) || isToday(d, today);
   });
   const pastEvents = events.filter(e => {
     const d = parseISO(e.event_date);
-    return !isFuture(d) && !isToday(d);
+    return !isFuture(d) && !isToday(d, today);
   });
 
   return (
