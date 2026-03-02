@@ -83,7 +83,7 @@ export default function PlayerSignIn() {
       <Card className="bg-gradient-to-r from-red-900/20 to-red-950/60 border-red-900/40">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
-            <LogIn className="w-5 h-5 text-red-400" /> Sign In to Tonight's Game
+            <LogIn className="w-5 h-5 text-red-400" /> Sign In to Today's Game
           </CardTitle>
         </CardHeader>
         <CardContent>
