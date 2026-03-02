@@ -201,7 +201,7 @@ export default function Leaderboard() {
               <DropdownMenuContent align="end" className="bg-gray-900 border-gray-800">
                 <DropdownMenuItem
                   onClick={() => setSelectedLocation(null)}
-                  className={`text-white ${selectedLocation === null ? "bg-amber-500/20" : ""}`}
+                  className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
                 >
                   Overall
                 </DropdownMenuItem>
@@ -209,7 +209,7 @@ export default function Leaderboard() {
                   <DropdownMenuItem
                     key={location.id}
                     onClick={() => setSelectedLocation(location.name)}
-                    className={`text-white ${selectedLocation === location.name ? "bg-amber-500/20" : ""}`}
+                    className={`text-white ${selectedLocation === location.name ? "bg-red-700/20" : ""}`}
                   >
                     {location.name}
                   </DropdownMenuItem>
@@ -238,10 +238,10 @@ export default function Leaderboard() {
                    const locationStats = getLocationStats();
                    return locationStats ? (
                      <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-2">
-                       <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/30 rounded-lg p-4">
-                         <div className="text-amber-400 text-xs font-semibold mb-1">Most Points</div>
+                       <div className="bg-gradient-to-br from-red-700/20 to-red-900/10 border border-red-700/30 rounded-lg p-4">
+                         <div className="text-red-400 text-xs font-semibold mb-1">Most Points</div>
                          <div className="text-white font-bold text-lg">{locationStats.mostPoints?.name || "TBD"}</div>
-                         <div className="text-amber-300 text-sm">{locationStats.mostPoints?.points || 0} pts</div>
+                         <div className="text-red-300 text-sm">{locationStats.mostPoints?.points || 0} pts</div>
                        </div>
                        <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 rounded-lg p-4">
                          <div className="text-emerald-400 text-xs font-semibold mb-1">Most Wins</div>
@@ -274,7 +274,7 @@ export default function Leaderboard() {
                              </div>
                            );
                          })()}
-                         <div className="text-white font-medium group-hover:text-amber-400 transition-colors">
+                         <div className="text-white font-medium group-hover:text-red-400 transition-colors">
                            {stat.name}
                          </div>
                        </div>
@@ -285,7 +285,7 @@ export default function Leaderboard() {
                           </div>
                           <div className="text-right">
                             <div className="text-gray-400 text-xs">Points</div>
-                            <div className="text-amber-400 font-bold text-lg">{stat.points}</div>
+                            <div className="text-red-400 font-bold text-lg">{stat.points}</div>
                           </div>
                         </div>
                      </Link>
@@ -300,10 +300,10 @@ export default function Leaderboard() {
                <>
                  {quarterlyRecord && (
                    <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-2">
-                     <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/30 rounded-lg p-4">
-                       <div className="text-amber-400 text-xs font-semibold mb-1">Most Points</div>
+                     <div className="bg-gradient-to-br from-red-700/20 to-red-900/10 border border-red-700/30 rounded-lg p-4">
+                       <div className="text-red-400 text-xs font-semibold mb-1">Most Points</div>
                        <div className="text-white font-bold text-lg">{quarterlyRecord.most_points_player_name || "TBD"}</div>
-                       <div className="text-amber-300 text-sm">{quarterlyRecord.most_points_total || 0} pts</div>
+                       <div className="text-red-300 text-sm">{quarterlyRecord.most_points_total || 0} pts</div>
                      </div>
                      <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 rounded-lg p-4">
                        <div className="text-emerald-400 text-xs font-semibold mb-1">Most Wins</div>
@@ -344,7 +344,7 @@ export default function Leaderboard() {
                         </div>
                         <div className="text-right">
                           <div className="text-gray-400 text-xs">Points</div>
-                          <div className="text-amber-400 font-bold text-lg">{player.quarterlyPoints}</div>
+                          <div className="text-red-400 font-bold text-lg">{player.quarterlyPoints}</div>
                         </div>
                       </div>
                    </Link>

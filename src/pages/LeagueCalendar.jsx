@@ -136,7 +136,7 @@ export default function LeagueCalendar() {
           {isAdmin && !showForm && (
             <Button
               onClick={() => setShowForm(true)}
-              className="bg-cyan-600 hover:bg-cyan-700 text-white gap-2 w-full sm:w-auto"
+              className="bg-red-700 hover:bg-red-800 text-white gap-2 w-full sm:w-auto"
             >
               <Plus className="w-4 h-4" /> Add Event
             </Button>
@@ -233,7 +233,7 @@ export default function LeagueCalendar() {
                 <Button variant="ghost" onClick={handleCancel} className="text-gray-400 gap-2">
                   <X className="w-4 h-4" /> Cancel
                 </Button>
-                <Button onClick={handleSubmit} className="bg-cyan-600 hover:bg-cyan-700 text-white gap-2">
+                <Button onClick={handleSubmit} className="bg-red-700 hover:bg-red-800 text-white gap-2">
                   <Check className="w-4 h-4" /> {editingEvent ? "Save Changes" : "Create Event"}
                 </Button>
               </div>
@@ -311,7 +311,7 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
               </div>
               {isAdmin && (
                 <div className="flex gap-1 flex-shrink-0">
-                  <button onClick={() => onEdit(event)} className="text-gray-500 hover:text-cyan-400 transition-colors p-0.5">
+                  <button onClick={() => onEdit(event)} className="text-gray-500 hover:text-red-400 transition-colors p-0.5">
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
                   <button onClick={() => onDelete(event.id)} className="text-gray-500 hover:text-red-400 transition-colors p-0.5">
