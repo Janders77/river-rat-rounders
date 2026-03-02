@@ -172,8 +172,8 @@ function LayoutInner({ children }) {
                         asChild 
                         className={`relative overflow-hidden transition-all duration-200 rounded-lg mb-1 ${
                           location.pathname === createPageUrl("BreakTimeBump")
-                            ? 'bg-gradient-to-r from-green-500/20 to-green-600/10 text-green-400 border-l-2 border-green-500' 
-                            : 'text-gray-400 hover:text-red-400 hover:bg-red-950/30 hover:border-l-2 hover:border-red-500 border-l-2 border-transparent'
+                            ? 'bg-gradient-to-r from-gray-500/30 to-gray-600/20 text-gray-200 border-l-2 border-gray-400' 
+                            : 'text-gray-400 hover:text-gray-200 hover:bg-gray-700/30 hover:border-l-2 hover:border-gray-500 border-l-2 border-transparent'
                         }`}
                       >
                         <Link to={createPageUrl("BreakTimeBump")} onClick={() => setOpenMobile(false)} className="flex items-center gap-3 px-4 py-3">
