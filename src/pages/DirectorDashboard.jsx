@@ -566,11 +566,14 @@ export default function DirectorDashboard() {
                         <div key={i} className="flex items-center gap-3">
                           <div className="w-10 text-sm font-bold text-right shrink-0 text-gray-400">{label}</div>
                           <div className="text-sm text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
-                          <Select value={placements[i] || ""} onValueChange={val => {
+                          <Select value={placements[i] || "__placeholder__"} onValueChange={val => {
                             const updated = [...placements];
-                            for (let j = 0; j < updated.length; j++) { if (updated[j] === val) updated[j] = ""; }
-                            if (val === "") updated[i] = "";
-                            else updated[i] = val;
+                            if (val === "__clear_placement__") {
+                              updated[i] = "";
+                            } else {
+                              for (let j = 0; j < updated.length; j++) { if (updated[j] === val) updated[j] = ""; }
+                              updated[i] = val;
+                            }
                             setPlacements(updated);
                           }}>
                             <SelectTrigger className="bg-gray-900 border-gray-700 text-white flex-1">
