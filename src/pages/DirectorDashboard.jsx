@@ -818,9 +818,13 @@ export default function DirectorDashboard() {
                         </div>
                         <div className="space-y-2">
                           <Label className="text-gray-300">Location</Label>
-                          <Select value={photoForm.location} onValueChange={v => setPhotoForm({...photoForm, location: v})}>
+                          <Select value={photoForm.location || "__placeholder__"} onValueChange={v => {
+                            if (v === "__placeholder__") return;
+                            setPhotoForm({...photoForm, location: v});
+                          }}>
                             <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
                             <SelectContent className="bg-gray-900 border-gray-700">
+                              <SelectItem value="__placeholder__" disabled>Select location</SelectItem>
                               {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc => (
                                 <SelectItem key={loc} value={loc}>{loc}</SelectItem>
                               ))}
