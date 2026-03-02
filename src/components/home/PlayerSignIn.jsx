@@ -143,7 +143,7 @@ export default function PlayerSignIn() {
             )}
 
             {isSignedIn(session) ? (
-              <div className="flex items-center gap-2 text-emerald-400 font-medium text-sm">
+              <div className="flex items-center gap-2 text-red-400 font-medium text-sm">
                 <CheckCircle2 className="w-4 h-4" />
                 You're signed in!
               </div>
