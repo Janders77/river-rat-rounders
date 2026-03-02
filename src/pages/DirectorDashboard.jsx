@@ -722,12 +722,13 @@ export default function DirectorDashboard() {
                           <div className="font-medium text-white truncate">{displayName}</div>
                           <div className="text-xs text-gray-400 truncate">{user.email}</div>
                           <div className="text-xs text-red-400 font-bold mt-0.5">{user.total_points || 0} pts · {user.games_played || 0} games</div>
-                        </div>
-                        <Badge variant="outline" className={`shrink-0 text-xs ${user.role === "admin" ? "border-red-500 text-red-400" : "border-gray-600 text-gray-400"}`}>
+                          </div>
+                          <Badge variant="outline" className={`shrink-0 text-xs ${user.role === "admin" ? "border-red-500 text-red-400" : "border-gray-600 text-gray-400"}`}>
                           {user.role === "admin" ? "Director" : "Player"}
-                        </Badge>
-                      </div>
-                    ))}
+                          </Badge>
+                          </div>
+                          );
+                          })}
                     {users.length === 0 && <p className="text-gray-500 text-center py-4">No players yet.</p>}
                     {users.length > 0 && playerSearch && users.filter(u =>
                       (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
