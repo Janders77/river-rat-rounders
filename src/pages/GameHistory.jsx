@@ -134,7 +134,15 @@ export default function GameHistory() {
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
-                      {game.players?.slice(0, 5).map((email, index) => (
+                      {game.players?.slice(0, 5).map((email, index) => {
+                        const player = allPlayers.find(p => p.email === email);
+                        const initials = player
+                          ? `${(player.first_name || "")[0] || ""}${(player.last_name || "")[0] || ""}`.toUpperCase()
+                          : email[0]?.toUpperCase() || "?";
+                        const displayName = player
+                          ? `${player.first_name} ${player.last_name}`.trim()
+                          : email;
+                        return (
                         <div
                           key={index}
                           className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -142,11 +150,12 @@ export default function GameHistory() {
                               ? 'bg-gradient-to-br from-red-700 to-red-900 text-white ring-2 ring-red-400/50'
                               : 'bg-gray-800 text-gray-400'
                           }`}
-                          title={email}
+                          title={displayName}
                         >
-                          {email[0].toUpperCase()}
+                          {initials}
                         </div>
-                      ))}
+                        );
+                      })}
                       {game.players?.length > 5 && (
                         <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-sm text-gray-400">
                           +{game.players.length - 5}
