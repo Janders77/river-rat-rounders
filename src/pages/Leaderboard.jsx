@@ -104,6 +104,7 @@ export default function Leaderboard() {
         quarterlyPoints: getQuarterlyStats(player.email).points,
         quarterlyWins: getQuarterlyStats(player.email).wins
       }))
+      .filter(player => player.quarterlyPoints > 0 || player.quarterlyWins > 0)
       .sort((a, b) => b.quarterlyPoints - a.quarterlyPoints)
       .slice(0, 100);
   };
