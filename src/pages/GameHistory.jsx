@@ -9,6 +9,7 @@ import { format } from "date-fns";
 
 export default function GameHistory() {
   const [games, setGames] = useState([]);
+  const [allPlayers, setAllPlayers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterVenue, setFilterVenue] = useState("all");
 
