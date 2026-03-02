@@ -102,7 +102,7 @@ export default function PlayerSignIn() {
             <div className="flex items-start justify-between gap-2">
               <div>
                 <div className="flex items-center gap-2 text-white font-semibold">
-                  <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <MapPin className="w-4 h-4 text-red-400 shrink-0" />
                   {session.location}
                 </div>
                 <div className="flex items-center gap-2 text-gray-400 text-sm mt-1">
