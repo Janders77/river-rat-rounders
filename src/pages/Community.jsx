@@ -92,7 +92,7 @@ export default function Community() {
           {!showForm && (
             <Button
               onClick={() => setShowForm(true)}
-              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white"
+              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200"
             >
               <Plus className="w-4 h-4 mr-1" /> Post Ad
             </Button>
@@ -133,7 +133,7 @@ export default function Community() {
                 </label>
               </div>
               <div className="flex gap-2">
-                <Button type="submit" disabled={submitting} className="flex-1 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white">
+                <Button type="submit" disabled={submitting} className="flex-1 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
                   {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null} Submit for Approval
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="border-gray-700 text-gray-300">

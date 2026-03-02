@@ -378,7 +378,7 @@ export default function DirectorDashboard() {
                       </div>
                     </div>
                     <Button type="submit" disabled={isCreatingSession || !newSession.location}
-                      className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white">
+                      className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
                       {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CalendarPlus className="w-4 h-4 mr-2" />Open Game</>}
                     </Button>
                   </form>
@@ -572,7 +572,7 @@ export default function DirectorDashboard() {
                   </div>
 
                   <Button type="submit" disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white">
+                    className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
                     {isSubmitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Recording...</> : <><Trophy className="w-4 h-4 mr-2" />Record Game</>}
                   </Button>
                 </CardContent>
@@ -674,7 +674,7 @@ export default function DirectorDashboard() {
                       required
                     />
                     <Button type="submit" disabled={inviteStatus === "sending"}
-                      className="bg-red-600 hover:bg-red-700 text-white">
+                      className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
                       {inviteStatus === "sending" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Invite"}
                     </Button>
                   </form>
@@ -805,7 +805,7 @@ export default function DirectorDashboard() {
                           required />
                       </div>
                       <Button type="submit" disabled={isUploadingPhoto || !photoFile}
-                        className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white font-bold">
+                        className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white font-bold shadow-lg shadow-red-900/40 transition-all duration-200">
                         {isUploadingPhoto ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Uploading...</> : <><ImagePlus className="w-4 h-4 mr-2" />Upload Photo</>}
                       </Button>
                     </form>

@@ -88,7 +88,7 @@ function LocationForm({ initial, onSave, onCancel, title }) {
             <Button type="button" variant="outline" onClick={onCancel} className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800">
               Cancel
             </Button>
-            <Button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white font-semibold">
+            <Button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white font-semibold shadow-lg shadow-red-900/40 transition-all duration-200">
               {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
               {saving ? "Saving..." : "Save"}
             </Button>
@@ -167,7 +167,7 @@ export default function Locations() {
             <Button
               onClick={() => setShowAddForm(true)}
               size="sm"
-              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white font-semibold"
+              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white font-semibold shadow-lg shadow-red-900/40 transition-all duration-200"
             >
               <Plus className="w-4 h-4 mr-1" />
               Add Location

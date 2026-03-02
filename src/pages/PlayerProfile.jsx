@@ -210,7 +210,7 @@ export default function PlayerProfile() {
                       setEditingName(false);
                       setTimeout(() => setNameUpdateStatus("idle"), 2000);
                     }}
-                    className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white"
+                    className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200"
                     disabled={nameUpdateStatus === "loading"}
                   >
                     {nameUpdateStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
@@ -300,7 +300,7 @@ export default function PlayerProfile() {
             </div>
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white"
+              className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200"
               disabled={passwordStatus === "loading"}
             >
               {passwordStatus === "loading" ? (
