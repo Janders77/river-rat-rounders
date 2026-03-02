@@ -277,10 +277,10 @@ export default function Leaderboard() {
                          {(() => {
                            const playerData = getPlayerData(stat.email);
                            return playerData?.image ? (
-                             <img src={playerData.image} alt={playerData.fullName} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                             <img src={playerData.image} alt={playerData.fullName} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
                            ) : (
-                             <div className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold shrink-0">
-                               {stat.name?.[0]?.toUpperCase() || "?"}
+                             <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
+                               {playerData?.fullName?.[0]}
                              </div>
                            );
                          })()}
@@ -335,10 +335,10 @@ export default function Leaderboard() {
                        {(() => {
                          const playerData = getPlayerData(player.email);
                          return playerData?.image ? (
-                           <img src={playerData.image} alt={playerData.fullName} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                           <img src={playerData.image} alt={playerData.fullName} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
                          ) : (
-                           <div className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold shrink-0">
-                             {getPlayerName(player)[0]?.toUpperCase() || "?"}
+                           <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
+                             {playerData?.fullName?.[0]}
                            </div>
                          );
                        })()}
