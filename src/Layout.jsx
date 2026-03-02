@@ -238,7 +238,7 @@ function LayoutInner({ children }) {
         </Sidebar>
 
         <main className="flex-1 flex flex-col">
-          <header className="bg-gradient-to-r from-green-500/15 to-green-600/10 border-b border-green-500/25 px-6 py-4 lg:hidden flex items-center justify-center relative">
+          <header className="bg-gradient-to-r from-gray-800/80 to-gray-700/60 border-b border-gray-600/40 px-6 py-4 lg:hidden flex items-center justify-center relative">
             <SidebarTrigger className="hover:bg-gray-800 w-12 h-12 rounded-lg transition-colors flex items-center justify-center absolute left-6">
               <Menu className="w-5 h-5" />
             </SidebarTrigger>
