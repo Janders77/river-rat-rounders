@@ -713,10 +713,13 @@ export default function DirectorDashboard() {
                       !playerSearch ||
                       (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
                       u.email.toLowerCase().includes(playerSearch.toLowerCase())
-                    ).map(user => (
+                    ).map(user => {
+                      const player = players.find(p => p.email === user.email);
+                      const displayName = player ? `${player.first_name || ""} ${player.last_name || ""}`.trim() : user.full_name || user.email;
+                      return (
                       <div key={user.id} className="flex items-center justify-between gap-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0 overflow-hidden">
                         <div className="min-w-0 flex-1 overflow-hidden">
-                          <div className="font-medium text-white truncate">{user.full_name || user.email}</div>
+                          <div className="font-medium text-white truncate">{displayName}</div>
                           <div className="text-xs text-gray-400 truncate">{user.email}</div>
                           <div className="text-xs text-red-400 font-bold mt-0.5">{user.total_points || 0} pts · {user.games_played || 0} games</div>
                         </div>
