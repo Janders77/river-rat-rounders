@@ -137,18 +137,20 @@ export default function DirectorDashboard() {
    }
 
    setDirectorRole(directorRecord.role);
-   const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
+   const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests, fetchedPlayers] = await Promise.all([
      User.list(),
      Game.list("-created_date", 20),
      GameSession.list("-session_date", 20),
      WinnerPhoto.list("-created_date", 50),
-     InviteRequest.filter({ status: "pending" }, "-created_date", 50)
+     InviteRequest.filter({ status: "pending" }, "-created_date", 50),
+     Player.list()
    ]);
    setUsers(fetchedUsers);
    setGames(fetchedGames);
    setSessions(fetchedSessions);
    setPhotos(fetchedPhotos);
    setInviteRequests(fetchedRequests);
+   setPlayers(fetchedPlayers);
 
    // Subscribe to user updates for real-time player data
    base44.entities.User.subscribe((event) => {
