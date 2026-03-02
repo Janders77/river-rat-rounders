@@ -162,7 +162,7 @@ function LayoutInner({ children }) {
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="p-3" style={{background: "linear-gradient(180deg, transparent 0%, rgba(5,15,4,0.3) 100%)"}}>
+          <SidebarContent className="p-3" style={{background: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%)"}}>
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
