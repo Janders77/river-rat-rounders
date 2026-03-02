@@ -90,10 +90,10 @@ export default function PlayerSignIn() {
   }
 
   return (
-    <Card className="bg-gradient-to-br from-green-500/20 to-green-700/10 border-green-500/25">
+    <Card className="bg-gradient-to-r from-red-900/20 to-red-950/60 border-red-900/40">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
-          <LogIn className="w-5 h-5 text-emerald-400" /> Sign In to Tonight's Game
+          <LogIn className="w-5 h-5 text-red-400" /> Sign In to Tonight's Game
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
