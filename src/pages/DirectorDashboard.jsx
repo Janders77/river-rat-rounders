@@ -304,17 +304,17 @@ export default function DirectorDashboard() {
         <Tabs defaultValue={hasPermission(directorRole, "canManageSessions") ? "sessions" : "record"}>
           <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-2 sm:grid-cols-6 h-auto gap-1">
             {hasPermission(directorRole, "canManageSessions") && (
-              <TabsTrigger value="sessions" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+              <TabsTrigger value="sessions" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
                 <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
               </TabsTrigger>
             )}
             {hasPermission(directorRole, "canRecordGames") && (
-              <TabsTrigger value="record" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+              <TabsTrigger value="record" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
                 <Plus className="w-4 h-4 mr-2" /> Record Game
               </TabsTrigger>
             )}
             {hasPermission(directorRole, "canApproveRequests") && (
-              <TabsTrigger value="requests" className="data-[state=active]:bg-red-600 data-[state=active]:text-white relative">
+              <TabsTrigger value="requests" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50 relative">
                 <Mail className="w-4 h-4 mr-2" /> Requests
                 {inviteRequests.length > 0 && (
                   <span className="ml-1 bg-red-400 text-white text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
@@ -322,15 +322,15 @@ export default function DirectorDashboard() {
               </TabsTrigger>
             )}
             {hasPermission(directorRole, "canManagePlayers") && (
-              <TabsTrigger value="players" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+              <TabsTrigger value="players" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
                 <Users className="w-4 h-4 mr-2" /> Players
               </TabsTrigger>
             )}
-            <TabsTrigger value="history" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+            <TabsTrigger value="history" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
               <Trophy className="w-4 h-4 mr-2" /> Games
             </TabsTrigger>
             {hasPermission(directorRole, "canUploadPhotos") && (
-              <TabsTrigger value="photos" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+              <TabsTrigger value="photos" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
                 <ImagePlus className="w-4 h-4 mr-2" /> Photos
               </TabsTrigger>
             )}
