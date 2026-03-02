@@ -201,8 +201,8 @@ function LayoutInner({ children }) {
                   })}
                   <SidebarMenuItem key="user-welcome" className="mt-auto pt-4 border-t border-gray-800">
                     {player && (
-                      <div className="px-4 py-3 text-gray-400 text-sm">
-                        Welcome, <span className="text-gray-400 font-medium">{player.first_name} {player.last_name}</span>
+                      <div className="px-4 py-3 text-gray-500 text-sm">
+                        Welcome, <span className="text-gray-500 font-medium">{player.first_name} {player.last_name}</span>
                       </div>
                     )}
                   </SidebarMenuItem>
