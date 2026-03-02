@@ -531,14 +531,16 @@ export default function DirectorDashboard() {
                     </div>
                     <div className="space-y-2 md:col-span-2">
                       <Label className="text-gray-300">Location</Label>
-                      <Select value={gameData.location} onValueChange={v => setGameData({...gameData, location: v})}>
+                      <Select value={gameData.location} onValueChange={v => {
+                        setGameData({...gameData, location: v});
+                        const session = sessions.find(s => s.location === v && s.is_open);
+                        setCurrentSessionId(session?.id || null);
+                      }}>
                         <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
                         <SelectContent className="bg-gray-900 border-gray-700">
-                          <SelectItem value="Tavern 018 Sunday">Tavern 018 Sunday</SelectItem>
-                          <SelectItem value="Tavern 018 Wednesday">Tavern 018 Wednesday</SelectItem>
-                          <SelectItem value="East End Grill">East End Grill</SelectItem>
-                          <SelectItem value="Habana Club">Habana Club</SelectItem>
-                          <SelectItem value="Meddlesome">Meddlesome</SelectItem>
+                          {sessions.filter(s => s.is_open).map(session => (
+                            <SelectItem key={session.id} value={session.location}>{session.location}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
