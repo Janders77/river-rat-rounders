@@ -324,8 +324,7 @@ export default function Leaderboard() {
                          {index + 1}
                        </div>
                        {(() => {
-                         const playerRecord = playerRecords.find(r => r.email === player.email);
-                         const imageUrl = player.profile_image_url || playerRecord?.profile_picture;
+                         const imageUrl = player.profile_picture;
                          return imageUrl ? (
                            <img src={imageUrl} alt={getPlayerName(player)} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
                          ) : (
