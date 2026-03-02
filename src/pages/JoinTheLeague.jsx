@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { CheckSquare, Square, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const PAYPAL_URL = "https://www.paypal.com/webapps/hermes?token=9TF07755UX864373F&useraction=commit&rm=1&wpsFlowRedirectToXorouterSkipHermesStartTime=1771991918905&flowType=WPS&mfid=1771991918693_f471767b38254";
+const PAYPAL_URL = "https://www.paypal.com/webapps/hermes?token=10M62691DD355105D&useraction=commit&rm=1&wpsFlowRedirectToXorouterSkipHermesStartTime=1772486683042&flowType=WPS&mfid=1772486682826_f69011947455e";
 
 export default function JoinTheLeague() {
   const [agreed, setAgreed] = useState(false);
