@@ -567,11 +567,18 @@ export default function DirectorDashboard() {
                               </span>
                             </SelectTrigger>
                             <SelectContent className="bg-gray-900 border-gray-700">
-                              <SelectItem value="__none__">— None —</SelectItem>
-                              {players.filter(p => p.email && p.first_name).sort((a, b) => `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)).map(p => (
-                                <SelectItem key={p.email} value={p.email} className="text-white">{p.first_name} {p.last_name}</SelectItem>
-                              ))}
-                            </SelectContent>
+                               <SelectItem value="__none__">— None —</SelectItem>
+                               {(() => {
+                                 const session = sessions.find(s => s.id === currentSessionId);
+                                 const signedInPlayers = session?.signed_in_players || [];
+                                 return players
+                                   .filter(p => p.email && p.first_name && signedInPlayers.includes(p.email))
+                                   .sort((a, b) => `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`))
+                                   .map(p => (
+                                     <SelectItem key={p.email} value={p.email} className="text-white">{p.first_name} {p.last_name}</SelectItem>
+                                   ));
+                               })()}
+                             </SelectContent>
                           </Select>
                         </div>
                       ))}
