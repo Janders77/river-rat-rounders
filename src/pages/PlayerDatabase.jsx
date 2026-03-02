@@ -155,7 +155,7 @@ export default function PlayerDatabase() {
   );
 
   return (
-    <div className="min-h-screen p-1 sm:p-6 w-full overflow-x-hidden box-border" style={{background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d3a 50%, #1a1a2e 100%)"}}>
+    <div className="min-h-screen p-1 sm:p-6 w-full overflow-x-hidden box-border" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="w-full max-w-2xl mx-auto overflow-x-hidden box-border">
         {/* Header */}
         <div className="mb-4 flex items-center justify-between gap-2 w-full">

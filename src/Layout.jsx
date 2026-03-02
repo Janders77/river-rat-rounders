@@ -125,7 +125,7 @@ function LayoutInner({ children }) {
           --accent: 220 10% 40%;
         }
       `}</style>
-      <div className="min-h-screen flex w-full text-gray-100" style={{background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d3a 50%, #1a1a2e 100%)"}}>
+      <div className="min-h-screen flex w-full text-gray-100" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
         <Sidebar className="border-r border-gray-700/60" style={{background: "linear-gradient(180deg, #111118 0%, #1e1e2a 30%, #181820 70%, #0d0d14 100%)", backdropFilter: "blur(8px)"}}>
           <SidebarHeader className="border-b border-gray-700/40 p-5" style={{background: "linear-gradient(135deg, rgba(30,30,42,0.95) 0%, rgba(15,15,22,0.98) 100%)", boxShadow: "0 4px 24px rgba(0,0,0,0.30), 0 1px 0 rgba(255,255,255,0.05)"}}>
             <div className="flex items-center justify-between w-full gap-2">
@@ -232,7 +232,7 @@ function LayoutInner({ children }) {
         </Sidebar>
 
         <main className="flex-1 flex flex-col">
-          <header className="bg-gradient-to-r from-gray-800/80 to-gray-700/60 border-b border-gray-600/40 px-6 py-4 lg:hidden flex items-center justify-center relative">
+          <header className="border-b border-red-900/40 px-6 py-4 lg:hidden flex items-center justify-center relative" style={{background: "linear-gradient(to right, rgba(127,29,29,0.2), rgba(127,29,29,0.6))"}}>
             <SidebarTrigger className="hover:bg-gray-800 w-12 h-12 rounded-lg transition-colors flex items-center justify-center absolute left-6">
               <Menu className="w-5 h-5" />
             </SidebarTrigger>

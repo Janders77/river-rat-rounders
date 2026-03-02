@@ -120,7 +120,7 @@ export default function LeagueCalendar() {
   });
 
   return (
-    <div className="min-h-screen p-3 sm:p-6" style={{background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d3a 50%, #1a1a2e 100%)"}}>
+    <div className="min-h-screen p-3 sm:p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">

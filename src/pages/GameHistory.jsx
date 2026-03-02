@@ -30,7 +30,7 @@ export default function GameHistory() {
   });
 
   return (
-    <div className="min-h-screen p-6" style={{background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d3a 50%, #1a1a2e 100%)"}}>
+    <div className="min-h-screen p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-6">
