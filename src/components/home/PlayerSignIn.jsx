@@ -117,7 +117,7 @@ export default function PlayerSignIn() {
             </div>
 
             <button
-              className="flex items-center gap-2 text-sm text-gray-400 hover:text-emerald-400 transition-colors w-full text-left"
+              className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors w-full text-left"
               onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
             >
               <Users className="w-4 h-4" />
