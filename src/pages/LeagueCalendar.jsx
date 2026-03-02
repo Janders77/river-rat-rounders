@@ -40,6 +40,7 @@ export default function LeagueCalendar() {
 
   useEffect(() => {
     loadData();
+    setToday(new Date());
   }, []);
 
   const loadData = async () => {
