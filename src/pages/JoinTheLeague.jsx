@@ -25,11 +25,11 @@ export default function JoinTheLeague() {
         <div className="bg-[#1A1B20] border border-gray-700 rounded-xl p-6 mb-6 max-h-[60vh] overflow-y-auto space-y-5 text-sm text-gray-300 leading-relaxed">
 
           <div>
-            <h2 className="text-amber-400 font-bold text-base mb-2">RRR Mission Statement</h2>
+            <h2 className="text-red-400 font-bold text-base mb-2">RRR Mission Statement</h2>
             <p>To create an inclusive, fun, competitive environment for players at all skill levels who are interested in improving their game or socializing without the risk of losing money.</p>
           </div>
 
-          <p>The River Rat Rounders (RRR) plays No-Limit Texas Hold 'em poker tournaments. To learn how the game of Texas Hold 'em is played, click <a href="https://en.wikipedia.org/wiki/Texas_hold_%27em" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline">HERE</a>.</p>
+          <p>The River Rat Rounders (RRR) plays No-Limit Texas Hold 'em poker tournaments. To learn how the game of Texas Hold 'em is played, click <a href="https://en.wikipedia.org/wiki/Texas_hold_%27em" target="_blank" rel="noopener noreferrer" className="text-red-400 underline">HERE</a>.</p>
 
           <div>
             <h2 className="text-white font-bold mb-1">RULINGS</h2>
@@ -123,7 +123,7 @@ export default function JoinTheLeague() {
         >
           <div className="mt-0.5 shrink-0">
             {agreed
-              ? <CheckSquare className="w-6 h-6 text-purple-400" />
+              ? <CheckSquare className="w-6 h-6 text-red-400" />
               : <Square className="w-6 h-6 text-gray-500" />
             }
           </div>
@@ -138,7 +138,7 @@ export default function JoinTheLeague() {
           disabled={!agreed}
           className={`w-full py-6 text-base font-bold flex items-center justify-center gap-2 transition-all ${
             agreed
-              ? "bg-purple-600 hover:bg-purple-700 text-white"
+              ? "bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40"
               : "bg-gray-700 text-gray-500 cursor-not-allowed"
           }`}
         >
