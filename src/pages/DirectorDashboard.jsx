@@ -97,7 +97,11 @@ export default function DirectorDashboard() {
     };
   }, []);
 
+  const [players, setPlayers] = useState([]);
+
   const getPlayerName = (email) => {
+    const player = players.find(p => p.email === email);
+    if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim();
     const user = users.find(u => u.email === email);
     return user?.full_name || email;
   };
