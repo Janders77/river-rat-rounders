@@ -111,7 +111,7 @@ export default function PlayerSignIn() {
                   {session.game_type && <span className="text-gray-600">· {session.game_type}</span>}
                 </div>
               </div>
-              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 shrink-0">
+              <Badge className="bg-red-500/20 text-red-400 border-red-500/30 shrink-0">
                 Open
               </Badge>
             </div>
