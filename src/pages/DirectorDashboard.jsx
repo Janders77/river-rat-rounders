@@ -445,11 +445,11 @@ export default function DirectorDashboard() {
                                 </SelectTrigger>
                                 <SelectContent className="bg-gray-900 border-gray-700">
                                   {(session.signed_in_players?.length > 0
-                                    ? users.filter(u => session.signed_in_players.includes(u.email))
-                                    : users
-                                  ).filter(u => !(session.hand_of_week_emails || []).includes(u.email))
-                                   .map(u => (
-                                    <SelectItem key={u.email} value={u.email} className="text-white">{u.full_name || u.email}</SelectItem>
+                                    ? players.filter(p => session.signed_in_players.includes(p.email))
+                                    : players
+                                  ).filter(p => !(session.hand_of_week_emails || []).includes(p.email))
+                                   .map(p => (
+                                    <SelectItem key={p.email} value={p.email} className="text-white">{p.first_name} {p.last_name}</SelectItem>
                                   ))}
                                 </SelectContent>
                               </Select>
