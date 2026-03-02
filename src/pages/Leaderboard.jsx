@@ -147,9 +147,11 @@ export default function Leaderboard() {
 
     locationGames.forEach(game => {
       if (!locationStats[game.winner_email]) {
+        const playerRecord = playerRecords.find(r => r.email === game.winner_email);
+        const playerName = playerRecord ? `${playerRecord.first_name || ""} ${playerRecord.last_name || ""}`.trim() : game.winner_name;
         locationStats[game.winner_email] = {
           email: game.winner_email,
-          name: game.winner_name,
+          name: playerName,
           points: 0,
           wins: 0
         };
