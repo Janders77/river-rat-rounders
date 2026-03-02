@@ -151,7 +151,7 @@ export default function Locations() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-green-900/30">
+    <div className="min-h-screen p-6" style={{background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d3a 50%, #1a1a2e 100%)"}}>
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
