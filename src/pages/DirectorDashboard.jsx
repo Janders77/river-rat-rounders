@@ -551,10 +551,10 @@ export default function DirectorDashboard() {
                             <SelectTrigger className="bg-gray-900 border-gray-700 text-white flex-1">
                               <SelectValue placeholder={`Select ${label} place`} />
                             </SelectTrigger>
-                            <SelectContent className="bg-gray-900 border-gray-700">
+                            <SelectContent className="bg-gray-900 border-gray-700 [&_[role=option]]:text-white">
                               <SelectItem value={null}>— None —</SelectItem>
-                              {users.map(u => (
-                                <SelectItem key={u.email} value={u.email}>{u.full_name || u.email}</SelectItem>
+                              {users.filter(u => u.full_name).sort((a, b) => (a.full_name || "").localeCompare(b.full_name || "")).map(u => (
+                                <SelectItem key={u.email} value={u.email} className="text-white">{u.full_name}</SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
