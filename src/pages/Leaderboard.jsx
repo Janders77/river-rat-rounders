@@ -275,11 +275,9 @@ export default function Leaderboard() {
                            {index + 1}
                          </div>
                          {(() => {
-                           const playerRecord = playerRecords.find(r => r.email === stat.email);
-                           const user = players.find(p => p.email === stat.email);
-                           const imageUrl = user?.profile_image_url || playerRecord?.profile_picture;
-                           return imageUrl ? (
-                             <img src={imageUrl} alt={stat.name} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                           const playerData = getPlayerData(stat.email);
+                           return playerData?.image ? (
+                             <img src={playerData.image} alt={playerData.fullName} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
                            ) : (
                              <div className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold shrink-0">
                                {stat.name?.[0]?.toUpperCase() || "?"}
@@ -335,9 +333,9 @@ export default function Leaderboard() {
                          {index + 1}
                        </div>
                        {(() => {
-                         const imageUrl = player.profile_picture;
-                         return imageUrl ? (
-                           <img src={imageUrl} alt={getPlayerName(player)} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                         const playerData = getPlayerData(player.email);
+                         return playerData?.image ? (
+                           <img src={playerData.image} alt={playerData.fullName} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
                          ) : (
                            <div className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold shrink-0">
                              {getPlayerName(player)[0]?.toUpperCase() || "?"}
