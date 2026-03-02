@@ -135,11 +135,15 @@ export default function PlayerSignIn() {
             {expandedSession === session.id && session.signed_in_players?.length > 0 && (
               <div className="bg-gray-800/60 rounded-lg p-3 space-y-1.5">
                 {session.signed_in_players.map(email => {
+                  const player = allPlayers.find(p => p.email === email);
                   const user = allUsers.find(u => u.email === email);
+                  const name = player
+                    ? `${player.first_name || ""} ${player.last_name || ""}`.trim()
+                    : user?.full_name || email;
                   return (
                     <div key={email} className="flex items-center gap-2 text-sm text-gray-300">
                       <div className="w-2 h-2 rounded-full bg-red-400 shrink-0" />
-                      {user?.full_name || email}
+                      {name}
                     </div>
                   );
                 })}
