@@ -386,13 +386,10 @@ export default function DirectorDashboard() {
                       </div>
                       <div className="space-y-2 md:col-span-2">
                         <label className="text-gray-300 text-sm">Location</label>
-                        <Select value={newSession.location || "__placeholder__"} onValueChange={v => {
-                          if (v === "__placeholder__") return;
-                          setNewSession({...newSession, location: v});
-                        }}>
+                        <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
                           <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
                           <SelectContent className="bg-gray-900 border-gray-700">
-                            <SelectItem value="__placeholder__" disabled>Select location</SelectItem>
+                            <SelectItem value="__none__" disabled>Select location</SelectItem>
                             {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc => (
                               <SelectItem key={loc} value={loc}>{loc}</SelectItem>
                             ))}
