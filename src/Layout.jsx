@@ -115,20 +115,14 @@ function LayoutInner({ children }) {
     <>
       <style>{`
         :root {
-          --background: 220 13% 9%;
+          --background: 230 15% 11%;
           --foreground: 60 5% 90%;
-          --primary: 45 100% 51%;
-          --primary-foreground: 0 0% 0%;
-          --card: 220 13% 12%;
+          --primary: 220 10% 50%;
+          --primary-foreground: 0 0% 100%;
+          --card: 230 15% 14%;
           --card-foreground: 60 5% 90%;
-          --border: 220 13% 20%;
-          --accent: 142 76% 36%;
-        }
-        .felt-bg {
-          background-color: #1f4d18;
-          background-image:
-            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='%23ffffff08'/%3E%3Ccircle cx='3' cy='3' r='0.6' fill='%23ffffff05'/%3E%3C/svg%3E"),
-            radial-gradient(ellipse at center, %232d5a27 0%25, %231a3d15 50%25, %230f2a0a 100%25);
+          --border: 230 15% 22%;
+          --accent: 220 10% 40%;
         }
       `}</style>
       <div className="min-h-screen flex w-full text-gray-100" style={{background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d3a 50%, #1a1a2e 100%)"}}>
