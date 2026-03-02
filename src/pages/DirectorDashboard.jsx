@@ -39,6 +39,7 @@ export default function DirectorDashboard() {
     location: "",
     notes: ""
   });
+  const [currentSessionId, setCurrentSessionId] = useState(null);
   const [placements, setPlacements] = useState(Array(9).fill(""));
   const [sessions, setSessions] = useState([]);
   const [newSession, setNewSession] = useState({
