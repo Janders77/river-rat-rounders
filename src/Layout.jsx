@@ -131,9 +131,9 @@ function LayoutInner({ children }) {
             radial-gradient(ellipse at center, %232d5a27 0%25, %231a3d15 50%25, %230f2a0a 100%25);
         }
       `}</style>
-      <div className="min-h-screen flex w-full text-gray-100" style={{background: "radial-gradient(ellipse at center, #2d5a27 0%, #1a3d15 50%, #0f2a0a 100%)"}}>
-        <Sidebar className="border-r border-green-900/60" style={{background: "linear-gradient(180deg, #0d2810 0%, #1a3d15 30%, #142e10 70%, #0a1f08 100%)", backdropFilter: "blur(8px)"}}>
-          <SidebarHeader className="border-b border-green-900/40 p-5" style={{background: "linear-gradient(135deg, rgba(20,60,16,0.95) 0%, rgba(10,30,8,0.98) 100%)", boxShadow: "0 4px 24px rgba(34,197,94,0.10), 0 1px 0 rgba(255,255,255,0.05)"}}>
+      <div className="min-h-screen flex w-full text-gray-100" style={{background: "linear-gradient(135deg, #1a1a2e 0%, #2d2d3a 50%, #1a1a2e 100%)"}}>
+        <Sidebar className="border-r border-gray-700/60" style={{background: "linear-gradient(180deg, #111118 0%, #1e1e2a 30%, #181820 70%, #0d0d14 100%)", backdropFilter: "blur(8px)"}}>
+          <SidebarHeader className="border-b border-gray-700/40 p-5" style={{background: "linear-gradient(135deg, rgba(30,30,42,0.95) 0%, rgba(15,15,22,0.98) 100%)", boxShadow: "0 4px 24px rgba(0,0,0,0.30), 0 1px 0 rgba(255,255,255,0.05)"}}>
             <div className="flex items-center justify-between w-full gap-2">
               <button onClick={handleLogoClick} className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-90 transition-opacity">
                 <div style={{filter: "drop-shadow(0 0 10px rgba(220,38,38,0.5)) drop-shadow(0 0 20px rgba(220,38,38,0.2))"}}>
