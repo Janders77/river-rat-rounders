@@ -16,21 +16,21 @@ const navLinks = [
     description: "View community rankings and player stats",
     icon: Trophy,
     url: createPageUrl("Leaderboard"),
-    iconColor: "text-green-400",
+    iconColor: "text-red-400",
   },
   {
     title: "Game History",
     description: "Browse all past games and results",
     icon: History,
     url: createPageUrl("GameHistory"),
-    iconColor: "text-green-400",
+    iconColor: "text-red-400",
   },
   {
     title: "Calendar",
     description: "View upcoming league events and games",
     icon: CalendarDays,
     url: createPageUrl("LeagueCalendar"),
-    iconColor: "text-green-400",
+    iconColor: "text-red-400",
   },
 ];
 
