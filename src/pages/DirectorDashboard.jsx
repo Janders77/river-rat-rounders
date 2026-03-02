@@ -100,6 +100,16 @@ export default function DirectorDashboard() {
 
   const [players, setPlayers] = useState([]);
 
+  const getPlayerData = (email) => {
+    const player = players.find(p => p.email === email);
+    if (!player) return null;
+
+    return {
+      fullName: `${player.first_name} ${player.last_name}`,
+      image: player.profile_picture
+    };
+  };
+
   const getPlayerName = (email) => {
     const player = players.find(p => p.email === email);
     if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim();
