@@ -25,14 +25,14 @@ export default function BreakTimeBump() {
             <CardTitle className="text-white text-lg">What is a Break Time Bump?</CardTitle>
           </CardHeader>
           <CardContent className="text-gray-300 text-sm leading-relaxed">
-            <p>A <span className="text-amber-400 font-semibold">Break Time Bump</span> allows you to get back in the action if you bust or want to add on during the break.</p>
+            <p>A <span className="text-red-400 font-semibold">Break Time Bump</span> allows you to get back in the action if you bust or want to add on during the break.</p>
           </CardContent>
         </Card>
 
         {/* Price */}
-        <div className="flex items-center justify-center gap-3 mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-          <span className="text-2xl font-bold text-amber-400">${BUMP_COST}.00</span>
-          <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/40">Per Bump</Badge>
+        <div className="flex items-center justify-center gap-3 mb-6 p-4 rounded-xl bg-red-900/20 border border-red-700/40">
+          <span className="text-2xl font-bold text-red-400">${BUMP_COST}.00</span>
+          <Badge className="bg-red-900/30 text-red-300 border-red-700/40">Per Bump</Badge>
         </div>
 
         {/* Payment Options */}
@@ -41,7 +41,7 @@ export default function BreakTimeBump() {
             href="https://store7781494.ecwid.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 px-8 py-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 transition-colors text-white font-bold text-base"
+            className="flex items-center justify-center gap-3 px-8 py-4 rounded-lg bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 transition-all duration-200 text-white font-bold text-base shadow-lg shadow-red-900/40"
           >
             <ExternalLink className="w-5 h-5" />
             Break Time Bump
