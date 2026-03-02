@@ -557,13 +557,13 @@ export default function DirectorDashboard() {
                           }}>
                             <SelectTrigger className="bg-gray-900 border-gray-700 text-white flex-1">
                               <span className="text-white">
-                                {placements[i] ? (users.find(u => u.email === placements[i])?.full_name || placements[i]) : <span className="text-gray-500">Select {label} place</span>}
+                                {placements[i] ? getPlayerName(placements[i]) : <span className="text-gray-500">Select {label} place</span>}
                               </span>
                             </SelectTrigger>
                             <SelectContent className="bg-gray-900 border-gray-700">
                               <SelectItem value={null}>— None —</SelectItem>
-                              {users.filter(u => u.full_name).sort((a, b) => a.full_name.localeCompare(b.full_name)).map(u => (
-                                <SelectItem key={u.email} value={u.email} className="text-white">{u.full_name}</SelectItem>
+                              {players.filter(p => p.first_name).sort((a, b) => `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`)).map(p => (
+                                <SelectItem key={p.email} value={p.email} className="text-white">{p.first_name} {p.last_name}</SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
