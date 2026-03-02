@@ -430,7 +430,7 @@ export default function DirectorDashboard() {
                               <Select
                                 value="__placeholder__"
                                 onValueChange={async (val) => {
-                                  if (val === "__placeholder__") return;
+                                   if (val === "__add_player__") return;
                                   const currentList = session.hand_of_week_emails || [];
                                   if (currentList.includes(val)) return;
                                   const player = users.find(u => u.email === val);
@@ -456,7 +456,7 @@ export default function DirectorDashboard() {
                                   <SelectValue placeholder="Add player..." />
                                 </SelectTrigger>
                                 <SelectContent className="bg-gray-900 border-gray-700">
-                                  <SelectItem value="__placeholder__" disabled className="text-gray-500">Add player...</SelectItem>
+                                  <SelectItem value="__add_player__" disabled className="text-gray-500">Add player...</SelectItem>
                                   {(session.signed_in_players?.length > 0
                                     ? players.filter(p => session.signed_in_players.includes(p.email))
                                     : players
@@ -564,10 +564,10 @@ export default function DirectorDashboard() {
                         <div key={i} className="flex items-center gap-3">
                           <div className="w-10 text-sm font-bold text-right shrink-0 text-gray-400">{label}</div>
                           <div className="text-sm text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
-                          <Select value={placements[i] || "__none__"} onValueChange={val => {
+                          <Select value={placements[i] || ""} onValueChange={val => {
                             const updated = [...placements];
                             for (let j = 0; j < updated.length; j++) { if (updated[j] === val) updated[j] = ""; }
-                            if (val === "__none__") updated[i] = "";
+                            if (val === "") updated[i] = "";
                             else updated[i] = val;
                             setPlacements(updated);
                           }}>
@@ -577,7 +577,7 @@ export default function DirectorDashboard() {
                               </span>
                             </SelectTrigger>
                             <SelectContent className="bg-gray-900 border-gray-700">
-                               <SelectItem value="__none__">— None —</SelectItem>
+                               <SelectItem value="__clear_placement__" disabled>— None —</SelectItem>
                                {(() => {
                                  const session = sessions.find(s => s.id === currentSessionId);
                                  const signedInPlayers = session?.signed_in_players || [];
