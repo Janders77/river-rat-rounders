@@ -12,8 +12,8 @@ export default function BreakTimeBump() {
       <div className="max-w-lg mx-auto">
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-4">
-            <Zap className="w-9 h-9 text-black" />
+          <div className="w-16 h-16 bg-gradient-to-br from-red-700 to-red-900 rounded-2xl flex items-center justify-center shadow-lg shadow-red-900/40 mx-auto mb-4">
+            <Zap className="w-9 h-9 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white">Break Time Bump</h1>
           <p className="text-gray-400 mt-2">Get back in the action during the break</p>
