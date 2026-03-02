@@ -540,7 +540,7 @@ export default function DirectorDashboard() {
                     <div className="space-y-2">
                       {PLACE_LABELS.map((label, i) => (
                         <div key={i} className="flex items-center gap-3">
-                          <div className={`w-10 text-sm font-bold text-right shrink-0 ${i === 0 ? 'text-red-400' : i === 1 ? 'text-gray-300' : i === 2 ? 'text-red-700' : 'text-gray-500'}`}>{label}</div>
+                          <div className="w-10 text-sm font-bold text-right shrink-0 text-gray-400">{label}</div>
                           <div className="text-xs text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
                           <Select value={placements[i]} onValueChange={val => {
                             const updated = [...placements];
