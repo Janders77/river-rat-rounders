@@ -458,7 +458,7 @@ export default function DirectorDashboard() {
                                   <SelectValue placeholder="Add player..." />
                                 </SelectTrigger>
                                 <SelectContent className="bg-gray-900 border-gray-700">
-                                  <SelectItem value="__add_player__" disabled className="text-gray-500">Add player...</SelectItem>
+                                  <SelectItem value="__none__" disabled className="text-gray-500">Add player...</SelectItem>
                                   {(session.signed_in_players?.length > 0
                                     ? players.filter(p => session.signed_in_players.includes(p.email))
                                     : players
