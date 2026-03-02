@@ -428,9 +428,9 @@ export default function DirectorDashboard() {
                             <div className="mt-3 space-y-2">
                               <label className="text-xs text-red-400 font-semibold">🃏 Hand of the Week</label>
                               <Select
-                                value="__placeholder__"
+                                value=""
                                 onValueChange={async (val) => {
-                                   if (val === "__add_player__") return;
+                                   if (val === "") return;
                                   const currentList = session.hand_of_week_emails || [];
                                   if (currentList.includes(val)) return;
                                   const player = users.find(u => u.email === val);
