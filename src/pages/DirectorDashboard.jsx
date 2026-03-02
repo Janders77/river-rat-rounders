@@ -552,7 +552,8 @@ export default function DirectorDashboard() {
                           <Select value={placements[i]} onValueChange={val => {
                             const updated = [...placements];
                             for (let j = 0; j < updated.length; j++) { if (updated[j] === val) updated[j] = ""; }
-                            updated[i] = val;
+                            if (val === "__none__") updated[i] = "";
+                            else updated[i] = val;
                             setPlacements(updated);
                           }}>
                             <SelectTrigger className="bg-gray-900 border-gray-700 text-white flex-1">
