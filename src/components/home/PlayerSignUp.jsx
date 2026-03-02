@@ -36,7 +36,7 @@ export default function PlayerSignUp() {
         className="w-full flex items-center gap-4 p-5 rounded-xl border border-red-900/40 bg-gradient-to-r from-red-900/20 to-red-950/60 hover:border-red-800/60 hover:from-red-900/30 hover:to-red-950/80 transition-all duration-200 group"
       >
         <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
-          <UserPlus className="w-6 h-6 text-green-400" />
+          <UserPlus className="w-6 h-6 text-red-400" />
         </div>
         <div className="text-left">
           <div className="font-semibold text-white text-lg">New Player? Sign Up</div>
