@@ -208,7 +208,7 @@ export default function LeagueCalendar() {
               {/* Image Upload */}
               <div>
                 <label className="text-gray-400 text-xs mb-2 block">Event Images</label>
-                <label className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-dashed border-gray-600 hover:border-cyan-500 text-gray-400 hover:text-cyan-400 transition-colors w-fit text-sm ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
+                <label className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-dashed border-gray-600 hover:border-red-500 text-gray-400 hover:text-red-400 transition-colors w-fit text-sm ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
                   <Upload className="w-4 h-4" />
                   {uploadingImage ? "Uploading..." : "Upload Images"}
                   <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
