@@ -549,11 +549,13 @@ export default function DirectorDashboard() {
                             setPlacements(updated);
                           }}>
                             <SelectTrigger className="bg-gray-900 border-gray-700 text-white flex-1">
-                              <SelectValue placeholder={`Select ${label} place`} />
+                              <span className="text-white">
+                                {placements[i] ? (users.find(u => u.email === placements[i])?.full_name || placements[i]) : <span className="text-gray-500">Select {label} place</span>}
+                              </span>
                             </SelectTrigger>
-                            <SelectContent className="bg-gray-900 border-gray-700 [&_[role=option]]:text-white">
+                            <SelectContent className="bg-gray-900 border-gray-700">
                               <SelectItem value={null}>— None —</SelectItem>
-                              {users.filter(u => u.full_name).sort((a, b) => (a.full_name || "").localeCompare(b.full_name || "")).map(u => (
+                              {users.filter(u => u.full_name).sort((a, b) => a.full_name.localeCompare(b.full_name)).map(u => (
                                 <SelectItem key={u.email} value={u.email} className="text-white">{u.full_name}</SelectItem>
                               ))}
                             </SelectContent>
