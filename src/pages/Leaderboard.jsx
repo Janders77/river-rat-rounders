@@ -181,7 +181,7 @@ export default function Leaderboard() {
                   onClick={() => setSelectedQuarter(q)}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     selectedQuarter === q
-                      ? 'bg-amber-500 text-black'
+                      ? 'bg-red-700 text-white'
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                   }`}
                 >
