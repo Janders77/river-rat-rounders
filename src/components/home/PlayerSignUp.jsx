@@ -33,7 +33,7 @@ export default function PlayerSignUp() {
     return (
       <button
         onClick={() => setExpanded(true)}
-        className="w-full flex items-center gap-4 p-5 rounded-xl border border-red-900/40 bg-gradient-to-r from-red-900/20 to-red-950/60 hover:border-red-800/60 hover:from-red-900/30 hover:to-red-950/80 transition-all duration-200 group"
+        className="w-full flex items-center gap-4 p-5 rounded-xl border border-red-900/40 bg-gradient-to-r from-red-900/20 to-red-950/60 hover:border-red-700/70 hover:from-red-700/40 hover:to-red-800/50 transition-all duration-200 group"
       >
         <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
           <UserPlus className="w-6 h-6 text-red-400" />
