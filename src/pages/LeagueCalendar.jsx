@@ -136,7 +136,7 @@ export default function LeagueCalendar() {
           {isAdmin && !showForm && (
             <Button
               onClick={() => setShowForm(true)}
-              className="bg-red-700 hover:bg-red-800 text-white gap-2 w-full sm:w-auto"
+              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white gap-2 w-full sm:w-auto shadow-lg shadow-red-900/40 transition-all duration-200"
             >
               <Plus className="w-4 h-4" /> Add Event
             </Button>
@@ -233,7 +233,7 @@ export default function LeagueCalendar() {
                 <Button variant="ghost" onClick={handleCancel} className="text-gray-400 gap-2">
                   <X className="w-4 h-4" /> Cancel
                 </Button>
-                <Button onClick={handleSubmit} className="bg-red-700 hover:bg-red-800 text-white gap-2">
+                <Button onClick={handleSubmit} className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white gap-2 shadow-lg shadow-red-900/40 transition-all duration-200">
                   <Check className="w-4 h-4" /> {editingEvent ? "Save Changes" : "Create Event"}
                 </Button>
               </div>

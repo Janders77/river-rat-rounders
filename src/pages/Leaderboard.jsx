@@ -168,7 +168,7 @@ export default function Leaderboard() {
               <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/db52ea530_red2012-2.jpg" alt="River Rat Rounders" className="w-full h-full object-cover" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Leaderboard</h1>
+              <h1 className="text-3xl font-bold text-white text-center">Leaderboard</h1>
               <p className="text-gray-400">Top 100 Players - Current Quarter</p>
             </div>
           </div>
@@ -179,10 +179,10 @@ export default function Leaderboard() {
                 <button
                   key={q}
                   onClick={() => setSelectedQuarter(q)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                     selectedQuarter === q
-                      ? 'bg-red-700 text-white'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                      ? 'bg-gradient-to-r from-red-700 to-red-900 text-white shadow-lg shadow-red-900/40'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gradient-to-r hover:from-red-700 hover:to-red-900 hover:text-white hover:shadow-lg hover:shadow-red-900/40'
                   }`}
                 >
                   {q}
