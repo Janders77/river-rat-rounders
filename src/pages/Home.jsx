@@ -73,7 +73,7 @@ export default function Home() {
               className={cardClass}
             >
               <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
-                <UserPlus className="w-6 h-6 text-green-400" />
+                <UserPlus className="w-6 h-6 text-red-400" />
               </div>
               <div className="text-left">
                 <div className="font-semibold text-white text-lg">Join the League</div>
