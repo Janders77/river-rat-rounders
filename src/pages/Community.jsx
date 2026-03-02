@@ -86,13 +86,13 @@ export default function Community() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <Megaphone className="w-7 h-7 text-green-400" />
+            <Megaphone className="w-7 h-7 text-red-400" />
             <h1 className="text-2xl font-bold text-white">Community Board</h1>
           </div>
           {!showForm && (
             <Button
               onClick={() => setShowForm(true)}
-              className="bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white"
+              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white"
             >
               <Plus className="w-4 h-4 mr-1" /> Post Ad
             </Button>
@@ -101,39 +101,39 @@ export default function Community() {
 
         {/* Submit Form */}
         {showForm && (
-          <div className="rounded-xl border border-green-500/30 bg-gradient-to-br from-green-950/30 to-green-900/10 p-4 mb-6">
+          <div className="rounded-xl border border-red-700/30 bg-gradient-to-br from-red-950/30 to-red-900/10 p-4 mb-6">
             <h2 className="text-white font-semibold mb-3">New Advertisement</h2>
             <form onSubmit={handleSubmit} className="space-y-3">
               <Input
                 placeholder="Title / Business Name *"
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                className="bg-black/30 border-green-500/30 text-white placeholder:text-gray-500"
+                className="bg-black/30 border-red-700/30 text-white placeholder:text-gray-500"
                 required
               />
               <Textarea
                 placeholder="Describe your service or business *"
                 value={form.body}
                 onChange={e => setForm(f => ({ ...f, body: e.target.value }))}
-                className="bg-black/30 border-green-500/30 text-white placeholder:text-gray-500 min-h-[100px]"
+                className="bg-black/30 border-red-700/30 text-white placeholder:text-gray-500 min-h-[100px]"
                 required
               />
               <Input
                 placeholder="Contact info (phone, email, website)"
                 value={form.contact_info}
                 onChange={e => setForm(f => ({ ...f, contact_info: e.target.value }))}
-                className="bg-black/30 border-green-500/30 text-white placeholder:text-gray-500"
+                className="bg-black/30 border-red-700/30 text-white placeholder:text-gray-500"
               />
               <div>
                 <label className="text-gray-400 text-xs mb-1 block">Image (optional)</label>
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="post-image" />
-                <label htmlFor="post-image" className="flex items-center gap-2 cursor-pointer text-sm text-green-400 hover:text-green-300">
+                <label htmlFor="post-image" className="flex items-center gap-2 cursor-pointer text-sm text-red-400 hover:text-red-300">
                   {imageUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                   {form.image_url ? "Image uploaded ✓" : "Upload image"}
                 </label>
               </div>
               <div className="flex gap-2">
-                <Button type="submit" disabled={submitting} className="flex-1 bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white">
+                <Button type="submit" disabled={submitting} className="flex-1 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white">
                   {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null} Submit for Approval
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="border-gray-700 text-gray-300">
@@ -145,13 +145,13 @@ export default function Community() {
         )}
 
         {loading ? (
-          <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-green-400" /></div>
+          <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-red-400" /></div>
         ) : (
           <>
             {/* Admin: Pending Posts */}
             {isAdmin && pendingPosts.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-amber-400 font-semibold mb-3 flex items-center gap-2">
+                <h2 className="text-red-400 font-semibold mb-3 flex items-center gap-2">
                   <Clock className="w-4 h-4" /> Pending Approval ({pendingPosts.length})
                 </h2>
                 <div className="space-y-3">
@@ -164,7 +164,7 @@ export default function Community() {
 
             {/* Approved Posts */}
             <div className="mb-6">
-              {isAdmin && <h2 className="text-green-400 font-semibold mb-3">Approved Posts ({approvedPosts.length})</h2>}
+              {isAdmin && <h2 className="text-red-400 font-semibold mb-3">Approved Posts ({approvedPosts.length})</h2>}
               {approvedPosts.length === 0 ? (
                 <p className="text-gray-500 text-center py-12">No posts yet. Be the first to advertise!</p>
               ) : (
@@ -196,8 +196,8 @@ export default function Community() {
 
 function PostCard({ post, isAdmin, onApprove, onReject, onDelete }) {
   const statusColors = {
-    approved: "bg-green-600/20 border-green-500/50 text-green-300",
-    pending: "bg-amber-600/20 border-amber-500/50 text-amber-300",
+    approved: "bg-red-700/20 border-red-500/50 text-red-300",
+    pending: "bg-red-600/20 border-red-500/50 text-red-300",
     rejected: "bg-red-600/20 border-red-500/50 text-red-300"
   };
 
@@ -211,7 +211,7 @@ function PostCard({ post, isAdmin, onApprove, onReject, onDelete }) {
           </div>
           <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{post.body}</p>
           {post.contact_info && (
-            <div className="flex items-center gap-1 mt-2 text-green-400 text-xs">
+            <div className="flex items-center gap-1 mt-2 text-red-400 text-xs">
               <Phone className="w-3 h-3" /> {post.contact_info}
             </div>
           )}
@@ -223,12 +223,12 @@ function PostCard({ post, isAdmin, onApprove, onReject, onDelete }) {
         {isAdmin && (
           <div className="flex gap-1 shrink-0">
             {post.status !== "approved" && (
-              <Button size="icon" variant="ghost" onClick={() => onApprove(post)} className="text-green-400 hover:text-green-300 hover:bg-green-900/20 h-7 w-7">
+              <Button size="icon" variant="ghost" onClick={() => onApprove(post)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 h-7 w-7">
                 <Check className="w-3.5 h-3.5" />
               </Button>
             )}
             {post.status !== "rejected" && (
-              <Button size="icon" variant="ghost" onClick={() => onReject(post)} className="text-amber-400 hover:text-amber-300 hover:bg-amber-900/20 h-7 w-7">
+              <Button size="icon" variant="ghost" onClick={() => onReject(post)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 h-7 w-7">
                 <X className="w-3.5 h-3.5" />
               </Button>
             )}

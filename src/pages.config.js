@@ -53,7 +53,6 @@ import DirectorDashboard from './pages/DirectorDashboard';
 import DirectorManagement from './pages/DirectorManagement';
 import DirectorSignIn from './pages/DirectorSignIn';
 import GameHistory from './pages/GameHistory';
-import Home from './pages/Home';
 import JoinTheLeague from './pages/JoinTheLeague';
 import Leaderboard from './pages/Leaderboard';
 import LeagueCalendar from './pages/LeagueCalendar';
@@ -64,6 +63,7 @@ import PlayerDatabase from './pages/PlayerDatabase';
 import PlayerProfile from './pages/PlayerProfile';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -74,7 +74,6 @@ export const PAGES = {
     "DirectorManagement": DirectorManagement,
     "DirectorSignIn": DirectorSignIn,
     "GameHistory": GameHistory,
-    "Home": Home,
     "JoinTheLeague": JoinTheLeague,
     "Leaderboard": Leaderboard,
     "LeagueCalendar": LeagueCalendar,
@@ -85,6 +84,7 @@ export const PAGES = {
     "PlayerProfile": PlayerProfile,
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
+    "Home": Home,
 }
 
 export const pagesConfig = {

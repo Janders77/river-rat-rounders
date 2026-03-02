@@ -48,7 +48,7 @@ export default function LoginCard({ onLoginSuccess }) {
     <Card className="bg-transparent border-gray-700/40 w-full max-w-md">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
-          <LogIn className="w-5 h-5 text-green-400" /> Player Login
+          <LogIn className="w-5 h-5 text-red-400" /> Player Login
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -83,7 +83,7 @@ export default function LoginCard({ onLoginSuccess }) {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+            className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white"
           >
             {loading ? (
               <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing in...</>

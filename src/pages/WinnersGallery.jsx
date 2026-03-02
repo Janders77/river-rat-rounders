@@ -19,8 +19,8 @@ export default function WinnersGallery() {
     <div className="min-h-screen p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="max-w-5xl mx-auto">
         <div className="mb-8 flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
-            <Trophy className="w-7 h-7 text-gray-900" />
+          <div className="w-12 h-12 bg-gradient-to-br from-red-700 to-red-900 rounded-xl flex items-center justify-center shadow-lg">
+            <Trophy className="w-7 h-7 text-white" />
           </div>
           <div>
             <h1 className="text-3xl font-bold text-white">Winners Gallery</h1>
@@ -76,7 +76,7 @@ export default function WinnersGallery() {
             <div className="mt-4 text-center">
               {selected.winner_name && (
                 <div className="text-xl font-bold text-white flex items-center justify-center gap-2">
-                  <Trophy className="w-5 h-5 text-amber-400" />
+                  <Trophy className="w-5 h-5 text-red-400" />
                   {selected.winner_name}
                 </div>
               )}
@@ -86,7 +86,7 @@ export default function WinnersGallery() {
                   {selected.game_date && new Date(selected.game_date).toLocaleDateString()}
                 </div>
               )}
-              {selected.title && <div className="text-amber-300 italic mt-1">{selected.title}</div>}
+              {selected.title && <div className="text-red-300 italic mt-1">{selected.title}</div>}
             </div>
           </div>
         </div>

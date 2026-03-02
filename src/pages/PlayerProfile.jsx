@@ -150,7 +150,7 @@ export default function PlayerProfile() {
                   disabled={imageUploadStatus === "loading"}
                 />
                 <label htmlFor="profile-image-input" className="absolute bottom-0 right-0 cursor-pointer">
-                  <div className="w-7 h-7 bg-green-600 hover:bg-green-700 rounded-full flex items-center justify-center border-2 border-gray-900 shadow-lg">
+                  <div className="w-7 h-7 bg-gradient-to-br from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 rounded-full flex items-center justify-center border-2 border-gray-900 shadow-lg">
                     {imageUploadStatus === "loading" ? (
                       <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
                     ) : (
@@ -210,7 +210,7 @@ export default function PlayerProfile() {
                       setEditingName(false);
                       setTimeout(() => setNameUpdateStatus("idle"), 2000);
                     }}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white"
                     disabled={nameUpdateStatus === "loading"}
                   >
                     {nameUpdateStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
@@ -300,7 +300,7 @@ export default function PlayerProfile() {
             </div>
             <Button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white"
               disabled={passwordStatus === "loading"}
             >
               {passwordStatus === "loading" ? (

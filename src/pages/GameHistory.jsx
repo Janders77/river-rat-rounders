@@ -34,7 +34,7 @@ export default function GameHistory() {
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-red-700 to-red-900 rounded-xl flex items-center justify-center shadow-lg">
               <History className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -75,12 +75,12 @@ export default function GameHistory() {
         ) : (
           <div className="space-y-4">
             {filteredGames.map((game) => (
-              <Card key={game.id} className="bg-[#1A1B20] border-gray-800 hover:border-amber-500/50 transition-all">
+              <Card key={game.id} className="bg-[#1A1B20] border-gray-800 hover:border-red-500/50 transition-all">
                 <CardContent className="p-6">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-400 text-sm font-medium">
+                        <div className="px-3 py-1 bg-red-700/20 border border-red-700/30 rounded-full text-red-400 text-sm font-medium">
                           {game.game_type}
                         </div>
                         <span className="text-gray-500 text-sm">
@@ -89,7 +89,7 @@ export default function GameHistory() {
                       </div>
 
                       <div className="flex items-center gap-2 mb-3">
-                        <Trophy className="w-5 h-5 text-amber-400" />
+                        <Trophy className="w-5 h-5 text-red-400" />
                         <span className="text-white font-bold text-lg">{game.winner_name}</span>
                         <span className="text-emerald-400 font-bold">+{game.points_awarded} pts</span>
                       </div>
@@ -127,7 +127,7 @@ export default function GameHistory() {
                           key={index}
                           className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
                             email === game.winner_email
-                              ? 'bg-gradient-to-br from-amber-500 to-amber-600 text-white ring-2 ring-amber-400/50'
+                              ? 'bg-gradient-to-br from-red-700 to-red-900 text-white ring-2 ring-red-400/50'
                               : 'bg-gray-800 text-gray-400'
                           }`}
                           title={email}

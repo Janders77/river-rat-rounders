@@ -75,7 +75,7 @@ function LocationForm({ initial, onSave, onCancel, title }) {
               <button
                 type="button"
                 onClick={() => fileInputRef.current.click()}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-dashed border-gray-600 text-gray-400 hover:border-amber-500 hover:text-amber-400 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-dashed border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-400 transition-colors"
               >
                 {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
                 {uploadingImage ? "Uploading..." : "Upload Photo"}
@@ -88,7 +88,7 @@ function LocationForm({ initial, onSave, onCancel, title }) {
             <Button type="button" variant="outline" onClick={onCancel} className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800">
               Cancel
             </Button>
-            <Button type="submit" disabled={saving} className="flex-1 bg-amber-500 hover:bg-amber-600 text-black font-semibold">
+            <Button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white font-semibold">
               {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
               {saving ? "Saving..." : "Save"}
             </Button>
@@ -155,8 +155,8 @@ export default function Locations() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center">
-              <MapPin className="w-6 h-6 text-amber-400" />
+            <div className="w-10 h-10 bg-red-700/20 rounded-xl flex items-center justify-center">
+              <MapPin className="w-6 h-6 text-red-400" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Locations</h1>
@@ -167,7 +167,7 @@ export default function Locations() {
             <Button
               onClick={() => setShowAddForm(true)}
               size="sm"
-              className="bg-amber-500 hover:bg-amber-600 text-black font-semibold"
+              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white font-semibold"
             >
               <Plus className="w-4 h-4 mr-1" />
               Add Location
@@ -201,7 +201,7 @@ export default function Locations() {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   style={{
-                    backgroundColor: snapshot.isDraggingOver ? "rgba(217, 119, 6, 0.1)" : "transparent",
+                    backgroundColor: snapshot.isDraggingOver ? "rgba(153, 27, 27, 0.1)" : "transparent",
                     borderRadius: "8px",
                     padding: "8px",
                     transition: "background-color 0.2s"
@@ -237,7 +237,7 @@ export default function Locations() {
                                   <h3 className="text-xl font-bold text-white mb-3">{loc.name}</h3>
                                   {isAdmin && (
                                     <div className="flex gap-2 ml-2 shrink-0">
-                                      <button onClick={() => { setEditingId(loc.id); setShowAddForm(false); }} className="text-gray-500 hover:text-amber-400 transition-colors">
+                                      <button onClick={() => { setEditingId(loc.id); setShowAddForm(false); }} className="text-gray-500 hover:text-red-400 transition-colors">
                                         <Pencil className="w-4 h-4" />
                                       </button>
                                       <button onClick={() => handleDelete(loc.id)} className="text-gray-500 hover:text-red-400 transition-colors">
@@ -248,13 +248,13 @@ export default function Locations() {
                                 </div>
                                 {loc.address && (
                                   <div className="flex items-start gap-2 text-gray-400 mb-2">
-                                    <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-amber-500" />
+                                    <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-red-400" />
                                     <span className="text-sm">{loc.address}</span>
                                   </div>
                                 )}
                                 {loc.game_time && (
                                   <div className="flex items-center gap-2 text-gray-400 mb-2">
-                                    <Clock className="w-4 h-4 shrink-0 text-amber-500" />
+                                    <Clock className="w-4 h-4 shrink-0 text-red-400" />
                                     <span className="text-sm">{loc.game_time}</span>
                                   </div>
                                 )}

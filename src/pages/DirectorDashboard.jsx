@@ -269,7 +269,7 @@ export default function DirectorDashboard() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+        <Loader2 className="w-8 h-8 animate-spin text-red-400" />
       </div>
     );
   }
@@ -342,7 +342,7 @@ export default function DirectorDashboard() {
             <div className="space-y-6">
               <Card className="bg-transparent border border-red-500/40">
                  <CardHeader>
-                   <CardTitle className="text-emerald-400">Open a New Game</CardTitle>
+                   <CardTitle className="text-red-400">Open a New Game</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleCreateSession} className="space-y-4">
@@ -378,7 +378,7 @@ export default function DirectorDashboard() {
                       </div>
                     </div>
                     <Button type="submit" disabled={isCreatingSession || !newSession.location}
-                      className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white">
+                      className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white">
                       {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CalendarPlus className="w-4 h-4 mr-2" />Open Game</>}
                     </Button>
                   </form>
@@ -387,7 +387,7 @@ export default function DirectorDashboard() {
 
               <Card className="bg-transparent border border-red-500/40">
                  <CardHeader>
-                   <CardTitle className="text-emerald-400">Open Games</CardTitle>
+                   <CardTitle className="text-red-400">Open Games</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -408,7 +408,7 @@ export default function DirectorDashboard() {
                               </div>
                             )}
                             <div className="mt-3 space-y-2">
-                              <label className="text-xs text-amber-400 font-semibold">🃏 Hand of the Week</label>
+                              <label className="text-xs text-red-400 font-semibold">🃏 Hand of the Week</label>
                               <Select
                                 value=""
                                 onValueChange={async (val) => {
@@ -449,7 +449,7 @@ export default function DirectorDashboard() {
                               {(session.hand_of_week_names || []).length > 0 && (
                                 <div className="flex flex-wrap gap-1 mt-1">
                                   {(session.hand_of_week_emails || []).map((email, idx) => (
-                                    <span key={email} className="flex items-center gap-1 bg-amber-900/40 border border-amber-700 text-amber-300 text-xs rounded-full px-2 py-0.5">
+                                    <span key={email} className="flex items-center gap-1 bg-red-900/40 border border-red-700 text-red-300 text-xs rounded-full px-2 py-0.5">
                                       {session.hand_of_week_names?.[idx] || email}
                                       <button onClick={async () => {
                                         const player = users.find(u => u.email === email);
@@ -472,7 +472,7 @@ export default function DirectorDashboard() {
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
                             <Button size="sm" variant="outline"
-                              className={session.is_open ? "border-emerald-600 text-emerald-400 hover:bg-emerald-900/20" : "border-gray-700 text-gray-500 hover:bg-gray-800"}
+                              className={session.is_open ? "border-red-600 text-red-400 hover:bg-red-900/20" : "border-gray-700 text-gray-500 hover:bg-gray-800"}
                               onClick={() => handleToggleSession(session)}>
                               {session.is_open ? "Close" : "Reopen"}
                             </Button>
@@ -540,7 +540,7 @@ export default function DirectorDashboard() {
                     <div className="space-y-2">
                       {PLACE_LABELS.map((label, i) => (
                         <div key={i} className="flex items-center gap-3">
-                          <div className={`w-10 text-sm font-bold text-right shrink-0 ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-gray-300' : i === 2 ? 'text-amber-700' : 'text-gray-500'}`}>{label}</div>
+                          <div className={`w-10 text-sm font-bold text-right shrink-0 ${i === 0 ? 'text-red-400' : i === 1 ? 'text-gray-300' : i === 2 ? 'text-red-700' : 'text-gray-500'}`}>{label}</div>
                           <div className="text-xs text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
                           <Select value={placements[i]} onValueChange={val => {
                             const updated = [...placements];
@@ -586,10 +586,10 @@ export default function DirectorDashboard() {
             <Card className="bg-transparent border border-red-500/40">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-amber-400" />
+                  <Mail className="w-5 h-5 text-red-400" />
                   Pending Invite Requests
                   {inviteRequests.length > 0 && (
-                    <span className="ml-1 bg-amber-400 text-black text-xs font-bold rounded-full px-2 py-0.5">{inviteRequests.length}</span>
+                    <span className="ml-1 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5">{inviteRequests.length}</span>
                   )}
                 </CardTitle>
               </CardHeader>
@@ -599,21 +599,21 @@ export default function DirectorDashboard() {
                 ) : (
                   <div className="space-y-3">
                     {inviteRequests.map(req => (
-                      <div key={req.id} className="flex items-center justify-between p-4 bg-amber-900/20 rounded-lg border border-amber-700/40">
-                        <div>
-                          <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
-                          <div className="text-sm text-gray-400">{req.email}</div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" onClick={() => handleApproveRequest(req)}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                            Approve & Invite
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={() => handleDeclineRequest(req)}
-                            className="border-red-700 text-red-400 hover:bg-red-900/20">
-                            Decline
-                          </Button>
-                        </div>
+                      <div key={req.id} className="flex items-center justify-between p-4 bg-red-900/20 rounded-lg border border-red-700/40">
+                       <div>
+                         <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
+                         <div className="text-sm text-gray-400">{req.email}</div>
+                       </div>
+                       <div className="flex gap-2">
+                         <Button size="sm" onClick={() => handleApproveRequest(req)}
+                           className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white">
+                           Approve & Invite
+                         </Button>
+                         <Button size="sm" variant="outline" onClick={() => handleDeclineRequest(req)}
+                           className="border-red-700 text-red-400 hover:bg-red-900/20">
+                           Decline
+                         </Button>
+                       </div>
                       </div>
                     ))}
                   </div>
@@ -630,29 +630,29 @@ export default function DirectorDashboard() {
                 <Card className="bg-transparent border border-red-500/40">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                      <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
                       Pending Invite Requests ({inviteRequests.length})
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       {inviteRequests.map(req => (
-                        <div key={req.id} className="flex items-center justify-between p-3 bg-amber-900/20 rounded-lg border border-amber-700/40">
-                          <div>
-                            <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
-                            <div className="text-sm text-gray-400">{req.email}</div>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button size="sm" onClick={() => handleApproveRequest(req)}
-                              className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                              Approve & Invite
-                            </Button>
-                            <Button size="sm" variant="outline" onClick={() => handleDeclineRequest(req)}
-                              className="border-red-700 text-red-400 hover:bg-red-900/20">
-                              Decline
-                            </Button>
-                          </div>
-                        </div>
+                        <div key={req.id} className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-700/40">
+                           <div>
+                             <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
+                             <div className="text-sm text-gray-400">{req.email}</div>
+                           </div>
+                           <div className="flex gap-2">
+                             <Button size="sm" onClick={() => handleApproveRequest(req)}
+                               className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white">
+                               Approve & Invite
+                             </Button>
+                             <Button size="sm" variant="outline" onClick={() => handleDeclineRequest(req)}
+                               className="border-red-700 text-red-400 hover:bg-red-900/20">
+                               Decline
+                             </Button>
+                           </div>
+                         </div>
                       ))}
                     </div>
                   </CardContent>
@@ -678,7 +678,7 @@ export default function DirectorDashboard() {
                       {inviteStatus === "sending" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Invite"}
                     </Button>
                   </form>
-                  {inviteStatus === "sent" && <p className="text-emerald-400 text-sm mt-2">Invitation sent!</p>}
+                  {inviteStatus === "sent" && <p className="text-red-400 text-sm mt-2">Invitation sent!</p>}
                 </CardContent>
               </Card>
 
@@ -706,7 +706,7 @@ export default function DirectorDashboard() {
                         <div className="min-w-0 flex-1 overflow-hidden">
                           <div className="font-medium text-white truncate">{user.full_name || user.email}</div>
                           <div className="text-xs text-gray-400 truncate">{user.email}</div>
-                          <div className="text-xs text-amber-400 font-bold mt-0.5">{user.total_points || 0} pts · {user.games_played || 0} games</div>
+                          <div className="text-xs text-red-400 font-bold mt-0.5">{user.total_points || 0} pts · {user.games_played || 0} games</div>
                         </div>
                         <Badge variant="outline" className={`shrink-0 text-xs ${user.role === "admin" ? "border-red-500 text-red-400" : "border-gray-600 text-gray-400"}`}>
                           {user.role === "admin" ? "Director" : "Player"}
@@ -740,7 +740,7 @@ export default function DirectorDashboard() {
                         <div className="text-sm text-gray-400">
                           {new Date(game.game_date).toLocaleDateString()} {game.location && `· ${game.location}`}
                         </div>
-                        <div className="text-sm text-emerald-400 mt-1">Winner: {game.winner_name || game.winner_email}</div>
+                        <div className="text-sm text-red-400 mt-1">Winner: {game.winner_name || game.winner_email}</div>
                       </div>
                       <Button size="icon" variant="ghost"
                         className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
@@ -805,7 +805,7 @@ export default function DirectorDashboard() {
                           required />
                       </div>
                       <Button type="submit" disabled={isUploadingPhoto || !photoFile}
-                        className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-bold">
+                        className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white font-bold">
                         {isUploadingPhoto ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Uploading...</> : <><ImagePlus className="w-4 h-4 mr-2" />Upload Photo</>}
                       </Button>
                     </form>
@@ -825,7 +825,7 @@ export default function DirectorDashboard() {
                             <div className="text-white text-sm font-bold">{photo.winner_name}</div>
                             {photo.location && <div className="text-gray-300 text-xs">{photo.location}</div>}
                             {photo.game_date && <div className="text-gray-400 text-xs">{new Date(photo.game_date).toLocaleDateString()}</div>}
-                            {photo.title && <div className="text-amber-300 text-xs italic mt-1">{photo.title}</div>}
+                            {photo.title && <div className="text-red-300 text-xs italic mt-1">{photo.title}</div>}
                           </div>
                           <button onClick={() => handleDeletePhoto(photo.id)}
                             className="absolute top-2 right-2 w-7 h-7 bg-red-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700">
