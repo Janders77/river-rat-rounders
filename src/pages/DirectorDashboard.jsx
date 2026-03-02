@@ -532,9 +532,10 @@ export default function DirectorDashboard() {
                     </div>
                     <div className="space-y-2">
                       <Label className="text-gray-300">Game Type</Label>
-                      <Select value={gameData.game_type} onValueChange={v => setGameData({...gameData, game_type: v})}>
-                        <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue /></SelectTrigger>
+                      <Select value={gameData.game_type || "__none__"} onValueChange={v => setGameData({...gameData, game_type: v === "__none__" ? "" : v})}>
+                        <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select game type" /></SelectTrigger>
                         <SelectContent className="bg-gray-900 border-gray-700">
+                          <SelectItem value="__none__" disabled>Select game type</SelectItem>
                           {["Main Game","Turbo"].map(t => (
                             <SelectItem key={t} value={t}>{t}</SelectItem>
                           ))}
