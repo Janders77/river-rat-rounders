@@ -442,7 +442,7 @@ export default function DirectorDashboard() {
                                     : users
                                   ).filter(u => !(session.hand_of_week_emails || []).includes(u.email))
                                    .map(u => (
-                                    <SelectItem key={u.email} value={u.email}>{u.full_name || u.email}</SelectItem>
+                                    <SelectItem key={u.email} value={u.email} className="text-white">{u.full_name || u.email}</SelectItem>
                                   ))}
                                 </SelectContent>
                               </Select>
