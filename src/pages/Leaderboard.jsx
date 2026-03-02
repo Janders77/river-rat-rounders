@@ -78,6 +78,16 @@ export default function Leaderboard() {
     setLocationGames(games);
   };
 
+  const getPlayerData = (email) => {
+    const player = players.find(p => p.email === email);
+    if (!player) return null;
+
+    return {
+      fullName: `${player.first_name} ${player.last_name}`,
+      image: player.profile_picture
+    };
+  };
+
   const getPlayerName = (player) => {
     return `${player.first_name || ""} ${player.last_name || ""}`.trim();
   };
