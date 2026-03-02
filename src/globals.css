@@ -1,5 +1,18 @@
 
 @layer components {
+  /* Global red gradient button standard */
+  .btn-red {
+    background: linear-gradient(to right, #b91c1c, #7f1d1d);
+    color: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(127, 29, 29, 0.35);
+  }
+  .btn-red:hover {
+    background: linear-gradient(to right, #991b1b, #6b1d1d);
+    box-shadow: 0 6px 20px rgba(127, 29, 29, 0.5);
+    transform: translateY(-1px);
+  }
+
   .card {
     backdrop-filter: blur(16px) saturate(1.4) !important;
     -webkit-backdrop-filter: blur(16px) saturate(1.4) !important;
