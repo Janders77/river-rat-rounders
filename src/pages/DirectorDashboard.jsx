@@ -747,22 +747,22 @@ export default function DirectorDashboard() {
                        const user = users.find(u => u.email === player.email);
                        const displayName = `${player.first_name || ""} ${player.last_name || ""}`.trim() || player.email;
                        return (
-                         <div key={user.id} className="flex items-center justify-between gap-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0 overflow-hidden">
+                         <div key={player.id} className="flex items-center justify-between gap-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0 overflow-hidden">
                            <div className="min-w-0 flex-1 overflow-hidden">
                              <div className="font-medium text-white truncate">{displayName}</div>
-                             <div className="text-xs text-gray-400 truncate">{user.email}</div>
-                             <div className="text-xs text-red-400 font-bold mt-0.5">{user.total_points || 0} pts · {user.games_played || 0} games</div>
+                             <div className="text-xs text-gray-400 truncate">{player.email}</div>
+                             <div className="text-xs text-red-400 font-bold mt-0.5">{user?.total_points || 0} pts · {user?.games_played || 0} games</div>
                            </div>
-                           <Badge variant="outline" className={`shrink-0 text-xs ${user.role === "admin" ? "border-red-500 text-red-400" : "border-gray-600 text-gray-400"}`}>
-                             {user.role === "admin" ? "Director" : "Player"}
+                           <Badge variant="outline" className={`shrink-0 text-xs ${user?.role === "admin" ? "border-red-500 text-red-400" : "border-gray-600 text-gray-400"}`}>
+                             {user?.role === "admin" ? "Director" : "Player"}
                            </Badge>
                          </div>
                        );
                      })}
-                    {users.length === 0 && <p className="text-gray-500 text-center py-4">No players yet.</p>}
-                    {users.length > 0 && playerSearch && users.filter(u =>
-                      (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
-                      u.email.toLowerCase().includes(playerSearch.toLowerCase())
+                    {players.length === 0 && <p className="text-gray-500 text-center py-4">No players yet.</p>}
+                    {players.length > 0 && playerSearch && players.filter(p =>
+                      `${p.first_name || ""} ${p.last_name || ""}`.toLowerCase().includes(playerSearch.toLowerCase()) ||
+                      (p.email || "").toLowerCase().includes(playerSearch.toLowerCase())
                     ).length === 0 && <p className="text-gray-500 text-center py-4">No players match your search.</p>}
                   </div>
                 </CardContent>
