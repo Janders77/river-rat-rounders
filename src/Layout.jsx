@@ -188,19 +188,18 @@ function LayoutInner({ children }) {
                     }
                     return (
                       <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton 
-                          asChild 
-                          className={`group relative overflow-hidden transition-all duration-200 rounded-lg mb-1 ${
-                            location.pathname === item.url 
-                              ? 'bg-gradient-to-r from-gray-500/30 to-gray-600/20 text-gray-100 border-l-2 border-gray-400' 
-                              : 'text-gray-500 hover:text-gray-100 hover:bg-gray-700/30 hover:border-l-2 hover:border-gray-500 border-l-2 border-transparent'
-                          }`}
-                        >
-                          <Link to={item.url} onClick={() => setOpenMobile(false)} className="flex items-center gap-3 px-4 py-3">
+                        <Link to={item.url} onClick={() => setOpenMobile(false)} className="block w-full">
+                          <SidebarMenuButton 
+                            className={`group relative overflow-hidden transition-all duration-200 rounded-lg mb-1 w-full ${
+                              location.pathname === item.url 
+                                ? 'bg-gradient-to-r from-gray-500/30 to-gray-600/20 text-gray-100 border-l-2 border-gray-400' 
+                                : 'text-gray-500 hover:text-gray-100 hover:bg-gray-700/30 hover:border-l-2 hover:border-gray-500 border-l-2 border-transparent'
+                            }`}
+                          >
                             <item.icon className="w-5 h-5" />
                             <span className="font-medium">{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
+                          </SidebarMenuButton>
+                        </Link>
                       </SidebarMenuItem>
                     );
                   })}
