@@ -766,6 +766,29 @@ export default function DirectorDashboard() {
                   })()}
                 </CardContent>
               </Card>
+
+              <Card className="bg-transparent border border-red-500/40">
+                <CardHeader>
+                  <CardTitle className="text-white">Invite Player</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleInvite} className="flex gap-3">
+                    <Input
+                      type="email"
+                      placeholder="player@email.com"
+                      value={inviteEmail}
+                      onChange={e => setInviteEmail(e.target.value)}
+                      className="bg-gray-900 border-gray-700 text-white flex-1"
+                      required
+                    />
+                    <Button type="submit" disabled={inviteStatus === "sending"}
+                      className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
+                      {inviteStatus === "sending" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Invite"}
+                    </Button>
+                  </form>
+                  {inviteStatus === "sent" && <p className="text-red-400 text-sm mt-2">Invitation sent!</p>}
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
           )}
