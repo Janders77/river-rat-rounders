@@ -120,8 +120,12 @@ export default function DirectorDashboard() {
   const loadAll = async () => {
    setIsLoading(true);
 
-   // Check director access
-   if (!localStorage.getItem("directorAccess")) {
+   // Check director access and 4-hour expiry
+   const accessTime = localStorage.getItem("directorAccessTime");
+   const FOUR_HOURS = 4 * 60 * 60 * 1000;
+   if (!localStorage.getItem("directorAccess") || !accessTime || Date.now() - parseInt(accessTime) > FOUR_HOURS) {
+     localStorage.removeItem("directorAccess");
+     localStorage.removeItem("directorAccessTime");
      navigate(createPageUrl("DirectorSignIn"));
      return;
    }
