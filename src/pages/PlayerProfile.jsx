@@ -53,8 +53,8 @@ export default function PlayerProfile() {
       const playerName = [p.first_name, p.last_name].filter(Boolean).join(" ").trim();
       setFullName(playerName);
       
-      // Set profile image - prefer Player.profile_picture, fall back to auth profile_image_url
-      const imageUrl = p.profile_picture || currentUser.profile_image_url || "";
+      // Set profile image - only use Player.profile_picture, never fall back to auth user's image
+      const imageUrl = p.profile_picture || "";
       setProfileImageUrl(imageUrl);
       
       setUser({ ...currentUser, email: emailToLoad });
