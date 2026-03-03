@@ -36,7 +36,7 @@ export default function LoginCard({ onLoginSuccess }) {
 
       localStorage.setItem("playerEmail", player.email);
       localStorage.setItem("playerName", `${player.first_name}${player.last_name ? ' ' + player.last_name : ''}`);
-      onLoginSuccess(player);
+      window.location.reload();
     } catch (err) {
       setError("An error occurred. Please try again.");
     } finally {
