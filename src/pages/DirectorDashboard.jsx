@@ -35,7 +35,7 @@ export default function DirectorDashboard() {
 
   const [gameData, setGameData] = useState({
     game_date: new Date().toISOString().split('T')[0],
-    game_type: "Texas Hold'em",
+    game_type: "Main Game",
     location: "",
     notes: ""
   });
