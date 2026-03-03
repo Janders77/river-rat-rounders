@@ -92,10 +92,15 @@ function LayoutInner({ children }) {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       
-      const players = await base44.entities.Player.filter({ email: currentUser.email });
+      // Use localStorage playerEmail (player-level login) if available, fall back to auth email
+      const playerEmail = localStorage.getItem("playerEmail") || currentUser.email;
+      const players = await base44.entities.Player.filter({ email: playerEmail });
       if (players.length > 0) {
         setPlayer(players[0]);
-        setProfileImageUrl(currentUser.profile_image_url || players[0].profile_picture || "");
+        setProfileImageUrl(players[0].profile_picture || "");
+      } else {
+        setPlayer(null);
+        setProfileImageUrl("");
       }
     };
     fetchUser();
