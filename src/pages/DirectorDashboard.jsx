@@ -45,7 +45,7 @@ export default function DirectorDashboard() {
   const [newSession, setNewSession] = useState({
     session_date: new Date().toISOString().split('T')[0],
     location: "",
-    game_type: "Texas Hold'em"
+    game_type: "Main Game"
   });
   const [isCreatingSession, setIsCreatingSession] = useState(false);
   const [inviteRequests, setInviteRequests] = useState([]);
