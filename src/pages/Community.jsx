@@ -38,10 +38,17 @@ export default function Community() {
     e.preventDefault();
     if (!form.title || !form.body) return;
     setSubmitting(true);
+    const playerEmail = localStorage.getItem("playerEmail") || user.email;
+    const players = await base44.entities.Player.filter({ email: playerEmail }).catch(() => []);
+    const player = players[0];
+    const authorName = player
+      ? `${player.first_name || ""} ${player.last_name || ""}`.trim()
+      : (user.full_name && !user.full_name.includes("@") ? user.full_name : "Unknown Player");
+
     await base44.entities.CommunityPost.create({
       ...form,
-      author_email: user.email,
-      author_name: user.full_name || user.email,
+      author_email: playerEmail,
+      author_name: authorName,
       status: "pending"
     });
     setForm({ title: "", body: "", contact_info: "", image_url: "" });
