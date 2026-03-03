@@ -111,7 +111,7 @@ export default function PlayerSignIn() {
                 </div>
                 <div className="flex items-center gap-2 text-gray-400 text-sm mt-1">
                   <Calendar className="w-3 h-3" />
-                  {new Date(session.session_date).toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
+                  {new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
                   {session.game_type && <span className="text-gray-600">· {session.game_type}</span>}
                 </div>
               </div>
