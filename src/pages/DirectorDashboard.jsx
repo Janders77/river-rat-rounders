@@ -476,6 +476,53 @@ export default function DirectorDashboard() {
                   </div>
                 </CardContent>
               </Card>
+
+              <Card className="bg-transparent border border-red-500/40">
+                 <CardHeader>
+                   <CardTitle className="text-red-400">Open a New Game</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleCreateSession} className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-gray-300 text-sm">Date</label>
+                        <input type="date" value={newSession.session_date}
+                          onChange={e => setNewSession({...newSession, session_date: e.target.value})}
+                          className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm [color-scheme:dark]"
+                          required />
+                      </div>
+                      <div className="space-y-2">
+                       <label className="text-gray-300 text-sm">Game Type</label>
+                       <Select value={newSession.game_type || "__none__"} onValueChange={v => setNewSession({...newSession, game_type: v === "__none__" ? "" : v})}>
+                         <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select game type" /></SelectTrigger>
+                         <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                           <SelectItem value="__none__" disabled className="text-gray-400">Select game type</SelectItem>
+                             {["Main Game","Turbo"].map(t => (
+                               <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>
+                             ))}
+                           </SelectContent>
+                       </Select>
+                      </div>
+                      <div className="space-y-2 md:col-span-2">
+                       <label className="text-gray-300 text-sm">Location</label>
+                       <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
+                         <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
+                         <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                           <SelectItem value="__none__" disabled className="text-gray-400">Select location</SelectItem>
+                           {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc => (
+                             <SelectItem key={loc} value={loc} className="text-white">{loc}</SelectItem>
+                           ))}
+                         </SelectContent>
+                       </Select>
+                      </div>
+                    </div>
+                    <Button type="submit" disabled={isCreatingSession || !newSession.location}
+                      className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
+                      {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CalendarPlus className="w-4 h-4 mr-2" />Open Game</>}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
             </div>
             </TabsContent>
             )}
