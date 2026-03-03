@@ -111,10 +111,10 @@ export default function DirectorDashboard() {
   };
 
   const getPlayerName = (email) => {
-    const player = players.find(p => p.email === email);
+    const normalizedEmail = email?.toLowerCase();
+    const player = players.find(p => p.email?.toLowerCase() === normalizedEmail);
     if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim();
-    const user = users.find(u => u.email === email);
-    return user?.full_name || email;
+    return email;
   };
 
   const loadAll = async () => {
