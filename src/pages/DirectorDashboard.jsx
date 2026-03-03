@@ -376,28 +376,28 @@ export default function DirectorDashboard() {
                           required />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-gray-300 text-sm">Game Type</label>
-                        <Select value={newSession.game_type || "__none__"} onValueChange={v => setNewSession({...newSession, game_type: v === "__none__" ? "" : v})}>
-                          <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select game type" /></SelectTrigger>
-                          <SelectContent className="bg-gray-900 border-gray-700">
-                            <SelectItem value="__none__" disabled>Select game type</SelectItem>
-                              {["Main Game","Turbo"].map(t => (
-                                <SelectItem key={t} value={t}>{t}</SelectItem>
-                              ))}
-                            </SelectContent>
-                        </Select>
+                       <label className="text-gray-300 text-sm">Game Type</label>
+                       <Select value={newSession.game_type || "__none__"} onValueChange={v => setNewSession({...newSession, game_type: v === "__none__" ? "" : v})}>
+                         <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select game type" /></SelectTrigger>
+                         <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                           <SelectItem value="__none__" disabled className="text-gray-400">Select game type</SelectItem>
+                             {["Main Game","Turbo"].map(t => (
+                               <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>
+                             ))}
+                           </SelectContent>
+                       </Select>
                       </div>
                       <div className="space-y-2 md:col-span-2">
-                        <label className="text-gray-300 text-sm">Location</label>
-                        <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
-                          <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
-                          <SelectContent className="bg-gray-900 border-gray-700">
-                            <SelectItem value="__none__" disabled>Select location</SelectItem>
-                            {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc => (
-                              <SelectItem key={loc} value={loc}>{loc}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                       <label className="text-gray-300 text-sm">Location</label>
+                       <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
+                         <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
+                         <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                           <SelectItem value="__none__" disabled className="text-gray-400">Select location</SelectItem>
+                           {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc => (
+                             <SelectItem key={loc} value={loc} className="text-white">{loc}</SelectItem>
+                           ))}
+                         </SelectContent>
+                       </Select>
                       </div>
                     </div>
                     <Button type="submit" disabled={isCreatingSession || !newSession.location}
