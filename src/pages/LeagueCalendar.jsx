@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { base44 } from "@/api/base44Client";
 import { CalendarDays, Plus, MapPin, Clock, Trash2, Edit2, X, Check, Upload, Image } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
