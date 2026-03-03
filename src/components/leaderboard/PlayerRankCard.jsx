@@ -37,7 +37,7 @@ export default function PlayerRankCard({ player, rank, onClick }) {
 
           <div className="flex-1 min-w-0">
             <h3 className="font-bold text-lg text-white truncate group-hover:text-amber-400 transition-colors">
-              {player.full_name || player.email}
+              {`${player.first_name || ""} ${player.last_name || ""}`.trim() || player.full_name || "Unknown Player"}
             </h3>
             <div className="flex items-center gap-4 text-sm text-gray-400 mt-1">
               <span className="flex items-center gap-1">
