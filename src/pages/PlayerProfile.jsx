@@ -97,7 +97,10 @@ export default function PlayerProfile() {
 
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     
-    await base44.auth.updateMe({ profile_image_url: file_url });
+    if (playerData) {
+      await base44.entities.Player.update(playerData.id, { profile_picture: file_url });
+      setPlayerData(prev => ({ ...prev, profile_picture: file_url }));
+    }
     setProfileImageUrl(file_url);
     setImageUploadStatus("done");
     
