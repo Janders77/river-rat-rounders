@@ -725,7 +725,7 @@ export default function DirectorDashboard() {
 
               <Card className="bg-transparent border border-red-500/40">
                 <CardHeader>
-                  <CardTitle className="text-white">All Players ({users.length})</CardTitle>
+                  <CardTitle className="text-white">All Players ({players.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="relative mb-4">
