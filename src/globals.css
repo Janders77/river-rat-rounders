@@ -68,4 +68,10 @@
   .bg-gray-900 {
     color: white !important;
   }
+
+  /* Date input calendar icon white */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
 }
