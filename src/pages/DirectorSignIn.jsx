@@ -7,12 +7,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShieldAlert, AlertCircle, Lock } from "lucide-react";
 
 const DIRECTOR_CODE = "3855";
+const SIX_HOURS_MS = 6 * 60 * 60 * 1000;
+
+function isDirectorSessionValid() {
+  const accessTime = localStorage.getItem("directorAccessTime");
+  if (!accessTime) return false;
+  return Date.now() - parseInt(accessTime) < SIX_HOURS_MS;
+}
 
 export default function DirectorSignIn() {
   const navigate = useNavigate();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Auto-redirect if session still valid
+  React.useEffect(() => {
+    if (isDirectorSessionValid()) {
+      navigate(createPageUrl("DirectorDashboard"));
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
