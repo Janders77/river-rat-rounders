@@ -148,13 +148,9 @@ export default function PlayerSignIn() {
               <div className="px-4 pb-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
                 {session.signed_in_players.map(email => {
                   const player = allPlayers.find(p => p.email === email);
-                  const playerName = player
-                    ? `${player.first_name || ""} ${player.last_name || ""}`.trim()
-                    : "";
-                  const user = allUsers.find(u => u.email === email);
-                  // Only use full_name if it doesn't look like an email
-                  const authName = user?.full_name && !user.full_name.includes("@") ? user.full_name : "";
-                  const name = playerName || authName || "Unknown Player";
+                  const name = player
+                    ? `${player.first_name || ""} ${player.last_name || ""}`.trim() || "Unknown Player"
+                    : "Unknown Player";
                   return (
                     <div key={email} className="flex items-center gap-2 text-sm text-gray-300">
                       <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
