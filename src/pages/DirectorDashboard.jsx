@@ -113,8 +113,11 @@ export default function DirectorDashboard() {
   const getPlayerName = (email) => {
     if (!email || !players?.length) return "Loading...";
     const player = players.find(p => p.email?.toLowerCase() === email?.toLowerCase());
-    if (player?.first_name && player?.last_name) return `${player.first_name} ${player.last_name}`;
-    return "Unknown Player";
+    if (player) {
+      const name = `${player.first_name || ""} ${player.last_name || ""}`.trim();
+      if (name) return name;
+    }
+    return email;
   };
 
   const loadAll = async () => {
