@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShieldAlert, AlertCircle, Lock } from "lucide-react";
 
 const DIRECTOR_CODE = "3855";
-const SESSION_DURATION_MS = 6 * 60 * 60 * 1000; // 6 hours
 
 export default function DirectorSignIn() {
   const navigate = useNavigate();
@@ -21,7 +20,10 @@ export default function DirectorSignIn() {
     setIsSubmitting(true);
 
     if (code === DIRECTOR_CODE) {
-      const expiresAt = Date.now() + SESSION_DURATION_MS;
+      // Expire at midnight (end of today)
+      const midnight = new Date();
+      midnight.setHours(23, 59, 59, 999);
+      const expiresAt = midnight.getTime();
       localStorage.setItem("directorAccess", "true");
       localStorage.setItem("directorAccessExpiry", expiresAt.toString());
       setTimeout(() => {
