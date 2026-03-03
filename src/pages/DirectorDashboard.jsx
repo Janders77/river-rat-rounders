@@ -462,7 +462,7 @@ export default function DirectorDashboard() {
                                   {(session.signed_in_players?.length > 0
                                     ? players.filter(p => session.signed_in_players.includes(p.email))
                                     : players
-                                  ).filter(p => !(session.hand_of_week_emails || []).includes(p.email))
+                                  ).filter(p => p.email && !(session.hand_of_week_emails || []).includes(p.email))
                                    .map(p => (
                                     <SelectItem key={p.email} value={p.email} className="text-white">{p.first_name} {p.last_name}</SelectItem>
                                   ))}
