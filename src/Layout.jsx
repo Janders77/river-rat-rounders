@@ -211,8 +211,8 @@ function LayoutInner({ children }) {
                       onClick={() => {
                         localStorage.removeItem("playerEmail");
                         localStorage.removeItem("playerName");
-                        window.location.href = createPageUrl("Home");
                         setOpenMobile(false);
+                        window.location.href = createPageUrl("Home");
                       }}
                       className="hover:bg-red-900/30 transition-all duration-200 rounded-lg text-red-400"
                     >
