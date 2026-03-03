@@ -20,12 +20,7 @@ export default function DirectorSignIn() {
     setIsSubmitting(true);
 
     if (code === DIRECTOR_CODE) {
-      // Expire at midnight (end of today)
-      const midnight = new Date();
-      midnight.setHours(23, 59, 59, 999);
-      const expiresAt = midnight.getTime();
       localStorage.setItem("directorAccess", "true");
-      localStorage.setItem("directorAccessExpiry", expiresAt.toString());
       setTimeout(() => {
         navigate(createPageUrl("DirectorDashboard"));
       }, 300);
