@@ -137,11 +137,11 @@ export default function GameHistory() {
                       {game.players?.slice(0, 5).map((email, index) => {
                         const player = allPlayers.find(p => p.email === email);
                         const initials = player
-                          ? `${(player.first_name || "")[0] || ""}${(player.last_name || "")[0] || ""}`.toUpperCase()
-                          : email[0]?.toUpperCase() || "?";
+                         ? `${(player.first_name || "")[0] || ""}${(player.last_name || "")[0] || ""}`.toUpperCase()
+                         : "?";
                         const displayName = player
-                          ? `${player.first_name} ${player.last_name}`.trim()
-                          : email;
+                         ? `${player.first_name} ${player.last_name}`.trim()
+                         : "Unknown Player";
                         return (
                         <div
                           key={index}
