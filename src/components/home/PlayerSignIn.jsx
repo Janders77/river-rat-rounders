@@ -100,40 +100,51 @@ export default function PlayerSignIn() {
           <LogIn className="w-5 h-5 text-red-400" /> Sign In to Tonight's Game
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 pt-0">
         {sessions.map((session) => (
-          <div key={session.id} className="p-4 bg-gray-900/60 rounded-xl border border-gray-800 space-y-3">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <div className="flex items-center gap-2 text-white font-semibold">
+          <div key={session.id} className="rounded-xl border border-gray-800 bg-gray-900/50 overflow-hidden">
+            {/* Session Info */}
+            <div className="px-4 pt-4 pb-3 border-b border-gray-800/60">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 text-white font-semibold text-base">
                   <MapPin className="w-4 h-4 text-red-400 shrink-0" />
-                  {session.location}
+                  <span>{session.location}</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-400 text-sm mt-1">
-                  <Calendar className="w-3 h-3" />
-                  {new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
-                  {session.game_type && <span className="text-gray-600">· {session.game_type}</span>}
-                </div>
+                <Badge className="bg-green-500/10 text-green-400 border-green-500/30 text-xs shrink-0">
+                  Open
+                </Badge>
               </div>
-              <Badge className="bg-red-500/20 text-red-400 border-red-500/30 shrink-0">
-                Open
-              </Badge>
+              <div className="flex items-center gap-3 mt-1.5 text-sm text-gray-400">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5" />
+                  {new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                </span>
+                {session.game_type && (
+                  <span className="text-gray-600">·</span>
+                )}
+                {session.game_type && <span className="text-gray-500">{session.game_type}</span>}
+              </div>
             </div>
 
+            {/* Players count + expand */}
             <button
-              className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors w-full text-left"
+              className="flex items-center justify-between w-full px-4 py-2.5 text-sm text-gray-400 hover:text-red-400 hover:bg-gray-800/40 transition-colors"
               onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
             >
-              <Users className="w-4 h-4" />
-              <span>{session.signed_in_players?.length || 0} signed in</span>
+              <span className="flex items-center gap-1.5">
+                <Users className="w-4 h-4" />
+                {session.signed_in_players?.length || 0} player{session.signed_in_players?.length !== 1 ? "s" : ""} signed in
+              </span>
               {session.signed_in_players?.length > 0 && (
                 expandedSession === session.id
-                  ? <ChevronUp className="w-3 h-3 ml-1" />
-                  : <ChevronDown className="w-3 h-3 ml-1" />
+                  ? <ChevronUp className="w-3.5 h-3.5" />
+                  : <ChevronDown className="w-3.5 h-3.5" />
               )}
             </button>
+
+            {/* Expanded player list */}
             {expandedSession === session.id && session.signed_in_players?.length > 0 && (
-              <div className="bg-gray-800/60 rounded-lg p-3 space-y-1.5">
+              <div className="px-4 pb-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
                 {session.signed_in_players.map(email => {
                   const player = allPlayers.find(p => p.email === email);
                   const user = allUsers.find(u => u.email === email);
@@ -142,32 +153,35 @@ export default function PlayerSignIn() {
                     : user?.full_name || email;
                   return (
                     <div key={email} className="flex items-center gap-2 text-sm text-gray-300">
-                      <div className="w-2 h-2 rounded-full bg-red-400 shrink-0" />
-                      {name}
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+                      <span className="truncate">{name}</span>
                     </div>
                   );
                 })}
               </div>
             )}
 
-            {isSignedIn(session) ? (
-              <div className="flex items-center gap-2 text-red-400 font-medium text-sm">
-                <CheckCircle2 className="w-4 h-4" />
-                You're signed in!
-              </div>
-            ) : (
-              <Button
-                onClick={() => handleSignIn(session)}
-                disabled={signingIn === session.id}
-                className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200"
-              >
-                {signingIn === session.id ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing in...</>
-                ) : (
-                  <><LogIn className="w-4 h-4 mr-2" /> Sign In</>
-                )}
-              </Button>
-            )}
+            {/* Sign In / Signed In */}
+            <div className="px-4 pb-4">
+              {isSignedIn(session) ? (
+                <div className="flex items-center justify-center gap-2 text-green-400 font-medium text-sm py-2 rounded-lg bg-green-500/10 border border-green-500/20">
+                  <CheckCircle2 className="w-4 h-4" />
+                  You're signed in!
+                </div>
+              ) : (
+                <Button
+                  onClick={() => handleSignIn(session)}
+                  disabled={signingIn === session.id}
+                  className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200"
+                >
+                  {signingIn === session.id ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing in...</>
+                  ) : (
+                    <><LogIn className="w-4 h-4 mr-2" /> Sign In</>
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
         ))}
       </CardContent>
