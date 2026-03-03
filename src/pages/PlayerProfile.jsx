@@ -62,7 +62,7 @@ export default function PlayerProfile() {
       setUser(currentUser);
       // Even in fallback, don't show email as name
       setFullName("");
-      setProfileImageUrl(currentUser.profile_image_url || "");
+      setProfileImageUrl("");
     }
     setLoading(false);
   };
