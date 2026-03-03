@@ -39,7 +39,7 @@ export default function PlayerSignIn() {
     const playerEmail = localStorage.getItem("playerEmail");
     const [fetchedSessions, fetchedPlayers] = await Promise.all([
       base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10),
-      Player.list().catch(() => [])
+      base44.entities.Player.list(undefined, 500).catch(() => [])
     ]);
     setCurrentUser(playerEmail ? { email: playerEmail } : null);
     setSessions(fetchedSessions);
