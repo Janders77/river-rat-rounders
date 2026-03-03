@@ -37,13 +37,13 @@ export default function PlayerSignIn() {
 
   const loadData = async () => {
     setIsLoading(true);
-    const [me, fetchedSessions, fetchedUsers, fetchedPlayers] = await Promise.all([
-      base44.auth.me().catch(() => null),
+    const playerEmail = localStorage.getItem("playerEmail");
+    const [fetchedSessions, fetchedUsers, fetchedPlayers] = await Promise.all([
       base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10),
       base44.entities.User.list().catch(() => []),
       Player.list().catch(() => [])
     ]);
-    setCurrentUser(me);
+    setCurrentUser(playerEmail ? { email: playerEmail } : null);
     setSessions(fetchedSessions);
     setAllUsers(fetchedUsers);
     setAllPlayers(fetchedPlayers);
@@ -51,14 +51,15 @@ export default function PlayerSignIn() {
   };
 
   const handleSignIn = async (session) => {
-    if (!currentUser) {
+    const playerEmail = localStorage.getItem("playerEmail");
+    if (!playerEmail) {
       base44.auth.redirectToLogin();
       return;
     }
     setSigningIn(session.id);
-    const alreadySigned = session.signed_in_players?.includes(currentUser.email);
+    const alreadySigned = session.signed_in_players?.includes(playerEmail);
     if (!alreadySigned) {
-      const updated = [...(session.signed_in_players || []), currentUser.email];
+      const updated = [...(session.signed_in_players || []), playerEmail];
       await base44.entities.GameSession.update(session.id, { signed_in_players: updated });
     }
     await loadData();
