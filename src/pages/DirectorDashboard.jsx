@@ -314,8 +314,8 @@ export default function DirectorDashboard() {
   }
 
   return (
-    <div className="min-h-screen p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen p-4 md:p-6 overflow-x-hidden" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="max-w-4xl mx-auto w-full">
         <div className="mb-8 flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center shadow-lg">
             <ShieldAlert className="w-7 h-7 text-white" />
