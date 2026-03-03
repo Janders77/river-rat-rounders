@@ -36,9 +36,12 @@ export default function PlayerProfile() {
       return;
     }
 
+    // Use localStorage playerEmail (player-level login) as the "current" player
+    const loggedInPlayerEmail = localStorage.getItem("playerEmail") || currentUser.email;
+
     // Determine which user's profile to show
-    const emailToLoad = viewingEmail || currentUser.email;
-    const isOwnProf = emailToLoad === currentUser.email;
+    const emailToLoad = viewingEmail || loggedInPlayerEmail;
+    const isOwnProf = emailToLoad === loggedInPlayerEmail;
     setIsOwnProfile(isOwnProf);
 
     const players = await base44.entities.Player.filter({ email: emailToLoad });
