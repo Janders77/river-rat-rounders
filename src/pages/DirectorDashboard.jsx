@@ -586,7 +586,7 @@ export default function DirectorDashboard() {
                               </span>
                             </SelectTrigger>
                             <SelectContent className="bg-gray-900 border-gray-700">
-                               <SelectItem value="__clear_placement__" disabled>— None —</SelectItem>
+                                <SelectItem value="__none__" disabled>— None —</SelectItem>
                                {(() => {
                                  const session = sessions.find(s => s.id === currentSessionId);
                                  const signedInPlayers = session?.signed_in_players || [];
