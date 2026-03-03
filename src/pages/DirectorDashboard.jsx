@@ -216,8 +216,14 @@ export default function DirectorDashboard() {
       }
     }
 
+    // Close the current session and clear signed-in players
+    if (currentSessionId) {
+      await GameSession.update(currentSessionId, { is_open: false, signed_in_players: [] });
+    }
+
     setPlacements(Array(9).fill(""));
-    setGameData({ game_date: new Date().toISOString().split('T')[0], game_type: "Texas Hold'em", location: "", notes: "" });
+    setGameData({ game_date: new Date().toISOString().split('T')[0], game_type: "Main Game", location: "", notes: "" });
+    setCurrentSessionId(null);
     setIsSubmitting(false);
     alert("Game recorded successfully!");
   };
