@@ -9,7 +9,6 @@ import { CheckCircle2, Users, Loader2, LogIn, MapPin, Calendar, ChevronDown, Che
 
 export default function PlayerSignIn() {
   const [sessions, setSessions] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
   const [allPlayers, setAllPlayers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
