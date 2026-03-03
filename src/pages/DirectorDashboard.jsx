@@ -725,45 +725,56 @@ export default function DirectorDashboard() {
 
               <Card className="bg-transparent border border-red-500/40">
                 <CardHeader>
-                  <CardTitle className="text-white">All Players ({users.length})</CardTitle>
+                  <CardTitle className="text-white">
+                    {(() => {
+                      const openSession = sessions.find(s => s.is_open);
+                      const signedInEmails = openSession?.signed_in_players || [];
+                      return `Players Signed In to Current Game (${signedInEmails.length})`;
+                    })()}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="relative mb-4">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <Input
-                      placeholder="Search by name or email..."
-                      value={playerSearch}
-                      onChange={e => setPlayerSearch(e.target.value)}
-                      className="bg-gray-900 border-gray-700 text-white pl-9"
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    {users.filter(u =>
+                  {(() => {
+                    const openSession = sessions.find(s => s.is_open);
+                    const signedInEmails = openSession?.signed_in_players || [];
+                    if (!openSession) {
+                      return <p className="text-gray-500 text-center py-4">No open game session. Open a game in the Sessions tab first.</p>;
+                    }
+                    if (signedInEmails.length === 0) {
+                      return <p className="text-gray-500 text-center py-4">No players have signed in yet.</p>;
+                    }
+                    const signedInPlayers = players.filter(p => signedInEmails.includes(p.email));
+                    const filteredPlayers = signedInPlayers.filter(p =>
                       !playerSearch ||
-                      (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
-                      u.email.toLowerCase().includes(playerSearch.toLowerCase())
-                    ).map(user => {
-                       const player = players.find(p => p.email === user.email);
-                       const displayName = player ? `${player.first_name || ""} ${player.last_name || ""}`.trim() : user.full_name || user.email;
-                       return (
-                         <div key={user.id} className="flex items-center justify-between gap-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0 overflow-hidden">
-                           <div className="min-w-0 flex-1 overflow-hidden">
-                             <div className="font-medium text-white truncate">{displayName}</div>
-                             <div className="text-xs text-gray-400 truncate">{user.email}</div>
-                             <div className="text-xs text-red-400 font-bold mt-0.5">{user.total_points || 0} pts · {user.games_played || 0} games</div>
-                           </div>
-                           <Badge variant="outline" className={`shrink-0 text-xs ${user.role === "admin" ? "border-red-500 text-red-400" : "border-gray-600 text-gray-400"}`}>
-                             {user.role === "admin" ? "Director" : "Player"}
-                           </Badge>
-                         </div>
-                       );
-                     })}
-                    {users.length === 0 && <p className="text-gray-500 text-center py-4">No players yet.</p>}
-                    {users.length > 0 && playerSearch && users.filter(u =>
-                      (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
-                      u.email.toLowerCase().includes(playerSearch.toLowerCase())
-                    ).length === 0 && <p className="text-gray-500 text-center py-4">No players match your search.</p>}
-                  </div>
+                      `${p.first_name} ${p.last_name}`.toLowerCase().includes(playerSearch.toLowerCase()) ||
+                      p.email.toLowerCase().includes(playerSearch.toLowerCase())
+                    );
+                    return (
+                      <>
+                        <div className="relative mb-4">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                          <Input
+                            placeholder="Search by name or email..."
+                            value={playerSearch}
+                            onChange={e => setPlayerSearch(e.target.value)}
+                            className="bg-gray-900 border-gray-700 text-white pl-9"
+                          />
+                        </div>
+                        <div className="space-y-3">
+                          {filteredPlayers.map(player => (
+                            <div key={player.email} className="flex items-center justify-between gap-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0 overflow-hidden">
+                              <div className="min-w-0 flex-1 overflow-hidden">
+                                <div className="font-medium text-white truncate">{player.first_name} {player.last_name}</div>
+                                <div className="text-xs text-gray-400 truncate">{player.email}</div>
+                              </div>
+                              <Badge variant="outline" className="shrink-0 text-xs border-green-600 text-green-400">Signed In</Badge>
+                            </div>
+                          ))}
+                          {filteredPlayers.length === 0 && playerSearch && <p className="text-gray-500 text-center py-4">No players match your search.</p>}
+                        </div>
+                      </>
+                    );
+                  })()}
                 </CardContent>
               </Card>
             </div>
