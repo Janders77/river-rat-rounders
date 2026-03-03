@@ -291,7 +291,7 @@ export default function LeagueCalendar() {
 }
 
 function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
-  const [lightboxUrl, setLightboxUrl] = useState(null);
+  const [lightboxUrl, setLightboxUrl] = React.useState(null);
 
   return (
     <>
