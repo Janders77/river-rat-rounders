@@ -295,84 +295,90 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
 
   return (
     <>
-    {lightboxUrl && (
-      <div
-        className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-        onClick={() => setLightboxUrl(null)}
-      >
-        <button
-          className="absolute top-4 right-4 text-white bg-gray-800 rounded-full p-2 hover:bg-gray-700 transition-colors"
+      {lightboxUrl && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
           onClick={() => setLightboxUrl(null)}
         >
-          <X className="w-6 h-6" />
-        </button>
-        <img
-          src={lightboxUrl}
-          alt=""
-          className="max-w-full max-h-full object-contain rounded-lg"
-          onClick={e => e.stopPropagation()}
-        />
-      </div>
-    )}
-    (
-    <Card className={`border bg-transparent ${highlight ? "border-red-500/40" : "border-red-500/20"}`}>
-      <CardContent className="p-3">
-        <div className="flex gap-3 items-start">
-          {/* Date block */}
-          <div className="text-center flex-shrink-0 w-[36px] pt-0.5">
-            <div className="text-[9px] text-gray-400 uppercase leading-none">{format(parseISO(event.event_date), "MMM")}</div>
-            <div className="text-xl font-bold text-white leading-tight">{format(parseISO(event.event_date), "d")}</div>
-            <div className="text-[9px] text-gray-500 leading-none">{format(parseISO(event.event_date), "yyyy")}</div>
-          </div>
-
-          {/* Content */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-1">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="font-semibold text-sm text-white">{event.title}</span>
-                <Badge className={`text-[9px] border px-1 py-0 ${EVENT_TYPE_COLORS[event.event_type] || EVENT_TYPE_COLORS["Other"]}`}>
-                  {event.event_type}
-                </Badge>
-              </div>
-              {isAdmin && (
-                <div className="flex gap-1 flex-shrink-0">
-                  <button onClick={() => onEdit(event)} className="text-gray-500 hover:text-red-400 transition-colors p-0.5">
-                    <Edit2 className="w-3.5 h-3.5" />
-                  </button>
-                  <button onClick={() => onDelete(event.id)} className="text-gray-500 hover:text-red-400 transition-colors p-0.5">
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1">
-              {event.event_time && (
-                <div className="flex items-center gap-1 text-gray-400 text-xs">
-                  <Clock className="w-3 h-3 flex-shrink-0" /><span>{event.event_time}</span>
-                </div>
-              )}
-              {event.location && (
-                <div className="flex items-center gap-1 text-gray-400 text-xs">
-                  <MapPin className="w-3 h-3 flex-shrink-0" /><span className="truncate">{event.location}</span>
-                </div>
-              )}
-            </div>
-            {event.address && (
-              <div className="text-gray-500 text-[10px] mt-0.5 truncate">{event.address}</div>
-            )}
-            {event.description && (
-              <p className="text-gray-400 text-xs mt-1">{event.description}</p>
-            )}
-            {event.image_urls?.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {event.image_urls.map((url, idx) => (
-                  <img key={idx} src={url} alt="" className="max-w-[100px] rounded-lg border border-gray-700" />
-                ))}
-              </div>
-            )}
-          </div>
+          <button
+            className="absolute top-4 right-4 text-white bg-gray-800 rounded-full p-2 hover:bg-gray-700 transition-colors"
+            onClick={() => setLightboxUrl(null)}
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <img
+            src={lightboxUrl}
+            alt=""
+            className="max-w-full max-h-full object-contain rounded-lg"
+            onClick={e => e.stopPropagation()}
+          />
         </div>
-      </CardContent>
-    </Card>
+      )}
+      <Card className={`border bg-transparent ${highlight ? "border-red-500/40" : "border-red-500/20"}`}>
+        <CardContent className="p-3">
+          <div className="flex gap-3 items-start">
+            {/* Date block */}
+            <div className="text-center flex-shrink-0 w-[36px] pt-0.5">
+              <div className="text-[9px] text-gray-400 uppercase leading-none">{format(parseISO(event.event_date), "MMM")}</div>
+              <div className="text-xl font-bold text-white leading-tight">{format(parseISO(event.event_date), "d")}</div>
+              <div className="text-[9px] text-gray-500 leading-none">{format(parseISO(event.event_date), "yyyy")}</div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between gap-1">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="font-semibold text-sm text-white">{event.title}</span>
+                  <Badge className={`text-[9px] border px-1 py-0 ${EVENT_TYPE_COLORS[event.event_type] || EVENT_TYPE_COLORS["Other"]}`}>
+                    {event.event_type}
+                  </Badge>
+                </div>
+                {isAdmin && (
+                  <div className="flex gap-1 flex-shrink-0">
+                    <button onClick={() => onEdit(event)} className="text-gray-500 hover:text-red-400 transition-colors p-0.5">
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button onClick={() => onDelete(event.id)} className="text-gray-500 hover:text-red-400 transition-colors p-0.5">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1">
+                {event.event_time && (
+                  <div className="flex items-center gap-1 text-gray-400 text-xs">
+                    <Clock className="w-3 h-3 flex-shrink-0" /><span>{event.event_time}</span>
+                  </div>
+                )}
+                {event.location && (
+                  <div className="flex items-center gap-1 text-gray-400 text-xs">
+                    <MapPin className="w-3 h-3 flex-shrink-0" /><span className="truncate">{event.location}</span>
+                  </div>
+                )}
+              </div>
+              {event.address && (
+                <div className="text-gray-500 text-[10px] mt-0.5 truncate">{event.address}</div>
+              )}
+              {event.description && (
+                <p className="text-gray-400 text-xs mt-1">{event.description}</p>
+              )}
+              {event.image_urls?.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {event.image_urls.map((url, idx) => (
+                    <img
+                      key={idx}
+                      src={url}
+                      alt=""
+                      className="max-w-[100px] rounded-lg border border-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => setLightboxUrl(url)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </>
   );
 }
