@@ -144,7 +144,7 @@ export default function PlayerSignIn() {
             {expandedSession === session.id && session.signed_in_players?.length > 0 && (
               <div className="px-4 pb-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
                 {session.signed_in_players.map(email => {
-                  const player = allPlayers.find(p => p.email === email);
+                  const player = allPlayers.find(p => p.email?.toLowerCase() === email?.toLowerCase());
                   const name = player
                     ? `${player.first_name || ""} ${player.last_name || ""}`.trim() || "Unknown Player"
                     : "Unknown Player";
