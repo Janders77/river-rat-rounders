@@ -291,7 +291,30 @@ export default function LeagueCalendar() {
 }
 
 function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
+  const [lightboxUrl, setLightboxUrl] = useState(null);
+
   return (
+    <>
+    {lightboxUrl && (
+      <div
+        className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+        onClick={() => setLightboxUrl(null)}
+      >
+        <button
+          className="absolute top-4 right-4 text-white bg-gray-800 rounded-full p-2 hover:bg-gray-700 transition-colors"
+          onClick={() => setLightboxUrl(null)}
+        >
+          <X className="w-6 h-6" />
+        </button>
+        <img
+          src={lightboxUrl}
+          alt=""
+          className="max-w-full max-h-full object-contain rounded-lg"
+          onClick={e => e.stopPropagation()}
+        />
+      </div>
+    )}
+    (
     <Card className={`border bg-transparent ${highlight ? "border-red-500/40" : "border-red-500/20"}`}>
       <CardContent className="p-3">
         <div className="flex gap-3 items-start">
