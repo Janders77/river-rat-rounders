@@ -225,7 +225,7 @@ function PostCard({ post, isAdmin, onApprove, onReject, onDelete }) {
           {post.image_url && (
             <img src={post.image_url} alt="post" className="mt-3 rounded-lg max-h-48 object-cover w-full" />
           )}
-          <p className="text-gray-600 text-xs mt-2">By {post.author_name || post.author_email}</p>
+          <p className="text-gray-600 text-xs mt-2">By {post.author_name || "Unknown Player"}</p>
         </div>
         {isAdmin && (
           <div className="flex gap-1 shrink-0">
