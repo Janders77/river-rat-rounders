@@ -327,7 +327,7 @@ export default function DirectorDashboard() {
         </div>
 
         <Tabs defaultValue={hasPermission(directorRole, "canManageSessions") ? "sessions" : "record"}>
-          <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-2 sm:grid-cols-6 h-auto gap-1">
+          <TabsList className="bg-gray-800 border-gray-700 mb-6 flex flex-wrap h-auto gap-1 w-full">
             {hasPermission(directorRole, "canManageSessions") && (
               <TabsTrigger value="sessions" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
                 <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
