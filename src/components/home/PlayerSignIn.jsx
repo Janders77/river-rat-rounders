@@ -36,11 +36,17 @@ export default function PlayerSignIn() {
   const loadData = async () => {
     setIsLoading(true);
     const playerEmail = localStorage.getItem("playerEmail");
-    const [fetchedSessions, fetchedPlayers] = await Promise.all([
-      base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10),
-      base44.entities.Player.list("-created_date", 500).catch(() => [])
-    ]);
-    console.log("Fetched players:", fetchedPlayers.length, fetchedPlayers.map(p => p.email));
+    const fetchedSessions = await base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10);
+    
+    // Get all unique emails from signed-in players across sessions
+    const allEmails = [...new Set(fetchedSessions.flatMap(s => s.signed_in_players || []))];
+    
+    // Fetch players for each email directly
+    const playerResults = await Promise.all(
+      allEmails.map(email => base44.entities.Player.filter({ email }, "-created_date", 1).catch(() => []))
+    );
+    const fetchedPlayers = playerResults.flat();
+
     setCurrentUser(playerEmail ? { email: playerEmail } : null);
     setSessions(fetchedSessions);
     setAllPlayers(fetchedPlayers);
