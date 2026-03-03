@@ -31,7 +31,7 @@ export default function GameHistory() {
   const getPlayerName = (email) => {
     const player = allPlayers.find(p => p.email === email);
     if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim();
-    return email[0]?.toUpperCase() || "?";
+    return "Unknown Player";
   };
 
   const venues = [...new Set(games.map(g => g.location).filter(Boolean))];
