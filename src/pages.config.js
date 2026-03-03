@@ -49,6 +49,7 @@
  */
 import BreakTimeBump from './pages/BreakTimeBump';
 import Community from './pages/Community';
+import DirectorDashboard from './pages/DirectorDashboard';
 import DirectorManagement from './pages/DirectorManagement';
 import DirectorSignIn from './pages/DirectorSignIn';
 import GameHistory from './pages/GameHistory';
@@ -63,13 +64,13 @@ import PlayerDatabase from './pages/PlayerDatabase';
 import PlayerProfile from './pages/PlayerProfile';
 import RecordGame from './pages/RecordGame';
 import WinnersGallery from './pages/WinnersGallery';
-import DirectorDashboard from './pages/DirectorDashboard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "BreakTimeBump": BreakTimeBump,
     "Community": Community,
+    "DirectorDashboard": DirectorDashboard,
     "DirectorManagement": DirectorManagement,
     "DirectorSignIn": DirectorSignIn,
     "GameHistory": GameHistory,
@@ -84,7 +85,6 @@ export const PAGES = {
     "PlayerProfile": PlayerProfile,
     "RecordGame": RecordGame,
     "WinnersGallery": WinnersGallery,
-    "DirectorDashboard": DirectorDashboard,
 }
 
 export const pagesConfig = {

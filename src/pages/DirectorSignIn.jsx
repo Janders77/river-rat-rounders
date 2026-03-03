@@ -21,6 +21,7 @@ export default function DirectorSignIn() {
 
     if (code === DIRECTOR_CODE) {
       localStorage.setItem("directorAccess", "true");
+      localStorage.setItem("directorAccessTime", Date.now().toString());
       setTimeout(() => {
         navigate(createPageUrl("DirectorDashboard"));
       }, 300);
