@@ -420,7 +420,7 @@ export default function DirectorDashboard() {
                           <div className="flex-1 min-w-0">
                             <div className="font-medium text-white">{session.location}</div>
                             <div className="text-sm text-gray-400">
-                              {new Date(session.session_date).toLocaleDateString()} · {session.game_type}
+                              {session.session_date ? new Date(session.session_date + 'T12:00:00').toLocaleDateString() : ''} · {session.game_type}
                             </div>
                             <div className="text-sm text-gray-500 mt-1">
                               {session.signed_in_players?.length || 0} player(s) signed in
