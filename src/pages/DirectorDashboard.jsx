@@ -797,7 +797,7 @@ export default function DirectorDashboard() {
                       <div>
                         <div className="font-medium text-white">{game.game_type}</div>
                         <div className="text-sm text-gray-400">
-                          {new Date(game.game_date).toLocaleDateString()} {game.location && `· ${game.location}`}
+                          {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString() : ''} {game.location && `· ${game.location}`}
                         </div>
                         <div className="text-sm text-red-400 mt-1">Winner: {game.winner_name || game.winner_email}</div>
                       </div>
