@@ -544,15 +544,15 @@ export default function DirectorDashboard() {
                     </div>
                     <div className="space-y-2 md:col-span-2">
                       <Label className="text-gray-300">Location</Label>
-                      <Select value={gameData.location || "__placeholder__"} onValueChange={v => {
-                        if (v === "__placeholder__") return;
-                        setGameData({...gameData, location: v});
-                        const session = sessions.find(s => s.location === v && s.is_open);
+                      <Select value={gameData.location || "__none__"} onValueChange={v => {
+                        const val = v === "__none__" ? "" : v;
+                        setGameData({...gameData, location: val});
+                        const session = sessions.find(s => s.location === val && s.is_open);
                         setCurrentSessionId(session?.id || null);
                       }}>
                         <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
                         <SelectContent className="bg-gray-900 border-gray-700">
-                          <SelectItem value="__placeholder__" disabled>Select location</SelectItem>
+                          <SelectItem value="__none__" disabled>Select location</SelectItem>
                           {sessions.filter(s => s.is_open).map(session => (
                             <SelectItem key={session.id} value={session.location}>{session.location}</SelectItem>
                           ))}
