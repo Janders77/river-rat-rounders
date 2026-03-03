@@ -581,9 +581,9 @@ export default function DirectorDashboard() {
                             setPlacements(updated);
                           }}>
                             <SelectTrigger className="bg-gray-900 border-gray-700 text-white flex-1">
-                              <span className="text-white">
-                                {placements[i] ? getPlayerName(placements[i]) : <span className="text-gray-500">Select {label} place</span>}
-                              </span>
+                              <SelectValue placeholder={`Select ${label} place`}>
+                                {placements[i] ? getPlayerName(placements[i]) : undefined}
+                              </SelectValue>
                             </SelectTrigger>
                             <SelectContent className="bg-gray-900 border-gray-700">
                                 <SelectItem value="__none__" disabled>— None —</SelectItem>
