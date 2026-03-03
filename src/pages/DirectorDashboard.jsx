@@ -430,8 +430,13 @@ export default function DirectorDashboard() {
                               {session.signed_in_players?.length || 0} player(s) signed in
                             </div>
                             {session.signed_in_players?.length > 0 && (
-                              <div className="text-xs text-gray-600 mt-1">
-                                {session.signed_in_players.map(email => getPlayerName(email)).join(", ")}
+                              <div className="mt-2 space-y-1">
+                                {session.signed_in_players.map((email, idx) => (
+                                  <div key={email} className="flex items-center gap-2 text-xs text-gray-300">
+                                    <span className="text-gray-600 w-4 text-right shrink-0">{idx + 1}.</span>
+                                    <span>{getPlayerName(email)}</span>
+                                  </div>
+                                ))}
                               </div>
                             )}
                             <div className="mt-3 space-y-2">
