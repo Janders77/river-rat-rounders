@@ -113,7 +113,7 @@ export default function DirectorDashboard() {
   const getPlayerName = (email) => {
     const normalizedEmail = email?.toLowerCase();
     const player = players.find(p => p.email?.toLowerCase() === normalizedEmail);
-    if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim();
+    if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim() || email;
     return email;
   };
 
