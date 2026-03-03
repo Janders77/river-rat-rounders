@@ -738,13 +738,14 @@ export default function DirectorDashboard() {
                     />
                   </div>
                   <div className="space-y-3">
-                    {users.filter(u =>
+                    {players.filter(p =>
                       !playerSearch ||
-                      (u.full_name || "").toLowerCase().includes(playerSearch.toLowerCase()) ||
-                      u.email.toLowerCase().includes(playerSearch.toLowerCase())
-                    ).map(user => {
-                       const player = players.find(p => p.email === user.email);
-                       const displayName = player ? `${player.first_name || ""} ${player.last_name || ""}`.trim() : user.full_name || user.email;
+                      `${p.first_name || ""} ${p.last_name || ""}`.toLowerCase().includes(playerSearch.toLowerCase()) ||
+                      (p.email || "").toLowerCase().includes(playerSearch.toLowerCase())
+                    ).sort((a, b) => `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`))
+                    .map(player => {
+                       const user = users.find(u => u.email === player.email);
+                       const displayName = `${player.first_name || ""} ${player.last_name || ""}`.trim() || player.email;
                        return (
                          <div key={user.id} className="flex items-center justify-between gap-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0 overflow-hidden">
                            <div className="min-w-0 flex-1 overflow-hidden">
