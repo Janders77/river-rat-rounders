@@ -105,7 +105,7 @@ export default function DirectorDashboard() {
   const [players, setPlayers] = useState([]);
 
   const getPlayerData = (email) => {
-    const player = players.find(p => p.email === email);
+    const player = players.find(p => p.email?.trim().toLowerCase() === email?.trim().toLowerCase());
     if (!player) return null;
 
     return {
@@ -116,9 +116,9 @@ export default function DirectorDashboard() {
 
   const getPlayerName = (email) => {
     if (!email || !players?.length) return "Loading...";
-    const player = players.find(p => p.email?.toLowerCase() === email?.toLowerCase());
+    const player = players.find(p => p.email?.trim().toLowerCase() === email?.trim().toLowerCase());
     if (player?.first_name && player?.last_name) return `${player.first_name} ${player.last_name}`;
-    return email;
+    return "Unknown Player";
   };
 
   const loadAll = async () => {
@@ -303,7 +303,7 @@ export default function DirectorDashboard() {
 
     const normalizedEmail = dirSignInEmail.trim().toLowerCase();
     const playerResults = await base44.entities.Player.filter({ email: normalizedEmail });
-    const player = playerResults[0] || players.find(p => p.email?.toLowerCase() === normalizedEmail);
+    const player = playerResults[0] || players.find(p => p.email?.trim().toLowerCase() === normalizedEmail);
     if (!player) {
       setDirSignInStatus("error");
       setDirSignInMessage("No player found with that email.");
