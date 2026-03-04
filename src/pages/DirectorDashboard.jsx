@@ -488,7 +488,7 @@ export default function DirectorDashboard() {
                         <label className="text-gray-300 text-sm">Date</label>
                         <input type="date" value={newSession.session_date}
                           onChange={e => setNewSession({...newSession, session_date: e.target.value})}
-                          className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm [color-scheme:dark]"
+                          className="w-full h-10 bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm [color-scheme:dark]"
                           required />
                       </div>
                       <div className="space-y-2">
