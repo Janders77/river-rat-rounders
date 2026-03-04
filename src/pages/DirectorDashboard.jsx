@@ -484,11 +484,11 @@ export default function DirectorDashboard() {
                 <CardContent>
                   <form onSubmit={handleCreateSession} className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
+                      <div className="space-y-2 min-w-0 overflow-hidden">
                         <label className="text-gray-300 text-sm">Date</label>
                         <input type="date" value={newSession.session_date}
                           onChange={e => setNewSession({...newSession, session_date: e.target.value})}
-                          className="w-full h-10 bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm [color-scheme:dark]"
+                          className="w-full max-w-full h-10 bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm [color-scheme:dark] box-border"
                           required />
                       </div>
                       <div className="space-y-2">
