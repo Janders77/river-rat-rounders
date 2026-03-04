@@ -526,47 +526,6 @@ export default function DirectorDashboard() {
               </Card>
 
               <Card className="bg-transparent border border-red-500/40">
-                <CardHeader>
-                  <CardTitle className="text-red-400">Sign In Player</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleDirectorSignInPlayer} className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-gray-300 text-sm">Player Email</label>
-                      <Input
-                        type="email"
-                        placeholder="player@email.com"
-                        value={dirSignInEmail}
-                        onChange={e => setDirSignInEmail(e.target.value)}
-                        className="bg-gray-900 border-gray-700 text-white"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-gray-300 text-sm">Password</label>
-                      <Input
-                        type="password"
-                        placeholder="Enter password"
-                        value={dirSignInPassword}
-                        onChange={e => setDirSignInPassword(e.target.value)}
-                        className="bg-gray-900 border-gray-700 text-white"
-                        required
-                      />
-                    </div>
-                    <Button type="submit" disabled={dirSignInStatus === "loading"}
-                      className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
-                      {dirSignInStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In Player"}
-                    </Button>
-                    {dirSignInMessage && (
-                      <p className={`text-sm text-center ${dirSignInStatus === "success" ? "text-green-400" : "text-red-400"}`}>
-                        {dirSignInMessage}
-                      </p>
-                    )}
-                  </form>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-transparent border border-red-500/40">
                  <CardHeader>
                    <CardTitle className="text-red-400">Open a New Game</CardTitle>
                 </CardHeader>
@@ -609,6 +568,47 @@ export default function DirectorDashboard() {
                       className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
                       {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CalendarPlus className="w-4 h-4 mr-2" />Open Game</>}
                     </Button>
+                  </form>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-transparent border border-red-500/40">
+                <CardHeader>
+                  <CardTitle className="text-red-400">Sign In Player</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleDirectorSignInPlayer} className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-gray-300 text-sm">Player Email</label>
+                      <Input
+                        type="email"
+                        placeholder="player@email.com"
+                        value={dirSignInEmail}
+                        onChange={e => setDirSignInEmail(e.target.value)}
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-gray-300 text-sm">Password</label>
+                      <Input
+                        type="password"
+                        placeholder="Enter password"
+                        value={dirSignInPassword}
+                        onChange={e => setDirSignInPassword(e.target.value)}
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                    <Button type="submit" disabled={dirSignInStatus === "loading"}
+                      className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
+                      {dirSignInStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In Player"}
+                    </Button>
+                    {dirSignInMessage && (
+                      <p className={`text-sm text-center ${dirSignInStatus === "success" ? "text-green-400" : "text-red-400"}`}>
+                        {dirSignInMessage}
+                      </p>
+                    )}
                   </form>
                 </CardContent>
               </Card>
