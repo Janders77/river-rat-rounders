@@ -566,7 +566,7 @@ export default function DirectorDashboard() {
                     </div>
                     <Button type="submit" disabled={isCreatingSession || !newSession.location}
                       className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
-                      {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CalendarPlus className="w-4 h-4 mr-2" />Open Game</>}
+                      {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin" /> : "Open Game"}
                     </Button>
                   </form>
                 </CardContent>
