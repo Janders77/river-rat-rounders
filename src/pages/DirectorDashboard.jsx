@@ -289,6 +289,50 @@ export default function DirectorDashboard() {
     setIsUploadingPhoto(false);
   };
 
+  const handleDirectorSignInPlayer = async (e) => {
+    e.preventDefault();
+    setDirSignInStatus("loading");
+    setDirSignInMessage("");
+
+    const DIRECTOR_PASSWORD = "Poker123";
+    if (dirSignInPassword !== DIRECTOR_PASSWORD) {
+      setDirSignInStatus("error");
+      setDirSignInMessage("Incorrect password.");
+      return;
+    }
+
+    const player = players.find(p => p.email?.toLowerCase() === dirSignInEmail.trim().toLowerCase());
+    if (!player) {
+      setDirSignInStatus("error");
+      setDirSignInMessage("No player found with that email.");
+      return;
+    }
+
+    const openSession = sessions.find(s => s.is_open);
+    if (!openSession) {
+      setDirSignInStatus("error");
+      setDirSignInMessage("No open game session. Open a game first.");
+      return;
+    }
+
+    const alreadySignedIn = (openSession.signed_in_players || []).includes(player.email);
+    if (alreadySignedIn) {
+      setDirSignInStatus("error");
+      setDirSignInMessage(`${player.first_name} ${player.last_name} is already signed in.`);
+      return;
+    }
+
+    const updatedPlayers = [...(openSession.signed_in_players || []), player.email];
+    await base44.entities.GameSession.update(openSession.id, { signed_in_players: updatedPlayers });
+    setSessions(prev => prev.map(s => s.id === openSession.id ? { ...s, signed_in_players: updatedPlayers } : s));
+
+    setDirSignInStatus("success");
+    setDirSignInMessage(`${player.first_name} ${player.last_name} signed in successfully!`);
+    setDirSignInEmail("");
+    setDirSignInPassword("");
+    setTimeout(() => { setDirSignInStatus(""); setDirSignInMessage(""); }, 3000);
+  };
+
   const handleDeletePhoto = async (photoId) => {
     if (!confirm("Delete this photo?")) return;
     await WinnerPhoto.delete(photoId);
