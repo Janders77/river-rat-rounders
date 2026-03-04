@@ -540,7 +540,7 @@ export default function DirectorDashboard() {
                       <Label className="text-gray-300">Game Date</Label>
                       <input type="date" value={gameData.game_date}
                         onChange={e => setGameData({...gameData, game_date: e.target.value})}
-                        className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm" required />
+                        className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm [color-scheme:dark]" required />
                     </div>
                     <div className="space-y-2">
                       <Label className="text-gray-300">Game Type</Label>
