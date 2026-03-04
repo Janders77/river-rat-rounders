@@ -54,6 +54,10 @@ export default function DirectorDashboard() {
   const [photoForm, setPhotoForm] = useState({ title: "", winner_name: "", game_date: new Date().toISOString().split('T')[0], location: "" });
   const [photoFile, setPhotoFile] = useState(null);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [dirSignInEmail, setDirSignInEmail] = useState("");
+  const [dirSignInPassword, setDirSignInPassword] = useState("");
+  const [dirSignInStatus, setDirSignInStatus] = useState(""); // "", "loading", "success", "error"
+  const [dirSignInMessage, setDirSignInMessage] = useState("");
 
   useEffect(() => {
     loadAll();
