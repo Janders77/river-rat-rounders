@@ -149,7 +149,7 @@ export default function PlayerSignIn() {
             {/* Expanded player list */}
             {expandedSession === session.id && session.signed_in_players?.length > 0 && (
               <div className="px-4 pb-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
-                {session.signed_in_players.map(email => {
+                {session.signed_in_players.map((email, index) => {
                   const player = allPlayers.find(p => p.email?.toLowerCase() === email?.toLowerCase());
                   const name = player
                     ? `${player.first_name || ""} ${player.last_name || ""}`.trim() || "Unknown Player"
@@ -157,7 +157,7 @@ export default function PlayerSignIn() {
                   return (
                     <div key={email} className="flex items-center gap-2 text-sm text-gray-300">
                       <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-                      <span className="truncate">{name}</span>
+                      <span className="truncate">{index + 1}. {name}</span>
                     </div>
                   );
                 })}
