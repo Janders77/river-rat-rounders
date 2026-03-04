@@ -301,7 +301,9 @@ export default function DirectorDashboard() {
       return;
     }
 
-    const player = players.find(p => p.email?.toLowerCase() === dirSignInEmail.trim().toLowerCase());
+    const normalizedEmail = dirSignInEmail.trim().toLowerCase();
+    const playerResults = await base44.entities.Player.filter({ email: normalizedEmail });
+    const player = playerResults[0] || players.find(p => p.email?.toLowerCase() === normalizedEmail);
     if (!player) {
       setDirSignInStatus("error");
       setDirSignInMessage("No player found with that email.");
