@@ -148,7 +148,7 @@ export default function PlayerSignIn() {
 
             {/* Expanded player list */}
             {expandedSession === session.id && session.signed_in_players?.length > 0 && (
-              <div className="px-4 pb-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
+              <div className="px-4 pb-3 flex flex-col gap-1.5">
                 {session.signed_in_players.map((email, index) => {
                   const player = allPlayers.find(p => p.email?.toLowerCase() === email?.toLowerCase());
                   const name = player
