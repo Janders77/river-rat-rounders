@@ -58,6 +58,9 @@ export default function DirectorDashboard() {
   const [dirSignInPassword, setDirSignInPassword] = useState("");
   const [dirSignInStatus, setDirSignInStatus] = useState(""); // "", "loading", "success", "error"
   const [dirSignInMessage, setDirSignInMessage] = useState("");
+  const [showSignInSuggestions, setShowSignInSuggestions] = useState(false);
+  const [placementSearches, setPlacementSearches] = useState(Array(9).fill(""));
+  const [showPlacementSuggestions, setShowPlacementSuggestions] = useState(Array(9).fill(false));
 
   useEffect(() => {
     loadAll();
