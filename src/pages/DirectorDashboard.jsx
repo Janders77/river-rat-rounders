@@ -504,13 +504,12 @@ export default function DirectorDashboard() {
                                 </SelectTrigger>
                                 <SelectContent className="bg-gray-900 border-gray-700">
                                   <SelectItem value="__none__" disabled className="text-gray-500">Add player...</SelectItem>
-                                  {(session.signed_in_players?.length > 0
-                                    ? players.filter(p => session.signed_in_players.includes(p.email))
-                                    : players
-                                  ).filter(p => p.email && !(session.hand_of_week_emails || []).includes(p.email))
-                                   .map(p => (
-                                    <SelectItem key={p.email} value={p.email} className="text-white">{p.first_name} {p.last_name}</SelectItem>
-                                  ))}
+                                  {players
+                                    .filter(p => p.email && (session.signed_in_players || []).includes(p.email) && !(session.hand_of_week_emails || []).includes(p.email))
+                                    .sort((a, b) => `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`))
+                                    .map(p => (
+                                      <SelectItem key={p.email} value={p.email} className="text-white">{p.first_name} {p.last_name}</SelectItem>
+                                    ))}
                                 </SelectContent>
                               </Select>
                               {(session.hand_of_week_names || []).length > 0 && (
