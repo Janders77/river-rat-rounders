@@ -117,6 +117,33 @@ export default function DirectorDashboard() {
     };
   };
 
+  const filteredSignInSuggestions = useMemo(() => {
+    const q = dirSignInEmail.trim().toLowerCase();
+    if (!q) return [];
+    return players
+      .filter(p => {
+        const fullName = `${p.first_name || ""} ${p.last_name || ""}`.trim().toLowerCase();
+        const email = (p.email || "").trim().toLowerCase();
+        return fullName.includes(q) || email.includes(q);
+      })
+      .slice(0, 8);
+  }, [dirSignInEmail, players]);
+
+  const getPlacementSuggestions = (index) => {
+    const q = placementSearches[index]?.trim().toLowerCase();
+    if (!q) return [];
+    const session = sessions.find(s => s.id === currentSessionId);
+    const signedInEmails = session?.signed_in_players || [];
+    return players
+      .filter(p => {
+        if (!signedInEmails.includes(p.email)) return false;
+        const fullName = `${p.first_name || ""} ${p.last_name || ""}`.trim().toLowerCase();
+        const email = (p.email || "").trim().toLowerCase();
+        return fullName.includes(q) || email.includes(q);
+      })
+      .slice(0, 8);
+  };
+
   const getPlayerName = (email) => {
     if (!email || !players?.length) return "Loading...";
     const player = players.find(p => p.email?.trim().toLowerCase() === email?.trim().toLowerCase());
