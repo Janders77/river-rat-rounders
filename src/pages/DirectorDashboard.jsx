@@ -774,6 +774,8 @@ export default function DirectorDashboard() {
                 </CardContent>
                 </Card>
                 </form>
+                );
+              })()}
                 </TabsContent>
             )}
 
