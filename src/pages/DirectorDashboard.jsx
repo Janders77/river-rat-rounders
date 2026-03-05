@@ -670,48 +670,39 @@ export default function DirectorDashboard() {
 
             {hasPermission(directorRole, "canRecordGames") && (
             <TabsContent value="record">
+              {(() => {
+                const openSession = sessions.find(s => s.is_open);
+                if (!openSession) {
+                  return (
+                    <Card className="bg-transparent border border-red-500/40">
+                      <CardContent className="py-10 text-center text-gray-500">
+                        No open game session. Open a game in the Sessions tab first.
+                      </CardContent>
+                    </Card>
+                  );
+                }
+                // Auto-set gameData from open session when it changes
+                if (gameData.location !== openSession.location || currentSessionId !== openSession.id) {
+                  setGameData(prev => ({ ...prev, location: openSession.location, game_type: openSession.game_type || "Main Game", game_date: openSession.session_date || prev.game_date }));
+                  setCurrentSessionId(openSession.id);
+                }
+                return (
               <form onSubmit={handleRecordGame}>
                 <Card className="bg-transparent border border-red-500/40">
                 <CardHeader>
-                  <CardTitle className="text-white">New Game</CardTitle>
+                  <CardTitle className="text-white">
+                    Record Game — <span className="text-red-400">{openSession.location}</span>
+                  </CardTitle>
+                  <p className="text-sm text-gray-400 mt-1">
+                    {openSession.session_date ? new Date(openSession.session_date + 'T12:00:00').toLocaleDateString() : ''} · {openSession.game_type} · {openSession.signed_in_players?.length || 0} players signed in
+                  </p>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label className="text-gray-300">Game Date</Label>
-                      <input type="date" value={gameData.game_date}
-                        onChange={e => setGameData({...gameData, game_date: e.target.value})}
-                        className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm [color-scheme:dark]" required />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-gray-300">Game Type</Label>
-                      <Select value={gameData.game_type || "__none__"} onValueChange={v => setGameData({...gameData, game_type: v === "__none__" ? "" : v})}>
-                        <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select game type" /></SelectTrigger>
-                        <SelectContent className="bg-gray-900 border-gray-700">
-                          <SelectItem value="__none__" disabled>Select game type</SelectItem>
-                          {["Main Game","Turbo"].map(t => (
-                            <SelectItem key={t} value={t}>{t}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2 md:col-span-2">
-                      <Label className="text-gray-300">Location</Label>
-                      <Select value={gameData.location || "__none__"} onValueChange={v => {
-                        const val = v === "__none__" ? "" : v;
-                        setGameData({...gameData, location: val});
-                        const session = sessions.find(s => s.location === val && s.is_open);
-                        setCurrentSessionId(session?.id || null);
-                      }}>
-                        <SelectTrigger className="bg-gray-900 border-gray-700 text-white"><SelectValue placeholder="Select location" /></SelectTrigger>
-                        <SelectContent className="bg-gray-900 border-gray-700">
-                          <SelectItem value="__none__" disabled>Select location</SelectItem>
-                          {sessions.filter(s => s.is_open).map(session => (
-                            <SelectItem key={session.id} value={session.location}>{session.location}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <div className="space-y-2">
+                    <Label className="text-gray-300">Game Date</Label>
+                    <input type="date" value={gameData.game_date}
+                      onChange={e => setGameData({...gameData, game_date: e.target.value})}
+                      className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm [color-scheme:dark]" required />
                   </div>
 
                   <div className="space-y-2">
