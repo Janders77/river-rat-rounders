@@ -22,6 +22,12 @@ export default function PlayerSignIn() {
       const playerEmail = localStorage.getItem("playerEmail");
       setCurrentUser(playerEmail ? { email: normalize(playerEmail) } : null);
 
+      // Check if current player is a director
+      if (playerEmail) {
+        const directorCheck = await base44.entities.Director.filter({ email: playerEmail.trim().toLowerCase() }).catch(() => []);
+        setIsDirector(directorCheck.length > 0);
+      }
+
       // Seed cache from all players first
       const allPlayers = await base44.entities.Player.list("-created_date", 500).catch(() => []);
       seedFromPlayers(allPlayers);
