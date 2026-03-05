@@ -124,7 +124,7 @@ export default function PlayerSignIn() {
                   <MapPin className="w-4 h-4 text-red-400 shrink-0" />
                   <span>{session.location}</span>
                 </div>
-                <Badge className="bg-green-500/10 text-green-400 border-green-500/30 text-xs shrink-0">Open</Badge>
+                <Badge className="bg-red-700/30 text-red-300 border-red-700/50 text-xs shrink-0">Open</Badge>
               </div>
               <div className="flex items-center gap-3 mt-1.5 text-sm text-gray-400">
                 <span className="flex items-center gap-1.5">
