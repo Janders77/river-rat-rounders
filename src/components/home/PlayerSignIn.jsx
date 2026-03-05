@@ -153,7 +153,16 @@ export default function PlayerSignIn() {
                 {session.signed_in_players.map((email, index) => (
                   <div key={email} className="flex items-center gap-2 text-sm text-gray-300">
                     <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-                    <span className="truncate">{index + 1}. {getPlayerName(email)}</span>
+                    <span className="truncate flex-1">{index + 1}. {getPlayerName(email)}</span>
+                    {isDirector && (
+                      <button
+                        onClick={() => handleRemovePlayer(session, email)}
+                        className="shrink-0 text-gray-600 hover:text-red-400 transition-colors"
+                        title="Remove player"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
