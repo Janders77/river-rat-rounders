@@ -168,12 +168,13 @@ export default function DirectorDashboard() {
   const fetchAllPlayers = async () => {
     const allPlayers = [];
     let page = 0;
-    const batchSize = 100;
+    const batchSize = 50;
     while (true) {
       const batch = await base44.entities.Player.filter({}, "-player_number", batchSize, page * batchSize);
       allPlayers.push(...batch);
       if (batch.length < batchSize) break;
       page++;
+      await new Promise(r => setTimeout(r, 300));
     }
     return allPlayers;
   };
