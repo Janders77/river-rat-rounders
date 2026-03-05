@@ -66,6 +66,20 @@ export default function DirectorDashboard() {
     loadAll();
   }, []);
 
+  // Auto-sync gameData with the current open session
+  useEffect(() => {
+    const openSession = sessions.find(s => s.is_open);
+    if (openSession) {
+      setGameData(prev => ({
+        ...prev,
+        location: openSession.location,
+        game_type: openSession.game_type || "Main Game",
+        game_date: openSession.session_date || prev.game_date
+      }));
+      setCurrentSessionId(openSession.id);
+    }
+  }, [sessions]);
+
   // Real-time subscriptions for game sessions and games
   useEffect(() => {
     const unsubscribeSessions = base44.entities.GameSession.subscribe((event) => {
