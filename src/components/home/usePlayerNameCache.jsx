@@ -6,6 +6,7 @@ const normalize = (email) => (email || "").trim().toLowerCase();
 // Shared in-memory cache across all hook instances within the same page load
 const globalCache = {};
 const pendingFetches = new Set();
+let seeded = false;
 
 export function usePlayerNameCache() {
   const [, setVersion] = useState(0);
