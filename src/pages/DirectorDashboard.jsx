@@ -684,31 +684,21 @@ export default function DirectorDashboard() {
 
             {hasPermission(directorRole, "canRecordGames") && (
             <TabsContent value="record">
-              {(() => {
-                const openSession = sessions.find(s => s.is_open);
-                if (!openSession) {
-                  return (
-                    <Card className="bg-transparent border border-red-500/40">
-                      <CardContent className="py-10 text-center text-gray-500">
-                        No open game session. Open a game in the Sessions tab first.
-                      </CardContent>
-                    </Card>
-                  );
-                }
-                // Auto-set gameData from open session when it changes
-                if (gameData.location !== openSession.location || currentSessionId !== openSession.id) {
-                  setGameData(prev => ({ ...prev, location: openSession.location, game_type: openSession.game_type || "Main Game", game_date: openSession.session_date || prev.game_date }));
-                  setCurrentSessionId(openSession.id);
-                }
-                return (
+              {!sessions.find(s => s.is_open) ? (
+                <Card className="bg-transparent border border-red-500/40">
+                  <CardContent className="py-10 text-center text-gray-500">
+                    No open game session. Open a game in the Sessions tab first.
+                  </CardContent>
+                </Card>
+              ) : (
               <form onSubmit={handleRecordGame}>
                 <Card className="bg-transparent border border-red-500/40">
                 <CardHeader>
                   <CardTitle className="text-white">
-                    Record Game — <span className="text-red-400">{openSession.location}</span>
+                    Record Game — <span className="text-red-400">{sessions.find(s => s.is_open)?.location}</span>
                   </CardTitle>
                   <p className="text-sm text-gray-400 mt-1">
-                    {openSession.session_date ? new Date(openSession.session_date + 'T12:00:00').toLocaleDateString() : ''} · {openSession.game_type} · {openSession.signed_in_players?.length || 0} players signed in
+                    {sessions.find(s => s.is_open)?.session_date ? new Date(sessions.find(s => s.is_open).session_date + 'T12:00:00').toLocaleDateString() : ''} · {sessions.find(s => s.is_open)?.game_type} · {sessions.find(s => s.is_open)?.signed_in_players?.length || 0} players signed in
                   </p>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -733,7 +723,6 @@ export default function DirectorDashboard() {
                             value={placements[i] ? getPlayerName(placements[i]) : placementSearches[i]}
                             onChange={e => {
                               if (placements[i]) {
-                                // Clear the selected player and start searching
                                 const updatedP = [...placements]; updatedP[i] = ""; setPlacements(updatedP);
                               }
                               const updatedS = [...placementSearches]; updatedS[i] = e.target.value; setPlacementSearches(updatedS);
@@ -787,10 +776,9 @@ export default function DirectorDashboard() {
                   </Button>
                 </CardContent>
                 </Card>
-                </form>
-                );
-              })()}
-                </TabsContent>
+              </form>
+              )}
+            </TabsContent>
             )}
 
           {hasPermission(directorRole, "canApproveRequests") && (
