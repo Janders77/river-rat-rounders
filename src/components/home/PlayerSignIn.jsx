@@ -69,7 +69,8 @@ export default function PlayerSignIn() {
       const updated = [...(session.signed_in_players || []), playerEmail];
       await base44.entities.GameSession.update(session.id, { signed_in_players: updated });
     }
-    await loadData();
+    await loadSessions();
+    await loadPlayers();
     setSigningIn(null);
   };
 
