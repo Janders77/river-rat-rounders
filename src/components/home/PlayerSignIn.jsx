@@ -16,6 +16,11 @@ export default function PlayerSignIn() {
   const [expandedSession, setExpandedSession] = useState(null);
 
   useEffect(() => {
+    async function loadData() {
+      await loadSessions();
+      await loadPlayers();
+    }
+
     loadData();
 
     const unsubscribe = base44.entities.GameSession.subscribe((event) => {
@@ -33,24 +38,23 @@ export default function PlayerSignIn() {
     return () => unsubscribe();
   }, []);
 
-  const loadData = async () => {
+  const loadSessions = async () => {
     setIsLoading(true);
     const playerEmail = localStorage.getItem("playerEmail");
     const fetchedSessions = await base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10);
-    
-    // Get all unique emails from signed-in players across sessions
-    const allEmails = [...new Set(fetchedSessions.flatMap(s => s.signed_in_players || []))];
-    
-    // Fetch players for each email directly
+    setCurrentUser(playerEmail ? { email: playerEmail } : null);
+    setSessions(fetchedSessions);
+    setIsLoading(false);
+    return fetchedSessions;
+  };
+
+  const loadPlayers = async () => {
+    const currentSessions = await base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10);
+    const allEmails = [...new Set(currentSessions.flatMap(s => s.signed_in_players || []))];
     const playerResults = await Promise.all(
       allEmails.map(email => base44.entities.Player.filter({ email }, "-created_date", 1).catch(() => []))
     );
-    const fetchedPlayers = playerResults.flat();
-
-    setCurrentUser(playerEmail ? { email: playerEmail } : null);
-    setSessions(fetchedSessions);
-    setAllPlayers(fetchedPlayers);
-    setIsLoading(false);
+    setAllPlayers(playerResults.flat());
   };
 
   const handleSignIn = async (session) => {
