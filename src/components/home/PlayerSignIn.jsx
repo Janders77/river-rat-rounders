@@ -78,6 +78,11 @@ export default function PlayerSignIn() {
   const isSignedIn = (session) =>
     currentUser && session.signed_in_players?.map(normalize).includes(currentUser.email);
 
+  const handleRemovePlayer = async (session, emailToRemove) => {
+    const updated = (session.signed_in_players || []).filter(e => normalize(e) !== normalize(emailToRemove));
+    await base44.entities.GameSession.update(session.id, { signed_in_players: updated });
+  };
+
   if (isLoading) {
     return (
       <Card className="bg-gradient-to-r from-red-900/20 to-red-950/60 border-red-900/40">
