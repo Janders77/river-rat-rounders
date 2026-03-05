@@ -12,6 +12,7 @@ export default function PlayerSignIn() {
   const [signingIn, setSigningIn] = useState(null);
   const [expandedSession, setExpandedSession] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isDirector, setIsDirector] = useState(false);
 
   const { seedFromPlayers, fetchMissingEmails, getPlayerName, normalize } = usePlayerNameCache();
 
