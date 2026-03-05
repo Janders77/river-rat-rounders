@@ -203,7 +203,7 @@ export default function DirectorDashboard() {
      GameSession.list("-session_date", 20),
      WinnerPhoto.list("-created_date", 50),
      InviteRequest.filter({ status: "pending" }, "-created_date", 50),
-     Player.list()
+     Player.list("-player_number", 2000)
    ]);
    setUsers(fetchedUsers);
    setGames(fetchedGames);
