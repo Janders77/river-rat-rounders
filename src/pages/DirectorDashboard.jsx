@@ -611,15 +611,36 @@ export default function DirectorDashboard() {
                 <CardContent>
                   <form onSubmit={handleDirectorSignInPlayer} className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-gray-300 text-sm">Player Email</label>
-                      <Input
-                        type="email"
-                        placeholder="player@email.com"
-                        value={dirSignInEmail}
-                        onChange={e => setDirSignInEmail(e.target.value)}
-                        className="bg-gray-900 border-gray-700 text-white"
-                        required
-                      />
+                      <label className="text-gray-300 text-sm">Player Name or Email</label>
+                      <div className="relative">
+                        <Input
+                          placeholder="Search by name or email..."
+                          value={dirSignInEmail}
+                          onChange={e => { setDirSignInEmail(e.target.value); setShowSignInSuggestions(true); }}
+                          onFocus={() => setShowSignInSuggestions(true)}
+                          onBlur={() => setTimeout(() => setShowSignInSuggestions(false), 150)}
+                          className="bg-gray-900 border-gray-700 text-white"
+                          required
+                        />
+                        {showSignInSuggestions && filteredSignInSuggestions.length > 0 && (
+                          <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg overflow-hidden">
+                            {filteredSignInSuggestions.map(p => (
+                              <button
+                                key={p.email}
+                                type="button"
+                                className="w-full text-left px-3 py-2 hover:bg-gray-800 transition-colors"
+                                onMouseDown={() => {
+                                  setDirSignInEmail(p.email);
+                                  setShowSignInSuggestions(false);
+                                }}
+                              >
+                                <div className="text-white text-sm font-medium">{p.first_name} {p.last_name}</div>
+                                <div className="text-gray-400 text-xs">{p.email}</div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <label className="text-gray-300 text-sm">Password</label>
