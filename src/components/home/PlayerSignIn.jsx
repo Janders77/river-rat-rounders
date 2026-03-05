@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Users, Loader2, LogIn, MapPin, Calendar, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle2, Users, Loader2, LogIn, MapPin, Calendar, ChevronDown, ChevronUp, X } from "lucide-react";
 import { usePlayerNameCache } from "./usePlayerNameCache";
 
 export default function PlayerSignIn() {
