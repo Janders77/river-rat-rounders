@@ -716,46 +716,57 @@ export default function DirectorDashboard() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-gray-300">Placements</Label>
-                    <p className="text-xs text-gray-500">1st=1000pts, 2nd=900pts … 9th=100pts</p>
-                    <div className="space-y-2">
-                      {PLACE_LABELS.map((label, i) => (
-                        <div key={i} className="flex items-center gap-3">
-                          <div className="w-10 text-sm font-bold text-right shrink-0 text-gray-400">{label}</div>
-                          <div className="text-sm text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
-                          <Select value={placements[i] || "__none__"} onValueChange={val => {
-                            const updated = [...placements];
-                            const realVal = val === "__none__" ? "" : val;
-                            if (realVal === "") {
-                              updated[i] = "";
-                            } else {
-                              for (let j = 0; j < updated.length; j++) { if (updated[j] === realVal) updated[j] = ""; }
-                              updated[i] = realVal;
-                            }
-                            setPlacements(updated);
-                          }}>
-                            <SelectTrigger className="bg-gray-900 border-gray-700 text-white flex-1">
-                              <SelectValue placeholder={`Select ${label} place`}>
-                                {placements[i] ? getPlayerName(placements[i]) : undefined}
-                              </SelectValue>
-                            </SelectTrigger>
-                            <SelectContent className="bg-gray-900 border-gray-700">
-                                <SelectItem value="__none__" disabled>— None —</SelectItem>
-                               {(() => {
-                                 const session = sessions.find(s => s.id === currentSessionId);
-                                 const signedInPlayers = session?.signed_in_players || [];
-                                 return players
-                                   .filter(p => p.email && p.first_name && signedInPlayers.includes(p.email))
-                                   .sort((a, b) => `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`))
-                                   .map(p => (
-                                     <SelectItem key={p.email} value={p.email} className="text-white">{p.first_name} {p.last_name}</SelectItem>
-                                   ));
-                               })()}
-                             </SelectContent>
-                          </Select>
+                  <Label className="text-gray-300">Placements</Label>
+                  <p className="text-xs text-gray-500">1st=1000pts, 2nd=900pts … 9th=100pts</p>
+                  <div className="space-y-2">
+                    {PLACE_LABELS.map((label, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-10 text-sm font-bold text-right shrink-0 text-gray-400">{label}</div>
+                        <div className="text-sm text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
+                        <div className="relative flex-1">
+                          <Input
+                            placeholder={`Search ${label} place...`}
+                            value={placements[i] ? getPlayerName(placements[i]) : placementSearches[i]}
+                            onChange={e => {
+                              if (placements[i]) {
+                                // Clear the selected player and start searching
+                                const updatedP = [...placements]; updatedP[i] = ""; setPlacements(updatedP);
+                              }
+                              const updatedS = [...placementSearches]; updatedS[i] = e.target.value; setPlacementSearches(updatedS);
+                              const updatedShow = [...showPlacementSuggestions]; updatedShow[i] = true; setShowPlacementSuggestions(updatedShow);
+                            }}
+                            onFocus={() => { const u = [...showPlacementSuggestions]; u[i] = true; setShowPlacementSuggestions(u); }}
+                            onBlur={() => setTimeout(() => { const u = [...showPlacementSuggestions]; u[i] = false; setShowPlacementSuggestions(u); }, 150)}
+                            className="bg-gray-900 border-gray-700 text-white w-full"
+                          />
+                          {placements[i] && (
+                            <button type="button" onClick={() => { const u = [...placements]; u[i] = ""; setPlacements(u); const s = [...placementSearches]; s[i] = ""; setPlacementSearches(s); }}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                          {showPlacementSuggestions[i] && !placements[i] && getPlacementSuggestions(i).length > 0 && (
+                            <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg overflow-hidden">
+                              {getPlacementSuggestions(i).map(p => (
+                                <button key={p.email} type="button"
+                                  className="w-full text-left px-3 py-2 hover:bg-gray-800 transition-colors"
+                                  onMouseDown={() => {
+                                    const updatedP = [...placements];
+                                    for (let j = 0; j < updatedP.length; j++) { if (updatedP[j] === p.email) updatedP[j] = ""; }
+                                    updatedP[i] = p.email; setPlacements(updatedP);
+                                    const updatedS = [...placementSearches]; updatedS[i] = ""; setPlacementSearches(updatedS);
+                                    const updatedShow = [...showPlacementSuggestions]; updatedShow[i] = false; setShowPlacementSuggestions(updatedShow);
+                                  }}
+                                >
+                                  <span className="text-white text-sm">{p.first_name} {p.last_name}</span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
+                  </div>
                   </div>
 
                   <div className="space-y-2">
