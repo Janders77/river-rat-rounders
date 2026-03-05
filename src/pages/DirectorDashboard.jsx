@@ -165,6 +165,19 @@ export default function DirectorDashboard() {
     return "Unknown Player";
   };
 
+  const fetchAllPlayers = async () => {
+    const allPlayers = [];
+    let skip = 0;
+    const batchSize = 100;
+    while (true) {
+      const batch = await base44.entities.Player.list("-player_number", batchSize, skip);
+      allPlayers.push(...batch);
+      if (batch.length < batchSize) break;
+      skip += batchSize;
+    }
+    return allPlayers;
+  };
+
   const loadAll = async () => {
    setIsLoading(true);
 
@@ -203,7 +216,7 @@ export default function DirectorDashboard() {
      GameSession.list("-session_date", 20),
      WinnerPhoto.list("-created_date", 50),
      InviteRequest.filter({ status: "pending" }, "-created_date", 50),
-     Player.list("-player_number", 2000)
+     fetchAllPlayers()
    ]);
    setUsers(fetchedUsers);
    setGames(fetchedGames);
