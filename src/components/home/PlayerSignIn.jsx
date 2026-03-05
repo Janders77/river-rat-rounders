@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Users, Loader2, LogIn, MapPin, Calendar, ChevronDown, ChevronUp } from "lucide-react";
+import { usePlayerNameCache } from "./usePlayerNameCache";
 
 export default function PlayerSignIn() {
   const [sessions, setSessions] = useState([]);
@@ -12,45 +13,7 @@ export default function PlayerSignIn() {
   const [expandedSession, setExpandedSession] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
 
-  // playerNameByEmail cache: email -> name string (or "Loading...")
-  const playerNameCache = useRef({});
-  const [, forceUpdate] = useState(0);
-
-  const normalize = (email) => (email || "").trim().toLowerCase();
-
-  const seedCacheFromPlayers = (players) => {
-    players.forEach(p => {
-      const key = normalize(p.email);
-      if (key) {
-        playerNameCache.current[key] = `${p.first_name || ""} ${p.last_name || ""}`.trim() || p.email;
-      }
-    });
-  };
-
-  const fetchMissingEmails = async (emails) => {
-    const missing = emails.map(normalize).filter(e => e && !(e in playerNameCache.current));
-    if (missing.length === 0) return;
-
-    // Mark as loading immediately
-    missing.forEach(e => { playerNameCache.current[e] = "Loading..."; });
-    forceUpdate(n => n + 1);
-
-    await Promise.all(missing.map(async (email) => {
-      const results = await base44.entities.Player.filter({ email }, "-created_date", 1).catch(() => []);
-      if (results.length > 0) {
-        const p = results[0];
-        playerNameCache.current[normalize(p.email)] = `${p.first_name || ""} ${p.last_name || ""}`.trim() || email;
-      } else {
-        playerNameCache.current[email] = email; // fallback to email, never "Unknown Player"
-      }
-    }));
-
-    forceUpdate(n => n + 1);
-  };
-
-  const getPlayerName = (email) => {
-    return playerNameCache.current[normalize(email)] || email;
-  };
+  const { seedFromPlayers, fetchMissingEmails, getPlayerName, normalize } = usePlayerNameCache();
 
   useEffect(() => {
     async function loadData() {
@@ -58,9 +21,9 @@ export default function PlayerSignIn() {
       const playerEmail = localStorage.getItem("playerEmail");
       setCurrentUser(playerEmail ? { email: normalize(playerEmail) } : null);
 
-      // Load players first, then sessions, so cache is seeded before rendering
+      // Seed cache from all players first
       const allPlayers = await base44.entities.Player.list("-created_date", 500).catch(() => []);
-      seedCacheFromPlayers(allPlayers);
+      seedFromPlayers(allPlayers);
 
       const fetchedSessions = await base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10);
       setSessions(fetchedSessions);
@@ -83,7 +46,6 @@ export default function PlayerSignIn() {
         } else if (event.type === 'delete') updated = prev.filter(s => s.id !== event.id);
         else updated = prev;
 
-        // Fetch missing names for any new emails
         const allEmails = [...new Set(updated.flatMap(s => s.signed_in_players || []))];
         fetchMissingEmails(allEmails);
         return updated;
