@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { base44 } from "@/api/base44Client";
 
-const normalizeEmail = (email) => (email || "").trim().toLowerCase();
+export const normalizeEmail = (email) => (email || "").trim().toLowerCase();
+
+export const buildFullName = (player) =>
+  `${player?.first_name || ""} ${player?.last_name || ""}`.trim();
+
+export const buildSearchName = (player) =>
+  buildFullName(player).toLowerCase();
 
 export function usePlayerNameCache(players = []) {
   const [playerNameByEmail, setPlayerNameByEmail] = useState({});
