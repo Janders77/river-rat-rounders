@@ -1,59 +1,89 @@
-import { useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { base44 } from "@/api/base44Client";
 
-const normalize = (email) => (email || "").trim().toLowerCase();
+const normalizeEmail = (email) => (email || "").trim().toLowerCase();
 
-// Shared in-memory cache across all hook instances within the same page load
-const globalCache = {};
-const pendingFetches = new Set();
-let seeded = false;
+export function usePlayerNameCache(players = []) {
+  const [playerNameByEmail, setPlayerNameByEmail] = useState({});
+  const [loadingEmails, setLoadingEmails] = useState({});
+  const pendingRef = useRef(new Set());
 
-export function usePlayerNameCache() {
-  const [, setVersion] = useState(0);
-  const bump = () => setVersion(v => v + 1);
+  // Seed cache from full players list
+  useEffect(() => {
+    if (!Array.isArray(players) || players.length === 0) return;
 
-  const seedFromPlayers = useCallback((players) => {
-    let changed = false;
-    players.forEach(p => {
-      const key = normalize(p.email);
-      if (key && !globalCache[key]) {
-        globalCache[key] = `${p.first_name || ""} ${p.last_name || ""}`.trim() || p.email;
-        changed = true;
+    setPlayerNameByEmail((prev) => {
+      const next = { ...prev };
+
+      for (const p of players) {
+        const email = normalizeEmail(p.email);
+        if (!email) continue;
+
+        const fullName = `${p.first_name || ""} ${p.last_name || ""}`.trim();
+        next[email] = fullName || p.email || email;
       }
+
+      return next;
     });
-    if (changed) bump();
-  }, []);
+  }, [players]);
 
-  const fetchMissingEmails = useCallback(async (emails) => {
-    const missing = emails
-      .map(normalize)
-      .filter(e => e && !(e in globalCache) && !pendingFetches.has(e));
+  const ensurePlayerName = useCallback(async (rawEmail) => {
+    const email = normalizeEmail(rawEmail);
+    if (!email) return "";
 
-    if (missing.length === 0) return;
+    if (playerNameByEmail[email]) return playerNameByEmail[email];
+    if (pendingRef.current.has(email)) return "";
 
-    missing.forEach(e => {
-      globalCache[e] = "Loading...";
-      pendingFetches.add(e);
-    });
-    bump();
+    pendingRef.current.add(email);
+    setLoadingEmails((prev) => ({ ...prev, [email]: true }));
 
-    await Promise.all(missing.map(async (email) => {
-      const results = await base44.entities.Player.filter({ email }, "-created_date", 1).catch(() => []);
-      if (results.length > 0) {
-        const p = results[0];
-        globalCache[normalize(p.email)] = `${p.first_name || ""} ${p.last_name || ""}`.trim() || email;
-      } else {
-        globalCache[email] = email;
-      }
-      pendingFetches.delete(email);
-    }));
+    try {
+      const results = await base44.entities.Player.filter({ email });
+      const player = Array.isArray(results) ? results[0] : null;
 
-    bump();
-  }, []);
+      const fullName = player
+        ? `${player.first_name || ""} ${player.last_name || ""}`.trim()
+        : "";
 
-  const getPlayerName = useCallback((email) => {
-    return globalCache[normalize(email)] || email;
-  }, []);
+      setPlayerNameByEmail((prev) => ({
+        ...prev,
+        [email]: fullName || email,
+      }));
 
-  return { seedFromPlayers, fetchMissingEmails, getPlayerName, normalize };
+      return fullName || email;
+    } catch (err) {
+      setPlayerNameByEmail((prev) => ({
+        ...prev,
+        [email]: email,
+      }));
+      return email;
+    } finally {
+      pendingRef.current.delete(email);
+      setLoadingEmails((prev) => {
+        const next = { ...prev };
+        delete next[email];
+        return next;
+      });
+    }
+  }, [playerNameByEmail]);
+
+  const getPlayerName = useCallback(
+    (rawEmail) => {
+      const email = normalizeEmail(rawEmail);
+      if (!email) return "";
+
+      if (playerNameByEmail[email]) return playerNameByEmail[email];
+      if (loadingEmails[email]) return "Loading...";
+
+      return email;
+    },
+    [playerNameByEmail, loadingEmails]
+  );
+
+  return {
+    normalizeEmail,
+    playerNameByEmail,
+    ensurePlayerName,
+    getPlayerName,
+  };
 }
