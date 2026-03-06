@@ -14,13 +14,15 @@ export default function PlayerSignIn() {
   const [currentUser, setCurrentUser] = useState(null);
   const [isDirector, setIsDirector] = useState(false);
 
-  const { seedFromPlayers, fetchMissingEmails, getPlayerName, normalize } = usePlayerNameCache();
+  const [allPlayers, setAllPlayers] = useState([]);
+  const { normalizeEmail, ensurePlayerName, getPlayerName } = usePlayerNameCache(allPlayers);
+  const normalize = normalizeEmail;
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
       const playerEmail = localStorage.getItem("playerEmail");
-      setCurrentUser(playerEmail ? { email: normalize(playerEmail) } : null);
+      setCurrentUser(playerEmail ? { email: normalizeEmail(playerEmail) } : null);
 
       // Check if current player is a director
       if (playerEmail) {
@@ -28,17 +30,17 @@ export default function PlayerSignIn() {
         setIsDirector(directorCheck.length > 0);
       }
 
-      // Seed cache from all players first
-      const allPlayers = await base44.entities.Player.list("-created_date", 500).catch(() => []);
-      seedFromPlayers(allPlayers);
+      // Load all players to seed cache
+      const players = await base44.entities.Player.filter({}, "-created_date", 500).catch(() => []);
+      setAllPlayers(players);
 
       const fetchedSessions = await base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10);
       setSessions(fetchedSessions);
       setIsLoading(false);
 
-      // Fetch any signed-in emails not already in cache
+      // Ensure names for any signed-in emails not in cache
       const allEmails = [...new Set(fetchedSessions.flatMap(s => s.signed_in_players || []))];
-      await fetchMissingEmails(allEmails);
+      allEmails.forEach(email => ensurePlayerName(email));
     }
 
     loadData();
@@ -54,7 +56,7 @@ export default function PlayerSignIn() {
         else updated = prev;
 
         const allEmails = [...new Set(updated.flatMap(s => s.signed_in_players || []))];
-        fetchMissingEmails(allEmails);
+        allEmails.forEach(email => ensurePlayerName(email));
         return updated;
       });
     });
