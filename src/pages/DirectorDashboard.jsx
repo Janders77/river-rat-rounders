@@ -122,10 +122,11 @@ export default function DirectorDashboard() {
 
   const [players, setPlayers] = useState([]);
 
+  const { getPlayerName: getCachedPlayerName } = usePlayerNameCache(players);
+
   const getPlayerData = (email) => {
     const player = players.find(p => p.email?.trim().toLowerCase() === email?.trim().toLowerCase());
     if (!player) return null;
-
     return {
       fullName: `${player.first_name} ${player.last_name}`,
       image: player.profile_picture
