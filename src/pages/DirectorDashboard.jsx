@@ -6,6 +6,7 @@ import { GameSession } from "@/entities/GameSession";
 import { WinnerPhoto } from "@/entities/WinnerPhoto";
 import { InviteRequest } from "@/entities/InviteRequest";
 import { Player } from "@/entities/Player";
+import { usePlayerNameCache } from "@/components/home/usePlayerNameCache";
 import { hasPermission } from "@/components/directorPermissions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
