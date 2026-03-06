@@ -9,6 +9,11 @@ export const buildFullName = (player) =>
 export const buildSearchName = (player) =>
   buildFullName(player).toLowerCase();
 
+export function getPlayerDisplayName(player) {
+  if (!player) return "";
+  return player.full_name || `${player.first_name || ""} ${player.last_name || ""}`.trim() || player.email || "";
+}
+
 export function usePlayerNameCache(players = []) {
   const [playerNameByEmail, setPlayerNameByEmail] = useState({});
   const [loadingEmails, setLoadingEmails] = useState({});
