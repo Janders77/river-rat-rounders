@@ -58,16 +58,16 @@ export function usePlayerNameCache(players = []) {
 
       setPlayerNameByEmail((prev) => ({
         ...prev,
-        [email]: fullName || email,
+        [email]: fullName || "Unknown Player",
       }));
 
-      return fullName || email;
+      return fullName || "Unknown Player";
     } catch (err) {
       setPlayerNameByEmail((prev) => ({
         ...prev,
-        [email]: email,
+        [email]: "Unknown Player",
       }));
-      return email;
+      return "Unknown Player";
     } finally {
       pendingRef.current.delete(email);
       setLoadingEmails((prev) => {
