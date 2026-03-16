@@ -171,24 +171,26 @@ export default function PlayerSignIn() {
 
             {(() => {
               const signedInIds = getSignedInIds(session);
+              const isOpen = openDropdown === session.id;
               return (
-                <>
+                <div className="relative">
                   <button
                     className="flex items-center justify-between w-full px-4 py-2.5 text-sm text-gray-400 hover:text-red-400 hover:bg-gray-800/40 transition-colors"
-                    onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
+                    onClick={() => setOpenDropdown(isOpen ? null : session.id)}
                   >
                     <span className="flex items-center gap-1.5">
                       <Users className="w-4 h-4" />
                       {signedInIds.length} player{signedInIds.length !== 1 ? "s" : ""} signed in
                     </span>
                     {signedInIds.length > 0 && (
-                      expandedSession === session.id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />
+                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
                     )}
                   </button>
-                  {expandedSession === session.id && signedInIds.length > 0 && (
-                    <div className="px-4 pb-3 flex flex-col gap-1.5">
+                  {isOpen && signedInIds.length > 0 && (
+                    <div className="absolute z-50 left-0 right-0 bg-gray-900 border border-gray-700 rounded-b-xl shadow-xl overflow-y-auto"
+                      style={{ maxHeight: "280px" }}>
                       {signedInIds.map((pid, index) => (
-                        <div key={pid} className="flex items-center gap-2 text-sm text-gray-300">
+                        <div key={pid} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 border-b border-gray-800/60 last:border-0 hover:bg-gray-800/40">
                           <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
                           <span className="truncate flex-1">{index + 1}. {getPlayerDisplayName(playersById[pid])}</span>
                           {isDirector && (
@@ -201,7 +203,7 @@ export default function PlayerSignIn() {
                       ))}
                     </div>
                   )}
-                </>
+                </div>
               );
             })()}
 
