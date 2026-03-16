@@ -53,6 +53,8 @@ export default function PlayerSignIn() {
     return () => unsubscribe();
   }, []);
 
+  const playersById = useMemo(() => buildPlayersById(allPlayers), [allPlayers]);
+
   const getSignedInIds = (session) => getEffectiveSignedInIds(session, allPlayers);
 
   const handleSignIn = async (session) => {
@@ -76,7 +78,7 @@ export default function PlayerSignIn() {
 
   const handleRemovePlayer = async (session, pidToRemove) => {
     const currentIds = getSignedInIds(session);
-    const player = getPlayerById(allPlayers, pidToRemove);
+    const player = playersById[pidToRemove];
     await base44.entities.GameSession.update(session.id, {
       signed_in_player_ids: currentIds.filter(id => id !== pidToRemove),
       signed_in_players: (session.signed_in_players || []).filter(e => e !== player?.email)
@@ -162,7 +164,7 @@ export default function PlayerSignIn() {
                       {signedInIds.map((pid, index) => (
                         <div key={pid} className="flex items-center gap-2 text-sm text-gray-300">
                           <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-                          <span className="truncate flex-1">{index + 1}. {getPlayerDisplayName(getPlayerById(allPlayers, pid))}</span>
+                          <span className="truncate flex-1">{index + 1}. {getPlayerDisplayName(playersById[pid])}</span>
                           {isDirector && (
                             <button onClick={() => handleRemovePlayer(session, pid)}
                               className="shrink-0 text-gray-600 hover:text-red-400 transition-colors" title="Remove player">
