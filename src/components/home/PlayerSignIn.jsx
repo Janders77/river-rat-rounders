@@ -158,7 +158,7 @@ export default function PlayerSignIn() {
                   <MapPin className="w-4 h-4 text-red-400 shrink-0" />
                   <span>{session.location}</span>
                 </div>
-                <Badge className="bg-red-700/30 text-red-300 border-red-700/50 text-xs shrink-0 animate-pulse" style={{boxShadow: "0 0 8px rgba(220,38,38,0.6), 0 0 16px rgba(220,38,38,0.3)"}}>Open</Badge>
+                <Badge className="bg-red-700/30 text-red-300 border-red-700/50 text-sm font-bold tracking-widest shrink-0 animate-pulse px-3 py-1" style={{boxShadow: "0 0 8px rgba(220,38,38,0.6), 0 0 16px rgba(220,38,38,0.3)"}}>OPEN</Badge>
               </div>
               <div className="flex items-center gap-3 mt-1.5 text-sm text-gray-400">
                 <span className="flex items-center gap-1.5">
