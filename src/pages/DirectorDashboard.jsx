@@ -168,7 +168,12 @@ export default function DirectorDashboard() {
   };
 
   const getPlayerName = (email) => {
-    return getCachedPlayerName(email) || email || "Loading...";
+    const cached = getCachedPlayerName(email);
+    if (cached && cached !== email) return cached;
+    // Fallback: look up directly in players array
+    const p = players.find(pl => pl.email?.trim().toLowerCase() === email?.trim().toLowerCase());
+    if (p) return `${p.first_name || ""} ${p.last_name || ""}`.trim() || email;
+    return email || "Unknown Player";
   };
 
   const fetchAllPlayers = async () => {
