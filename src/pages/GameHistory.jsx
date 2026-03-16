@@ -135,7 +135,7 @@ export default function GameHistory() {
 
                     <div className="flex items-center gap-2 flex-wrap">
                       {game.players?.slice(0, 5).map((email, index) => {
-                        const player = allPlayers.find(p => p.email === email);
+                        const player = allPlayers.find(p => p.email?.trim().toLowerCase() === email?.trim().toLowerCase());
                         const initials = player
                          ? `${(player.first_name || "")[0] || ""}${(player.last_name || "")[0] || ""}`.toUpperCase()
                          : "?";
