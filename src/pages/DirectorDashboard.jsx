@@ -609,10 +609,10 @@ export default function DirectorDashboard() {
                 <div>
                   <form onSubmit={handleDirectorSignInPlayer} className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-gray-300 text-sm">Search Player</label>
+                      <label className="text-gray-300 text-sm">Search by name or player #</label>
                       <div className="relative">
                         <Input
-                          placeholder="Type 2+ characters to search..."
+                          placeholder="Name or player number..."
                           value={dirSignInSearch}
                           onChange={e => { setDirSignInSearch(e.target.value); if (dirSignInSelectedPlayer) setDirSignInSelectedPlayer(null); }}
                           className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600"
@@ -623,9 +623,9 @@ export default function DirectorDashboard() {
                             <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
                           </div>
                         )}
-                        {!dirSignInSelectedPlayer && !dirSignInSearchLoading && dirSignInSearch.trim().length >= 2 && dirSignInResults.length === 0 && (
+                        {!dirSignInSelectedPlayer && !dirSignInSearchLoading && dirSignInSearch.trim().length >= 1 && dirSignInResults.length === 0 && (
                           <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg p-3 text-gray-500 text-sm text-center">
-                            No players found
+                            {/^\d+$/.test(dirSignInSearch.trim()) ? "No player found for that number" : "No players found"}
                           </div>
                         )}
                         {!dirSignInSelectedPlayer && dirSignInResults.length > 0 && (
@@ -639,6 +639,7 @@ export default function DirectorDashboard() {
                                   setDirSignInResults([]);
                                 }}>
                                 <div className="text-white text-sm font-medium">{p.display_name}</div>
+                                {p.player_number != null && <div className="text-gray-500 text-xs">#{p.player_number}</div>}
                               </button>
                             ))}
                           </div>
