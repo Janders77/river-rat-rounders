@@ -10,6 +10,27 @@ export const buildPlayersById = (players) => {
 export const getPlayerById = (players, id) =>
   id ? players.find(p => p.id === id) || null : null;
 
+// Build a multi-field searchable text string for a player.
+// Covers full_name, first+last, search_name — works even if some fields are blank/stale.
+export const buildPlayerSearchText = (player) => {
+  if (!player) return '';
+  const first = (player.first_name || '').trim().toLowerCase();
+  const last = (player.last_name || '').trim().toLowerCase();
+  const full = (player.full_name || '').trim().toLowerCase();
+  const search = (player.search_name || '').trim().toLowerCase();
+  // Deduplicate into one long string so a single includes() covers everything
+  const parts = new Set([full, `${first} ${last}`.trim(), first, last, search].filter(Boolean));
+  return Array.from(parts).join(' ');
+};
+
+// Returns true if the player matches the given query string.
+export const playerMatchesQuery = (player, query) => {
+  if (!query) return true;
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  return buildPlayerSearchText(player).includes(q);
+};
+
 export const getPlayerByEmail = (players, email) =>
   email ? players.find(p => p.email?.trim().toLowerCase() === email.trim().toLowerCase()) || null : null;
 
