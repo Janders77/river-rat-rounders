@@ -895,30 +895,33 @@ export default function DirectorDashboard() {
           )}
 
           <TabsContent value="history">
-            <Card className="bg-transparent border border-red-500/40">
-              <CardHeader><CardTitle className="text-white">Recent Games</CardTitle></CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {games.map(game => (
-                    <div key={game.id} className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg border border-gray-800">
-                      <div>
-                        <div className="font-medium text-white">{game.game_type}</div>
-                        <div className="text-sm text-gray-400">
-                          {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString() : ''} {game.location && `· ${game.location}`}
-                        </div>
-                        <div className="text-sm text-red-400 mt-1">Winner: {resolveGameWinner(game)}</div>
-                      </div>
-                      <Button size="icon" variant="ghost"
-                        className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
-                        onClick={() => handleDeleteGame(game.id)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  {games.length === 0 && <p className="text-gray-500 text-center py-4">No games recorded yet.</p>}
+            <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
+              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
+                <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+                  <Trophy className="w-5 h-5 text-red-400" />
                 </div>
-              </CardContent>
-            </Card>
+                <h2 className="text-lg font-semibold text-white">Recent Games</h2>
+              </div>
+              <div className="space-y-3">
+                {games.map(game => (
+                  <div key={game.id} className="flex items-center justify-between p-4 bg-gray-900/60 rounded-xl border border-gray-800">
+                    <div>
+                      <div className="font-medium text-white">{game.game_type}</div>
+                      <div className="text-sm text-gray-400">
+                        {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString() : ''} {game.location && `· ${game.location}`}
+                      </div>
+                      <div className="text-sm text-red-400 mt-1">Winner: {resolveGameWinner(game)}</div>
+                    </div>
+                    <Button size="icon" variant="ghost"
+                      className="border border-red-500 text-red-400 hover:bg-red-600/20 rounded-lg"
+                      onClick={() => handleDeleteGame(game.id)}>
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                {games.length === 0 && <p className="text-gray-500 text-center py-4">No games recorded yet.</p>}
+              </div>
+            </div>
           </TabsContent>
 
           {hasPermission(directorRole, "canUploadPhotos") && (
