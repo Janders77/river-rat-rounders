@@ -147,15 +147,22 @@ export default function DirectorDashboard() {
 
   const getPlacementSuggestions = (index) => {
     const q = placementSearches[index]?.trim().toLowerCase();
-    if (!q) return [];
     const session = sessions.find(s => s.id === currentSessionId);
     const signedInEmails = session?.signed_in_players || [];
+    const alreadyPlaced = new Set(placements.filter((p, i) => p && i !== index));
     return players
       .filter(p => {
         if (!signedInEmails.includes(p.email)) return false;
+        if (alreadyPlaced.has(p.email)) return false;
+        if (!q) return true;
         const fullName = `${p.first_name || ""} ${p.last_name || ""}`.trim().toLowerCase();
-        const email = (p.email || "").trim().toLowerCase();
-        return fullName.includes(q) || email.includes(q);
+        return fullName.startsWith(q) || fullName.includes(q);
+      })
+      .sort((a, b) => {
+        if (!q) return `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`);
+        const aName = `${a.first_name || ""} ${a.last_name || ""}`.trim().toLowerCase();
+        const bName = `${b.first_name || ""} ${b.last_name || ""}`.trim().toLowerCase();
+        return (aName.startsWith(q) ? 0 : 1) - (bName.startsWith(q) ? 0 : 1);
       })
       .slice(0, 8);
   };
