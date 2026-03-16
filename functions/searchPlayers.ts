@@ -13,24 +13,41 @@ Deno.serve(async (req) => {
       return Response.json({ players: [] });
     }
 
-    // Search by first_name, last_name, and search_name (normalized lowercase) using regex
-    const [byFirst, byLast, bySearchName] = await Promise.all([
-      base44.asServiceRole.entities.Player.filter(
-        { first_name: { $regex: query, $options: 'i' } }, null, 15
-      ).catch(() => []),
-      base44.asServiceRole.entities.Player.filter(
-        { last_name: { $regex: query, $options: 'i' } }, null, 15
-      ).catch(() => []),
-      base44.asServiceRole.entities.Player.filter(
-        { search_name: { $regex: query.toLowerCase() } }, null, 15
-      ).catch(() => []),
-    ]);
+    const parts = query.split(/\s+/);
+    const hasSpace = parts.length >= 2;
 
-    // Deduplicate and return top 20
+    let queries;
+    if (hasSpace) {
+      const first = parts[0];
+      const rest = parts.slice(1).join(' ');
+      // Support "First Last" and "Last First" orderings
+      queries = [
+        base44.asServiceRole.entities.Player.filter(
+          { first_name: { $regex: first, $options: 'i' }, last_name: { $regex: rest, $options: 'i' } }, null, 20
+        ).catch(() => []),
+        base44.asServiceRole.entities.Player.filter(
+          { first_name: { $regex: rest, $options: 'i' }, last_name: { $regex: first, $options: 'i' } }, null, 20
+        ).catch(() => []),
+      ];
+    } else {
+      // Single-term: match against first_name OR last_name
+      queries = [
+        base44.asServiceRole.entities.Player.filter(
+          { first_name: { $regex: query, $options: 'i' } }, null, 20
+        ).catch(() => []),
+        base44.asServiceRole.entities.Player.filter(
+          { last_name: { $regex: query, $options: 'i' } }, null, 20
+        ).catch(() => []),
+      ];
+    }
+
+    const results = await Promise.all(queries);
+
+    // Deduplicate, build display_name at runtime, sort alphabetically
     const seen = new Set();
     const players = [];
-    for (const p of [...byFirst, ...byLast, ...bySearchName]) {
-      if (!seen.has(p.id) && players.length < 20) {
+    for (const p of results.flat()) {
+      if (!seen.has(p.id)) {
         seen.add(p.id);
         players.push({
           id: p.id,
@@ -42,10 +59,9 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Sort alphabetically by display name
     players.sort((a, b) => a.display_name.localeCompare(b.display_name));
 
-    return Response.json({ players });
+    return Response.json({ players: players.slice(0, 20) });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
