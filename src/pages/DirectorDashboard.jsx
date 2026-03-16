@@ -6,7 +6,8 @@ import { GameSession } from "@/entities/GameSession";
 import { WinnerPhoto } from "@/entities/WinnerPhoto";
 import { InviteRequest } from "@/entities/InviteRequest";
 import { hasPermission } from "@/components/directorPermissions";
-import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, getEffectiveHandOfWeekIds, buildPlayersById, getPlayerNameById, playerMatchesQuery } from "@/utils/playerUtils";
+import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, getEffectiveHandOfWeekIds, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
+import { searchPlayers } from "@/functions/searchPlayers";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -60,7 +61,9 @@ export default function DirectorDashboard() {
   const [dirSignInPassword, setDirSignInPassword] = useState("");
   const [dirSignInStatus, setDirSignInStatus] = useState("");
   const [dirSignInMessage, setDirSignInMessage] = useState("");
-  const [showSignInSuggestions, setShowSignInSuggestions] = useState(false);
+  const [dirSignInSelectedPlayer, setDirSignInSelectedPlayer] = useState(null);
+  const [dirSignInResults, setDirSignInResults] = useState([]);
+  const [dirSignInSearchLoading, setDirSignInSearchLoading] = useState(false);
   const [placementSearches, setPlacementSearches] = useState(Array(9).fill(""));
   const [showPlacementSuggestions, setShowPlacementSuggestions] = useState(Array(9).fill(false));
 
@@ -135,11 +138,19 @@ export default function DirectorDashboard() {
     return () => { unsubSessions(); unsubGames(); unsubInvites(); };
   }, []);
 
-  const filteredSignInSuggestions = useMemo(() => {
+  // Debounced server-backed typeahead for Sign In Player search
+  useEffect(() => {
+    if (dirSignInSelectedPlayer) return;
     const q = dirSignInSearch.trim();
-    if (!q) return [];
-    return players.filter(p => playerMatchesQuery(p, q)).slice(0, 8);
-  }, [dirSignInSearch, players]);
+    if (q.length < 2) { setDirSignInResults([]); return; }
+    const timer = setTimeout(async () => {
+      setDirSignInSearchLoading(true);
+      const res = await searchPlayers({ query: q });
+      setDirSignInResults(res.data?.players || []);
+      setDirSignInSearchLoading(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [dirSignInSearch, dirSignInSelectedPlayer]);
 
   const getPlacementSuggestions = (index) => {
     const q = placementSearches[index]?.trim().toLowerCase();
@@ -152,9 +163,6 @@ export default function DirectorDashboard() {
       })
       .slice(0, 8);
   };
-
-  const fetchAllPlayers = async () =>
-    base44.entities.Player.filter({}, "-player_number", 500, 0);
 
   const loadAll = async () => {
     setIsLoading(true);
@@ -180,20 +188,18 @@ export default function DirectorDashboard() {
     if (!directorRecord) { setIsLoading(false); return; }
 
     setDirectorRole(directorRecord.role);
-    const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests, fetchedPlayers] = await Promise.all([
+    const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
       User.list(),
       Game.list("-created_date", 20),
       GameSession.list("-session_date", 20),
       WinnerPhoto.list("-created_date", 50),
       InviteRequest.filter({ status: "pending" }, "-created_date", 50),
-      fetchAllPlayers()
     ]);
     setUsers(fetchedUsers);
     setGames(fetchedGames);
     setSessions(fetchedSessions);
     setPhotos(fetchedPhotos);
     setInviteRequests(fetchedRequests);
-    setPlayers(fetchedPlayers);
 
     base44.entities.User.subscribe((event) => {
       if (event.type === 'update') setUsers(prev => prev.map(u => u.id === event.id ? event.data : u));
@@ -323,11 +329,10 @@ export default function DirectorDashboard() {
       return;
     }
 
-    // dirSignInSearch holds the selected player's id after picking from dropdown
-    const player = playersById[dirSignInSearch] || getPlayerByEmail(players, dirSignInSearch);
+    const player = dirSignInSelectedPlayer;
     if (!player) {
       setDirSignInStatus("error");
-      setDirSignInMessage("No player found.");
+      setDirSignInMessage("Please select a player from the search dropdown.");
       return;
     }
 
@@ -359,6 +364,8 @@ export default function DirectorDashboard() {
     setDirSignInMessage(`${getPlayerDisplayName(player)} signed in successfully!`);
     setDirSignInSearch("");
     setDirSignInPassword("");
+    setDirSignInSelectedPlayer(null);
+    setDirSignInResults([]);
     setTimeout(() => { setDirSignInStatus(""); setDirSignInMessage(""); }, 3000);
   };
 
@@ -613,32 +620,43 @@ export default function DirectorDashboard() {
                       <label className="text-gray-300 text-sm">Search Player</label>
                       <div className="relative">
                         <Input
-                          placeholder="Search by name..."
+                          placeholder="Type 2+ characters to search..."
                           value={dirSignInSearch}
-                          onChange={e => { setDirSignInSearch(e.target.value); setShowSignInSuggestions(true); }}
-                          onFocus={() => setShowSignInSuggestions(true)}
-                          onBlur={() => setTimeout(() => setShowSignInSuggestions(false), 150)}
+                          onChange={e => { setDirSignInSearch(e.target.value); if (dirSignInSelectedPlayer) setDirSignInSelectedPlayer(null); }}
                           className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600"
-                          required
+                          autoComplete="off"
                         />
-                        {showSignInSuggestions && filteredSignInSuggestions.length > 0 && (
-                          <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg overflow-hidden">
-                            {filteredSignInSuggestions.map(p => (
+                        {dirSignInSearchLoading && (
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                            <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+                          </div>
+                        )}
+                        {!dirSignInSelectedPlayer && !dirSignInSearchLoading && dirSignInSearch.trim().length >= 2 && dirSignInResults.length === 0 && (
+                          <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg p-3 text-gray-500 text-sm text-center">
+                            No players found
+                          </div>
+                        )}
+                        {!dirSignInSelectedPlayer && dirSignInResults.length > 0 && (
+                          <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg overflow-hidden max-h-48 overflow-y-auto">
+                            {dirSignInResults.map(p => (
                               <button key={p.id} type="button"
-                                className="w-full text-left px-3 py-2 hover:bg-gray-800 transition-colors"
+                                className="w-full text-left px-3 py-2 hover:bg-gray-800 transition-colors border-b border-gray-800 last:border-0"
                                 onMouseDown={() => {
-                                  setDirSignInSearch(p.id); // store ID internally
-                                  setShowSignInSuggestions(false);
+                                  setDirSignInSelectedPlayer(p);
+                                  setDirSignInSearch(p.display_name);
+                                  setDirSignInResults([]);
                                 }}>
-                                <div className="text-white text-sm font-medium">{getPlayerDisplayName(p)}</div>
+                                <div className="text-white text-sm font-medium">{p.display_name}</div>
                               </button>
                             ))}
                           </div>
                         )}
-                        {/* Show resolved name if an ID is stored */}
-                        {playersById[dirSignInSearch] && (
-                          <div className="mt-1 text-sm text-green-400 px-1">
-                            Selected: {nameById(dirSignInSearch)}
+                        {dirSignInSelectedPlayer && (
+                          <div className="mt-1 flex items-center justify-between text-sm px-1">
+                            <span className="text-green-400">✓ {dirSignInSelectedPlayer.display_name}</span>
+                            <button type="button" onClick={() => { setDirSignInSelectedPlayer(null); setDirSignInSearch(""); setDirSignInResults([]); }} className="text-gray-500 hover:text-red-400 ml-2">
+                              <X className="w-3.5 h-3.5" />
+                            </button>
                           </div>
                         )}
                       </div>
