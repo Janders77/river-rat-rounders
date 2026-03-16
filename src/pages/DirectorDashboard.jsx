@@ -6,7 +6,7 @@ import { GameSession } from "@/entities/GameSession";
 import { WinnerPhoto } from "@/entities/WinnerPhoto";
 import { InviteRequest } from "@/entities/InviteRequest";
 import { hasPermission } from "@/components/directorPermissions";
-import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, getEffectiveHandOfWeekIds, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
+import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, getEffectiveHandOfWeekIds, buildPlayersById, getPlayerNameById, playerMatchesQuery } from "@/utils/playerUtils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -119,13 +119,9 @@ export default function DirectorDashboard() {
   }, []);
 
   const filteredSignInSuggestions = useMemo(() => {
-    const q = dirSignInSearch.trim().toLowerCase();
+    const q = dirSignInSearch.trim();
     if (!q) return [];
-    return players.filter(p => {
-      const fullName = getPlayerDisplayName(p).toLowerCase();
-      const email = (p.email || "").trim().toLowerCase();
-      return fullName.includes(q) || email.includes(q);
-    }).slice(0, 8);
+    return players.filter(p => playerMatchesQuery(p, q)).slice(0, 8);
   }, [dirSignInSearch, players]);
 
   const getPlacementSuggestions = (index) => {
