@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { getPlayerById, getPlayerByEmail, getPlayerDisplayName } from "@/utils/playerUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy, MapPin, ChevronDown } from "lucide-react";
 import { createPageUrl } from "@/utils";
@@ -121,53 +122,51 @@ export default function Leaderboard() {
     return quarters;
   };
 
-  const getLocationStats = () => {
-    if (!selectedLocation || locationGames.length === 0) return null;
+  // Resolve the winner Player record from a game (id first, then email fallback)
+  const resolveWinnerRecord = (game) => {
+    if (game.winner_player_id) {
+      const p = getPlayerById(playerRecords, game.winner_player_id);
+      if (p) return p;
+    }
+    if (game.winner_email) return getPlayerByEmail(playerRecords, game.winner_email);
+    return null;
+  };
 
+  const buildLocationStats = () => {
+    if (!selectedLocation || locationGames.length === 0) return {};
     const locationStats = {};
-
     locationGames.forEach(game => {
-      if (!locationStats[game.winner_email]) {
-        const playerRecord = playerRecords.find(r => r.email?.trim().toLowerCase() === game.winner_email?.trim().toLowerCase());
-        const playerName = playerRecord ? `${playerRecord.first_name || ""} ${playerRecord.last_name || ""}`.trim() : game.winner_name;
-        locationStats[game.winner_email] = {
-          email: game.winner_email,
-          name: playerName || "Unknown Player",
+      const winnerRecord = resolveWinnerRecord(game);
+      const key = winnerRecord?.id || game.winner_email || "unknown";
+      if (!locationStats[key]) {
+        locationStats[key] = {
+          id: winnerRecord?.id || null,
+          email: winnerRecord?.email || game.winner_email || null,
+          name: winnerRecord ? getPlayerDisplayName(winnerRecord) : (game.winner_name || "Unknown Player"),
+          image: winnerRecord?.profile_picture || null,
           points: 0,
           wins: 0
         };
       }
-      locationStats[game.winner_email].points += game.points_awarded || 0;
-      locationStats[game.winner_email].wins += 1;
+      locationStats[key].points += game.points_awarded || 0;
+      locationStats[key].wins += 1;
     });
+    return locationStats;
+  };
 
+  const getLocationStats = () => {
+    const locationStats = buildLocationStats();
+    if (Object.keys(locationStats).length === 0) return null;
     const stats = Object.values(locationStats);
-    const mostPoints = [...stats].sort((a, b) => b.points - a.points)[0];
-    const mostWins = [...stats].sort((a, b) => b.wins - a.wins)[0];
-
-    return { mostPoints, mostWins, allStats: stats };
+    return {
+      mostPoints: [...stats].sort((a, b) => b.points - a.points)[0],
+      mostWins: [...stats].sort((a, b) => b.wins - a.wins)[0],
+      allStats: stats
+    };
   };
 
   const getLocationLeaderboard = () => {
-    if (!selectedLocation || locationGames.length === 0) return [];
-
-    const locationStats = {};
-
-    locationGames.forEach(game => {
-      if (!locationStats[game.winner_email]) {
-        const playerRecord = playerRecords.find(r => r.email?.trim().toLowerCase() === game.winner_email?.trim().toLowerCase());
-        const playerName = playerRecord ? `${playerRecord.first_name || ""} ${playerRecord.last_name || ""}`.trim() : game.winner_name;
-        locationStats[game.winner_email] = {
-          email: game.winner_email,
-          name: playerName || "Unknown Player",
-          points: 0,
-          wins: 0
-        };
-      }
-      locationStats[game.winner_email].points += game.points_awarded || 0;
-      locationStats[game.winner_email].wins += 1;
-    });
-
+    const locationStats = buildLocationStats();
     return Object.values(locationStats).sort((a, b) => b.points - a.points);
   };
 
