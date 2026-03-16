@@ -346,7 +346,7 @@ export default function DirectorDashboard() {
     const currentIds = openSession.signed_in_player_ids || [];
     if (currentIds.includes(player.id)) {
       setDirSignInStatus("error");
-      setDirSignInMessage(`${getPlayerDisplayName(player)} is already signed in.`);
+      setDirSignInMessage(`${player.display_name} is already signed in.`);
       return;
     }
 
@@ -361,7 +361,7 @@ export default function DirectorDashboard() {
       : s));
 
     setDirSignInStatus("success");
-    setDirSignInMessage(`${getPlayerDisplayName(player)} signed in successfully!`);
+    setDirSignInMessage(`${player.display_name} signed in successfully!`);
     setDirSignInSearch("");
     setDirSignInPassword("");
     setDirSignInSelectedPlayer(null);
