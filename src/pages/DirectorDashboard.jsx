@@ -69,6 +69,23 @@ export default function DirectorDashboard() {
   // Helper: get name from player ID
   const nameById = (id) => getPlayerDisplayName(playersById[id]);
 
+  // Fetch any player IDs that are signed in but not yet in our local players array
+  useEffect(() => {
+    const openSession = sessions.find(s => s.is_open);
+    if (!openSession) return;
+    const ids = getEffectiveSignedInIds(openSession, players);
+    const missingIds = ids.filter(id => !playersById[id]);
+    if (missingIds.length === 0) return;
+    Promise.all(missingIds.map(id => base44.entities.Player.filter({ id }).catch(() => [])))
+      .then(results => {
+        const fetched = results.flat().filter(Boolean);
+        if (fetched.length > 0) setPlayers(prev => {
+          const existingIds = new Set(prev.map(p => p.id));
+          return [...prev, ...fetched.filter(p => !existingIds.has(p.id))];
+        });
+      });
+  }, [sessions, playersById]);
+
   // Precomputed index of signed-in players for the open session — rebuilt only when session/players change
   const signedInSearchIndex = useMemo(() => {
     const openSession = sessions.find(s => s.is_open);
@@ -76,8 +93,8 @@ export default function DirectorDashboard() {
     return ids
       .map(id => {
         const p = playersById[id];
-        if (!p) return null;
-        const displayName = getPlayerDisplayName(p);
+        const displayName = p ? getPlayerDisplayName(p) : null;
+        if (!displayName) return null;
         return { id, displayName, searchText: displayName.toLowerCase() };
       })
       .filter(Boolean)
