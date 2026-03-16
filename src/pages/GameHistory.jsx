@@ -29,9 +29,9 @@ export default function GameHistory() {
   };
 
   const getPlayerName = (email) => {
-    const player = allPlayers.find(p => p.email === email);
-    if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim();
-    return "Unknown Player";
+    const player = allPlayers.find(p => p.email?.trim().toLowerCase() === email?.trim().toLowerCase());
+    if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim() || email;
+    return email || "Unknown Player";
   };
 
   const venues = [...new Set(games.map(g => g.location).filter(Boolean))];
