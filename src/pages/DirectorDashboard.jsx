@@ -69,6 +69,21 @@ export default function DirectorDashboard() {
   // Helper: get name from player ID
   const nameById = (id) => getPlayerDisplayName(playersById[id]);
 
+  // Precomputed index of signed-in players for the open session — rebuilt only when session/players change
+  const signedInSearchIndex = useMemo(() => {
+    const openSession = sessions.find(s => s.is_open);
+    const ids = getEffectiveSignedInIds(openSession || {}, players);
+    return ids
+      .map(id => {
+        const p = playersById[id];
+        if (!p) return null;
+        const displayName = getPlayerDisplayName(p);
+        return { id, displayName, searchText: displayName.toLowerCase() };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+  }, [sessions, playersById, players]);
+
   useEffect(() => { loadAll(); }, []);
 
   useEffect(() => {
@@ -115,17 +130,13 @@ export default function DirectorDashboard() {
 
   const getPlacementSuggestions = (index) => {
     const q = placementSearches[index]?.trim().toLowerCase();
-    const session = sessions.find(s => s.id === currentSessionId);
-    const signedInIds = getEffectiveSignedInIds(session || {}, players);
     const alreadyPlaced = new Set(placements.filter((p, i) => p && i !== index));
-    return players
-      .filter(p => {
-        if (!signedInIds.includes(p.id)) return false;
-        if (alreadyPlaced.has(p.id)) return false;
+    return signedInSearchIndex
+      .filter(entry => {
+        if (alreadyPlaced.has(entry.id)) return false;
         if (!q) return true;
-        return getPlayerDisplayName(p).toLowerCase().includes(q);
+        return entry.searchText.includes(q);
       })
-      .sort((a, b) => getPlayerDisplayName(a).localeCompare(getPlayerDisplayName(b)))
       .slice(0, 8);
   };
 
