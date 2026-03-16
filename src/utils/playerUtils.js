@@ -1,5 +1,16 @@
 // Primary player resolution helpers — all relationships use player.id, never email
 
+// Build O(1) lookup map from player id → player
+export const buildPlayersById = (players) => {
+  const map = {};
+  for (const p of players) { if (p.id) map[p.id] = p; }
+  return map;
+};
+
+// Fast name lookup using pre-built map
+export const getPlayerNameById = (playerId, playersById) =>
+  getPlayerDisplayName(playersById?.[playerId] || null);
+
 export const getPlayerById = (players, id) =>
   id ? players.find(p => p.id === id) || null : null;
 
