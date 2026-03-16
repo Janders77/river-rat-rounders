@@ -1,9 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-
-function getQuarterFromString(quarterStr) {
-  const [year, q] = quarterStr.split('-Q');
-  return { year: parseInt(year), quarter: parseInt(q) };
-}
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 Deno.serve(async (req) => {
   try {
@@ -16,59 +11,61 @@ Deno.serve(async (req) => {
 
     const { quarter } = await req.json();
 
-    // Get all quarterly stats for this quarter
     const stats = await base44.asServiceRole.entities.QuarterlyStats.filter({ quarter });
 
     if (stats.length === 0) {
       return Response.json({ error: 'No stats found for this quarter' }, { status: 400 });
     }
 
-    // Resolve all player names from Player records
     const allPlayers = await base44.asServiceRole.entities.Player.list();
-    const resolvePlayerName = (email) => {
-      const p = allPlayers.find(pl => pl.email?.trim().toLowerCase() === email?.trim().toLowerCase());
-      return p ? `${p.first_name || ''} ${p.last_name || ''}`.trim() : email;
+
+    // Resolve a player record from a stat entry (player_id first, then email fallback)
+    const resolvePlayer = (stat) => {
+      if (stat.player_id) {
+        const p = allPlayers.find(pl => pl.id === stat.player_id);
+        if (p) return p;
+      }
+      if (stat.player_email) {
+        return allPlayers.find(pl => pl.email?.trim().toLowerCase() === stat.player_email?.trim().toLowerCase()) || null;
+      }
+      return null;
     };
 
-    // Find the player with most points and most wins
-    const mostPointsPlayer = stats.reduce((prev, current) =>
-      (prev.points || 0) > (current.points || 0) ? prev : current
-    );
+    const getDisplayName = (player, fallbackEmail) => {
+      if (!player) return fallbackEmail || 'Unknown';
+      return `${player.first_name || ''} ${player.last_name || ''}`.trim() || fallbackEmail || 'Unknown';
+    };
 
-    const mostWinsPlayer = stats.reduce((prev, current) =>
-      (prev.wins || 0) > (current.wins || 0) ? prev : current
-    );
+    const mostPointsStat = stats.reduce((prev, cur) => (prev.points || 0) > (cur.points || 0) ? prev : cur);
+    const mostWinsStat = stats.reduce((prev, cur) => (prev.wins || 0) > (cur.wins || 0) ? prev : cur);
 
-    const mostPointsName = resolvePlayerName(mostPointsPlayer.player_email);
-    const mostWinsName = resolvePlayerName(mostWinsPlayer.player_email);
+    const mostPointsPlayer = resolvePlayer(mostPointsStat);
+    const mostWinsPlayer = resolvePlayer(mostWinsStat);
 
-    // Create or update quarterly record
+    const mostPointsName = getDisplayName(mostPointsPlayer, mostPointsStat.player_email);
+    const mostWinsName = getDisplayName(mostWinsPlayer, mostWinsStat.player_email);
+
+    const recordData = {
+      most_points_player_id: mostPointsPlayer?.id || null,
+      most_points_player_email: mostPointsPlayer?.email || mostPointsStat.player_email,
+      most_points_player_name: mostPointsName,
+      most_points_total: mostPointsStat.points,
+      most_wins_player_id: mostWinsPlayer?.id || null,
+      most_wins_player_email: mostWinsPlayer?.email || mostWinsStat.player_email,
+      most_wins_player_name: mostWinsName,
+      most_wins_total: mostWinsStat.wins,
+      completed: true
+    };
+
     const existingRecord = await base44.asServiceRole.entities.QuarterlyRecord.filter({ quarter });
 
     if (existingRecord.length > 0) {
-      await base44.asServiceRole.entities.QuarterlyRecord.update(existingRecord[0].id, {
-        most_points_player_email: mostPointsPlayer.player_email,
-        most_points_player_name: mostPointsName,
-        most_points_total: mostPointsPlayer.points,
-        most_wins_player_email: mostWinsPlayer.player_email,
-        most_wins_player_name: mostWinsName,
-        most_wins_total: mostWinsPlayer.wins,
-        completed: true
-      });
+      await base44.asServiceRole.entities.QuarterlyRecord.update(existingRecord[0].id, recordData);
     } else {
-      await base44.asServiceRole.entities.QuarterlyRecord.create({
-        quarter,
-        most_points_player_email: mostPointsPlayer.player_email,
-        most_points_player_name: mostPointsName,
-        most_points_total: mostPointsPlayer.points,
-        most_wins_player_email: mostWinsPlayer.player_email,
-        most_wins_player_name: mostWinsName,
-        most_wins_total: mostWinsPlayer.wins,
-        completed: true
-      });
+      await base44.asServiceRole.entities.QuarterlyRecord.create({ quarter, ...recordData });
     }
 
-    return Response.json({ success: true, quarter, winners: { mostPointsPlayer, mostWinsPlayer } });
+    return Response.json({ success: true, quarter, mostPointsName, mostWinsName });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
