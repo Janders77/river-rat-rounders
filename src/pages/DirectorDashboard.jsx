@@ -460,7 +460,7 @@ export default function DirectorDashboard() {
                                   onValueChange={async (pid) => {
                                     if (pid === "__none__") return;
                                     if (handIds.includes(pid)) return;
-                                    const playerRecord = getPlayerById(players, pid);
+                                    const playerRecord = playersById[pid];
                                     const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
                                     if (user) {
                                       await base44.entities.User.update(user.id, { total_points: (user.total_points || 0) + 50 });
@@ -490,7 +490,7 @@ export default function DirectorDashboard() {
                                       <span key={pid} className="flex items-center gap-1 bg-red-900/40 border border-red-700 text-red-300 text-xs rounded-full px-2 py-0.5">
                                         {nameById(pid)}
                                         <button onClick={async () => {
-                                          const playerRecord = getPlayerById(players, pid);
+                                          const playerRecord = playersById[pid];
                                           const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
                                           if (user) {
                                             await base44.entities.User.update(user.id, { total_points: Math.max(0, (user.total_points || 0) - 50) });
@@ -601,7 +601,7 @@ export default function DirectorDashboard() {
                           </div>
                         )}
                         {/* Show resolved name if an ID is stored */}
-                        {getPlayerById(players, dirSignInSearch) && (
+                        {playersById[dirSignInSearch] && (
                           <div className="mt-1 text-sm text-green-400 px-1">
                             Selected: {nameById(dirSignInSearch)}
                           </div>
@@ -820,7 +820,7 @@ export default function DirectorDashboard() {
                     if (!openSession) return <p className="text-gray-500 text-center py-4">No open game session.</p>;
                     const signedInIds = getEffectiveSignedInIds(openSession, players);
                     if (signedInIds.length === 0) return <p className="text-gray-500 text-center py-4">No players have signed in yet.</p>;
-                    const signedInPlayers = signedInIds.map(id => getPlayerById(players, id)).filter(Boolean);
+                    const signedInPlayers = signedInIds.map(id => playersById[id]).filter(Boolean);
                     const filtered = signedInPlayers.filter(p =>
                       !playerSearch || getPlayerDisplayName(p).toLowerCase().includes(playerSearch.toLowerCase())
                     );
