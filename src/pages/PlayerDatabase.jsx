@@ -155,16 +155,15 @@ export default function PlayerDatabase() {
   );
 
   return (
-    <div className="min-h-screen p-1 sm:p-6 w-full overflow-x-hidden box-border" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="w-full max-w-2xl mx-auto overflow-x-hidden box-border">
+    <div className="min-h-screen p-1 sm:p-6 w-full overflow-x-hidden box-border relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
+      <div className="w-full max-w-2xl mx-auto overflow-x-hidden box-border relative">
         {/* Header */}
-        <div className="mb-4 flex items-center justify-between gap-2 w-full">
-          <div className="flex items-center gap-2 min-w-0">
-            <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/34ac77100_red2012-2.jpg"
-              alt="River Rat Rounders"
-              className="w-9 h-9 rounded-full object-cover shrink-0"
-            />
+        <div className="mb-6 flex items-center justify-between gap-2 w-full">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+              <Users className="w-5 h-5 text-red-400" />
+            </div>
             <div className="min-w-0">
               <h1 className="text-lg font-bold text-white leading-tight">Player Database</h1>
               <p className="text-gray-400 text-xs">{totalCount ?? players.length} players</p>
@@ -174,7 +173,7 @@ export default function PlayerDatabase() {
             <Button
               variant="outline"
               size="sm"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800 px-2"
+              className="border-gray-700 text-gray-300 hover:bg-gray-800 rounded-lg px-3"
               onClick={() => fileInputRef.current.click()}
             >
               <Upload className="w-4 h-4" />
@@ -183,7 +182,7 @@ export default function PlayerDatabase() {
             <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={handleCSV} />
             <Button
               size="sm"
-              className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2"
+              className="bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-3"
               onClick={() => setShowForm(!showForm)}
             >
               <UserPlus className="w-4 h-4" />
@@ -198,77 +197,56 @@ export default function PlayerDatabase() {
 
         {/* Add Player Form */}
         {showForm && (
-          <Card className="bg-gray-900/60 border-gray-700 mb-4">
-            <CardHeader>
-              <CardTitle className="text-white text-base">New Player</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleAdd} className="space-y-3">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  <Input
-                    placeholder="# (number)"
-                    type="number"
-                    value={form.player_number}
-                    onChange={e => setForm(f => ({ ...f, player_number: e.target.value }))}
-                    className="bg-gray-900 border-gray-700 text-white col-span-2 sm:col-span-1"
-                  />
-                  <Input
-                    placeholder="First name"
-                    value={form.first_name}
-                    onChange={e => setForm(f => ({ ...f, first_name: e.target.value }))}
-                    className="bg-gray-900 border-gray-700 text-white"
-                    required
-                  />
-                  <Input
-                    placeholder="Last name"
-                    value={form.last_name}
-                    onChange={e => setForm(f => ({ ...f, last_name: e.target.value }))}
-                    className="bg-gray-900 border-gray-700 text-white"
-                  />
-                </div>
-                <Input
-                  type="email"
-                  placeholder="Email"
-                  value={form.email}
-                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="bg-gray-900 border-gray-700 text-white"
-                  required
-                />
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Card guards"
-                    type="number"
-                    value={form.card_guards}
-                    onChange={e => setForm(f => ({ ...f, card_guards: e.target.value }))}
-                    className="bg-gray-900 border-gray-700 text-white"
-                  />
-                  <Input
-                    placeholder="Date joined"
-                    type="date"
-                    value={form.date_joined}
-                    onChange={e => setForm(f => ({ ...f, date_joined: e.target.value }))}
-                    className="bg-gray-900 border-gray-700 text-white"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="flex-1 border-gray-700 text-gray-400">Cancel</Button>
-                  <Button type="submit" disabled={adding} className="flex-1 bg-amber-500 hover:bg-amber-600 text-black font-semibold">
-                    {adding ? "Adding..." : "Add Player"}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+          <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 mb-6 transition hover:border-gray-700 hover:bg-gray-900/60">
+            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
+              <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+                <UserPlus className="w-5 h-5 text-red-400" />
+              </div>
+              <h2 className="text-lg font-semibold text-white">New Player</h2>
+            </div>
+            <form onSubmit={handleAdd} className="space-y-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <Input placeholder="# (number)" type="number" value={form.player_number}
+                  onChange={e => setForm(f => ({ ...f, player_number: e.target.value }))}
+                  className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600 col-span-2 sm:col-span-1" />
+                <Input placeholder="First name" value={form.first_name}
+                  onChange={e => setForm(f => ({ ...f, first_name: e.target.value }))}
+                  className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600" required />
+                <Input placeholder="Last name" value={form.last_name}
+                  onChange={e => setForm(f => ({ ...f, last_name: e.target.value }))}
+                  className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600" />
+              </div>
+              <Input type="email" placeholder="Email" value={form.email}
+                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600" required />
+              <div className="flex gap-2">
+                <Input placeholder="Card guards" type="number" value={form.card_guards}
+                  onChange={e => setForm(f => ({ ...f, card_guards: e.target.value }))}
+                  className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600" />
+                <Input placeholder="Date joined" type="date" value={form.date_joined}
+                  onChange={e => setForm(f => ({ ...f, date_joined: e.target.value }))}
+                  className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600 [color-scheme:dark]" />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button type="button" onClick={() => setShowForm(false)}
+                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg px-4 py-2">Cancel</Button>
+                <Button type="submit" disabled={adding}
+                  className="flex-1 bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-4 py-2">
+                  {adding ? "Adding..." : "Add Player"}
+                </Button>
+              </div>
+            </form>
+          </div>
         )}
 
         {/* Search */}
-        <div className="relative mb-4">
+        <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
           <Input
             placeholder="Search players..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="bg-gray-900 border-gray-700 text-white pl-9"
+            className="bg-gray-900 border-gray-800 text-white pl-9 rounded-lg focus:ring-2 focus:ring-red-600"
           />
         </div>
 

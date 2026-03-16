@@ -48,9 +48,12 @@ export default function Home() {
     setLoading(false);
   };
 
+  const bgStyle = {background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"};
+  const radialGlow = {background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"};
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="min-h-screen flex items-center justify-center" style={bgStyle}>
         <div className="text-gray-400">Loading...</div>
       </div>
     );
@@ -58,8 +61,9 @@ export default function Home() {
 
   if (loggedInPlayer) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-        <div className="max-w-lg w-full">
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 relative" style={bgStyle}>
+        <div className="absolute inset-0 pointer-events-none" style={radialGlow} />
+        <div className="max-w-lg w-full relative">
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/8de2d69e1_ChatGPTImageMar2202603_07_22PM.png"
             alt="River Rat Rounders"
@@ -68,34 +72,27 @@ export default function Home() {
           <div className="space-y-6">
             <PlayerSignIn />
 
-            <Link
-              to={createPageUrl("JoinTheLeague")}
-              className={cardClass}
-            >
-              <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
-                <UserPlus className="w-6 h-6 text-red-400" />
+            <Link to={createPageUrl("JoinTheLeague")} className={cardClass}>
+              <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+                <UserPlus className="w-5 h-5 text-red-400" />
               </div>
               <div className="text-left">
-                <div className="font-semibold text-white text-lg">Join the League</div>
+                <div className="font-semibold text-white text-base">Join the League</div>
                 <div className="text-gray-400 text-sm">Pay your dues and join the action</div>
               </div>
             </Link>
 
             {navLinks.map((link) => (
-              <Link
-                key={link.title}
-                to={link.url}
-                className={cardClass}
-              >
-                <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+              <Link key={link.title} to={link.url} className={cardClass}>
+                <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
                   {link.image ? (
-                    <img src={link.image} alt={link.title} className="w-10 h-10 object-contain" />
+                    <img src={link.image} alt={link.title} className="w-8 h-8 object-contain" />
                   ) : (
-                    <link.icon className={`w-6 h-6 ${link.iconColor}`} />
+                    <link.icon className={`w-5 h-5 ${link.iconColor}`} />
                   )}
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-white text-lg group-hover:text-white">{link.title}</div>
+                  <div className="font-semibold text-white text-base group-hover:text-white">{link.title}</div>
                   <div className="text-gray-400 text-sm">{link.description}</div>
                 </div>
               </Link>
@@ -109,8 +106,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="max-w-lg w-full text-center mb-12">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative" style={bgStyle}>
+      <div className="absolute inset-0 pointer-events-none" style={radialGlow} />
+      <div className="max-w-lg w-full text-center mb-12 relative">
         <img
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/8de2d69e1_ChatGPTImageMar2202603_07_22PM.png"
           alt="River Rat Rounders"
@@ -119,7 +117,7 @@ export default function Home() {
         <p className="text-gray-400 text-lg">Memphis' Freeroll Bar Poker League</p>
       </div>
 
-      <div className="max-w-lg w-full mb-8">
+      <div className="max-w-lg w-full mb-8 relative">
         <LoginCard onLoginSuccess={() => checkLoginStatus()} />
       </div>
     </div>

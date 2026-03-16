@@ -16,15 +16,16 @@ export default function WinnersGallery() {
   }, []);
 
   return (
-    <div className="min-h-screen p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen p-6 relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
+      <div className="max-w-5xl mx-auto relative">
         <div className="mb-8 flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-red-700 to-red-900 rounded-xl flex items-center justify-center shadow-lg">
-            <Trophy className="w-7 h-7 text-white" />
+          <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+            <Trophy className="w-5 h-5 text-red-400" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white">Winners Gallery</h1>
-            <p className="text-gray-400">Celebrating our champions</p>
+            <h1 className="text-2xl font-bold text-white">Winners Gallery</h1>
+            <p className="text-gray-400 text-sm">Celebrating our champions</p>
           </div>
         </div>
 
