@@ -81,8 +81,10 @@ export default function Leaderboard() {
 
 
 
-  const getQuarterlyStats = (playerEmail) => {
-    const stat = quarterlyStats.find(s => s.player_email === playerEmail);
+  const getQuarterlyStats = (player) => {
+    // Try by player_id first, fall back to email
+    let stat = quarterlyStats.find(s => s.player_id && s.player_id === player.id);
+    if (!stat) stat = quarterlyStats.find(s => s.player_email?.trim().toLowerCase() === player.email?.trim().toLowerCase());
     return stat || { points: 0, wins: 0 };
   };
 
@@ -90,8 +92,8 @@ export default function Leaderboard() {
     return players
       .map(player => ({
         ...player,
-        quarterlyPoints: getQuarterlyStats(player.email).points,
-        quarterlyWins: getQuarterlyStats(player.email).wins
+        quarterlyPoints: getQuarterlyStats(player).points,
+        quarterlyWins: getQuarterlyStats(player).wins
       }))
       .filter(player => player.quarterlyPoints > 0 || player.quarterlyWins > 0)
       .sort((a, b) => b.quarterlyPoints - a.quarterlyPoints)
