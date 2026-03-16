@@ -263,30 +263,27 @@ export default function Leaderboard() {
                    ) : null;
                  })()}
                  {getLocationLeaderboard().length > 0 ? (
-                   getLocationLeaderboard().map((stat, index) => (
-                     <Link
-                       key={stat.email}
-                       to={`${createPageUrl("PlayerProfile")}?email=${stat.email}`}
-                       className="glass-link flex items-center justify-between p-4 rounded-lg border border-gray-800 hover:border-red-500/50 transition-all group"
-                       >
-                       <div className="flex items-center gap-4 flex-1">
-                         <div className="w-8 h-8 bg-gradient-to-br from-red-700 to-red-900 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 min-w-8">
-                           {index + 1}
-                         </div>
-                         {(() => {
-                           const playerData = getPlayerData(stat.email);
-                           return playerData?.image ? (
-                             <img src={playerData.image} alt={playerData.fullName} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
-                           ) : (
-                             <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
-                               {playerData?.fullName?.[0]}
-                             </div>
-                           );
-                         })()}
-                         <div className="text-white font-medium group-hover:text-red-400 transition-colors">
-                           {stat.name}
-                         </div>
-                       </div>
+                  getLocationLeaderboard().map((stat, index) => (
+                    <Link
+                      key={stat.id || stat.email}
+                      to={`${createPageUrl("PlayerProfile")}?email=${stat.email}`}
+                      className="glass-link flex items-center justify-between p-4 rounded-lg border border-gray-800 hover:border-red-500/50 transition-all group"
+                      >
+                      <div className="flex items-center gap-4 flex-1">
+                        <div className="w-8 h-8 bg-gradient-to-br from-red-700 to-red-900 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 min-w-8">
+                          {index + 1}
+                        </div>
+                        {stat.image ? (
+                          <img src={stat.image} alt={stat.name} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
+                            {stat.name?.[0]}
+                          </div>
+                        )}
+                        <div className="text-white font-medium group-hover:text-red-400 transition-colors">
+                          {stat.name}
+                        </div>
+                      </div>
                        <div className="flex items-center gap-6 text-sm">
                           <div className="text-right">
                             <div className="text-gray-400 text-xs">Wins</div>
