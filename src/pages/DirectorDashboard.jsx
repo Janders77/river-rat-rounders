@@ -748,19 +748,18 @@ export default function DirectorDashboard() {
                       ))}
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-gray-300">Notes (Optional)</Label>
-                    <Textarea value={gameData.notes}
-                      onChange={e => setGameData({...gameData, notes: e.target.value})}
-                      className="bg-gray-900 border-gray-700 text-white h-20"
-                      placeholder="Any notes about the game..." />
-                  </div>
-                  <Button type="submit" disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
-                    {isSubmitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Recording...</> : <><Trophy className="w-4 h-4 mr-2" />Record Game</>}
-                  </Button>
-                </CardContent>
-              </Card>
+                <div className="space-y-2">
+                  <Label className="text-gray-300">Notes (Optional)</Label>
+                  <Textarea value={gameData.notes}
+                    onChange={e => setGameData({...gameData, notes: e.target.value})}
+                    className="bg-gray-900 border-gray-800 text-white h-20 rounded-lg"
+                    placeholder="Any notes about the game..." />
+                </div>
+                <Button type="submit" disabled={isSubmitting}
+                  className="w-full bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-4 py-2">
+                  {isSubmitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Recording...</> : <><Trophy className="w-4 h-4 mr-2" />Record Game</>}
+                </Button>
+              </div>
             </form>
             )}
           </TabsContent>
