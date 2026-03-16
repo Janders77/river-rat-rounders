@@ -41,16 +41,18 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, quarter: currentQuarter, already_recorded: true });
     }
 
-    const winner = await base44.entities.Player.filter({ email: winner_email });
-    if (!winner?.length) {
+    const winnerRecords = await base44.entities.Player.filter({ email: winner_email });
+    if (!winnerRecords?.length) {
       return Response.json({ error: 'Player does not exist for winner_email' }, { status: 400 });
     }
+    const winnerPlayer = winnerRecords[0];
+    const resolvedName = `${winnerPlayer.first_name || ''} ${winnerPlayer.last_name || ''}`.trim() || winner_email;
 
     await base44.entities.Game.create({
       result_id,
       quarter: currentQuarter,
       winner_email,
-      winner_name: winner_name || winner_email,
+      winner_name: resolvedName,
       points_awarded,
       recorded_by: (user as any).email ?? (user as any).id ?? 'unknown',
     });
@@ -62,6 +64,7 @@ Deno.serve(async (req) => {
 
     if (stats.length > 0) {
       await base44.entities.QuarterlyStats.update(stats[0].id, {
+        player_name: resolvedName,
         points: (stats[0].points || 0) + points_awarded,
         wins: (stats[0].wins || 0) + 1,
       });
@@ -69,7 +72,7 @@ Deno.serve(async (req) => {
       await base44.entities.QuarterlyStats.create({
         quarter: currentQuarter,
         player_email: winner_email,
-        player_name: winner_name || winner_email,
+        player_name: resolvedName,
         points: points_awarded,
         wins: 1,
       });
