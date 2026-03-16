@@ -487,11 +487,10 @@ export default function DirectorDashboard() {
                                   </SelectTrigger>
                                   <SelectContent className="bg-gray-900 border-gray-700">
                                     <SelectItem value="__none__" disabled className="text-gray-500">Add player...</SelectItem>
-                                    {players
-                                      .filter(p => signedInIds.includes(p.id) && !handIds.includes(p.id))
-                                      .sort((a, b) => getPlayerDisplayName(a).localeCompare(getPlayerDisplayName(b)))
-                                      .map(p => (
-                                        <SelectItem key={p.id} value={p.id} className="text-white">{getPlayerDisplayName(p)}</SelectItem>
+                                    {signedInSearchIndex
+                                      .filter(entry => !handIds.includes(entry.id))
+                                      .map(entry => (
+                                        <SelectItem key={entry.id} value={entry.id} className="text-white">{entry.displayName}</SelectItem>
                                       ))}
                                   </SelectContent>
                                 </Select>
@@ -702,17 +701,17 @@ export default function DirectorDashboard() {
                             )}
                             {showPlacementSuggestions[i] && !placements[i] && getPlacementSuggestions(i).length > 0 && (
                               <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg overflow-hidden">
-                                {getPlacementSuggestions(i).map(p => (
-                                  <button key={p.id} type="button"
+                                {getPlacementSuggestions(i).map(entry => (
+                                  <button key={entry.id} type="button"
                                     className="w-full text-left px-3 py-2 hover:bg-gray-800 transition-colors"
                                     onMouseDown={() => {
                                       const u = [...placements];
-                                      for (let j = 0; j < u.length; j++) { if (u[j] === p.id) u[j] = ""; }
-                                      u[i] = p.id; setPlacements(u);
+                                      for (let j = 0; j < u.length; j++) { if (u[j] === entry.id) u[j] = ""; }
+                                      u[i] = entry.id; setPlacements(u);
                                       const s = [...placementSearches]; s[i] = ""; setPlacementSearches(s);
                                       const v = [...showPlacementSuggestions]; v[i] = false; setShowPlacementSuggestions(v);
                                     }}>
-                                    <span className="text-white text-sm">{getPlayerDisplayName(p)}</span>
+                                    <span className="text-white text-sm">{entry.displayName}</span>
                                   </button>
                                 ))}
                               </div>
