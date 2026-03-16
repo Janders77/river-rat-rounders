@@ -11,7 +11,7 @@ export default function PlayerSignIn() {
   const [sessions, setSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [signingIn, setSigningIn] = useState(null);
-  const [expandedSession, setExpandedSession] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(null);
   const [currentPlayerId, setCurrentPlayerId] = useState(null);
   const [isDirector, setIsDirector] = useState(false);
   const [allPlayers, setAllPlayers] = useState([]);
