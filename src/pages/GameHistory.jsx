@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Game } from "@/entities/Game";
 import { Player } from "@/entities/Player";
+import { getPlayerById, getPlayerByEmail, getPlayerDisplayName } from "@/utils/playerUtils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { History, Trophy, Clock, DollarSign, Filter, MapPin } from "lucide-react";
@@ -28,10 +29,24 @@ export default function GameHistory() {
     setIsLoading(false);
   };
 
-  const getPlayerName = (email) => {
-    const player = allPlayers.find(p => p.email?.trim().toLowerCase() === email?.trim().toLowerCase());
-    if (player) return `${player.first_name || ""} ${player.last_name || ""}`.trim() || "Unknown Player";
-    return "Unknown Player";
+  // Resolve player name from ID (primary) or email (legacy fallback)
+  const resolveWinner = (game) => {
+    if (game.winner_player_id) {
+      const p = getPlayerById(allPlayers, game.winner_player_id);
+      if (p) return getPlayerDisplayName(p);
+    }
+    if (game.winner_email) {
+      const p = getPlayerByEmail(allPlayers, game.winner_email);
+      if (p) return getPlayerDisplayName(p);
+    }
+    return game.winner_name || "Unknown Player";
+  };
+
+  const resolveParticipant = (idOrEmail) => {
+    // Try as id first, then email
+    const byId = getPlayerById(allPlayers, idOrEmail);
+    if (byId) return byId;
+    return getPlayerByEmail(allPlayers, idOrEmail);
   };
 
   const venues = [...new Set(games.map(g => g.location).filter(Boolean))];
@@ -102,7 +117,7 @@ export default function GameHistory() {
 
                       <div className="flex items-center gap-2 mb-3">
                         <Trophy className="w-5 h-5 text-red-400" />
-                        <span className="text-white font-bold text-lg">{game.winner_name}</span>
+                        <span className="text-white font-bold text-lg">{resolveWinner(game)}</span>
                         <span className="text-emerald-400 font-bold">+{game.points_awarded} pts</span>
                       </div>
 
@@ -133,35 +148,37 @@ export default function GameHistory() {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-2 flex-wrap">
-                      {game.players?.slice(0, 5).map((email, index) => {
-                        const player = allPlayers.find(p => p.email?.trim().toLowerCase() === email?.trim().toLowerCase());
-                        const initials = player
-                         ? `${(player.first_name || "")[0] || ""}${(player.last_name || "")[0] || ""}`.toUpperCase()
-                         : "?";
-                        const displayName = player
-                         ? `${player.first_name} ${player.last_name}`.trim()
-                         : "Unknown Player";
-                        return (
-                        <div
-                          key={index}
-                          className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
-                            email === game.winner_email
-                              ? 'bg-gradient-to-br from-red-700 to-red-900 text-white ring-2 ring-red-400/50'
-                              : 'bg-gray-800 text-gray-400'
-                          }`}
-                          title={displayName}
-                        >
-                          {initials}
+                    {(() => {
+                      // Prefer player_ids, fall back to players (email array)
+                      const participantRefs = (game.player_ids?.length > 0 ? game.player_ids : game.players) || [];
+                      const winnerRef = game.winner_player_id || game.winner_email;
+                      return (
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {participantRefs.slice(0, 5).map((ref, index) => {
+                            const player = resolveParticipant(ref);
+                            const name = getPlayerDisplayName(player);
+                            const initials = player
+                              ? `${(player.first_name || "")[0] || ""}${(player.last_name || "")[0] || ""}`.toUpperCase()
+                              : "?";
+                            const isWinner = ref === winnerRef;
+                            return (
+                              <div key={index}
+                                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
+                                  isWinner ? 'bg-gradient-to-br from-red-700 to-red-900 text-white ring-2 ring-red-400/50' : 'bg-gray-800 text-gray-400'
+                                }`}
+                                title={name}>
+                                {initials}
+                              </div>
+                            );
+                          })}
+                          {participantRefs.length > 5 && (
+                            <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-sm text-gray-400">
+                              +{participantRefs.length - 5}
+                            </div>
+                          )}
                         </div>
-                        );
-                      })}
-                      {game.players?.length > 5 && (
-                        <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-sm text-gray-400">
-                          +{game.players.length - 5}
-                        </div>
-                      )}
-                    </div>
+                      );
+                    })()}
                   </div>
                 </CardContent>
               </Card>
