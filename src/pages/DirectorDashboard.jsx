@@ -186,7 +186,7 @@ export default function DirectorDashboard() {
       return;
     }
     setIsSubmitting(true);
-    const winnerPlayer = getPlayerById(players, placements[0]);
+    const winnerPlayer = playersById[placements[0]];
     const winnerName = getPlayerDisplayName(winnerPlayer);
     const winnerEmail = winnerPlayer?.email || "";
 
@@ -206,10 +206,10 @@ export default function DirectorDashboard() {
         const pr = getPlayerById(players, pid);
         return pr && u.email?.trim().toLowerCase() === pr.email?.trim().toLowerCase();
       });
-      if (!user) continue;
       const pts = POINTS[i] || 0;
       if (i === 0) {
         const newStreak = (user.current_streak || 0) + 1;
+
         await User.update(user.id, {
           games_played: (user.games_played || 0) + 1,
           total_points: (user.total_points || 0) + pts,
@@ -300,8 +300,7 @@ export default function DirectorDashboard() {
     }
 
     // dirSignInSearch holds the selected player's id after picking from dropdown
-    const player = getPlayerById(players, dirSignInSearch) ||
-      getPlayerByEmail(players, dirSignInSearch);
+    const player = playersById[dirSignInSearch] || getPlayerByEmail(players, dirSignInSearch);
     if (!player) {
       setDirSignInStatus("error");
       setDirSignInMessage("No player found.");
@@ -345,12 +344,9 @@ export default function DirectorDashboard() {
     setPhotos(prev => prev.filter(p => p.id !== photoId));
   };
 
-  // Resolve game winner from player_id first, then winner_email fallback
   const resolveGameWinner = (game) => {
-    if (game.winner_player_id) {
-      const p = getPlayerById(players, game.winner_player_id);
-      if (p) return getPlayerDisplayName(p);
-    }
+    if (game.winner_player_id && playersById[game.winner_player_id])
+      return getPlayerDisplayName(playersById[game.winner_player_id]);
     if (game.winner_email) {
       const p = getPlayerByEmail(players, game.winner_email);
       if (p) return getPlayerDisplayName(p);
