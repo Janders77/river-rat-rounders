@@ -526,7 +526,9 @@ export default function DirectorDashboard() {
                                   }
 
                                   const newEmails = [...currentList, val];
-                                  const newNames = [...(session.hand_of_week_names || []), player?.full_name || val];
+                                  const playerRecord = players.find(pl => pl.email?.trim().toLowerCase() === val?.trim().toLowerCase());
+                                  const resolvedName = playerRecord ? `${playerRecord.first_name || ""} ${playerRecord.last_name || ""}`.trim() : (player?.full_name || val);
+                                  const newNames = [...(session.hand_of_week_names || []), resolvedName];
                                   await GameSession.update(session.id, {
                                     hand_of_week_emails: newEmails,
                                     hand_of_week_names: newNames
