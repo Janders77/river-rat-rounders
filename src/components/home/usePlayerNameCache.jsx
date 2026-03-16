@@ -86,7 +86,7 @@ export function usePlayerNameCache(players = []) {
       if (playerNameByEmail[email]) return playerNameByEmail[email];
       if (loadingEmails[email]) return "Loading...";
 
-      return email;
+      return "Unknown Player";
     },
     [playerNameByEmail, loadingEmails]
   );

@@ -172,8 +172,8 @@ export default function DirectorDashboard() {
     if (cached && cached !== email) return cached;
     // Fallback: look up directly in players array
     const p = players.find(pl => pl.email?.trim().toLowerCase() === email?.trim().toLowerCase());
-    if (p) return `${p.first_name || ""} ${p.last_name || ""}`.trim() || email;
-    return email || "Unknown Player";
+    if (p) return `${p.first_name || ""} ${p.last_name || ""}`.trim() || "Unknown Player";
+    return "Unknown Player";
   };
 
   const fetchAllPlayers = async () => {
@@ -671,7 +671,6 @@ export default function DirectorDashboard() {
                                 }}
                               >
                                 <div className="text-white text-sm font-medium">{p.first_name} {p.last_name}</div>
-                                <div className="text-gray-400 text-xs">{p.email}</div>
                               </button>
                             ))}
                           </div>
@@ -924,7 +923,6 @@ export default function DirectorDashboard() {
                             <div key={player.email} className="flex items-center justify-between gap-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0 overflow-hidden">
                               <div className="min-w-0 flex-1 overflow-hidden">
                                 <div className="font-medium text-white truncate">{player.first_name} {player.last_name}</div>
-                                <div className="text-xs text-gray-400 truncate">{player.email}</div>
                               </div>
                               <Badge variant="outline" className="shrink-0 text-xs border-green-600 text-green-400">Signed In</Badge>
                             </div>
@@ -978,7 +976,7 @@ export default function DirectorDashboard() {
                         <div className="text-sm text-gray-400">
                           {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString() : ''} {game.location && `· ${game.location}`}
                         </div>
-                        <div className="text-sm text-red-400 mt-1">Winner: {getPlayerFullName(game.winner_email) || game.winner_name || game.winner_email}</div>
+                        <div className="text-sm text-red-400 mt-1">Winner: {getPlayerFullName(game.winner_email) || game.winner_name || "Unknown Player"}</div>
                       </div>
                       <Button size="icon" variant="ghost"
                         className="text-red-400 hover:text-red-300 hover:bg-red-900/20"

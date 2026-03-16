@@ -132,7 +132,7 @@ export default function Leaderboard() {
         const playerName = playerRecord ? `${playerRecord.first_name || ""} ${playerRecord.last_name || ""}`.trim() : game.winner_name;
         locationStats[game.winner_email] = {
           email: game.winner_email,
-          name: playerName || game.winner_email,
+          name: playerName || "Unknown Player",
           points: 0,
           wins: 0
         };
@@ -159,7 +159,7 @@ export default function Leaderboard() {
         const playerName = playerRecord ? `${playerRecord.first_name || ""} ${playerRecord.last_name || ""}`.trim() : game.winner_name;
         locationStats[game.winner_email] = {
           email: game.winner_email,
-          name: playerName || game.winner_email,
+          name: playerName || "Unknown Player",
           points: 0,
           wins: 0
         };
