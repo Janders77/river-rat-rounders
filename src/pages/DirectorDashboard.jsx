@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -535,8 +535,8 @@ export default function DirectorDashboard() {
                               </div>
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
-                              <Button size="sm" variant="outline"
-                                className={session.is_open ? "border-red-600 text-red-400 hover:bg-red-900/20" : "border-gray-700 text-gray-500 hover:bg-gray-800"}
+                              <Button size="sm"
+                                className={session.is_open ? "border border-red-500 text-red-400 hover:bg-red-600/20 bg-transparent rounded-lg px-3" : "bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg px-3"}
                                 onClick={() => handleToggleSession(session)}>
                                 {session.is_open ? "Close" : "Reopen"}
                               </Button>
