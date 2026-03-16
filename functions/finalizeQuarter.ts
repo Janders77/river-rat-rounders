@@ -23,14 +23,24 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No stats found for this quarter' }, { status: 400 });
     }
 
+    // Resolve all player names from Player records
+    const allPlayers = await base44.asServiceRole.entities.Player.list();
+    const resolvePlayerName = (email) => {
+      const p = allPlayers.find(pl => pl.email?.trim().toLowerCase() === email?.trim().toLowerCase());
+      return p ? `${p.first_name || ''} ${p.last_name || ''}`.trim() : email;
+    };
+
     // Find the player with most points and most wins
-    const mostPointsPlayer = stats.reduce((prev, current) => 
+    const mostPointsPlayer = stats.reduce((prev, current) =>
       (prev.points || 0) > (current.points || 0) ? prev : current
     );
 
-    const mostWinsPlayer = stats.reduce((prev, current) => 
+    const mostWinsPlayer = stats.reduce((prev, current) =>
       (prev.wins || 0) > (current.wins || 0) ? prev : current
     );
+
+    const mostPointsName = resolvePlayerName(mostPointsPlayer.player_email);
+    const mostWinsName = resolvePlayerName(mostWinsPlayer.player_email);
 
     // Create or update quarterly record
     const existingRecord = await base44.asServiceRole.entities.QuarterlyRecord.filter({ quarter });
@@ -38,10 +48,10 @@ Deno.serve(async (req) => {
     if (existingRecord.length > 0) {
       await base44.asServiceRole.entities.QuarterlyRecord.update(existingRecord[0].id, {
         most_points_player_email: mostPointsPlayer.player_email,
-        most_points_player_name: mostPointsPlayer.player_name,
+        most_points_player_name: mostPointsName,
         most_points_total: mostPointsPlayer.points,
         most_wins_player_email: mostWinsPlayer.player_email,
-        most_wins_player_name: mostWinsPlayer.player_name,
+        most_wins_player_name: mostWinsName,
         most_wins_total: mostWinsPlayer.wins,
         completed: true
       });
@@ -49,10 +59,10 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.entities.QuarterlyRecord.create({
         quarter,
         most_points_player_email: mostPointsPlayer.player_email,
-        most_points_player_name: mostPointsPlayer.player_name,
+        most_points_player_name: mostPointsName,
         most_points_total: mostPointsPlayer.points,
         most_wins_player_email: mostWinsPlayer.player_email,
-        most_wins_player_name: mostWinsPlayer.player_name,
+        most_wins_player_name: mostWinsName,
         most_wins_total: mostWinsPlayer.wins,
         completed: true
       });
