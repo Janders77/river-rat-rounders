@@ -21,24 +21,34 @@ export default function PlayerSignIn() {
       setIsLoading(true);
       const playerEmail = localStorage.getItem("playerEmail");
 
-      const players = await base44.entities.Player.filter({}, "-created_date", 500).catch(() => []);
-      setAllPlayers(players);
+      // Fetch sessions and current player record in parallel (no full table load)
+      const [fetchedSessions, meArr, directorCheck] = await Promise.all([
+        base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10),
+        playerEmail ? base44.entities.Player.filter({ email: playerEmail.trim().toLowerCase() }).catch(() => []) : Promise.resolve([]),
+        playerEmail ? base44.entities.Director.filter({ email: playerEmail.trim().toLowerCase() }).catch(() => []) : Promise.resolve([]),
+      ]);
 
-      if (playerEmail) {
-        const me = getPlayerByEmail(players, playerEmail);
-        setCurrentPlayerId(me?.id || null);
-        const directorCheck = await base44.entities.Director.filter({ email: playerEmail.trim().toLowerCase() }).catch(() => []);
-        setIsDirector(directorCheck.length > 0);
+      const me = meArr[0] || null;
+      setCurrentPlayerId(me?.id || null);
+      setIsDirector(directorCheck.length > 0);
+      setSessions(fetchedSessions);
+
+      // Fetch only the players referenced in signed_in_player_ids across all sessions
+      const allIds = [...new Set(fetchedSessions.flatMap(s => s.signed_in_player_ids || []))];
+      if (me && !allIds.includes(me.id)) allIds.push(me.id); // ensure current user is in map
+      if (allIds.length > 0) {
+        const fetched = await base44.entities.Player.filter({ id: { $in: allIds } }, null, allIds.length).catch(() => []);
+        setAllPlayers(fetched);
+      } else if (me) {
+        setAllPlayers([me]);
       }
 
-      const fetchedSessions = await base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10);
-      setSessions(fetchedSessions);
       setIsLoading(false);
     }
 
     loadData();
 
-    const unsubscribe = base44.entities.GameSession.subscribe((event) => {
+    const unsubscribe = base44.entities.GameSession.subscribe(async (event) => {
       setSessions(prev => {
         if (event.type === 'create') return [...prev, event.data].filter(s => s.is_open);
         if (event.type === 'update') {
@@ -48,6 +58,22 @@ export default function PlayerSignIn() {
         if (event.type === 'delete') return prev.filter(s => s.id !== event.id);
         return prev;
       });
+      // When a session updates, fetch any newly added player IDs we don't have yet
+      if ((event.type === 'create' || event.type === 'update') && event.data?.signed_in_player_ids?.length > 0) {
+        setAllPlayers(prev => {
+          const existingIds = new Set(prev.map(p => p.id));
+          const missing = event.data.signed_in_player_ids.filter(id => !existingIds.has(id));
+          if (missing.length === 0) return prev;
+          base44.entities.Player.filter({ id: { $in: missing } }, null, missing.length)
+            .then(fetched => setAllPlayers(cur => {
+              const map = new Map(cur.map(p => [p.id, p]));
+              fetched.forEach(p => map.set(p.id, p));
+              return Array.from(map.values());
+            }))
+            .catch(() => {});
+          return prev;
+        });
+      }
     });
 
     return () => unsubscribe();
