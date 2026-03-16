@@ -140,38 +140,41 @@ export default function PlayerSignIn() {
               </div>
             </div>
 
-            <button
-              className="flex items-center justify-between w-full px-4 py-2.5 text-sm text-gray-400 hover:text-red-400 hover:bg-gray-800/40 transition-colors"
-              onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
-            >
-              <span className="flex items-center gap-1.5">
-                <Users className="w-4 h-4" />
-                {session.signed_in_players?.length || 0} player{session.signed_in_players?.length !== 1 ? "s" : ""} signed in
-              </span>
-              {session.signed_in_players?.length > 0 && (
-                expandedSession === session.id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />
-              )}
-            </button>
-
-            {expandedSession === session.id && session.signed_in_players?.length > 0 && (
-              <div className="px-4 pb-3 flex flex-col gap-1.5">
-                {session.signed_in_players.map((email, index) => (
-                  <div key={email} className="flex items-center gap-2 text-sm text-gray-300">
-                    <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-                    <span className="truncate flex-1">{index + 1}. {getPlayerName(email)}</span>
-                    {isDirector && (
-                      <button
-                        onClick={() => handleRemovePlayer(session, email)}
-                        className="shrink-0 text-gray-600 hover:text-red-400 transition-colors"
-                        title="Remove player"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
+            {(() => {
+              const signedInIds = getSignedInIds(session);
+              return (
+                <>
+                  <button
+                    className="flex items-center justify-between w-full px-4 py-2.5 text-sm text-gray-400 hover:text-red-400 hover:bg-gray-800/40 transition-colors"
+                    onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <Users className="w-4 h-4" />
+                      {signedInIds.length} player{signedInIds.length !== 1 ? "s" : ""} signed in
+                    </span>
+                    {signedInIds.length > 0 && (
+                      expandedSession === session.id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />
                     )}
-                  </div>
-                ))}
-              </div>
-            )}
+                  </button>
+                  {expandedSession === session.id && signedInIds.length > 0 && (
+                    <div className="px-4 pb-3 flex flex-col gap-1.5">
+                      {signedInIds.map((pid, index) => (
+                        <div key={pid} className="flex items-center gap-2 text-sm text-gray-300">
+                          <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+                          <span className="truncate flex-1">{index + 1}. {getPlayerDisplayName(getPlayerById(allPlayers, pid))}</span>
+                          {isDirector && (
+                            <button onClick={() => handleRemovePlayer(session, pid)}
+                              className="shrink-0 text-gray-600 hover:text-red-400 transition-colors" title="Remove player">
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
 
             <div className="px-4 pb-4">
               {isSignedIn(session) ? (
