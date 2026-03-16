@@ -39,6 +39,8 @@ export default function Leaderboard() {
     loadLocationData();
   }, [selectedLocation, selectedQuarter]);
 
+  const playersById = useMemo(() => buildPlayersById(playerRecords), [playerRecords]);
+
   const loadData = async () => {
     setIsLoading(true);
     const [fetchedPlayers, fetchedQuarterlyStats, fetchedQuarterlyRecord, fetchedLocations] = await Promise.all([
@@ -112,12 +114,9 @@ export default function Leaderboard() {
     return quarters;
   };
 
-  // Resolve the winner Player record from a game (id first, then email fallback)
   const resolveWinnerRecord = (game) => {
-    if (game.winner_player_id) {
-      const p = getPlayerById(playerRecords, game.winner_player_id);
-      if (p) return p;
-    }
+    if (game.winner_player_id && playersById[game.winner_player_id])
+      return playersById[game.winner_player_id];
     if (game.winner_email) return getPlayerByEmail(playerRecords, game.winner_email);
     return null;
   };
