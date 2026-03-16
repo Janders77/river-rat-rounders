@@ -452,8 +452,13 @@ export default function DirectorDashboard() {
           {hasPermission(directorRole, "canManageSessions") && (
           <TabsContent value="sessions">
             <div className="space-y-6">
-              <Card className="bg-transparent border border-red-500/40">
-                <CardHeader><CardTitle className="text-red-400">Open Games</CardTitle></CardHeader>
+              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
+                <div className="flex items-center gap-3 mb-4 pb-4 border-t-0 border-b border-gray-800">
+                  <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+                    <CalendarPlus className="w-5 h-5 text-red-400" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-white">Open Games</h2>
+                </div>
                 <CardContent>
                   <div className="space-y-3">
                     {sessions.filter(s => s.is_open).map(session => {
@@ -551,9 +556,14 @@ export default function DirectorDashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-transparent border border-red-500/40">
-                <CardHeader><CardTitle className="text-red-400">Open a New Game</CardTitle></CardHeader>
-                <CardContent>
+              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
+                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
+                  <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+                    <Plus className="w-5 h-5 text-red-400" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-white">Open a New Game</h2>
+                </div>
+                <div>
                   <form onSubmit={handleCreateSession} className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2 min-w-0 overflow-hidden">
