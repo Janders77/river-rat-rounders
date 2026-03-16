@@ -808,96 +808,88 @@ export default function DirectorDashboard() {
           <TabsContent value="players">
             <div className="space-y-6">
               {inviteRequests.length > 0 && (
-                <Card className="bg-transparent border border-red-500/40">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-                      Pending Invite Requests ({inviteRequests.length})
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {inviteRequests.map(req => (
-                        <div key={req.id} className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-700/40">
-                          <div>
-                            <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button size="sm" onClick={() => handleApproveRequest(req)}
-                              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white">
-                              Approve & Invite
-                            </Button>
-                            <Button size="sm" variant="outline" onClick={() => handleDeclineRequest(req)}
-                              className="border-red-700 text-red-400 hover:bg-red-900/20">
-                              Decline
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
+                <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-3 transition hover:border-gray-700 hover:bg-gray-900/60">
+                  <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-800">
+                    <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+                    <h2 className="text-lg font-semibold text-white">Pending Invite Requests ({inviteRequests.length})</h2>
+                  </div>
+                  {inviteRequests.map(req => (
+                    <div key={req.id} className="flex items-center justify-between p-3 bg-gray-900/60 rounded-xl border border-gray-800">
+                      <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={() => handleApproveRequest(req)}
+                          className="bg-red-600 hover:bg-red-500 text-white rounded-lg px-3">Approve & Invite</Button>
+                        <Button size="sm" onClick={() => handleDeclineRequest(req)}
+                          className="border border-red-500 text-red-400 hover:bg-red-600/20 bg-transparent rounded-lg px-3">Decline</Button>
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  ))}
+                </div>
               )}
-              <Card className="bg-transparent border border-red-500/40">
-                <CardHeader>
-                  <CardTitle className="text-white">
+              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
+                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
+                  <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+                    <Users className="w-5 h-5 text-red-400" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-white">
                     {(() => {
                       const openSession = sessions.find(s => s.is_open);
                       const ids = getEffectiveSignedInIds(openSession || {}, players);
-                      return `Players Signed In to Current Game (${ids.length})`;
+                      return `Players Signed In (${ids.length})`;
                     })()}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {(() => {
-                    const openSession = sessions.find(s => s.is_open);
-                    if (!openSession) return <p className="text-gray-500 text-center py-4">No open game session.</p>;
-                    const signedInIds = getEffectiveSignedInIds(openSession, players);
-                    if (signedInIds.length === 0) return <p className="text-gray-500 text-center py-4">No players have signed in yet.</p>;
-                    const signedInPlayers = signedInIds.map(id => playersById[id]).filter(Boolean);
-                    const filtered = signedInPlayers.filter(p =>
-                      !playerSearch || getPlayerDisplayName(p).toLowerCase().includes(playerSearch.toLowerCase())
-                    );
-                    return (
-                      <>
-                        <div className="relative mb-4">
-                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                          <Input placeholder="Search by name..."
-                            value={playerSearch}
-                            onChange={e => setPlayerSearch(e.target.value)}
-                            className="bg-gray-900 border-gray-700 text-white pl-9" />
-                        </div>
-                        <div className="space-y-3">
-                          {filtered.map(player => (
-                            <div key={player.id} className="flex items-center justify-between gap-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800 min-w-0 overflow-hidden">
-                              <div className="font-medium text-white truncate">{getPlayerDisplayName(player)}</div>
-                              <Badge variant="outline" className="shrink-0 text-xs border-green-600 text-green-400">Signed In</Badge>
-                            </div>
-                          ))}
-                          {filtered.length === 0 && playerSearch && <p className="text-gray-500 text-center py-4">No players match your search.</p>}
-                        </div>
-                      </>
-                    );
-                  })()}
-                </CardContent>
-              </Card>
-              <Card className="bg-transparent border border-red-500/40">
-                <CardHeader><CardTitle className="text-white">Invite Player</CardTitle></CardHeader>
-                <CardContent>
-                  <form onSubmit={handleInvite} className="flex gap-3">
-                    <Input type="email" placeholder="player@email.com"
-                      value={inviteEmail}
-                      onChange={e => setInviteEmail(e.target.value)}
-                      className="bg-gray-900 border-gray-700 text-white flex-1"
-                      required />
-                    <Button type="submit" disabled={inviteStatus === "sending"}
-                      className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
-                      {inviteStatus === "sending" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Invite"}
-                    </Button>
-                  </form>
-                  {inviteStatus === "sent" && <p className="text-red-400 text-sm mt-2">Invitation sent!</p>}
-                </CardContent>
-              </Card>
+                  </h2>
+                </div>
+                {(() => {
+                  const openSession = sessions.find(s => s.is_open);
+                  if (!openSession) return <p className="text-gray-500 text-center py-4">No open game session.</p>;
+                  const signedInIds = getEffectiveSignedInIds(openSession, players);
+                  if (signedInIds.length === 0) return <p className="text-gray-500 text-center py-4">No players have signed in yet.</p>;
+                  const signedInPlayers = signedInIds.map(id => playersById[id]).filter(Boolean);
+                  const filtered = signedInPlayers.filter(p =>
+                    !playerSearch || getPlayerDisplayName(p).toLowerCase().includes(playerSearch.toLowerCase())
+                  );
+                  return (
+                    <>
+                      <div className="relative mb-4">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                        <Input placeholder="Search by name..."
+                          value={playerSearch}
+                          onChange={e => setPlayerSearch(e.target.value)}
+                          className="bg-gray-900 border-gray-800 text-white pl-9 rounded-lg focus:ring-2 focus:ring-red-600" />
+                      </div>
+                      <div className="space-y-2">
+                        {filtered.map(player => (
+                          <div key={player.id} className="flex items-center gap-2 text-sm text-gray-300 py-1.5 border-b border-gray-800/60 last:border-0">
+                            <span className="text-red-500">•</span>
+                            <span className="font-medium text-white truncate">{getPlayerDisplayName(player)}</span>
+                          </div>
+                        ))}
+                        {filtered.length === 0 && playerSearch && <p className="text-gray-500 text-center py-4">No players match your search.</p>}
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
+                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
+                  <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-red-400" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-white">Invite Player</h2>
+                </div>
+                <form onSubmit={handleInvite} className="flex gap-3">
+                  <Input type="email" placeholder="player@email.com"
+                    value={inviteEmail}
+                    onChange={e => setInviteEmail(e.target.value)}
+                    className="bg-gray-900 border-gray-800 text-white flex-1 rounded-lg focus:ring-2 focus:ring-red-600"
+                    required />
+                  <Button type="submit" disabled={inviteStatus === "sending"}
+                    className="bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-4 py-2">
+                    {inviteStatus === "sending" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Invite"}
+                  </Button>
+                </form>
+                {inviteStatus === "sent" && <p className="text-green-400 text-sm mt-2">Invitation sent!</p>}
+              </div>
             </div>
           </TabsContent>
           )}
