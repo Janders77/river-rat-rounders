@@ -604,9 +604,14 @@ export default function DirectorDashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-transparent border border-red-500/40">
-                <CardHeader><CardTitle className="text-red-400">Sign In Player</CardTitle></CardHeader>
-                <CardContent>
+              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
+                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
+                  <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+                    <Users className="w-5 h-5 text-red-400" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-white">Sign In Player</h2>
+                </div>
+                <div>
                   <form onSubmit={handleDirectorSignInPlayer} className="space-y-4">
                     <div className="space-y-2">
                       <label className="text-gray-300 text-sm">Search Player</label>
