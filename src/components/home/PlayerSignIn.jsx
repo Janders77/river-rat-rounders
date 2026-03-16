@@ -99,8 +99,11 @@ export default function PlayerSignIn() {
     return (
       <Card className="bg-gradient-to-r from-red-900/20 to-red-950/60 border-red-900/40">
         <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
-            <LogIn className="w-5 h-5 text-red-400" /> Sign In to Today's Game
+          <CardTitle className="text-white flex items-center gap-4">
+            <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+              <LogIn className="w-6 h-6 text-red-400" />
+            </div>
+            Sign In to Today's Game
           </CardTitle>
         </CardHeader>
         <CardContent>
