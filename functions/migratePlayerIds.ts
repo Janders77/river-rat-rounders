@@ -46,7 +46,9 @@ Deno.serve(async (req) => {
     }
 
     if (entity === 'games' || entity === 'all') {
-      const games = await base44.asServiceRole.entities.Game.list('-game_date', 200);
+      const games = await base44.asServiceRole.entities.Game.list('-game_date', 500);
+      // Build list of records that actually need updates first
+      const gameUpdates = [];
       for (const game of games) {
         const updates = {};
         if (!game.winner_player_id && game.winner_email) {
@@ -56,14 +58,19 @@ Deno.serve(async (req) => {
         if (!game.player_ids?.length && game.players?.length) {
           const ids = game.players.map(ref => {
             if (typeof ref === 'string' && ref.includes('@')) return findByEmail(ref)?.id;
-            return ref; // already an ID
+            return ref;
           }).filter(Boolean);
           if (ids.length) updates.player_ids = ids;
         }
-        if (Object.keys(updates).length) {
-          await base44.asServiceRole.entities.Game.update(game.id, updates);
-          migrated++;
-        }
+        if (Object.keys(updates).length) gameUpdates.push({ id: game.id, updates });
+      }
+      // Apply updates in parallel batches of 10
+      for (let i = 0; i < gameUpdates.length; i += 10) {
+        const batch = gameUpdates.slice(i, i + 10);
+        await Promise.all(batch.map(({ id, updates }) =>
+          base44.asServiceRole.entities.Game.update(id, updates)
+        ));
+        migrated += batch.length;
       }
     }
 
