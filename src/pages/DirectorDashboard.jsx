@@ -142,7 +142,8 @@ export default function DirectorDashboard() {
   useEffect(() => {
     if (dirSignInSelectedPlayer) return;
     const q = dirSignInSearch.trim();
-    if (q.length < 2) { setDirSignInResults([]); return; }
+    const minLen = /^\d+$/.test(q) ? 1 : 2;
+    if (q.length < minLen) { setDirSignInResults([]); return; }
     const timer = setTimeout(async () => {
       setDirSignInSearchLoading(true);
       const res = await searchPlayers({ query: q });
