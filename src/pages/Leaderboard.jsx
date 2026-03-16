@@ -79,7 +79,7 @@ export default function Leaderboard() {
   };
 
   const getPlayerData = (email) => {
-    const player = players.find(p => p.email === email);
+    const player = players.find(p => p.email?.trim().toLowerCase() === email?.trim().toLowerCase());
     if (!player) return null;
 
     return {
