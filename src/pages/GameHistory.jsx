@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Game } from "@/entities/Game";
 import { Player } from "@/entities/Player";
-import { getPlayerById, getPlayerByEmail, getPlayerDisplayName } from "@/utils/playerUtils";
+import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
+import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { History, Trophy, Clock, DollarSign, Filter, MapPin } from "lucide-react";

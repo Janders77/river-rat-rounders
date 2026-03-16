@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { getPlayerById, getPlayerByEmail, getPlayerDisplayName } from "@/utils/playerUtils";
+import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy, MapPin, ChevronDown } from "lucide-react";
 import { createPageUrl } from "@/utils";

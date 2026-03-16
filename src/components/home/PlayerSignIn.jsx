@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Users, Loader2, LogIn, MapPin, Calendar, ChevronDown, ChevronUp, X } from "lucide-react";
-import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds } from "@/utils/playerUtils";
+import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, buildPlayersById } from "@/utils/playerUtils";
+import { useMemo } from "react";
 
 export default function PlayerSignIn() {
   const [sessions, setSessions] = useState([]);
