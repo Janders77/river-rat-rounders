@@ -64,8 +64,10 @@ export default function DirectorDashboard() {
   const [placementSearches, setPlacementSearches] = useState(Array(9).fill(""));
   const [showPlacementSuggestions, setShowPlacementSuggestions] = useState(Array(9).fill(false));
 
+  const playersById = useMemo(() => buildPlayersById(players), [players]);
+
   // Helper: get name from player ID
-  const nameById = (id) => getPlayerDisplayName(getPlayerById(players, id));
+  const nameById = (id) => getPlayerDisplayName(playersById[id]);
 
   useEffect(() => { loadAll(); }, []);
 
