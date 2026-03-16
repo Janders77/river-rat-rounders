@@ -19,6 +19,8 @@ export default function GameHistory() {
     loadGames();
   }, []);
 
+  const playersById = useMemo(() => buildPlayersById(allPlayers), [allPlayers]);
+
   const loadGames = async () => {
     setIsLoading(true);
     const [fetchedGames, fetchedPlayers] = await Promise.all([
@@ -30,12 +32,9 @@ export default function GameHistory() {
     setIsLoading(false);
   };
 
-  // Resolve player name from ID (primary) or email (legacy fallback)
   const resolveWinner = (game) => {
-    if (game.winner_player_id) {
-      const p = getPlayerById(allPlayers, game.winner_player_id);
-      if (p) return getPlayerDisplayName(p);
-    }
+    if (game.winner_player_id && playersById[game.winner_player_id])
+      return getPlayerDisplayName(playersById[game.winner_player_id]);
     if (game.winner_email) {
       const p = getPlayerByEmail(allPlayers, game.winner_email);
       if (p) return getPlayerDisplayName(p);
@@ -43,12 +42,8 @@ export default function GameHistory() {
     return game.winner_name || "Unknown Player";
   };
 
-  const resolveParticipant = (idOrEmail) => {
-    // Try as id first, then email
-    const byId = getPlayerById(allPlayers, idOrEmail);
-    if (byId) return byId;
-    return getPlayerByEmail(allPlayers, idOrEmail);
-  };
+  const resolveParticipant = (idOrEmail) =>
+    playersById[idOrEmail] || getPlayerByEmail(allPlayers, idOrEmail);
 
   const venues = [...new Set(games.map(g => g.location).filter(Boolean))];
 
