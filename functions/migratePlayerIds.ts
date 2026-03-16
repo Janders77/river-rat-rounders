@@ -30,11 +30,12 @@ Deno.serve(async (req) => {
       const sessions = await base44.asServiceRole.entities.GameSession.list('-session_date', 200);
       for (const session of sessions) {
         const updates = {};
-        if ((!session.signed_in_player_ids?.length) && session.signed_in_players?.length) {
+        // Always re-derive from email array to handle partial migrations
+        if (session.signed_in_players?.length) {
           const ids = session.signed_in_players.map(e => findByEmail(e)?.id).filter(Boolean);
           if (ids.length) updates.signed_in_player_ids = ids;
         }
-        if ((!session.hand_of_week_player_ids?.length) && session.hand_of_week_emails?.length) {
+        if (session.hand_of_week_emails?.length) {
           const ids = session.hand_of_week_emails.map(e => findByEmail(e)?.id).filter(Boolean);
           if (ids.length) updates.hand_of_week_player_ids = ids;
         }

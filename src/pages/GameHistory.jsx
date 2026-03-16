@@ -122,7 +122,7 @@ export default function GameHistory() {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
-                        <span>{game.players?.length || 0} players</span>
+                        <span>{(game.player_ids?.length || game.players?.length) || 0} players</span>
                         {game.location && (
                           <span className="flex items-center gap-1">
                             <MapPin className="w-4 h-4" />
