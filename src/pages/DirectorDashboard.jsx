@@ -670,52 +670,54 @@ export default function DirectorDashboard() {
           {hasPermission(directorRole, "canRecordGames") && (
           <TabsContent value="record">
             {!sessions.find(s => s.is_open) ? (
-              <Card className="bg-transparent border border-red-500/40">
-                <CardContent className="py-10 text-center text-gray-500">
-                  No open game session. Open a game in the Sessions tab first.
-                </CardContent>
-              </Card>
+              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-10 text-center text-gray-500">
+                No open game session. Open a game in the Sessions tab first.
+              </div>
             ) : (
             <form onSubmit={handleRecordGame}>
-              <Card className="bg-transparent border border-red-500/40">
-                <CardHeader>
-                  <CardTitle className="text-white">
-                    Record Game — <span className="text-red-400">{sessions.find(s => s.is_open)?.location}</span>
-                  </CardTitle>
-                  <p className="text-sm text-gray-400 mt-1">
-                    {sessions.find(s => s.is_open)?.session_date ? new Date(sessions.find(s => s.is_open).session_date + 'T12:00:00').toLocaleDateString() : ''} · {sessions.find(s => s.is_open)?.game_type} · {getEffectiveSignedInIds(sessions.find(s => s.is_open) || {}, players).length} players signed in
-                  </p>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <Label className="text-gray-300">Game Date</Label>
-                    <input type="date" value={gameData.game_date}
-                      onChange={e => setGameData({...gameData, game_date: e.target.value})}
-                      className="w-full bg-gray-900 border border-gray-700 text-white rounded-md px-3 py-2 text-sm [color-scheme:dark]" required />
+              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-6 transition hover:border-gray-700 hover:bg-gray-900/60">
+                <div className="flex items-center gap-3 pb-4 border-b border-gray-800">
+                  <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+                    <Trophy className="w-5 h-5 text-red-400" />
                   </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-white">
+                      Record Game — <span className="text-red-400">{sessions.find(s => s.is_open)?.location}</span>
+                    </h2>
+                    <p className="text-sm text-gray-400">
+                      {sessions.find(s => s.is_open)?.session_date ? new Date(sessions.find(s => s.is_open).session_date + 'T12:00:00').toLocaleDateString() : ''} · {sessions.find(s => s.is_open)?.game_type} · {getEffectiveSignedInIds(sessions.find(s => s.is_open) || {}, players).length} players signed in
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-gray-300">Game Date</Label>
+                  <input type="date" value={gameData.game_date}
+                    onChange={e => setGameData({...gameData, game_date: e.target.value})}
+                    className="w-full bg-gray-900 border border-gray-800 text-white rounded-lg px-3 py-2 text-sm [color-scheme:dark] focus:ring-2 focus:ring-red-600" required />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-gray-300">Placements</Label>
+                  <p className="text-xs text-gray-500">1st=1000pts, 2nd=750pts … 9th=50pts</p>
                   <div className="space-y-2">
-                    <Label className="text-gray-300">Placements</Label>
-                    <p className="text-xs text-gray-500">1st=1000pts, 2nd=750pts … 9th=50pts</p>
-                    <div className="space-y-2">
-                      {PLACE_LABELS.map((label, i) => (
-                        <div key={i} className="flex items-center gap-3">
-                          <div className="w-10 text-sm font-bold text-right shrink-0 text-gray-400">{label}</div>
-                          <div className="text-sm text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
-                          <div className="relative flex-1">
-                            <Input
-                              placeholder={`Search ${label} place...`}
-                              value={placements[i] ? nameById(placements[i]) : placementSearches[i]}
-                              onChange={e => {
-                                if (placements[i]) {
-                                  const u = [...placements]; u[i] = ""; setPlacements(u);
-                                }
-                                const u = [...placementSearches]; u[i] = e.target.value; setPlacementSearches(u);
-                                const v = [...showPlacementSuggestions]; v[i] = true; setShowPlacementSuggestions(v);
-                              }}
-                              onFocus={() => { const u = [...showPlacementSuggestions]; u[i] = true; setShowPlacementSuggestions(u); }}
-                              onBlur={() => setTimeout(() => { const u = [...showPlacementSuggestions]; u[i] = false; setShowPlacementSuggestions(u); }, 150)}
-                              className="bg-gray-900 border-gray-700 text-white w-full"
-                            />
+                    {PLACE_LABELS.map((label, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-10 text-sm font-bold text-right shrink-0 text-gray-400">{label}</div>
+                        <div className="text-sm text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
+                        <div className="relative flex-1">
+                          <Input
+                            placeholder={`Search ${label} place...`}
+                            value={placements[i] ? nameById(placements[i]) : placementSearches[i]}
+                            onChange={e => {
+                              if (placements[i]) {
+                                const u = [...placements]; u[i] = ""; setPlacements(u);
+                              }
+                              const u = [...placementSearches]; u[i] = e.target.value; setPlacementSearches(u);
+                              const v = [...showPlacementSuggestions]; v[i] = true; setShowPlacementSuggestions(v);
+                            }}
+                            onFocus={() => { const u = [...showPlacementSuggestions]; u[i] = true; setShowPlacementSuggestions(u); }}
+                            onBlur={() => setTimeout(() => { const u = [...showPlacementSuggestions]; u[i] = false; setShowPlacementSuggestions(u); }, 150)}
+                            className="bg-gray-900 border-gray-800 text-white w-full rounded-lg focus:ring-2 focus:ring-red-600"
+                          />
                             {placements[i] && (
                               <button type="button" onClick={() => {
                                 const u = [...placements]; u[i] = ""; setPlacements(u);
