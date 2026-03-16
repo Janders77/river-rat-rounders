@@ -7,15 +7,17 @@ export const buildPlayersById = (players) => {
   return map;
 };
 
-// Fast name lookup using pre-built map
-export const getPlayerNameById = (playerId, playersById) =>
-  getPlayerDisplayName(playersById?.[playerId] || null);
-
 export const getPlayerById = (players, id) =>
   id ? players.find(p => p.id === id) || null : null;
 
 export const getPlayerByEmail = (players, email) =>
   email ? players.find(p => p.email?.trim().toLowerCase() === email.trim().toLowerCase()) || null : null;
+
+// Fast name lookup using pre-built map
+export const getPlayerNameById = (playerId, playersById) =>
+  playersById?.[playerId]
+    ? `${playersById[playerId].first_name || ""} ${playersById[playerId].last_name || ""}`.trim() || "Unknown Player"
+    : "Unknown Player";
 
 export const getPlayerDisplayName = (player) => {
   if (!player) return "Unknown Player";
