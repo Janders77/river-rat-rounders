@@ -400,15 +400,16 @@ export default function DirectorDashboard() {
   }
 
   return (
-    <div className="min-h-screen p-3 md:p-6 overflow-x-hidden" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="max-w-4xl mx-auto w-full">
+    <div className="min-h-screen p-3 md:p-6 overflow-x-hidden relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
+      <div className="max-w-4xl mx-auto w-full relative">
         <div className="mb-8 flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center shadow-lg">
-            <ShieldAlert className="w-7 h-7 text-white" />
+          <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+            <ShieldAlert className="w-5 h-5 text-red-400" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white">Director Dashboard</h1>
-            <p className="text-gray-400">Tournament Directors only</p>
+            <h1 className="text-2xl font-bold text-white">Director Dashboard</h1>
+            <p className="text-gray-400 text-sm">Tournament Directors only</p>
           </div>
         </div>
 
