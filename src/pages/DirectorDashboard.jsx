@@ -58,7 +58,7 @@ export default function DirectorDashboard() {
   const [photoFile, setPhotoFile] = useState(null);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [dirSignInSearch, setDirSignInSearch] = useState("");
-  const [dirSignInPassword, setDirSignInPassword] = useState("");
+
   const [dirSignInStatus, setDirSignInStatus] = useState("");
   const [dirSignInMessage, setDirSignInMessage] = useState("");
   const [dirSignInSelectedPlayer, setDirSignInSelectedPlayer] = useState(null);
@@ -356,7 +356,6 @@ export default function DirectorDashboard() {
     setDirSignInStatus("success");
     setDirSignInMessage(`${player.display_name} signed in successfully!`);
     setDirSignInSearch("");
-    setDirSignInPassword("");
     setDirSignInSelectedPlayer(null);
     setDirSignInResults([]);
     setTimeout(() => { setDirSignInStatus(""); setDirSignInMessage(""); }, 3000);
