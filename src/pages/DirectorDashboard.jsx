@@ -322,13 +322,6 @@ export default function DirectorDashboard() {
     setDirSignInStatus("loading");
     setDirSignInMessage("");
 
-    const DIRECTOR_PASSWORD = "Poker123";
-    if (dirSignInPassword !== DIRECTOR_PASSWORD) {
-      setDirSignInStatus("error");
-      setDirSignInMessage("Incorrect password.");
-      return;
-    }
-
     const player = dirSignInSelectedPlayer;
     if (!player) {
       setDirSignInStatus("error");
@@ -660,14 +653,6 @@ export default function DirectorDashboard() {
                           </div>
                         )}
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-gray-300 text-sm">Password</label>
-                      <Input type="password" placeholder="Enter password"
-                        value={dirSignInPassword}
-                        onChange={e => setDirSignInPassword(e.target.value)}
-                        className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600"
-                        required />
                     </div>
                     <Button type="submit" disabled={dirSignInStatus === "loading"}
                       className="w-full bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-4 py-2">
