@@ -767,42 +767,40 @@ export default function DirectorDashboard() {
 
           {hasPermission(directorRole, "canApproveRequests") && (
           <TabsContent value="requests">
-            <Card className="bg-transparent border border-red-500/40">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+            <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
+              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
+                <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
                   <Mail className="w-5 h-5 text-red-400" />
+                </div>
+                <h2 className="text-lg font-semibold text-white flex items-center gap-2">
                   Pending Invite Requests
                   {inviteRequests.length > 0 && (
-                    <span className="ml-1 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5">{inviteRequests.length}</span>
+                    <span className="bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5">{inviteRequests.length}</span>
                   )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {inviteRequests.length === 0 ? (
-                  <p className="text-gray-500 text-center py-8">No pending invite requests.</p>
-                ) : (
-                  <div className="space-y-3">
-                    {inviteRequests.map(req => (
-                      <div key={req.id} className="flex items-center justify-between p-4 bg-red-900/20 rounded-lg border border-red-700/40">
-                        <div>
-                          <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" onClick={() => handleApproveRequest(req)}
-                            className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white">
-                            Approve & Invite
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={() => handleDeclineRequest(req)}
-                            className="border-red-700 text-red-400 hover:bg-red-900/20">
-                            Decline
-                          </Button>
-                        </div>
+                </h2>
+              </div>
+              {inviteRequests.length === 0 ? (
+                <p className="text-gray-500 text-center py-8">No pending invite requests.</p>
+              ) : (
+                <div className="space-y-3">
+                  {inviteRequests.map(req => (
+                    <div key={req.id} className="flex items-center justify-between p-4 bg-gray-900/60 rounded-xl border border-gray-800">
+                      <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={() => handleApproveRequest(req)}
+                          className="bg-red-600 hover:bg-red-500 text-white rounded-lg px-3">
+                          Approve & Invite
+                        </Button>
+                        <Button size="sm" onClick={() => handleDeclineRequest(req)}
+                          className="border border-red-500 text-red-400 hover:bg-red-600/20 bg-transparent rounded-lg px-3">
+                          Decline
+                        </Button>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </TabsContent>
           )}
 
