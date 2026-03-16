@@ -11,78 +11,75 @@ export default function PlayerSignIn() {
   const [isLoading, setIsLoading] = useState(true);
   const [signingIn, setSigningIn] = useState(null);
   const [expandedSession, setExpandedSession] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentPlayerId, setCurrentPlayerId] = useState(null);
   const [isDirector, setIsDirector] = useState(false);
-
   const [allPlayers, setAllPlayers] = useState([]);
-  const { normalizeEmail, ensurePlayerName, getPlayerName } = usePlayerNameCache(allPlayers);
-  const normalize = normalizeEmail;
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
       const playerEmail = localStorage.getItem("playerEmail");
-      setCurrentUser(playerEmail ? { email: normalizeEmail(playerEmail) } : null);
 
-      // Check if current player is a director
+      const players = await base44.entities.Player.filter({}, "-created_date", 500).catch(() => []);
+      setAllPlayers(players);
+
       if (playerEmail) {
+        const me = getPlayerByEmail(players, playerEmail);
+        setCurrentPlayerId(me?.id || null);
         const directorCheck = await base44.entities.Director.filter({ email: playerEmail.trim().toLowerCase() }).catch(() => []);
         setIsDirector(directorCheck.length > 0);
       }
 
-      // Load all players to seed cache
-      const players = await base44.entities.Player.filter({}, "-created_date", 500).catch(() => []);
-      setAllPlayers(players);
-
       const fetchedSessions = await base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10);
       setSessions(fetchedSessions);
       setIsLoading(false);
-
-      // Ensure names for any signed-in emails not in cache
-      const allEmails = [...new Set(fetchedSessions.flatMap(s => s.signed_in_players || []))];
-      allEmails.forEach(email => ensurePlayerName(email));
     }
 
     loadData();
 
-    const unsubscribe = base44.entities.GameSession.subscribe(async (event) => {
+    const unsubscribe = base44.entities.GameSession.subscribe((event) => {
       setSessions(prev => {
-        let updated;
-        if (event.type === 'create') updated = [...prev, event.data].filter(s => s.is_open);
-        else if (event.type === 'update') {
-          if (!event.data.is_open) updated = prev.filter(s => s.id !== event.id);
-          else updated = prev.map(s => s.id === event.id ? event.data : s);
-        } else if (event.type === 'delete') updated = prev.filter(s => s.id !== event.id);
-        else updated = prev;
-
-        const allEmails = [...new Set(updated.flatMap(s => s.signed_in_players || []))];
-        allEmails.forEach(email => ensurePlayerName(email));
-        return updated;
+        if (event.type === 'create') return [...prev, event.data].filter(s => s.is_open);
+        if (event.type === 'update') {
+          if (!event.data.is_open) return prev.filter(s => s.id !== event.id);
+          return prev.map(s => s.id === event.id ? event.data : s);
+        }
+        if (event.type === 'delete') return prev.filter(s => s.id !== event.id);
+        return prev;
       });
     });
 
     return () => unsubscribe();
   }, []);
 
+  const getSignedInIds = (session) => getEffectiveSignedInIds(session, allPlayers);
+
   const handleSignIn = async (session) => {
     const playerEmail = localStorage.getItem("playerEmail");
     if (!playerEmail) { base44.auth.redirectToLogin(); return; }
+    const me = getPlayerByEmail(allPlayers, playerEmail);
+    if (!me) return;
     setSigningIn(session.id);
-    const normalEmail = normalize(playerEmail);
-    const alreadySigned = session.signed_in_players?.map(normalize).includes(normalEmail);
-    if (!alreadySigned) {
-      const updated = [...(session.signed_in_players || []), playerEmail.trim()];
-      await base44.entities.GameSession.update(session.id, { signed_in_players: updated });
+    const currentIds = getSignedInIds(session);
+    if (!currentIds.includes(me.id)) {
+      await base44.entities.GameSession.update(session.id, {
+        signed_in_player_ids: [...currentIds, me.id],
+        signed_in_players: [...(session.signed_in_players || []), me.email] // legacy compat
+      });
     }
     setSigningIn(null);
   };
 
   const isSignedIn = (session) =>
-    currentUser && session.signed_in_players?.map(normalize).includes(currentUser.email);
+    currentPlayerId && getSignedInIds(session).includes(currentPlayerId);
 
-  const handleRemovePlayer = async (session, emailToRemove) => {
-    const updated = (session.signed_in_players || []).filter(e => normalize(e) !== normalize(emailToRemove));
-    await base44.entities.GameSession.update(session.id, { signed_in_players: updated });
+  const handleRemovePlayer = async (session, pidToRemove) => {
+    const currentIds = getSignedInIds(session);
+    const player = getPlayerById(allPlayers, pidToRemove);
+    await base44.entities.GameSession.update(session.id, {
+      signed_in_player_ids: currentIds.filter(id => id !== pidToRemove),
+      signed_in_players: (session.signed_in_players || []).filter(e => e !== player?.email)
+    });
   };
 
   if (isLoading) {
