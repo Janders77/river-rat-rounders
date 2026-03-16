@@ -459,25 +459,24 @@ export default function DirectorDashboard() {
                   </div>
                   <h2 className="text-lg font-semibold text-white">Open Games</h2>
                 </div>
-                <CardContent>
-                  <div className="space-y-3">
+                <div className="space-y-3">
                     {sessions.filter(s => s.is_open).map(session => {
                       const signedInIds = getEffectiveSignedInIds(session, players);
                       const handIds = getEffectiveHandOfWeekIds(session, players);
                       return (
-                        <div key={session.id} className="p-4 bg-gray-900/50 rounded-lg border border-gray-800">
+                        <div key={session.id} className="p-4 bg-gray-900/50 rounded-xl border border-gray-800">
                           <div className="flex items-start justify-between gap-2">
                             <div className="flex-1 min-w-0">
                               <div className="font-medium text-white">{session.location}</div>
                               <div className="text-sm text-gray-400">
                                 {session.session_date ? new Date(session.session_date + 'T12:00:00').toLocaleDateString() : ''} · {session.game_type}
                               </div>
-                              <div className="text-sm text-gray-500 mt-1">{signedInIds.length} player(s) signed in</div>
+                              <div className="text-sm text-gray-500 mt-1 font-medium">Players Signed In ({signedInIds.length})</div>
                               {signedInIds.length > 0 && (
-                                <div className="mt-2 space-y-1">
-                                  {signedInIds.map((pid, idx) => (
+                                <div className="mt-2 space-y-1 border-t border-gray-800 pt-2">
+                                  {signedInIds.map((pid) => (
                                     <div key={pid} className="flex items-center gap-2 text-xs text-gray-300">
-                                      <span className="text-gray-600 w-4 text-right shrink-0">{idx + 1}.</span>
+                                      <span className="text-red-500">•</span>
                                       <span>{nameById(pid)}</span>
                                     </div>
                                   ))}
