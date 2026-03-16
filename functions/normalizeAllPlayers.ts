@@ -7,73 +7,62 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
   }
 
-  // Fetch all players in batches
-  let allPlayers = [];
-  let skip = 0;
-  const batchSize = 200;
-  while (true) {
-    const batch = await base44.asServiceRole.entities.Player.list('-created_date', batchSize, skip);
-    if (!batch || batch.length === 0) break;
-    allPlayers = allPlayers.concat(batch);
-    if (batch.length < batchSize) break;
-    skip += batchSize;
-  }
+  const body = await req.json().catch(() => ({}));
+  const skip = body.skip || 0;
+  const batchSize = body.batch_size || 50; // process 50 at a time to avoid timeouts
 
-  let updated = 0;
-  let skipped = 0;
-  let failed = [];
+  // Fetch one batch of players
+  const players = await base44.asServiceRole.entities.Player.list('-created_date', batchSize, skip);
+
+  if (!players || players.length === 0) {
+    return Response.json({ done: true, skip, updated: 0, skipped: 0, failed: [] });
+  }
 
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-  // Build list of players that actually need updating
-  const toUpdate = allPlayers.filter(player => {
+  let updated = 0;
+  let skipped = 0;
+  const failed = [];
+
+  // Process one at a time with delay to respect rate limits
+  for (const player of players) {
     const firstName = (player.first_name || '').trim();
     const lastName = (player.last_name || '').trim();
     const email = (player.email || '').trim().toLowerCase();
     const fullName = [firstName, lastName].filter(Boolean).join(' ');
     const searchName = fullName.toLowerCase();
-    if (!firstName && !lastName && !email) return false;
-    return (
+
+    if (!firstName && !lastName && !email) { skipped++; continue; }
+
+    const needsUpdate =
       player.first_name !== firstName ||
       player.last_name !== lastName ||
       player.email !== email ||
       player.full_name !== fullName ||
-      player.search_name !== searchName
-    );
-  });
+      player.search_name !== searchName;
 
-  skipped = allPlayers.length - toUpdate.length;
+    if (!needsUpdate) { skipped++; continue; }
 
-  // Process in small sequential batches with delay to avoid rate limits
-  const CHUNK = 5;
-  const DELAY_MS = 600;
+    try {
+      await base44.asServiceRole.entities.Player.update(player.id, {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        full_name: fullName,
+        search_name: searchName,
+      });
+      updated++;
+    } catch (err) {
+      failed.push({ id: player.id, email: player.email, error: err.message });
+    }
 
-  for (let i = 0; i < toUpdate.length; i += CHUNK) {
-    const chunk = toUpdate.slice(i, i + CHUNK);
-    await Promise.all(chunk.map(async (player) => {
-      const firstName = (player.first_name || '').trim();
-      const lastName = (player.last_name || '').trim();
-      const email = (player.email || '').trim().toLowerCase();
-      const fullName = [firstName, lastName].filter(Boolean).join(' ');
-      const searchName = fullName.toLowerCase();
-      try {
-        await base44.asServiceRole.entities.Player.update(player.id, {
-          first_name: firstName,
-          last_name: lastName,
-          email,
-          full_name: fullName,
-          search_name: searchName,
-        });
-        updated++;
-      } catch (err) {
-        failed.push({ id: player.id, email: player.email, error: err.message });
-      }
-    }));
-    if (i + CHUNK < toUpdate.length) await sleep(DELAY_MS);
+    await sleep(350); // ~3 writes/sec — stays safely under rate limit
   }
 
   return Response.json({
-    total: allPlayers.length,
+    done: players.length < batchSize,
+    next_skip: skip + players.length,
+    batch_fetched: players.length,
     updated,
     skipped,
     failed_count: failed.length,
