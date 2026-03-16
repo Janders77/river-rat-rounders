@@ -234,6 +234,12 @@ export default function DirectorDashboard() {
    setIsLoading(false);
   };
 
+  const getPlayerFullName = (email) => {
+    const p = players.find(pl => pl.email?.trim().toLowerCase() === email?.trim().toLowerCase());
+    if (p) return `${p.first_name || ""} ${p.last_name || ""}`.trim();
+    return null;
+  };
+
   const handleRecordGame = async (e) => {
     e.preventDefault();
     const filledPlacements = placements.filter(p => p !== "");
@@ -242,13 +248,13 @@ export default function DirectorDashboard() {
       return;
     }
     setIsSubmitting(true);
-    const winner = users.find(u => u.email === placements[0]);
+    const winnerName = getPlayerFullName(placements[0]) || placements[0];
 
     await Game.create({
       ...gameData,
       players: filledPlacements,
       winner_email: placements[0],
-      winner_name: winner?.full_name || winner?.email,
+      winner_name: winnerName,
       points_awarded: POINTS[0],
     });
 
