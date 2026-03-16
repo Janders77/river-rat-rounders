@@ -316,18 +316,15 @@ export default function Leaderboard() {
                        <div className="w-8 h-8 bg-gradient-to-br from-red-700 to-red-900 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 min-w-8">
                          {index + 1}
                        </div>
-                       {(() => {
-                         const playerData = getPlayerData(player.email);
-                         return playerData?.image ? (
-                           <img src={playerData.image} alt={playerData.fullName} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
-                         ) : (
-                           <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
-                             {playerData?.fullName?.[0]}
-                           </div>
-                         );
-                       })()}
+                       {player.profile_picture ? (
+                         <img src={player.profile_picture} alt={getPlayerDisplayName(player)} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                       ) : (
+                         <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
+                           {getPlayerDisplayName(player)[0]}
+                         </div>
+                       )}
                        <div className="text-white font-medium group-hover:text-red-400 transition-colors">
-                         {getPlayerName(player)}
+                         {getPlayerDisplayName(player)}
                        </div>
                      </div>
                      <div className="flex items-center gap-6 text-sm">
