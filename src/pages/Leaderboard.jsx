@@ -16,6 +16,16 @@ import {
 // Points by placement index (0=1st, 1=2nd, ...)
 const PLACEMENT_POINTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
 
+// Canonical location list — always show all venues in the dropdown
+// regardless of whether a game has been recorded there yet
+const ALL_LOCATIONS = [
+  "Tavern 018 Sunday",
+  "Tavern 018 Wednesday",
+  "East End Grill",
+  "Habana Club",
+  "Meddlesome",
+];
+
 function getCurrentQuarter() {
   const now = new Date();
   return `${now.getFullYear()}-Q${Math.floor(now.getMonth() / 3) + 1}`;
