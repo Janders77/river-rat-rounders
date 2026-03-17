@@ -162,13 +162,12 @@ export default function DirectorDashboard() {
   const getPlacementSuggestions = (index) => {
     const q = placementSearches[index]?.trim().toLowerCase();
     const alreadyPlaced = new Set(placements.filter((p, i) => p && i !== index));
-    return signedInSearchIndex
-      .filter(entry => {
-        if (alreadyPlaced.has(entry.id)) return false;
-        if (!q) return true;
-        return entry.searchText.includes(q);
-      })
-      .slice(0, 8);
+    return signedInSearchIndex.filter(entry => {
+      if (alreadyPlaced.has(entry.id)) return false;
+      if (!q) return true;
+      return entry.searchText.includes(q);
+    });
+    // No slice — show the full roster so no signed-in player is hidden
   };
 
   const loadAll = async () => {
