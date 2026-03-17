@@ -654,25 +654,32 @@ export default function DirectorDashboard() {
                           </button>
 
                           {isExpanded && signedInIds.length > 0 && (
-                            <div className="mt-2 border-t border-gray-800 pt-2">
-                              <div className="flex gap-4">
-                                {Array.from({ length: Math.min(4, Math.ceil(signedInIds.length / 20)) }, (_, col) => {
-                                  const start = col * 20;
-                                  const slice = signedInIds.slice(start, start + 20);
-                                  return (
-                                    <div key={col} className="flex-1 min-w-0 space-y-0.5">
-                                      {slice.map((pid, i) => (
-                                        <div key={pid} className="flex items-baseline text-xs text-gray-300 leading-5">
-                                          <span className="text-gray-500 shrink-0 w-8 text-right pr-1">{start + i + 1}.</span>
-                                          <span className="truncate">{nameById(pid)}</span>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                              {signedInIds.length > 80 && (
-                                <p className="text-xs text-gray-600 mt-1">+{signedInIds.length - 80} more</p>
+                            <div className="mt-2 border-t border-gray-800 pt-2 space-y-1">
+                              {signedInIds.map((pid, i) => (
+                                <div key={pid} className="flex items-center justify-between text-xs p-2 hover:bg-gray-800/40 rounded transition-colors">
+                                  <div className="flex items-center gap-2 flex-1 text-gray-300 min-w-0">
+                                    <span className="text-gray-500 shrink-0 w-6 text-right">{i + 1}.</span>
+                                    <span className="truncate">{nameById(pid)}</span>
+                                  </div>
+                                  <button
+                                    onClick={async () => {
+                                      const updatedIds = signedInIds.filter(id => id !== pid);
+                                      const updatedEmails = (session.signed_in_players || []).filter((_, idx) => signedInIds[idx] !== pid);
+                                      await base44.entities.GameSession.update(session.id, {
+                                        signed_in_player_ids: updatedIds,
+                                        signed_in_players: updatedEmails
+                                      });
+                                      setSessions(prev => prev.map(s => s.id === session.id
+                                        ? { ...s, signed_in_player_ids: updatedIds, signed_in_players: updatedEmails }
+                                        : s));
+                                    }}
+                                    className="text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded px-1.5 py-0.5 ml-2 shrink-0">
+                                    ✕
+                                  </button>
+                                </div>
+                              ))}
+                              {signedInIds.length > 20 && (
+                                <p className="text-xs text-gray-600 pt-1">Total: {signedInIds.length} players</p>
                               )}
                             </div>
                           )}
