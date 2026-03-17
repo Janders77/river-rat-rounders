@@ -399,6 +399,7 @@ export default function DirectorDashboard() {
   }
 
   return (
+    <>
     <div className="min-h-screen p-3 md:p-6 overflow-x-hidden relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
       <div className="max-w-4xl mx-auto w-full relative">
