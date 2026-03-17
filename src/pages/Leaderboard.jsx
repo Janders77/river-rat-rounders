@@ -215,7 +215,7 @@ export default function Leaderboard() {
           </div>
         </div>
 
-        {isLoading ? (
+        {isLoading || isFetchingMissingPlayers ? (
           <div className="space-y-3">
             {Array(10).fill(0).map((_, i) => (
               <Skeleton key={i} className="h-16 bg-gray-800" />
