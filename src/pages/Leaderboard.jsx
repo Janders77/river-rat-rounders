@@ -253,37 +253,36 @@ export default function Leaderboard() {
             )}
 
             {leaderboard.map((entry, index) => (
-              <Link
+              <div
                 key={entry.id}
-                to={entry.email ? `${createPageUrl("PlayerProfile")}?email=${entry.email}` : "#"}
-                className="glass-link flex items-center justify-between p-4 rounded-lg border border-gray-800 hover:border-red-500/50 transition-all group"
+                className="glass-link flex items-center justify-between p-5 rounded-lg border border-gray-800 transition-all"
               >
                 <div className="flex items-center gap-4 flex-1">
-                  <div className="w-8 h-8 bg-gradient-to-br from-red-700 to-red-900 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 min-w-8">
+                  <div className="w-10 h-10 bg-gradient-to-br from-red-700 to-red-900 rounded-lg flex items-center justify-center text-white font-bold text-base shrink-0 min-w-10">
                     {index + 1}
                   </div>
                   {entry.image ? (
-                    <img src={entry.image} alt={entry.name} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                    <img src={entry.image} alt={entry.name} className="w-12 h-12 rounded-full object-cover border-2 border-gray-700 shrink-0" />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
                       {entry.name?.[0]}
                     </div>
                   )}
-                  <div className="text-white font-medium group-hover:text-red-400 transition-colors">
+                  <div className="text-white font-semibold text-lg">
                     {entry.name}
                   </div>
                 </div>
-                <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-8 text-base">
                   <div className="text-right">
-                    <div className="text-gray-400 text-xs">Wins</div>
-                    <div className="text-emerald-400 font-bold text-lg">{entry.wins}</div>
+                    <div className="text-gray-400 text-sm">Wins</div>
+                    <div className="text-emerald-400 font-bold text-xl">{entry.wins}</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-gray-400 text-xs">Points</div>
-                    <div className="text-red-400 font-bold text-lg">{entry.points}</div>
+                    <div className="text-gray-400 text-sm">Points</div>
+                    <div className="text-red-400 font-bold text-xl">{entry.points}</div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}
