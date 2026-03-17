@@ -92,7 +92,10 @@ export default function PlayerProfile() {
     setPasswordStatus("done");
     setNewPassword("");
     setConfirmPassword("");
-    setTimeout(() => setPasswordStatus("idle"), 3000);
+    setTimeout(() => {
+      setPasswordStatus("idle");
+      setShowPasswordModal(false);
+    }, 1500);
   };
 
   const handleImageUpload = async (e) => {
