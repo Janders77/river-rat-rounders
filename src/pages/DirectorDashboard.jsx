@@ -74,27 +74,31 @@ export default function DirectorDashboard() {
   // Helper: get name from player ID
   const nameById = (id) => getPlayerDisplayName(playersById[id]);
 
-  // Fetch any player IDs that are signed in but not yet in our local players array
+  // Fetch any player IDs from the open session that aren't yet in local players array.
+  // Use signed_in_player_ids directly (not getEffectiveSignedInIds) so we get ALL ids
+  // even if their Player records haven't been loaded yet.
   useEffect(() => {
     const openSession = sessions.find(s => s.is_open);
     if (!openSession) return;
-    const ids = getEffectiveSignedInIds(openSession, players);
-    const missingIds = ids.filter(id => !playersById[id]);
+    const allSessionIds = openSession.signed_in_player_ids || [];
+    const missingIds = allSessionIds.filter(id => !playersById[id]);
     if (missingIds.length === 0) return;
-    Promise.all(missingIds.map(id => base44.entities.Player.filter({ id }).catch(() => [])))
-      .then(results => {
-        const fetched = results.flat().filter(Boolean);
+    base44.entities.Player.filter({ id: { $in: missingIds } }, null, missingIds.length)
+      .then(fetched => {
         if (fetched.length > 0) setPlayers(prev => {
           const existingIds = new Set(prev.map(p => p.id));
           return [...prev, ...fetched.filter(p => !existingIds.has(p.id))];
         });
-      });
+      })
+      .catch(() => {});
   }, [sessions, playersById]);
 
-  // Precomputed index of signed-in players for the open session — rebuilt only when session/players change
+  // Precomputed roster for the open session in sign-in order.
+  // Built from signed_in_player_ids directly so every signed-in player is included
+  // as soon as their record is loaded.
   const signedInSearchIndex = useMemo(() => {
     const openSession = sessions.find(s => s.is_open);
-    const ids = getEffectiveSignedInIds(openSession || {}, players);
+    const ids = openSession?.signed_in_player_ids || [];
     return ids
       .map(id => {
         const p = playersById[id];
@@ -102,9 +106,9 @@ export default function DirectorDashboard() {
         if (!displayName) return null;
         return { id, displayName, searchText: displayName.toLowerCase() };
       })
-      .filter(Boolean)
-      .sort((a, b) => a.displayName.localeCompare(b.displayName));
-  }, [sessions, playersById, players]);
+      .filter(Boolean);
+    // Intentionally NOT sorted — preserves session sign-in order
+  }, [sessions, playersById]);
 
   useEffect(() => { loadAll(); }, []);
 
