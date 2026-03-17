@@ -151,7 +151,7 @@ export default function Leaderboard() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="gap-2 border-gray-800 text-gray-300 hover:text-white">
                   <MapPin className="w-4 h-4" />
-                  {selectedLocation || "All Locations"}
+                  {selectedLocation || "Overall"}
                   <ChevronDown className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
