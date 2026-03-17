@@ -87,9 +87,22 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', system-ui, sans-serif;
+    font-size: 18px;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-2xl;
+  }
+
+  h3 {
+    @apply text-xl;
+  }
+
+  h4, h5, h6 {
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     letter-spacing: -0.01em;
