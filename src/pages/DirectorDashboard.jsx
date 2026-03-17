@@ -692,9 +692,7 @@ export default function DirectorDashboard() {
                 </div>
                 <div>
                   <form onSubmit={handleDirectorSignInPlayer} className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-gray-300 text-sm">Search by name or player #</label>
-                      <div className="relative">
+                    <div className="relative">
                         <Input
                           id="dir-sign-in-search"
                           placeholder="Search player name or player #"
