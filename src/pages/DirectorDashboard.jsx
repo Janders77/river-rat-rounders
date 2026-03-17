@@ -208,6 +208,14 @@ export default function DirectorDashboard() {
     setPhotos(fetchedPhotos);
     setInviteRequests(fetchedRequests);
 
+    // Fetch all Player records referenced in open sessions immediately
+    const openSessions = fetchedSessions.filter(s => s.is_open);
+    const allIds = [...new Set(openSessions.flatMap(s => s.signed_in_player_ids || []))];
+    if (allIds.length > 0) {
+      const fetchedPlayers = await base44.entities.Player.filter({ id: { $in: allIds } }, null, allIds.length);
+      setPlayers(fetchedPlayers);
+    }
+
     base44.entities.User.subscribe((event) => {
       if (event.type === 'update') setUsers(prev => prev.map(u => u.id === event.id ? event.data : u));
       else if (event.type === 'create') setUsers(prev => [event.data, ...prev]);
