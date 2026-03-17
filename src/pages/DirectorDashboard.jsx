@@ -237,33 +237,6 @@ export default function DirectorDashboard() {
       points_awarded: POINTS[0],
     });
 
-    for (let i = 0; i < filledIds.length; i++) {
-      const pid = filledIds[i];
-      const user = users.find(u => {
-        const pr = getPlayerById(players, pid);
-        return pr && u.email?.trim().toLowerCase() === pr.email?.trim().toLowerCase();
-      });
-      const pts = POINTS[i] || 0;
-      if (!user) continue;
-      if (i === 0) {
-        const newStreak = (user.current_streak || 0) + 1;
-
-        await User.update(user.id, {
-          games_played: (user.games_played || 0) + 1,
-          total_points: (user.total_points || 0) + pts,
-          wins: (user.wins || 0) + 1,
-          current_streak: newStreak,
-          best_streak: Math.max(user.best_streak || 0, newStreak)
-        });
-      } else {
-        await User.update(user.id, {
-          games_played: (user.games_played || 0) + 1,
-          total_points: (user.total_points || 0) + pts,
-          current_streak: 0
-        });
-      }
-    }
-
     if (currentSessionId) {
       await GameSession.update(currentSessionId, { is_open: false, signed_in_player_ids: [], signed_in_players: [] });
     }
