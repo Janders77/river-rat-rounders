@@ -188,7 +188,11 @@ export default function Leaderboard() {
         ) : leaderboard.length === 0 ? (
           <div className="text-center py-16 text-gray-500">
             <Trophy className="w-16 h-16 mx-auto mb-4 opacity-20" />
-            <p className="text-lg">No games recorded for this period</p>
+            <p className="text-lg">
+              {selectedLocation
+                ? `No recorded games for ${selectedLocation} in this quarter`
+                : "No games recorded for this period"}
+            </p>
           </div>
         ) : (
           <div className="space-y-2 mt-2">
