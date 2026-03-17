@@ -75,6 +75,7 @@ export default function DirectorDashboard() {
   const [showPlacementSuggestions, setShowPlacementSuggestions] = useState(Array(9).fill(false));
   const [expandedSessions, setExpandedSessions] = useState({});
   const [activeTab, setActiveTab] = useState("sessions");
+  const [showWinnerPhotoModal, setShowWinnerPhotoModal] = useState(false);
 
   const playersById = useMemo(() => buildPlayersById(players), [players]);
 
