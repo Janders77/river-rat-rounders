@@ -64,6 +64,7 @@ export default function DirectorDashboard() {
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [dirSignInSearch, setDirSignInSearch] = useState("");
 
+  const [expandedGameId, setExpandedGameId] = useState(null);
   const [dirSignInStatus, setDirSignInStatus] = useState("");
   const [dirSignInMessage, setDirSignInMessage] = useState("");
   const [dirSignInSelectedPlayer, setDirSignInSelectedPlayer] = useState(null);
