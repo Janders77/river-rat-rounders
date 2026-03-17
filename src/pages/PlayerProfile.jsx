@@ -335,6 +335,85 @@ export default function PlayerProfile() {
           </div>
         )}
 
+        {/* Games Played Section */}
+        {playerData && (
+          <div className="bg-transparent border border-red-500/40 rounded-xl p-8 mb-8">
+            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              🎮 Games Played
+              {!gamesLoading && (
+                <span className="text-sm font-normal text-gray-400">({gamesPlayed.length} game{gamesPlayed.length !== 1 ? 's' : ''})</span>
+              )}
+            </h2>
+            {gamesLoading ? (
+              <div className="text-gray-500 text-sm">Loading...</div>
+            ) : gamesPlayed.length === 0 ? (
+              <div className="text-gray-500 text-sm">No recorded games yet.</div>
+            ) : (
+              <div className="space-y-6">
+                {/* Location Summary */}
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">Summary by Location</h3>
+                  <div className="space-y-2">
+                    {Object.entries(
+                      gamesPlayed.reduce((acc, game) => {
+                        const location = game.location || 'Unknown';
+                        if (!acc[location]) acc[location] = { games: 0, points: 0 };
+                        const playerIds = game.player_ids || [];
+                        const placement = playerIds.indexOf(playerData.id);
+                        if (placement >= 0) {
+                          acc[location].games += 1;
+                          acc[location].points += PLACEMENT_POINTS[placement] || 0;
+                        }
+                        return acc;
+                      }, {})
+                    ).map(([location, stats]) => (
+                      <div key={location} className="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border border-gray-800/50">
+                        <div className="flex items-center gap-3">
+                          <MapPin className="w-4 h-4 text-red-400 shrink-0" />
+                          <div>
+                            <div className="text-white font-medium text-sm">{location}</div>
+                            <div className="text-gray-400 text-xs">{stats.games} game{stats.games !== 1 ? 's' : ''}</div>
+                          </div>
+                        </div>
+                        <div className="text-red-400 font-bold">{stats.points} pts</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Individual Games */}
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">Game History</h3>
+                  <div className="space-y-2">
+                    {gamesPlayed.map(game => {
+                      const playerIds = game.player_ids || [];
+                      const placement = playerIds.indexOf(playerData.id);
+                      const points = PLACEMENT_POINTS[placement] || 0;
+                      const placementLabel = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'][placement] || `${placement + 1}th`;
+                      
+                      return (
+                        <div key={game.id} className="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border border-gray-800/50 hover:border-red-500/30 transition-colors">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="text-white font-medium text-sm">{game.game_type || 'Game'}</div>
+                              <span className="text-xs bg-red-900/30 text-red-300 rounded px-2 py-0.5">{placementLabel}</span>
+                            </div>
+                            <div className="text-gray-400 text-xs">
+                              {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                              {game.location ? ` · ${game.location}` : ''}
+                            </div>
+                          </div>
+                          <div className="text-red-400 font-bold text-sm">{points} pts</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Password Modal */}
         {isOwnProfile && showPasswordModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background: "rgba(0,0,0,0.7)"}}>
