@@ -129,20 +129,23 @@ export default function Leaderboard() {
           </div>
 
           <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex gap-2 flex-wrap">
-              {getAvailableQuarters().map(q => (
-                <button
-                  key={q}
-                  onClick={() => setSelectedQuarter(q)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                    selectedQuarter === q
-                      ? 'bg-gradient-to-r from-red-700 to-red-900 text-white shadow-lg shadow-red-900/40'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gradient-to-r hover:from-red-700 hover:to-red-900 hover:text-white hover:shadow-lg hover:shadow-red-900/40'
-                  }`}
-                >
-                  {q}
-                </button>
-              ))}
+            <div className="flex gap-2">
+              {getAllQuarters().map(q => {
+                const label = q.split('-')[1]; // "Q1", "Q2", etc.
+                return (
+                  <button
+                    key={q}
+                    onClick={() => setSelectedQuarter(q)}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
+                      selectedQuarter === q
+                        ? 'bg-gradient-to-r from-red-700 to-red-900 text-white shadow-lg shadow-red-900/40'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gradient-to-r hover:from-red-700 hover:to-red-900 hover:text-white hover:shadow-lg hover:shadow-red-900/40'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
 
             <DropdownMenu>
