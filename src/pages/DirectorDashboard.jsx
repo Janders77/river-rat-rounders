@@ -470,7 +470,13 @@ export default function DirectorDashboard() {
                   <h2 className="text-lg font-semibold text-white">Open Games</h2>
                 </div>
                 <div className="space-y-3">
-                    {sessions.filter(s => s.is_open).map(session => {
+                    {sessions.filter(s => s.is_open).sort((a, b) => {
+                      if (a.location < b.location) return -1;
+                      if (a.location > b.location) return 1;
+                      // Within same location: Main Game before Turbo
+                      const order = { "Main Game": 0, "Turbo": 1 };
+                      return (order[a.game_type] ?? 0) - (order[b.game_type] ?? 0);
+                    }).map(session => {
                       const signedInIds = getEffectiveSignedInIds(session, players);
                       const handIds = getEffectiveHandOfWeekIds(session, players);
                       const isExpanded = !!expandedSessions[session.id];
