@@ -987,22 +987,54 @@ export default function DirectorDashboard() {
                 <h2 className="text-lg font-semibold text-white">Recent Games</h2>
               </div>
               <div className="space-y-3">
-                {games.map(game => (
-                  <div key={game.id} className="flex items-center justify-between p-4 bg-gray-900/60 rounded-xl border border-gray-800">
-                    <div>
-                      <div className="font-medium text-white">{game.game_type}</div>
-                      <div className="text-sm text-gray-400">
-                        {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString() : ''} {game.location && `· ${game.location}`}
+                {games.map(game => {
+                  const isExpanded = expandedGameId === game.id;
+                  const placementIds = game.player_ids || [];
+                  return (
+                    <div key={game.id} className="bg-gray-900/60 rounded-xl border border-gray-800 overflow-hidden">
+                      <div
+                        className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/40 transition-colors"
+                        onClick={() => setExpandedGameId(isExpanded ? null : game.id)}
+                      >
+                        <div>
+                          <div className="font-medium text-white">{game.game_type}</div>
+                          <div className="text-sm text-gray-400">
+                            {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString() : ''} {game.location && `· ${game.location}`}
+                          </div>
+                          <div className="text-sm text-red-400 mt-1">Winner: {resolveGameWinner(game)}</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-500 text-xs">{isExpanded ? '▲' : '▼'}</span>
+                          <Button size="icon" variant="ghost"
+                            className="border border-red-500 text-red-400 hover:bg-red-600/20 rounded-lg"
+                            onClick={e => { e.stopPropagation(); handleDeleteGame(game.id); }}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
-                      <div className="text-sm text-red-400 mt-1">Winner: {resolveGameWinner(game)}</div>
+                      {isExpanded && (
+                        <div className="px-4 pb-4 border-t border-gray-800 pt-3">
+                          <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Placements</p>
+                          {placementIds.length > 0 ? (
+                            <div className="space-y-1">
+                              {placementIds.map((pid, i) => (
+                                <div key={pid} className="flex items-center gap-3 text-sm">
+                                  <span className="text-gray-500 w-6 text-right shrink-0">{i + 1}.</span>
+                                  <span className={i === 0 ? 'text-yellow-400 font-semibold' : 'text-gray-300'}>
+                                    {nameById(pid)}
+                                  </span>
+                                  <span className="text-gray-600 text-xs ml-auto">{POINTS[i] ? `${POINTS[i]} pts` : ''}</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-gray-600 text-sm">No placement data recorded.</p>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <Button size="icon" variant="ghost"
-                      className="border border-red-500 text-red-400 hover:bg-red-600/20 rounded-lg"
-                      onClick={() => handleDeleteGame(game.id)}>
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
+                  );
+                })}
                 {games.length === 0 && <p className="text-gray-500 text-center py-4">No games recorded yet.</p>}
               </div>
             </div>
