@@ -45,8 +45,13 @@ export default function DirectorDashboard() {
   // placements now store player IDs
   const [placements, setPlacements] = useState(Array(9).fill(""));
   const [sessions, setSessions] = useState([]);
+  const getLocalDateString = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  };
+
   const [newSession, setNewSession] = useState({
-    session_date: new Date().toISOString().split('T')[0],
+    session_date: getLocalDateString(),
     location: "",
     game_type: "Main Game"
   });
