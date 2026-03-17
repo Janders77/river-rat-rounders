@@ -79,8 +79,20 @@ export default function DirectorDashboard() {
 
   const playersById = useMemo(() => buildPlayersById(players), [players]);
 
-  // Helper: get name from player ID — show "Loading..." if record not yet fetched
-  const nameById = (id) => playersById[id] ? getPlayerDisplayName(playersById[id]) : "Loading...";
+  // Set of all player IDs we've already attempted to fetch (via games or sessions effects)
+  const fetchedPlayerIdSet = useMemo(() => new Set(players.map(p => p.id)), [players]);
+
+  // Helper: get name from player ID
+  // - "Loading..." if we haven't finished fetching yet (games still loading or fetch in-flight)
+  // - "Unknown Player" if we've fetched and it truly doesn't exist
+  const nameById = (id) => {
+    if (playersById[id]) return getPlayerDisplayName(playersById[id]);
+    if (isLoading) return "Loading...";
+    // If all game player IDs have been attempted (games effect ran), show Unknown
+    const allGameIds = new Set(games.flatMap(g => g.player_ids || []));
+    if (allGameIds.has(id) && fetchedPlayerIdSet.size > 0) return "Unknown Player";
+    return "Loading...";
+  };
 
   // Whenever sessions change (e.g. new sign-ins via subscription), fetch any missing Player records
   useEffect(() => {
