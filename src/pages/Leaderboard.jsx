@@ -116,7 +116,7 @@ export default function Leaderboard() {
     });
   }, [allGames, selectedQuarter, selectedLocation]);
 
-  // Compile points + wins directly from game.player_ids (placement order)
+  // Compile points + wins from filtered games
   const compiledStats = useMemo(() => {
     const statsMap = {};
     filteredGames.forEach(game => {
@@ -125,7 +125,8 @@ export default function Leaderboard() {
         if (!pid) return;
         if (!statsMap[pid]) statsMap[pid] = { points: 0, wins: 0 };
         statsMap[pid].points += PLACEMENT_POINTS[index] || 0;
-        if (index === 0) statsMap[pid].wins += 1;
+        // Use winner_player_id to determine wins, not array position
+        if (game.winner_player_id === pid) statsMap[pid].wins += 1;
       });
     });
     return statsMap;
