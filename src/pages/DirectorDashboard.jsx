@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ShieldAlert, Plus, Trophy, Loader2, Users, Trash2, CalendarPlus, ImagePlus, X, Mail, Search } from "lucide-react";
+import { ShieldAlert, Plus, Trophy, Loader2, Users, Trash2, CalendarPlus, ImagePlus, X, Mail, Search, ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -66,6 +66,8 @@ export default function DirectorDashboard() {
   const [dirSignInSearchLoading, setDirSignInSearchLoading] = useState(false);
   const [placementSearches, setPlacementSearches] = useState(Array(9).fill(""));
   const [showPlacementSuggestions, setShowPlacementSuggestions] = useState(Array(9).fill(false));
+  const [expandedSessions, setExpandedSessions] = useState({});
+  const [activeTab, setActiveTab] = useState("sessions");
 
   const playersById = useMemo(() => buildPlayersById(players), [players]);
 
@@ -189,6 +191,7 @@ export default function DirectorDashboard() {
     if (!directorRecord) { setIsLoading(false); return; }
 
     setDirectorRole(directorRecord.role);
+    setActiveTab(hasPermission(directorRecord.role, "canManageSessions") ? "sessions" : "record");
     const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
       User.list(),
       Game.list("-created_date", 20),
@@ -413,7 +416,30 @@ export default function DirectorDashboard() {
           </div>
         </div>
 
-        <Tabs defaultValue={hasPermission(directorRole, "canManageSessions") ? "sessions" : "record"}>
+        {/* Quick Actions */}
+        <div className="mb-6 rounded-xl border border-gray-800 bg-gray-900/40 p-4">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Quick Actions</h2>
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" onClick={() => { setActiveTab("sessions"); setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 100); }}
+              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3">
+              <Plus className="w-3.5 h-3.5 mr-1" /> Add Player
+            </Button>
+            <Button size="sm" onClick={() => setActiveTab("record")}
+              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3">
+              <Trophy className="w-3.5 h-3.5 mr-1" /> Record Game
+            </Button>
+            <Button size="sm" onClick={() => setActiveTab("sessions")}
+              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3">
+              🃏 Hand of the Week
+            </Button>
+            <Button size="sm" onClick={() => navigate(createPageUrl("Leaderboard"))}
+              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3">
+              <Users className="w-3.5 h-3.5 mr-1" /> View Leaderboard
+            </Button>
+          </div>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-3 gap-1 w-full h-auto p-1">
             {hasPermission(directorRole, "canManageSessions") && (
               <TabsTrigger value="sessions" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
@@ -463,103 +489,147 @@ export default function DirectorDashboard() {
                     {sessions.filter(s => s.is_open).map(session => {
                       const signedInIds = getEffectiveSignedInIds(session, players);
                       const handIds = getEffectiveHandOfWeekIds(session, players);
+                      const isExpanded = !!expandedSessions[session.id];
+                      const isHotwExpanded = !!expandedSessions[`hotw_${session.id}`];
                       return (
-                        <div key={session.id} className="p-4 bg-gray-900/50 rounded-xl border border-gray-800">
+                        <div key={session.id} className="p-4 bg-gray-900/50 rounded-xl border border-green-900/30">
+                          {/* LIVE Badge */}
+                          <div className="mb-2">
+                            <Badge className="bg-green-500/20 text-green-400 border border-green-500/30 text-xs font-semibold px-2 py-0.5">
+                              🟢 LIVE GAME
+                            </Badge>
+                          </div>
+
+                          {/* Location + delete */}
                           <div className="flex items-start justify-between gap-2">
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-white">{session.location}</div>
+                            <div>
+                              <div className="font-medium text-white text-base">{session.location}</div>
                               <div className="text-sm text-gray-400">
-                                {session.session_date ? new Date(session.session_date + 'T12:00:00').toLocaleDateString() : ''} · {session.game_type}
+                                {session.session_date ? new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", {month: "short", day: "numeric"}) : ''} · {session.game_type}
                               </div>
-                              <div className="text-sm text-gray-500 mt-1 font-medium">Players Signed In ({signedInIds.length})</div>
-                              {signedInIds.length > 0 && (
-                                <div className="mt-2 border-t border-gray-800 pt-2">
-                                  <div className="flex gap-4">
-                                    {Array.from({ length: Math.min(4, Math.ceil(signedInIds.length / 20)) }, (_, col) => {
-                                      const start = col * 20;
-                                      const slice = signedInIds.slice(start, start + 20);
-                                      return (
-                                        <div key={col} className="flex-1 min-w-0 space-y-0.5">
-                                          {slice.map((pid, i) => (
-                                            <div key={pid} className="flex items-baseline text-xs text-gray-300 leading-5">
-                                              <span className="text-gray-500 shrink-0 w-8 text-right pr-1">{start + i + 1}.</span>
-                                              <span className="truncate">{nameById(pid)}</span>
-                                            </div>
-                                          ))}
+                            </div>
+                            <Button size="icon" variant="ghost"
+                              className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                              onClick={() => handleDeleteSession(session.id)}>
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+
+                          {/* Director Actions Row */}
+                          <div className="flex flex-wrap gap-2 mt-3 pb-3 border-b border-gray-800">
+                            <Button size="sm"
+                              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3"
+                              onClick={() => { setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 50); }}>
+                              <Plus className="w-3.5 h-3.5 mr-1" /> Add Player
+                            </Button>
+                            <Button size="sm"
+                              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3"
+                              onClick={() => setActiveTab("record")}>
+                              <Trophy className="w-3.5 h-3.5 mr-1" /> Record Game
+                            </Button>
+                            <Button size="sm"
+                              className={`rounded-lg text-xs px-3 ${isHotwExpanded ? 'bg-red-900/40 border border-red-700 text-red-300' : 'bg-gray-800 hover:bg-gray-700 text-white border border-gray-700'}`}
+                              onClick={() => setExpandedSessions(prev => ({ ...prev, [`hotw_${session.id}`]: !prev[`hotw_${session.id}`] }))}>
+                              🃏 Hand of Week
+                            </Button>
+                            <Button size="sm"
+                              className="border border-red-500 text-red-400 hover:bg-red-600/20 bg-transparent rounded-lg text-xs px-3"
+                              onClick={() => handleToggleSession(session)}>
+                              {session.is_open ? "End Game" : "Reopen"}
+                            </Button>
+                          </div>
+
+                          {/* Collapsible Players Signed In */}
+                          <button
+                            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-300 transition-colors mt-3 w-full text-left"
+                            onClick={() => setExpandedSessions(prev => ({ ...prev, [session.id]: !prev[session.id] }))}
+                          >
+                            <Users className="w-3.5 h-3.5" />
+                            <span>Players Signed In ({signedInIds.length})</span>
+                            {isExpanded ? <ChevronUp className="w-3.5 h-3.5 ml-auto" /> : <ChevronDown className="w-3.5 h-3.5 ml-auto" />}
+                          </button>
+
+                          {isExpanded && signedInIds.length > 0 && (
+                            <div className="mt-2 border-t border-gray-800 pt-2">
+                              <div className="flex gap-4">
+                                {Array.from({ length: Math.min(4, Math.ceil(signedInIds.length / 20)) }, (_, col) => {
+                                  const start = col * 20;
+                                  const slice = signedInIds.slice(start, start + 20);
+                                  return (
+                                    <div key={col} className="flex-1 min-w-0 space-y-0.5">
+                                      {slice.map((pid, i) => (
+                                        <div key={pid} className="flex items-baseline text-xs text-gray-300 leading-5">
+                                          <span className="text-gray-500 shrink-0 w-8 text-right pr-1">{start + i + 1}.</span>
+                                          <span className="truncate">{nameById(pid)}</span>
                                         </div>
-                                      );
-                                    })}
-                                  </div>
-                                  {signedInIds.length > 80 && (
-                                    <p className="text-xs text-gray-600 mt-1">+{signedInIds.length - 80} more</p>
-                                  )}
+                                      ))}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              {signedInIds.length > 80 && (
+                                <p className="text-xs text-gray-600 mt-1">+{signedInIds.length - 80} more</p>
+                              )}
+                            </div>
+                          )}
+                          {isExpanded && signedInIds.length === 0 && (
+                            <p className="text-xs text-gray-500 mt-2 pl-1">No players signed in yet.</p>
+                          )}
+
+                          {/* Hand of the Week (expandable) */}
+                          {isHotwExpanded && (
+                            <div className="mt-3 space-y-2 border-t border-gray-800 pt-3">
+                              <label className="text-xs text-red-400 font-semibold">🃏 Hand of the Week</label>
+                              <Select
+                                value="__none__"
+                                onValueChange={async (pid) => {
+                                  if (pid === "__none__") return;
+                                  if (handIds.includes(pid)) return;
+                                  const playerRecord = playersById[pid];
+                                  const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
+                                  if (user) {
+                                    await base44.entities.User.update(user.id, { total_points: (user.total_points || 0) + 50 });
+                                    setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: (u.total_points || 0) + 50 } : u));
+                                  }
+                                  const newIds = [...handIds, pid];
+                                  await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
+                                  setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
+                                }}
+                              >
+                                <SelectTrigger className="bg-gray-800 border-gray-700 text-white text-sm h-8">
+                                  <SelectValue placeholder="Add player..." />
+                                </SelectTrigger>
+                                <SelectContent className="bg-gray-900 border-gray-700">
+                                  <SelectItem value="__none__" disabled className="text-gray-500">Add player...</SelectItem>
+                                  {signedInSearchIndex
+                                    .filter(entry => !handIds.includes(entry.id))
+                                    .map(entry => (
+                                      <SelectItem key={entry.id} value={entry.id} className="text-white">{entry.displayName}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                              {handIds.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {handIds.map(pid => (
+                                    <span key={pid} className="flex items-center gap-1 bg-red-900/40 border border-red-700 text-red-300 text-xs rounded-full px-2 py-0.5">
+                                      {nameById(pid)}
+                                      <button onClick={async () => {
+                                        const playerRecord = playersById[pid];
+                                        const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
+                                        if (user) {
+                                          await base44.entities.User.update(user.id, { total_points: Math.max(0, (user.total_points || 0) - 50) });
+                                          setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: Math.max(0, (u.total_points || 0) - 50) } : u));
+                                        }
+                                        const newIds = handIds.filter(id => id !== pid);
+                                        await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
+                                        setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
+                                      }} className="ml-1 hover:text-white">×</button>
+                                    </span>
+                                  ))}
                                 </div>
                               )}
-                              <div className="mt-3 space-y-2">
-                                <label className="text-xs text-red-400 font-semibold">🃏 Hand of the Week</label>
-                                <Select
-                                  value="__none__"
-                                  onValueChange={async (pid) => {
-                                    if (pid === "__none__") return;
-                                    if (handIds.includes(pid)) return;
-                                    const playerRecord = playersById[pid];
-                                    const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
-                                    if (user) {
-                                      await base44.entities.User.update(user.id, { total_points: (user.total_points || 0) + 50 });
-                                      setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: (u.total_points || 0) + 50 } : u));
-                                    }
-                                    const newIds = [...handIds, pid];
-                                    await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
-                                    setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
-                                  }}
-                                >
-                                  <SelectTrigger className="bg-gray-800 border-gray-700 text-white text-sm h-8">
-                                    <SelectValue placeholder="Add player..." />
-                                  </SelectTrigger>
-                                  <SelectContent className="bg-gray-900 border-gray-700">
-                                    <SelectItem value="__none__" disabled className="text-gray-500">Add player...</SelectItem>
-                                    {signedInSearchIndex
-                                      .filter(entry => !handIds.includes(entry.id))
-                                      .map(entry => (
-                                        <SelectItem key={entry.id} value={entry.id} className="text-white">{entry.displayName}</SelectItem>
-                                      ))}
-                                  </SelectContent>
-                                </Select>
-                                {handIds.length > 0 && (
-                                  <div className="flex flex-wrap gap-1 mt-1">
-                                    {handIds.map(pid => (
-                                      <span key={pid} className="flex items-center gap-1 bg-red-900/40 border border-red-700 text-red-300 text-xs rounded-full px-2 py-0.5">
-                                        {nameById(pid)}
-                                        <button onClick={async () => {
-                                          const playerRecord = playersById[pid];
-                                          const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
-                                          if (user) {
-                                            await base44.entities.User.update(user.id, { total_points: Math.max(0, (user.total_points || 0) - 50) });
-                                            setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: Math.max(0, (u.total_points || 0) - 50) } : u));
-                                          }
-                                          const newIds = handIds.filter(id => id !== pid);
-                                          await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
-                                          setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
-                                        }} className="ml-1 hover:text-white">×</button>
-                                      </span>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
                             </div>
-                            <div className="flex items-center gap-2 shrink-0">
-                              <Button size="sm"
-                                className={session.is_open ? "border border-red-500 text-red-400 hover:bg-red-600/20 bg-transparent rounded-lg px-3" : "bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg px-3"}
-                                onClick={() => handleToggleSession(session)}>
-                                {session.is_open ? "Close" : "Reopen"}
-                              </Button>
-                              <Button size="icon" variant="ghost"
-                                className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
-                                onClick={() => handleDeleteSession(session.id)}>
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </div>
+                          )}
                         </div>
                       );
                     })}
@@ -626,7 +696,8 @@ export default function DirectorDashboard() {
                       <label className="text-gray-300 text-sm">Search by name or player #</label>
                       <div className="relative">
                         <Input
-                          placeholder="Name or player number..."
+                          id="dir-sign-in-search"
+                          placeholder="Search player name or player #"
                           value={dirSignInSearch}
                           onChange={e => { setDirSignInSearch(e.target.value); if (dirSignInSelectedPlayer) setDirSignInSelectedPlayer(null); }}
                           className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600"
@@ -652,8 +723,7 @@ export default function DirectorDashboard() {
                                   setDirSignInSearch(p.display_name);
                                   setDirSignInResults([]);
                                 }}>
-                                <div className="text-white text-sm font-medium">{p.display_name}</div>
-                                {p.player_number != null && <div className="text-gray-500 text-xs">#{p.player_number}</div>}
+                                <div className="text-white text-sm font-medium">{p.display_name}{p.player_number != null ? ` (#${p.player_number})` : ''}</div>
                               </button>
                             ))}
                           </div>
