@@ -283,6 +283,32 @@ export default function DirectorDashboard() {
       });
     }
 
+    // Update QuarterlyStats for all placed players (1st–9th)
+    const gameDate = new Date(gameData.game_date + 'T12:00:00');
+    const quarter = `${gameDate.getFullYear()}-Q${Math.floor(gameDate.getMonth() / 3) + 1}`;
+    for (let i = 0; i < filledIds.length; i++) {
+      const pid = filledIds[i];
+      const pts = POINTS[i] || 0;
+      const isWin = i === 0;
+      const playerRec = playersById[pid];
+      const existing = await base44.entities.QuarterlyStats.filter({ quarter, player_id: pid });
+      if (existing.length > 0) {
+        await base44.entities.QuarterlyStats.update(existing[0].id, {
+          points: (existing[0].points || 0) + pts,
+          wins: (existing[0].wins || 0) + (isWin ? 1 : 0),
+        });
+      } else {
+        await base44.entities.QuarterlyStats.create({
+          quarter,
+          player_id: pid,
+          player_email: playerRec?.email || "",
+          player_name: playerRec ? getPlayerDisplayName(playerRec) : "",
+          points: pts,
+          wins: isWin ? 1 : 0,
+        });
+      }
+    }
+
     if (currentSessionId) {
       await GameSession.update(currentSessionId, { is_open: false, signed_in_player_ids: [], signed_in_players: [] });
     }
