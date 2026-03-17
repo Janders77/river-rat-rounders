@@ -139,11 +139,6 @@ export default function PlayerProfile() {
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between gap-3 mb-8">
           <div className="flex items-center gap-3">
-            <Link to={createPageUrl("Leaderboard")}>
-              <Button variant="outline" size="icon" className="border-gray-700 text-gray-400 hover:text-white">
-                <ArrowLeft className="w-4 h-4" />
-              </Button>
-            </Link>
             <h1 className="text-3xl font-bold text-white">Player Profile</h1>
           </div>
           {isOwnProfile && (
