@@ -58,13 +58,6 @@ export default function Leaderboard() {
 
   const playersById = useMemo(() => buildPlayersById(playerRecords), [playerRecords]);
 
-  // Derive unique location names directly from game records so they always match game.location exactly
-  const locations = useMemo(() => {
-    const seen = new Set();
-    allGames.forEach(g => { if (g.location) seen.add(g.location); });
-    return [...seen].sort();
-  }, [allGames]);
-
   const loadData = async () => {
     setIsLoading(true);
     const [fetchedGames, fetchedPlayers] = await Promise.all([
