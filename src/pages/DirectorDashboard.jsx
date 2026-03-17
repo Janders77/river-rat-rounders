@@ -263,7 +263,7 @@ export default function DirectorDashboard() {
     setGameData({ game_date: new Date().toISOString().split('T')[0], game_type: "Main Game", location: "", notes: "" });
     setCurrentSessionId(null);
     setIsSubmitting(false);
-    alert("Game recorded successfully!");
+    setShowWinnerPhotoModal(true);
   };
 
   const handleInvite = async (e) => {
