@@ -341,7 +341,53 @@ export default function DirectorDashboard() {
     setInviteRequests(prev => prev.filter(r => r.id !== req.id));
   };
 
-  const handleDeleteGame = (gameId) => setGames(prev => prev.filter(g => g.id !== gameId));
+  const handleDeleteGame = async (gameId) => {
+    if (!confirm("Delete this game? This will remove all associated wins and points.")) return;
+    
+    const game = games.find(g => g.id === gameId);
+    if (!game) return;
+
+    // Delete QuarterlyStats entries for all placed players
+    const gameDate = new Date(game.game_date + 'T12:00:00');
+    const quarter = `${gameDate.getFullYear()}-Q${Math.floor(gameDate.getMonth() / 3) + 1}`;
+    const placedIds = game.player_ids || [];
+    
+    for (let i = 0; i < placedIds.length; i++) {
+      const pid = placedIds[i];
+      const pts = POINTS[i] || 0;
+      const isWin = i === 0;
+      
+      const stats = await base44.entities.QuarterlyStats.filter({ quarter, player_id: pid });
+      if (stats.length > 0) {
+        const existing = stats[0];
+        const newPoints = Math.max(0, (existing.points || 0) - pts);
+        const newWins = Math.max(0, (existing.wins || 0) - (isWin ? 1 : 0));
+        
+        if (newPoints === 0 && newWins === 0) {
+          // Delete the record if nothing left
+          await base44.entities.QuarterlyStats.delete(existing.id);
+        } else {
+          // Update with reduced totals
+          await base44.entities.QuarterlyStats.update(existing.id, {
+            points: newPoints,
+            wins: newWins,
+          });
+        }
+      }
+    }
+    
+    // Remove card guard from winner if applicable
+    if (game.winner_player_id && playersById[game.winner_player_id]) {
+      const winner = playersById[game.winner_player_id];
+      await base44.entities.Player.update(winner.id, {
+        card_guards: Math.max(0, (winner.card_guards || 0) - 1),
+      });
+    }
+    
+    // Delete the game
+    await Game.delete(gameId);
+    setGames(prev => prev.filter(g => g.id !== gameId));
+  };
 
   const handleCreateSession = async (e) => {
     e.preventDefault();
