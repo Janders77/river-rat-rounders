@@ -32,13 +32,9 @@ function getQuarterDateRange(quarter) {
   return { startDate, endDate };
 }
 
-function getAvailableQuarters() {
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentQ = Math.floor(now.getMonth() / 3) + 1;
-  const quarters = [];
-  for (let q = 1; q <= currentQ; q++) quarters.push(`${currentYear}-Q${q}`);
-  return quarters;
+function getAllQuarters() {
+  const year = new Date().getFullYear();
+  return [1, 2, 3, 4].map(q => `${year}-Q${q}`);
 }
 
 export default function Leaderboard() {
