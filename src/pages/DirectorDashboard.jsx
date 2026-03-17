@@ -473,13 +473,26 @@ export default function DirectorDashboard() {
                               </div>
                               <div className="text-sm text-gray-500 mt-1 font-medium">Players Signed In ({signedInIds.length})</div>
                               {signedInIds.length > 0 && (
-                                <div className="mt-2 space-y-1 border-t border-gray-800 pt-2">
-                                  {signedInIds.map((pid) => (
-                                    <div key={pid} className="flex items-center gap-2 text-xs text-gray-300">
-                                      <span className="text-red-500">•</span>
-                                      <span>{nameById(pid)}</span>
-                                    </div>
-                                  ))}
+                                <div className="mt-2 border-t border-gray-800 pt-2">
+                                  <div className="flex gap-4">
+                                    {Array.from({ length: Math.min(4, Math.ceil(signedInIds.length / 20)) }, (_, col) => {
+                                      const start = col * 20;
+                                      const slice = signedInIds.slice(start, start + 20);
+                                      return (
+                                        <div key={col} className="flex-1 min-w-0 space-y-0.5">
+                                          {slice.map((pid, i) => (
+                                            <div key={pid} className="flex items-baseline gap-1 text-xs text-gray-300 leading-5">
+                                              <span className="text-gray-500 shrink-0 w-6 text-right">{start + i + 1}.</span>
+                                              <span className="truncate">{nameById(pid)}</span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                  {signedInIds.length > 80 && (
+                                    <p className="text-xs text-gray-600 mt-1">+{signedInIds.length - 80} more</p>
+                                  )}
                                 </div>
                               )}
                               <div className="mt-3 space-y-2">
