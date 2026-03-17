@@ -40,7 +40,6 @@ function getAllQuarters() {
 export default function Leaderboard() {
   const [allGames, setAllGames] = useState([]);
   const [playerRecords, setPlayerRecords] = useState([]);
-  const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
@@ -49,21 +48,21 @@ export default function Leaderboard() {
 
   const playersById = useMemo(() => buildPlayersById(playerRecords), [playerRecords]);
 
+  // Derive unique location names directly from game records so they always match game.location exactly
+  const locations = useMemo(() => {
+    const seen = new Set();
+    allGames.forEach(g => { if (g.location) seen.add(g.location); });
+    return [...seen].sort();
+  }, [allGames]);
+
   const loadData = async () => {
     setIsLoading(true);
-    const [fetchedGames, fetchedPlayers, fetchedLocations] = await Promise.all([
+    const [fetchedGames, fetchedPlayers] = await Promise.all([
       base44.entities.Game.list('-game_date', 500),
       base44.entities.Player.list(),
-      base44.entities.Location.list().catch(() => []),
     ]);
     setAllGames(fetchedGames);
     setPlayerRecords(fetchedPlayers);
-    setLocations(fetchedLocations.sort((a, b) => {
-      const dayOrder = { Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5, Saturday: 6 };
-      const dayA = Object.keys(dayOrder).find(d => a.game_time?.includes(d)) || 7;
-      const dayB = Object.keys(dayOrder).find(d => b.game_time?.includes(d)) || 7;
-      return (dayOrder[dayA] || 7) - (dayOrder[dayB] || 7);
-    }));
     setIsLoading(false);
   };
 
