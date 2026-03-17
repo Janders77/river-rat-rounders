@@ -97,6 +97,21 @@ export default function DirectorDashboard() {
       });
   }, [sessions]);
 
+  // Whenever games change, fetch any Player records referenced in game.player_ids that aren't loaded yet
+  useEffect(() => {
+    if (games.length === 0) return;
+    const allIds = [...new Set(games.flatMap(g => g.player_ids || []))];
+    const missingIds = allIds.filter(id => !playersById[id]);
+    if (missingIds.length === 0) return;
+    base44.entities.Player.filter({ id: { $in: missingIds } }, null, missingIds.length)
+      .then(fetched => {
+        if (fetched.length > 0) setPlayers(prev => {
+          const existingIds = new Set(prev.map(p => p.id));
+          return [...prev, ...fetched.filter(p => !existingIds.has(p.id))];
+        });
+      });
+  }, [games]);
+
   // Precomputed roster for the open session in sign-in order.
   // Built from signed_in_player_ids directly so every signed-in player is included
   // as soon as their record is loaded.
