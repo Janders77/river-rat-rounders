@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
+import { getPlayerDisplayName, buildPlayersById } from "@/utils/playerUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy, MapPin, ChevronDown } from "lucide-react";
 import { createPageUrl } from "@/utils";
@@ -13,151 +13,109 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+// Points by placement index (0=1st, 1=2nd, ...)
+const PLACEMENT_POINTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
+
+function getCurrentQuarter() {
+  const now = new Date();
+  return `${now.getFullYear()}-Q${Math.floor(now.getMonth() / 3) + 1}`;
+}
+
+function getQuarterDateRange(quarter) {
+  const [year, q] = quarter.split('-Q');
+  const qNum = parseInt(q);
+  const startMonth = (qNum - 1) * 3;
+  const endMonth = startMonth + 2;
+  const startDate = `${year}-${String(startMonth + 1).padStart(2, '0')}-01`;
+  const endDay = new Date(parseInt(year), endMonth + 1, 0).getDate();
+  const endDate = `${year}-${String(endMonth + 1).padStart(2, '0')}-${String(endDay).padStart(2, '0')}`;
+  return { startDate, endDate };
+}
+
+function getAvailableQuarters() {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentQ = Math.floor(now.getMonth() / 3) + 1;
+  const quarters = [];
+  for (let q = 1; q <= currentQ; q++) quarters.push(`${currentYear}-Q${q}`);
+  return quarters;
+}
+
 export default function Leaderboard() {
-  const [players, setPlayers] = useState([]);
+  const [allGames, setAllGames] = useState([]);
   const [playerRecords, setPlayerRecords] = useState([]);
-  const [quarterlyStats, setQuarterlyStats] = useState([]);
-  const [quarterlyRecord, setQuarterlyRecord] = useState(null);
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [locationGames, setLocationGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
 
-  function getCurrentQuarter() {
-    const now = new Date();
-    const quarter = Math.floor(now.getMonth() / 3) + 1;
-    const year = now.getFullYear();
-    return `${year}-Q${quarter}`;
-  }
-
-  useEffect(() => {
-    loadData();
-  }, [selectedQuarter]);
-
-  useEffect(() => {
-    loadLocationData();
-  }, [selectedLocation, selectedQuarter]);
+  useEffect(() => { loadData(); }, []);
 
   const playersById = useMemo(() => buildPlayersById(playerRecords), [playerRecords]);
 
   const loadData = async () => {
     setIsLoading(true);
-    const [fetchedPlayers, fetchedQuarterlyStats, fetchedQuarterlyRecord, fetchedLocations] = await Promise.all([
+    const [fetchedGames, fetchedPlayers, fetchedLocations] = await Promise.all([
+      base44.entities.Game.list('-game_date', 500),
       base44.entities.Player.list(),
-      base44.entities.QuarterlyStats.filter({ quarter: selectedQuarter }).catch(() => []),
-      base44.entities.QuarterlyRecord.filter({ quarter: selectedQuarter }).catch(() => []),
-      base44.entities.Location.list().catch(() => [])
+      base44.entities.Location.list().catch(() => []),
     ]);
-    
+    setAllGames(fetchedGames);
     setPlayerRecords(fetchedPlayers);
-    setQuarterlyStats(fetchedQuarterlyStats);
-    setQuarterlyRecord(fetchedQuarterlyRecord[0] || null);
-    
-    // Sort locations by day of week
-    const locationsByDay = fetchedLocations.sort((a, b) => {
-      const dayOrder = { "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6 };
-      const dayA = Object.keys(dayOrder).find(day => a.game_time?.includes(day)) || 7;
-      const dayB = Object.keys(dayOrder).find(day => b.game_time?.includes(day)) || 7;
+    setLocations(fetchedLocations.sort((a, b) => {
+      const dayOrder = { Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5, Saturday: 6 };
+      const dayA = Object.keys(dayOrder).find(d => a.game_time?.includes(d)) || 7;
+      const dayB = Object.keys(dayOrder).find(d => b.game_time?.includes(d)) || 7;
       return (dayOrder[dayA] || 7) - (dayOrder[dayB] || 7);
-    });
-    setLocations(locationsByDay);
-
-    const sortedPlayers = fetchedPlayers
-      .filter(p => p.first_name && p.email)
-      .slice(0, 100);
-    
-    setPlayers(sortedPlayers);
+    }));
     setIsLoading(false);
   };
 
-  const loadLocationData = async () => {
-    if (!selectedLocation) {
-      setLocationGames([]);
-      return;
-    }
-    
-    const games = await base44.entities.Game.filter({ location: selectedLocation }).catch(() => []);
-    setLocationGames(games);
-  };
-
-
-
-  const getQuarterlyStats = (player) => {
-    // Try by player_id first, fall back to email
-    let stat = quarterlyStats.find(s => s.player_id && s.player_id === player.id);
-    if (!stat) stat = quarterlyStats.find(s => s.player_email?.trim().toLowerCase() === player.email?.trim().toLowerCase());
-    return stat || { points: 0, wins: 0 };
-  };
-
-  const getSortedPlayers = () => {
-    return players
-      .map(player => ({
-        ...player,
-        quarterlyPoints: getQuarterlyStats(player).points,
-        quarterlyWins: getQuarterlyStats(player).wins
-      }))
-      .filter(player => player.quarterlyPoints > 0 || player.quarterlyWins > 0)
-      .sort((a, b) => b.quarterlyPoints - a.quarterlyPoints)
-      .slice(0, 100);
-  };
-
-  const getAvailableQuarters = () => {
-    const quarters = [];
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentQuarter = Math.floor(now.getMonth() / 3) + 1;
-    
-    for (let q = 1; q <= currentQuarter; q++) {
-      quarters.push(`${currentYear}-Q${q}`);
-    }
-    return quarters;
-  };
-
-  const resolveWinnerRecord = (game) => {
-    if (game.winner_player_id && playersById[game.winner_player_id])
-      return playersById[game.winner_player_id];
-    if (game.winner_email) return getPlayerByEmail(playerRecords, game.winner_email);
-    return null;
-  };
-
-  const buildLocationStats = () => {
-    if (!selectedLocation || locationGames.length === 0) return {};
-    const locationStats = {};
-    locationGames.forEach(game => {
-      const winnerRecord = resolveWinnerRecord(game);
-      const key = winnerRecord?.id || game.winner_email || "unknown";
-      if (!locationStats[key]) {
-        locationStats[key] = {
-          id: winnerRecord?.id || null,
-          email: winnerRecord?.email || game.winner_email || null,
-          name: winnerRecord ? getPlayerDisplayName(winnerRecord) : (game.winner_name || "Unknown Player"),
-          image: winnerRecord?.profile_picture || null,
-          points: 0,
-          wins: 0
-        };
-      }
-      locationStats[key].points += game.points_awarded || 0;
-      locationStats[key].wins += 1;
+  // Filter games by quarter date range and optional location
+  const filteredGames = useMemo(() => {
+    const { startDate, endDate } = getQuarterDateRange(selectedQuarter);
+    return allGames.filter(g => {
+      if (!g.game_date) return false;
+      if (g.game_date < startDate || g.game_date > endDate) return false;
+      if (selectedLocation && g.location !== selectedLocation) return false;
+      return true;
     });
-    return locationStats;
-  };
+  }, [allGames, selectedQuarter, selectedLocation]);
 
-  const getLocationStats = () => {
-    const locationStats = buildLocationStats();
-    if (Object.keys(locationStats).length === 0) return null;
-    const stats = Object.values(locationStats);
-    return {
-      mostPoints: [...stats].sort((a, b) => b.points - a.points)[0],
-      mostWins: [...stats].sort((a, b) => b.wins - a.wins)[0],
-      allStats: stats
-    };
-  };
+  // Compile points + wins directly from game.player_ids (placement order)
+  const compiledStats = useMemo(() => {
+    const statsMap = {};
+    filteredGames.forEach(game => {
+      const playerIds = game.player_ids || [];
+      playerIds.forEach((pid, index) => {
+        if (!pid) return;
+        if (!statsMap[pid]) statsMap[pid] = { points: 0, wins: 0 };
+        statsMap[pid].points += PLACEMENT_POINTS[index] || 0;
+        if (index === 0) statsMap[pid].wins += 1;
+      });
+    });
+    return statsMap;
+  }, [filteredGames]);
 
-  const getLocationLeaderboard = () => {
-    const locationStats = buildLocationStats();
-    return Object.values(locationStats).sort((a, b) => b.points - a.points);
-  };
+  // Build sorted leaderboard rows
+  const leaderboard = useMemo(() => {
+    return Object.entries(compiledStats)
+      .map(([pid, stats]) => {
+        const player = playersById[pid];
+        return {
+          id: pid,
+          name: player ? getPlayerDisplayName(player) : 'Unknown Player',
+          image: player?.profile_picture || null,
+          email: player?.email || null,
+          ...stats,
+        };
+      })
+      .filter(p => p.points > 0 || p.wins > 0)
+      .sort((a, b) => b.points - a.points);
+  }, [compiledStats, playersById]);
+
+  const topPoints = leaderboard[0] || null;
+  const topWins = [...leaderboard].sort((a, b) => b.wins - a.wins)[0] || null;
 
   return (
     <div className="min-h-screen p-6 relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
@@ -170,11 +128,11 @@ export default function Leaderboard() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">Leaderboard</h1>
-              <p className="text-gray-400 text-sm">Top 100 Players - Current Quarter</p>
+              <p className="text-gray-400 text-sm">Live from recorded game results</p>
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex gap-2 flex-wrap">
               {getAvailableQuarters().map(q => (
                 <button
@@ -204,7 +162,7 @@ export default function Leaderboard() {
                   onClick={() => setSelectedLocation(null)}
                   className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
                 >
-                  Overall
+                  All Locations
                 </DropdownMenuItem>
                 {locations.map(location => (
                   <DropdownMenuItem
@@ -226,126 +184,68 @@ export default function Leaderboard() {
               <Skeleton key={i} className="h-16 bg-gray-800" />
             ))}
           </div>
-        ) : players.length === 0 ? (
-           <div className="text-center py-16 text-gray-500">
-             <Trophy className="w-16 h-16 mx-auto mb-4 opacity-20" />
-             <p className="text-lg">No players yet</p>
-           </div>
-         ) : (
-           <div className="space-y-2 mt-6">
-             {selectedLocation ? (
-               <>
-                 {(() => {
-                   const locationStats = getLocationStats();
-                   return locationStats ? (
-                     <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-2">
-                       <div className="bg-gradient-to-br from-red-700/20 to-red-900/10 border border-red-700/30 rounded-lg p-4">
-                         <div className="text-red-400 text-xs font-semibold mb-1">Most Points</div>
-                         <div className="text-white font-bold text-lg">{locationStats.mostPoints?.name || "TBD"}</div>
-                         <div className="text-red-300 text-sm">{locationStats.mostPoints?.points || 0} pts</div>
-                       </div>
-                       <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 rounded-lg p-4">
-                         <div className="text-emerald-400 text-xs font-semibold mb-1">Most Wins</div>
-                         <div className="text-white font-bold text-lg">{locationStats.mostWins?.name || "TBD"}</div>
-                         <div className="text-emerald-300 text-sm">{locationStats.mostWins?.wins || 0} wins</div>
-                       </div>
-                     </div>
-                   ) : null;
-                 })()}
-                 {getLocationLeaderboard().length > 0 ? (
-                  getLocationLeaderboard().map((stat, index) => (
-                    <Link
-                      key={stat.id || stat.email}
-                      to={`${createPageUrl("PlayerProfile")}?email=${stat.email}`}
-                      className="glass-link flex items-center justify-between p-4 rounded-lg border border-gray-800 hover:border-red-500/50 transition-all group"
-                      >
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="w-8 h-8 bg-gradient-to-br from-red-700 to-red-900 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 min-w-8">
-                          {index + 1}
-                        </div>
-                        {stat.image ? (
-                          <img src={stat.image} alt={stat.name} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
-                            {stat.name?.[0]}
-                          </div>
-                        )}
-                        <div className="text-white font-medium group-hover:text-red-400 transition-colors">
-                          {stat.name}
-                        </div>
-                      </div>
-                       <div className="flex items-center gap-6 text-sm">
-                          <div className="text-right">
-                            <div className="text-gray-400 text-xs">Wins</div>
-                            <div className="text-emerald-400 font-bold text-lg">{stat.wins}</div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-gray-400 text-xs">Points</div>
-                            <div className="text-red-400 font-bold text-lg">{stat.points}</div>
-                          </div>
-                        </div>
-                     </Link>
-                   ))
-                 ) : (
-                   <div className="text-center py-8 text-gray-500">
-                     <p>No games at this location yet</p>
-                   </div>
-                 )}
-               </>
-             ) : (
-               <>
-                 {quarterlyRecord && (
-                   <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-2">
-                     <div className="bg-gradient-to-br from-red-700/20 to-red-900/10 border border-red-700/30 rounded-lg p-4">
-                       <div className="text-red-400 text-xs font-semibold mb-1">Most Points</div>
-                       <div className="text-white font-bold text-lg">{quarterlyRecord.most_points_player_name || "TBD"}</div>
-                       <div className="text-red-300 text-sm">{quarterlyRecord.most_points_total || 0} pts</div>
-                     </div>
-                     <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 rounded-lg p-4">
-                       <div className="text-emerald-400 text-xs font-semibold mb-1">Most Wins</div>
-                       <div className="text-white font-bold text-lg">{quarterlyRecord.most_wins_player_name || "TBD"}</div>
-                       <div className="text-emerald-300 text-sm">{quarterlyRecord.most_wins_total || 0} wins</div>
-                     </div>
-                   </div>
-                 )}
-                 {getSortedPlayers().map((player, index) => (
-                   <Link
-                     key={player.id}
-                     to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
-                     className="glass-link flex items-center justify-between p-4 rounded-lg border border-gray-800 hover:border-red-500/50 transition-all group"
-                     >
-                     <div className="flex items-center gap-4 flex-1">
-                       <div className="w-8 h-8 bg-gradient-to-br from-red-700 to-red-900 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 min-w-8">
-                         {index + 1}
-                       </div>
-                       {player.profile_picture ? (
-                         <img src={player.profile_picture} alt={getPlayerDisplayName(player)} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
-                       ) : (
-                         <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
-                           {getPlayerDisplayName(player)[0]}
-                         </div>
-                       )}
-                       <div className="text-white font-medium group-hover:text-red-400 transition-colors">
-                         {getPlayerDisplayName(player)}
-                       </div>
-                     </div>
-                     <div className="flex items-center gap-6 text-sm">
-                        <div className="text-right">
-                          <div className="text-gray-400 text-xs">Wins</div>
-                          <div className="text-emerald-400 font-bold text-lg">{player.quarterlyWins}</div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-gray-400 text-xs">Points</div>
-                          <div className="text-red-400 font-bold text-lg">{player.quarterlyPoints}</div>
-                        </div>
-                      </div>
-                   </Link>
-                 ))}
-               </>
-             )}
-           </div>
-         )}
-                 </div>
-                 </div>
-                 );
-                 }
+        ) : leaderboard.length === 0 ? (
+          <div className="text-center py-16 text-gray-500">
+            <Trophy className="w-16 h-16 mx-auto mb-4 opacity-20" />
+            <p className="text-lg">No games recorded for this period</p>
+          </div>
+        ) : (
+          <div className="space-y-2 mt-2">
+            {(topPoints || topWins) && (
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                {topPoints && (
+                  <div className="bg-gradient-to-br from-red-700/20 to-red-900/10 border border-red-700/30 rounded-lg p-4">
+                    <div className="text-red-400 text-xs font-semibold mb-1">Most Points</div>
+                    <div className="text-white font-bold text-lg">{topPoints.name}</div>
+                    <div className="text-red-300 text-sm">{topPoints.points} pts</div>
+                  </div>
+                )}
+                {topWins && (
+                  <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 rounded-lg p-4">
+                    <div className="text-emerald-400 text-xs font-semibold mb-1">Most Wins</div>
+                    <div className="text-white font-bold text-lg">{topWins.name}</div>
+                    <div className="text-emerald-300 text-sm">{topWins.wins} wins</div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {leaderboard.map((entry, index) => (
+              <Link
+                key={entry.id}
+                to={entry.email ? `${createPageUrl("PlayerProfile")}?email=${entry.email}` : "#"}
+                className="glass-link flex items-center justify-between p-4 rounded-lg border border-gray-800 hover:border-red-500/50 transition-all group"
+              >
+                <div className="flex items-center gap-4 flex-1">
+                  <div className="w-8 h-8 bg-gradient-to-br from-red-700 to-red-900 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 min-w-8">
+                    {index + 1}
+                  </div>
+                  {entry.image ? (
+                    <img src={entry.image} alt={entry.name} className="w-10 h-10 rounded-full object-cover border-2 border-gray-700 shrink-0" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
+                      {entry.name?.[0]}
+                    </div>
+                  )}
+                  <div className="text-white font-medium group-hover:text-red-400 transition-colors">
+                    {entry.name}
+                  </div>
+                </div>
+                <div className="flex items-center gap-6 text-sm">
+                  <div className="text-right">
+                    <div className="text-gray-400 text-xs">Wins</div>
+                    <div className="text-emerald-400 font-bold text-lg">{entry.wins}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-gray-400 text-xs">Points</div>
+                    <div className="text-red-400 font-bold text-lg">{entry.points}</div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
