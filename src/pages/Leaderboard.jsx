@@ -165,7 +165,7 @@ export default function Leaderboard() {
                 >
                   Overall
                 </DropdownMenuItem>
-                {locations.map(loc => (
+                {ALL_LOCATIONS.map(loc => (
                   <DropdownMenuItem
                     key={loc}
                     onClick={() => setSelectedLocation(loc)}
