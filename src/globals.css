@@ -5,6 +5,8 @@
     color: white;
     transition: all 0.2s ease;
     box-shadow: 0 4px 14px rgba(127, 29, 29, 0.35);
+    padding: 0.75rem 1.5rem;
+    font-size: 1.125rem;
   }
   .btn-red:hover {
     background: linear-gradient(to right, #991b1b, #6b1d1d);
@@ -23,6 +25,7 @@
       inset 0 -1px 0 rgba(0,0,0,0.18) !important;
     border-top: 1.5px solid rgba(255,255,255,0.08) !important;
     transition: box-shadow 0.2s, transform 0.2s;
+    padding: 1.5rem;
   }
 
   .card:hover {
