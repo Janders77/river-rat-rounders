@@ -60,6 +60,13 @@ export default function PlayerProfile() {
       const wins = await base44.entities.Game.filter({ winner_player_id: p.id }, '-game_date', 100);
       setWinHistory(wins);
       setWinsLoading(false);
+      
+      // Load all games where this player appears in player_ids (not just wins)
+      setGamesLoading(true);
+      const allGames = await base44.entities.Game.list('-game_date', 500);
+      const playerGames = allGames.filter(g => g.player_ids && g.player_ids.includes(p.id));
+      setGamesPlayed(playerGames);
+      setGamesLoading(false);
       // Always prefer the Player entity name over the auth user name
       // Always build name from first_name + last_name only — never from auth full_name (it can be the email)
       const playerName = [p.first_name, p.last_name].filter(Boolean).join(" ").trim();
