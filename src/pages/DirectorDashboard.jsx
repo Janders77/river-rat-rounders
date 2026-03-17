@@ -244,6 +244,7 @@ export default function DirectorDashboard() {
         return pr && u.email?.trim().toLowerCase() === pr.email?.trim().toLowerCase();
       });
       const pts = POINTS[i] || 0;
+      if (!user) continue;
       if (i === 0) {
         const newStreak = (user.current_streak || 0) + 1;
 
