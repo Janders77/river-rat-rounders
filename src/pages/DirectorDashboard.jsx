@@ -71,8 +71,8 @@ export default function DirectorDashboard() {
 
   const playersById = useMemo(() => buildPlayersById(players), [players]);
 
-  // Helper: get name from player ID
-  const nameById = (id) => getPlayerDisplayName(playersById[id]);
+  // Helper: get name from player ID — show "Loading..." if record not yet fetched
+  const nameById = (id) => playersById[id] ? getPlayerDisplayName(playersById[id]) : "Loading...";
 
   // Whenever sessions change (e.g. new sign-ins via subscription), fetch any missing Player records
   useEffect(() => {
