@@ -1110,17 +1110,19 @@ export default function DirectorDashboard() {
                         <div className="flex items-center gap-2">
                           <span className="text-gray-500 text-xs">{isExpanded ? '▲' : '▼'}</span>
                           {directorRole === "Head Director" && (
-                            <Button size="icon" variant="ghost"
-                              className="border border-gray-600 text-gray-400 hover:bg-gray-700/40 rounded-lg"
-                              onClick={e => { e.stopPropagation(); setEditingGame(game); }}>
-                              <Pencil className="w-4 h-4" />
-                            </Button>
+                            <>
+                              <Button size="icon" variant="ghost"
+                                className="border border-gray-600 text-gray-400 hover:bg-gray-700/40 rounded-lg"
+                                onClick={e => { e.stopPropagation(); setEditingGame(game); }}>
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button size="icon" variant="ghost"
+                                className="border border-red-500 text-red-400 hover:bg-red-600/20 rounded-lg"
+                                onClick={e => { e.stopPropagation(); handleDeleteGame(game.id); }}>
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </>
                           )}
-                          <Button size="icon" variant="ghost"
-                            className="border border-red-500 text-red-400 hover:bg-red-600/20 rounded-lg"
-                            onClick={e => { e.stopPropagation(); handleDeleteGame(game.id); }}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
                         </div>
                       </div>
                       {isExpanded && (
