@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Game } from "@/entities/Game";
 import { Player } from "@/entities/Player";
-import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
-import { useMemo } from "react";
+import { getPlayerByEmail, getPlayerDisplayName, buildPlayersById } from "@/utils/playerUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { History, Trophy, Clock, DollarSign, Filter, MapPin } from "lucide-react";
+import { History, Trophy, MapPin, Filter, ChevronDown, ChevronUp, Users } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
+
+const POINTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
+const PLACE_LABELS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
 
 export default function GameHistory() {
   const [games, setGames] = useState([]);
   const [allPlayers, setAllPlayers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterVenue, setFilterVenue] = useState("all");
+  const [expandedId, setExpandedId] = useState(null);
 
-  useEffect(() => {
-    loadGames();
-  }, []);
+  useEffect(() => { loadGames(); }, []);
 
   const playersById = useMemo(() => buildPlayersById(allPlayers), [allPlayers]);
 
@@ -38,147 +39,141 @@ export default function GameHistory() {
       const p = getPlayerByEmail(allPlayers, game.winner_email);
       if (p) return getPlayerDisplayName(p);
     }
-    return game.winner_name || "Unknown Player";
+    return game.winner_name || "Unknown";
   };
 
-  const resolveParticipant = (idOrEmail) =>
-    playersById[idOrEmail] || getPlayerByEmail(allPlayers, idOrEmail);
+  const resolveName = (pid) => {
+    if (playersById[pid]) return getPlayerDisplayName(playersById[pid]);
+    const p = getPlayerByEmail(allPlayers, pid);
+    return p ? getPlayerDisplayName(p) : "Unknown";
+  };
 
-  const venues = [...new Set(games.map(g => g.location).filter(Boolean))];
-
-  const filteredGames = games.filter(game => {
-    const venueMatch = filterVenue === "all" || game.location === filterVenue;
-    return venueMatch;
-  });
+  const filteredGames = filterVenue === "all"
+    ? games
+    : games.filter(g => g.location === filterVenue);
 
   return (
-    <div className="min-h-screen p-6 relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+    <div className="min-h-screen p-4 md:p-6 relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
-      <div className="max-w-5xl mx-auto relative">
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
-              <History className="w-5 h-5 text-red-400" />
+      <div className="max-w-3xl mx-auto relative">
+
+        {/* Header */}
+        <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-gray-900/60 rounded-lg flex items-center justify-center">
+              <History className="w-4 h-4 text-red-400" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Game History</h1>
-              <p className="text-gray-400 text-sm">Complete archive of all poker sessions</p>
+              <h1 className="text-xl font-bold text-white">Game History</h1>
+              <p className="text-gray-500 text-xs">All recorded sessions</p>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <Filter className="w-5 h-5 text-gray-400" />
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-gray-500" />
             <Select value={filterVenue} onValueChange={setFilterVenue}>
-              <SelectTrigger className="w-48 bg-[#1A1B20] border-gray-800 text-white">
+              <SelectTrigger className="w-44 h-8 text-xs bg-gray-900/60 border-gray-800 text-white">
                 <SelectValue placeholder="All Venues" />
               </SelectTrigger>
-              <SelectContent className="bg-[#1A1B20] border-gray-800 text-white">
-                <SelectItem value="all" className="text-white focus:text-white focus:bg-gray-700">All Venues</SelectItem>
-                <SelectItem value="Tavern 018 Sunday" className="text-white focus:text-white focus:bg-gray-700">Tavern 018 Sunday</SelectItem>
-                <SelectItem value="Tavern 018 Wednesday" className="text-white focus:text-white focus:bg-gray-700">Tavern 018 Wednesday</SelectItem>
-                <SelectItem value="East End Grill" className="text-white focus:text-white focus:bg-gray-700">East End Grill</SelectItem>
-                <SelectItem value="Habana Club" className="text-white focus:text-white focus:bg-gray-700">Habana Club</SelectItem>
-                <SelectItem value="Meddlesome" className="text-white focus:text-white focus:bg-gray-700">Meddlesome</SelectItem>
+              <SelectContent className="bg-gray-900 border-gray-800 text-white">
+                <SelectItem value="all" className="text-white text-xs">All Venues</SelectItem>
+                {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(v => (
+                  <SelectItem key={v} value={v} className="text-white text-xs">{v}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
         </div>
 
+        {/* Content */}
         {isLoading ? (
-          <div className="space-y-4">
-            {Array(5).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-40 bg-gray-800" />
-            ))}
+          <div className="space-y-2">
+            {Array(6).fill(0).map((_, i) => <Skeleton key={i} className="h-16 bg-gray-800/60 rounded-lg" />)}
           </div>
         ) : filteredGames.length === 0 ? (
           <div className="text-center py-16 text-gray-500">
-            <History className="w-16 h-16 mx-auto mb-4 opacity-20" />
-            <p className="text-lg">No games recorded yet</p>
+            <History className="w-12 h-12 mx-auto mb-3 opacity-20" />
+            <p>No games recorded yet</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {filteredGames.map((game) => (
-              <div key={game.id} className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-2 transition hover:border-gray-700 hover:bg-gray-900/60">
-                <div>
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="px-3 py-1 bg-red-700/20 border border-red-700/30 rounded-full text-red-400 text-sm font-medium">
-                          {game.game_type}
-                        </div>
-                        <span className="text-gray-500 text-sm">
-                          {format(new Date(game.game_date), "MMM d, yyyy")}
-                        </span>
-                      </div>
+          <div className="space-y-1.5">
+            {filteredGames.map((game) => {
+              const isExpanded = expandedId === game.id;
+              const placementIds = game.player_ids || [];
+              const playerCount = placementIds.length || game.players?.length || 0;
+              const winner = resolveWinner(game);
+              const dateStr = game.game_date
+                ? format(new Date(game.game_date + 'T12:00:00'), "MMM d, yyyy")
+                : "";
 
-                      <div className="flex items-center gap-2 mb-3">
-                        <Trophy className="w-5 h-5 text-red-400" />
-                        <span className="text-white font-bold text-lg">{resolveWinner(game)}</span>
-                        <span className="text-emerald-400 font-bold">+{game.points_awarded} pts</span>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
-                        <span>{(game.player_ids?.length || game.players?.length) || 0} players</span>
-                        {game.location && (
-                          <span className="flex items-center gap-1">
-                            <MapPin className="w-4 h-4" />
-                            {game.location}
+              return (
+                <div key={game.id} className="rounded-lg border border-gray-800/80 bg-gray-900/50 overflow-hidden transition-colors hover:border-gray-700">
+                  {/* Collapsed Card */}
+                  <button
+                    className="w-full text-left px-4 py-3"
+                    onClick={() => setExpandedId(isExpanded ? null : game.id)}
+                  >
+                    {/* Row 1: badge + date + venue */}
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-red-900/40 text-red-400 border border-red-900/50">
+                        {game.game_type || "Game"}
+                      </span>
+                      <span className="text-gray-500 text-xs">{dateStr}</span>
+                      {game.location && (
+                        <>
+                          <span className="text-gray-700 text-xs">·</span>
+                          <span className="text-gray-500 text-xs flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />{game.location}
                           </span>
-                        )}
-                        {game.buy_in && (
-                          <span className="flex items-center gap-1">
-                            <DollarSign className="w-4 h-4" />
-                            {game.buy_in} buy-in
-                          </span>
-                        )}
-                        {game.duration_minutes && (
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {game.duration_minutes} min
-                          </span>
-                        )}
-                      </div>
-
-                      {game.notes && (
-                        <p className="mt-3 text-gray-400 text-sm italic">{game.notes}</p>
+                        </>
                       )}
                     </div>
 
-                    {(() => {
-                      // Prefer player_ids, fall back to players (email array)
-                      const participantRefs = (game.player_ids?.length > 0 ? game.player_ids : game.players) || [];
-                      const winnerRef = game.winner_player_id || game.winner_email;
-                      return (
-                        <div className="flex items-center gap-2 flex-wrap">
-                          {participantRefs.slice(0, 5).map((ref, index) => {
-                            const player = resolveParticipant(ref);
-                            const name = getPlayerDisplayName(player);
-                            const initials = player
-                              ? `${(player.first_name || "")[0] || ""}${(player.last_name || "")[0] || ""}`.toUpperCase()
-                              : "?";
-                            const isWinner = ref === winnerRef;
-                            return (
-                              <div key={index}
-                                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
-                                  isWinner ? 'bg-gradient-to-br from-red-700 to-red-900 text-white ring-2 ring-red-400/50' : 'bg-gray-800 text-gray-400'
-                                }`}
-                                title={name}>
-                                {initials}
-                              </div>
-                            );
-                          })}
-                          {participantRefs.length > 5 && (
-                            <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-sm text-gray-400">
-                              +{participantRefs.length - 5}
+                    {/* Row 2: winner + points */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Trophy className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                        <span className="text-white font-semibold text-sm">{winner}</span>
+                        <span className="text-emerald-400 text-xs font-bold">+{game.points_awarded} pts</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-gray-600 text-xs flex items-center gap-1">
+                          <Users className="w-3 h-3" />{playerCount}
+                        </span>
+                        {isExpanded
+                          ? <ChevronUp className="w-3.5 h-3.5 text-gray-600" />
+                          : <ChevronDown className="w-3.5 h-3.5 text-gray-600" />
+                        }
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Expanded Placements */}
+                  {isExpanded && (
+                    <div className="px-4 pb-3 border-t border-gray-800/60 pt-2.5">
+                      {placementIds.length > 0 ? (
+                        <div className="space-y-1">
+                          {placementIds.map((pid, i) => (
+                            <div key={pid} className="flex items-center gap-2 text-sm">
+                              <span className="text-gray-600 text-xs w-6 text-right shrink-0">{PLACE_LABELS[i] || `${i+1}.`}</span>
+                              <span className={`flex-1 ${i === 0 ? 'text-white font-semibold' : 'text-gray-400'}`}>
+                                {resolveName(pid)}
+                              </span>
+                              <span className="text-gray-600 text-xs">{POINTS[i] ? `${POINTS[i]}` : ''}pts</span>
                             </div>
-                          )}
+                          ))}
                         </div>
-                      );
-                    })()}
-                  </div>
+                      ) : (
+                        <p className="text-gray-600 text-xs">No placement data recorded.</p>
+                      )}
+                      {game.notes && (
+                        <p className="mt-2 text-gray-500 text-xs italic border-t border-gray-800/60 pt-2">{game.notes}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
