@@ -237,6 +237,13 @@ export default function DirectorDashboard() {
       points_awarded: POINTS[0],
     });
 
+    // Award winner a card guard in the Player database
+    if (winnerPlayer) {
+      await base44.entities.Player.update(winnerPlayer.id, {
+        card_guards: (winnerPlayer.card_guards || 0) + 1,
+      });
+    }
+
     if (currentSessionId) {
       await GameSession.update(currentSessionId, { is_open: false, signed_in_player_ids: [], signed_in_players: [] });
     }
