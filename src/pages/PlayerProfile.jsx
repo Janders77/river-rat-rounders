@@ -137,13 +137,21 @@ export default function PlayerProfile() {
   return (
     <div className="min-h-screen p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-3 mb-8">
-          <Link to={createPageUrl("Leaderboard")}>
-            <Button variant="outline" size="icon" className="border-gray-700 text-gray-400 hover:text-white">
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-          </Link>
-          <h1 className="text-3xl font-bold text-white">Player Profile</h1>
+        <div className="flex items-center justify-between gap-3 mb-8">
+          <div className="flex items-center gap-3">
+            <Link to={createPageUrl("Leaderboard")}>
+              <Button variant="outline" size="icon" className="border-gray-700 text-gray-400 hover:text-white">
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+            </Link>
+            <h1 className="text-3xl font-bold text-white">Player Profile</h1>
+          </div>
+          {isOwnProfile && (
+            <button onClick={() => setShowPasswordModal(true)}
+              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-300 transition-colors border border-gray-700 hover:border-gray-500 rounded-lg px-3 py-1.5">
+              <KeyRound className="w-3.5 h-3.5" /> Change Password
+            </button>
+          )}
         </div>
 
         {/* Profile Picture Section */}
