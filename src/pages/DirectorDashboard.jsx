@@ -734,7 +734,6 @@ export default function DirectorDashboard() {
                             </button>
                           </div>
                         )}
-                      </div>
                     </div>
                     <Button type="submit" disabled={dirSignInStatus === "loading"}
                       className="w-full bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-4 py-2">
