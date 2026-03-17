@@ -20,6 +20,8 @@ export default function PlayerProfile() {
   const [fullName, setFullName] = useState("");
   const [nameUpdateStatus, setNameUpdateStatus] = useState("idle");
   const [isOwnProfile, setIsOwnProfile] = useState(true);
+  const [winHistory, setWinHistory] = useState([]);
+  const [winsLoading, setWinsLoading] = useState(false);
 
   useEffect(() => {
     loadUserData();
