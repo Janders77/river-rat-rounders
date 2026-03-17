@@ -695,7 +695,7 @@ export default function DirectorDashboard() {
                     <div className="relative">
                         <Input
                           id="dir-sign-in-search"
-                          placeholder="Search player name or player #"
+                          placeholder="Search player name or player #..."
                           value={dirSignInSearch}
                           onChange={e => { setDirSignInSearch(e.target.value); if (dirSignInSelectedPlayer) setDirSignInSelectedPlayer(null); }}
                           className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600"
