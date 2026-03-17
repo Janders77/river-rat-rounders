@@ -341,7 +341,7 @@ export default function PlayerProfile() {
         {/* Games Played Section */}
         {playerData && (
           <div className="bg-transparent border border-red-500/40 rounded-xl p-6 mb-8">
-            <h2 className="text-lg font-semibold text-white mb-3">🎮 Games Played</h2>
+            <h2 className="text-lg font-semibold text-white mb-3">🂡🂭 Games Played</h2>
             {gamesLoading ? (
               <div className="text-gray-500 text-sm">Loading...</div>
             ) : (
