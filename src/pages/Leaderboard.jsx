@@ -160,15 +160,15 @@ export default function Leaderboard() {
                   onClick={() => setSelectedLocation(null)}
                   className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
                 >
-                  All Locations
+                  Overall
                 </DropdownMenuItem>
-                {locations.map(location => (
+                {locations.map(loc => (
                   <DropdownMenuItem
-                    key={location.id}
-                    onClick={() => setSelectedLocation(location.name)}
-                    className={`text-white ${selectedLocation === location.name ? "bg-red-700/20" : ""}`}
+                    key={loc}
+                    onClick={() => setSelectedLocation(loc)}
+                    className={`text-white ${selectedLocation === loc ? "bg-red-700/20" : ""}`}
                   >
-                    {location.name}
+                    {loc}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
