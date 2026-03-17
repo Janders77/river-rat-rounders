@@ -7,6 +7,7 @@ import { base44 } from "@/api/base44Client";
 import PlayerSignIn from "../components/home/PlayerSignIn";
 import PlayerSignUp from "../components/home/PlayerSignUp";
 import LoginCard from "../components/home/LoginCard";
+import GameClock from "../components/home/GameClock";
 
 const cardClass = "flex items-center gap-4 p-5 rounded-xl border border-red-900/40 bg-gradient-to-r from-red-900/20 to-red-950/60 hover:border-red-700/70 hover:from-red-700/40 hover:to-red-800/50 hover:bg-red-800/30 transition-all duration-200 group";
 
