@@ -1203,6 +1203,18 @@ export default function DirectorDashboard() {
         }}
       />
     )}
+
+    {editingGame && directorRole === "Head Director" && (
+      <EditGameModal
+        game={editingGame}
+        playersById={playersById}
+        onClose={() => setEditingGame(null)}
+        onSaved={(updatedGame) => {
+          setGames(prev => prev.map(g => g.id === updatedGame.id ? updatedGame : g));
+          setEditingGame(null);
+        }}
+      />
+    )}
     </>
   );
 }
