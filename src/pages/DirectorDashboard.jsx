@@ -6,6 +6,7 @@ import { GameSession } from "@/entities/GameSession";
 import { WinnerPhoto } from "@/entities/WinnerPhoto";
 import { InviteRequest } from "@/entities/InviteRequest";
 import { hasPermission } from "@/components/directorPermissions";
+import WinnerPhotoReminderModal from "@/components/director/WinnerPhotoReminderModal";
 import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, getEffectiveHandOfWeekIds, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
 import { searchPlayers } from "@/functions/searchPlayers";
 import { Button } from "@/components/ui/button";
