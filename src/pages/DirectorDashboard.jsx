@@ -481,8 +481,8 @@ export default function DirectorDashboard() {
                                       return (
                                         <div key={col} className="flex-1 min-w-0 space-y-0.5">
                                           {slice.map((pid, i) => (
-                                            <div key={pid} className="flex items-baseline gap-1 text-xs text-gray-300 leading-5">
-                                              <span className="text-gray-500 shrink-0 w-6 text-right">{start + i + 1}.</span>
+                                            <div key={pid} className="flex items-baseline text-xs text-gray-300 leading-5">
+                                              <span className="text-gray-500 shrink-0 w-8 text-right pr-1">{start + i + 1}.</span>
                                               <span className="truncate">{nameById(pid)}</span>
                                             </div>
                                           ))}
