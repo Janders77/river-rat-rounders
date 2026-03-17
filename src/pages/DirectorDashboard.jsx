@@ -17,7 +17,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ShieldAlert, Plus, Trophy, Loader2, Users, Trash2, CalendarPlus, ImagePlus, X, Mail, Search } from "lucide-react";
-import ClockControls from "@/components/director/ClockControls";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -613,11 +612,6 @@ export default function DirectorDashboard() {
                   </Button>
                 </form>
               </div>
-
-              <ClockControls
-                session={sessions.find(s => s.is_open) || null}
-                onSessionUpdate={(updated) => setSessions(prev => prev.map(s => s.id === updated.id ? updated : s))}
-              />
 
               <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
                 <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
