@@ -74,14 +74,11 @@ export default function DirectorDashboard() {
   // Helper: get name from player ID
   const nameById = (id) => getPlayerDisplayName(playersById[id]);
 
-  // Fetch any player IDs from the open session that aren't yet in local players array.
-  // Use signed_in_player_ids directly (not getEffectiveSignedInIds) so we get ALL ids
-  // even if their Player records haven't been loaded yet.
+  // Whenever sessions change (e.g. new sign-ins via subscription), fetch any missing Player records
   useEffect(() => {
-    const openSession = sessions.find(s => s.is_open);
-    if (!openSession) return;
-    const allSessionIds = openSession.signed_in_player_ids || [];
-    const missingIds = allSessionIds.filter(id => !playersById[id]);
+    const openSessions = sessions.filter(s => s.is_open);
+    const allIds = [...new Set(openSessions.flatMap(s => s.signed_in_player_ids || []))];
+    const missingIds = allIds.filter(id => !playersById[id]);
     if (missingIds.length === 0) return;
     base44.entities.Player.filter({ id: { $in: missingIds } }, null, missingIds.length)
       .then(fetched => {
@@ -89,9 +86,8 @@ export default function DirectorDashboard() {
           const existingIds = new Set(prev.map(p => p.id));
           return [...prev, ...fetched.filter(p => !existingIds.has(p.id))];
         });
-      })
-      .catch(() => {});
-  }, [sessions, playersById]);
+      });
+  }, [sessions]);
 
   // Precomputed roster for the open session in sign-in order.
   // Built from signed_in_player_ids directly so every signed-in player is included
