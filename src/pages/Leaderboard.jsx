@@ -233,19 +233,19 @@ export default function Leaderboard() {
         ) : (
           <div className="space-y-2 mt-2">
             {(topPoints || topWins) && (
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="flex gap-3 mb-4 flex-wrap">
                 {topPoints && (
-                  <div className="bg-gradient-to-br from-red-700/20 to-red-900/10 border border-red-700/30 rounded-lg p-4">
-                    <div className="text-red-400 text-xs font-semibold mb-1">Most Points</div>
-                    <div className="text-white font-bold text-lg">{topPoints.name}</div>
-                    <div className="text-red-300 text-sm">{topPoints.points} pts</div>
+                  <div className="bg-gradient-to-br from-red-700/20 to-red-900/10 border border-red-700/30 rounded-lg px-3 py-2 flex items-center gap-2">
+                    <div className="text-red-400 text-xs font-semibold">Most Points:</div>
+                    <div className="text-white font-bold text-sm">{topPoints.name}</div>
+                    <div className="text-red-300 text-xs">{topPoints.points} pts</div>
                   </div>
                 )}
                 {topWins && (
-                  <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 rounded-lg p-4">
-                    <div className="text-emerald-400 text-xs font-semibold mb-1">Most Wins</div>
-                    <div className="text-white font-bold text-lg">{topWins.name}</div>
-                    <div className="text-emerald-300 text-sm">{topWins.wins} wins</div>
+                  <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 rounded-lg px-3 py-2 flex items-center gap-2">
+                    <div className="text-emerald-400 text-xs font-semibold">Most Wins:</div>
+                    <div className="text-white font-bold text-sm">{topWins.name}</div>
+                    <div className="text-emerald-300 text-xs">{topWins.wins} wins</div>
                   </div>
                 )}
               </div>
