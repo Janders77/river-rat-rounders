@@ -157,25 +157,25 @@ export default function Leaderboard() {
       <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
       <div className="max-w-7xl mx-auto relative">
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-red-400" />
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-14 h-14 bg-gray-900/60 rounded-lg flex items-center justify-center">
+              <Trophy className="w-7 h-7 text-red-400" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Leaderboard</h1>
-              <p className="text-gray-400 text-sm">Live from recorded game results</p>
+              <h1 className="text-4xl font-bold text-white">Leaderboard</h1>
+              <p className="text-gray-400 text-base">Live from recorded game results</p>
             </div>
           </div>
 
           <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {getAllQuarters().map(q => {
                 const label = q.split('-')[1]; // "Q1", "Q2", etc.
                 return (
                   <button
                     key={q}
                     onClick={() => setSelectedQuarter(q)}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
+                    className={`px-6 py-3 rounded-lg font-semibold text-base transition-all duration-200 ${
                       selectedQuarter === q
                         ? 'bg-gradient-to-r from-red-700 to-red-900 text-white shadow-lg shadow-red-900/40'
                         : 'bg-gray-800 text-gray-300 hover:bg-gradient-to-r hover:from-red-700 hover:to-red-900 hover:text-white hover:shadow-lg hover:shadow-red-900/40'
@@ -189,10 +189,10 @@ export default function Leaderboard() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2 border-gray-800 text-gray-300 hover:text-white">
-                  <MapPin className="w-4 h-4" />
+                <Button variant="outline" className="gap-3 border-gray-800 text-gray-300 hover:text-white text-base px-6 py-3">
+                  <MapPin className="w-5 h-5" />
                   {selectedLocation || "Overall"}
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className="w-5 h-5" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-gray-900 border-gray-800">
