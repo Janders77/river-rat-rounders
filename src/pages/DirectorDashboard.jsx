@@ -77,6 +77,7 @@ export default function DirectorDashboard() {
   const [expandedSessions, setExpandedSessions] = useState({});
   const [activeTab, setActiveTab] = useState("sessions");
   const [showWinnerPhotoModal, setShowWinnerPhotoModal] = useState(false);
+  const [editingGame, setEditingGame] = useState(null);
 
   const playersById = useMemo(() => buildPlayersById(players), [players]);
 
