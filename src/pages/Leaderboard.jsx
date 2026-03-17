@@ -52,6 +52,7 @@ export default function Leaderboard() {
   const [playerRecords, setPlayerRecords] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingMissingPlayers, setIsFetchingMissingPlayers] = useState(false);
   const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
 
   useEffect(() => { loadData(); }, []);
@@ -62,12 +63,47 @@ export default function Leaderboard() {
     setIsLoading(true);
     const [fetchedGames, fetchedPlayers] = await Promise.all([
       base44.entities.Game.list('-game_date', 500),
-      base44.entities.Player.list(),
+      base44.entities.Player.list('-created_date', 1000),
     ]);
     setAllGames(fetchedGames);
     setPlayerRecords(fetchedPlayers);
     setIsLoading(false);
   };
+
+  // After stats are compiled, fetch any missing player records
+  useEffect(() => {
+    const { startDate, endDate } = getQuarterDateRange(selectedQuarter);
+    const filteredForThisEffect = allGames.filter(g => {
+      if (!g.game_date) return false;
+      if (g.game_date < startDate || g.game_date > endDate) return false;
+      if (selectedLocation && g.location !== selectedLocation) return false;
+      return true;
+    });
+
+    const referencedIds = new Set();
+    filteredForThisEffect.forEach(game => {
+      const playerIds = game.player_ids || [];
+      playerIds.forEach(pid => {
+        if (pid) referencedIds.add(pid);
+      });
+    });
+
+    const missingIds = Array.from(referencedIds).filter(id => !playersById[id]);
+
+    if (missingIds.length > 0) {
+      setIsFetchingMissingPlayers(true);
+      base44.entities.Player.filter({ id: { $in: missingIds } }, null, missingIds.length)
+        .then(fetchedMissing => {
+          if (fetchedMissing.length > 0) {
+            setPlayerRecords(prev => {
+              const existingIds = new Set(prev.map(p => p.id));
+              return [...prev, ...fetchedMissing.filter(p => !existingIds.has(p.id))];
+            });
+          }
+          setIsFetchingMissingPlayers(false);
+        });
+    }
+  }, [selectedQuarter, selectedLocation, allGames, playersById]);
 
   // Filter games by quarter date range and optional location
   const filteredGames = useMemo(() => {
