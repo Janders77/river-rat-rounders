@@ -1130,5 +1130,15 @@ export default function DirectorDashboard() {
         </Tabs>
       </div>
     </div>
+
+    {showWinnerPhotoModal && (
+      <WinnerPhotoReminderModal
+        onClose={() => setShowWinnerPhotoModal(false)}
+        onTakePhoto={() => {
+          setShowWinnerPhotoModal(false);
+          setActiveTab("photos");
+        }}
+      />
+    )}
   );
 }
