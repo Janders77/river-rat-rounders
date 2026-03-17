@@ -71,6 +71,7 @@ export default function Home() {
             className="mx-auto mb-8 w-64 object-contain"
           />
           <div className="space-y-6">
+            <GameClock />
             <PlayerSignIn />
 
             <Link to={createPageUrl("JoinTheLeague")} className={cardClass}>
