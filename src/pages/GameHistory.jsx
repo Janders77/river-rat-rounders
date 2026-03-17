@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Game } from "@/entities/Game";
-import { Player } from "@/entities/Player";
+import { base44 } from "@/api/base44Client";
 import { getPlayerByEmail, getPlayerDisplayName, buildPlayersById } from "@/utils/playerUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { History, Trophy, MapPin, Filter, ChevronDown, ChevronUp, Users } from "lucide-react";
@@ -12,40 +12,41 @@ const PLACE_LABELS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9
 
 export default function GameHistory() {
   const [games, setGames] = useState([]);
-  const [allPlayers, setAllPlayers] = useState([]);
+  const [playersMap, setPlayersMap] = useState({});
+  const [playersFetched, setPlayersFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [filterVenue, setFilterVenue] = useState("all");
   const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => { loadGames(); }, []);
 
-  const playersById = useMemo(() => buildPlayersById(allPlayers), [allPlayers]);
-
   const loadGames = async () => {
     setIsLoading(true);
-    const [fetchedGames, fetchedPlayers] = await Promise.all([
-      Game.list("-game_date"),
-      Player.list().catch(() => [])
-    ]);
+    const fetchedGames = await Game.list("-game_date");
     setGames(fetchedGames);
-    setAllPlayers(fetchedPlayers);
     setIsLoading(false);
+
+    // Collect all unique player_ids referenced by all games
+    const allIds = [...new Set(fetchedGames.flatMap(g => g.player_ids || []))];
+    if (allIds.length > 0) {
+      const fetched = await base44.entities.Player.filter({ id: { $in: allIds } }, null, allIds.length);
+      const map = {};
+      fetched.forEach(p => { map[p.id] = p; });
+      setPlayersMap(map);
+    }
+    setPlayersFetched(true);
   };
 
   const resolveWinner = (game) => {
-    if (game.winner_player_id && playersById[game.winner_player_id])
-      return getPlayerDisplayName(playersById[game.winner_player_id]);
-    if (game.winner_email) {
-      const p = getPlayerByEmail(allPlayers, game.winner_email);
-      if (p) return getPlayerDisplayName(p);
-    }
+    if (game.winner_player_id && playersMap[game.winner_player_id])
+      return getPlayerDisplayName(playersMap[game.winner_player_id]);
     return game.winner_name || "Unknown";
   };
 
   const resolveName = (pid) => {
-    if (playersById[pid]) return getPlayerDisplayName(playersById[pid]);
-    const p = getPlayerByEmail(allPlayers, pid);
-    return p ? getPlayerDisplayName(p) : "Unknown";
+    if (playersMap[pid]) return getPlayerDisplayName(playersMap[pid]);
+    if (!playersFetched) return "Loading...";
+    return "Unknown Player";
   };
 
   const filteredGames = filterVenue === "all"
