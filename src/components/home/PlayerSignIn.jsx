@@ -150,7 +150,7 @@ export default function PlayerSignIn() {
       const playerEmail = localStorage.getItem("playerEmail");
 
       const [fetchedSessions, meArr, directorCheck] = await Promise.all([
-        base44.entities.GameSession.filter({ is_open: true }, "-session_date", 10),
+        base44.entities.GameSession.filter({ is_open: true }, "session_date", 10),
         playerEmail ? base44.entities.Player.filter({ email: playerEmail.trim().toLowerCase() }).catch(() => []) : Promise.resolve([]),
         playerEmail ? base44.entities.Director.filter({ email: playerEmail.trim().toLowerCase() }).catch(() => []) : Promise.resolve([]),
       ]);
