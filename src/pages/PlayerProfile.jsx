@@ -285,6 +285,38 @@ export default function PlayerProfile() {
           </div>
         </div>
 
+        {/* Win History Section */}
+        {playerData && (
+          <div className="bg-transparent border border-red-500/40 rounded-xl p-8 mb-8">
+            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              🏆 Win History
+              {!winsLoading && (
+                <span className="text-sm font-normal text-gray-400">({winHistory.length} win{winHistory.length !== 1 ? 's' : ''})</span>
+              )}
+            </h2>
+            {winsLoading ? (
+              <div className="text-gray-500 text-sm">Loading...</div>
+            ) : winHistory.length === 0 ? (
+              <div className="text-gray-500 text-sm">No wins recorded yet.</div>
+            ) : (
+              <div className="space-y-2">
+                {winHistory.map(game => (
+                  <div key={game.id} className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
+                    <div>
+                      <div className="text-white text-sm font-medium">{game.game_type || 'Game'}</div>
+                      <div className="text-gray-400 text-xs">
+                        {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                        {game.location ? ` · ${game.location}` : ''}
+                      </div>
+                    </div>
+                    <div className="text-red-400 font-bold text-sm">{game.points_awarded || 1000} pts</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Password Change Section */}
          {isOwnProfile && (
          <div className="bg-transparent border border-red-500/40 rounded-xl p-8">
