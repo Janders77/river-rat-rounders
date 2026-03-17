@@ -25,6 +25,8 @@ export default function PlayerProfile() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [winHistory, setWinHistory] = useState([]);
   const [winsLoading, setWinsLoading] = useState(false);
+  const [gamesPlayed, setGamesPlayed] = useState([]);
+  const [gamesLoading, setGamesLoading] = useState(false);
 
   useEffect(() => {
     loadUserData();
