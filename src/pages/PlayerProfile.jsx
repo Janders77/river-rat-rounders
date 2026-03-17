@@ -4,7 +4,9 @@ import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload, Loader2, CheckCircle2, AlertCircle, ArrowLeft, Edit2, X, KeyRound } from "lucide-react";
+import { Upload, Loader2, CheckCircle2, AlertCircle, ArrowLeft, Edit2, X, KeyRound, MapPin, Gamepad2 } from "lucide-react";
+
+const PLACEMENT_POINTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
 
 export default function PlayerProfile() {
   const [user, setUser] = useState(null);
