@@ -321,57 +321,59 @@ export default function PlayerProfile() {
           </div>
         )}
 
-        {/* Password Change Section */}
-         {isOwnProfile && (
-         <div className="bg-transparent border border-red-500/40 rounded-xl p-8">
-           <h2 className="text-lg font-semibold text-white mb-4">Change Password</h2>
-           <form onSubmit={handlePasswordChange} className="space-y-4">
-            <div>
-              <label className="text-gray-400 text-sm block mb-2">New Password</label>
-              <Input
-                type="password"
-                placeholder="Enter new password"
-                value={newPassword}
-                onChange={e => setNewPassword(e.target.value)}
-                className="bg-gray-800 border-gray-700 text-white"
-                disabled={passwordStatus === "loading"}
-              />
+        {/* Password Modal */}
+        {isOwnProfile && showPasswordModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background: "rgba(0,0,0,0.7)"}}>
+            <div className="w-full max-w-sm rounded-xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-white font-semibold text-base flex items-center gap-2">
+                  <KeyRound className="w-4 h-4 text-red-400" /> Change Password
+                </h2>
+                <button onClick={() => { setShowPasswordModal(false); setPasswordStatus("idle"); setNewPassword(""); setConfirmPassword(""); }}
+                  className="text-gray-500 hover:text-white transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <form onSubmit={handlePasswordChange} className="space-y-4">
+                <div>
+                  <label className="text-gray-400 text-xs block mb-1.5">New Password</label>
+                  <Input type="password" placeholder="Enter new password" value={newPassword}
+                    onChange={e => setNewPassword(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white"
+                    disabled={passwordStatus === "loading"} />
+                </div>
+                <div>
+                  <label className="text-gray-400 text-xs block mb-1.5">Confirm Password</label>
+                  <Input type="password" placeholder="Confirm new password" value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white"
+                    disabled={passwordStatus === "loading"} />
+                </div>
+                {passwordStatus === "done" && (
+                  <p className="text-green-400 text-sm flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" /> Password updated!
+                  </p>
+                )}
+                {passwordStatus === "error" && (
+                  <p className="text-red-400 text-sm flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4" /> Passwords do not match or are empty
+                  </p>
+                )}
+                <div className="flex gap-2 pt-1">
+                  <Button type="submit"
+                    className="flex-1 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white"
+                    disabled={passwordStatus === "loading"}>
+                    {passwordStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Update Password"}
+                  </Button>
+                  <Button type="button" variant="outline" className="border-gray-700 text-gray-400 hover:text-white"
+                    onClick={() => { setShowPasswordModal(false); setPasswordStatus("idle"); setNewPassword(""); setConfirmPassword(""); }}>
+                    Cancel
+                  </Button>
+                </div>
+              </form>
             </div>
-            <div>
-              <label className="text-gray-400 text-sm block mb-2">Confirm Password</label>
-              <Input
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                className="bg-gray-800 border-gray-700 text-white"
-                disabled={passwordStatus === "loading"}
-              />
-            </div>
-            <Button
-              type="submit"
-              className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200"
-              disabled={passwordStatus === "loading"}
-            >
-              {passwordStatus === "loading" ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                "Update Password"
-              )}
-            </Button>
-            {passwordStatus === "done" && (
-              <p className="text-green-400 text-sm flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4" /> Password updated successfully
-              </p>
-            )}
-            {passwordStatus === "error" && (
-              <p className="text-red-400 text-sm flex items-center gap-2">
-                <AlertCircle className="w-4 h-4" /> Passwords do not match or are empty
-              </p>
-            )}
-          </form>
           </div>
-          )}
+        )}
           </div>
           </div>
           );
