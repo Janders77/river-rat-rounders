@@ -27,6 +27,9 @@ export default function PlayerProfile() {
   const [winsLoading, setWinsLoading] = useState(false);
   const [gamesPlayed, setGamesPlayed] = useState([]);
   const [gamesLoading, setGamesLoading] = useState(false);
+  const [expandedLocations, setExpandedLocations] = useState({});
+
+  const ALL_LOCATIONS = ["Tavern 018 Sunday", "Tavern 018 Wednesday", "East End Grill", "Habana Club", "Meddlesome"];
 
   useEffect(() => {
     loadUserData();
