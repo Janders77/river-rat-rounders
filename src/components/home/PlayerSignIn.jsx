@@ -158,7 +158,14 @@ export default function PlayerSignIn() {
       const me = meArr[0] || null;
       setCurrentPlayerId(me?.id || null);
       setIsDirector(directorCheck.length > 0);
-      setSessions(fetchedSessions);
+      // Sort: Main Game before Turbo within same location
+      const sorted = [...fetchedSessions].sort((a, b) => {
+        if (a.location < b.location) return -1;
+        if (a.location > b.location) return 1;
+        const order = { "Main Game": 0, "Turbo": 1 };
+        return (order[a.game_type] ?? 0) - (order[b.game_type] ?? 0);
+      });
+      setSessions(sorted);
 
       const allIds = [...new Set(fetchedSessions.flatMap(s => s.signed_in_player_ids || []))];
       if (me && !allIds.includes(me.id)) allIds.push(me.id);
