@@ -226,6 +226,23 @@ export default function PlayerSignIn() {
         signed_in_player_ids: [...currentIds, me.id],
         signed_in_players: [...(session.signed_in_players || []), me.email],
       });
+
+      // If signing into Main Game, also auto-sign into Turbo at same location
+      if (session.game_type === "Main Game") {
+        setSessions(prev => {
+          const turbo = prev.find(s => s.is_open && s.game_type === "Turbo" && s.location === session.location);
+          if (turbo) {
+            const turboIds = getEffectiveSignedInIds(turbo, allPlayers);
+            if (!turboIds.includes(me.id)) {
+              base44.entities.GameSession.update(turbo.id, {
+                signed_in_player_ids: [...turboIds, me.id],
+                signed_in_players: [...(turbo.signed_in_players || []), me.email],
+              });
+            }
+          }
+          return prev;
+        });
+      }
     }
     setSigningIn(null);
   };
