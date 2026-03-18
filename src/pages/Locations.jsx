@@ -308,7 +308,6 @@ export default function Locations() {
           </DragDropContext>
           );
         })()}
-      </div>
     </div>
   );
 }
