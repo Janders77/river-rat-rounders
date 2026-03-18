@@ -26,7 +26,7 @@ function NavTile({ icon: Icon, title, desc, url }) {
   return (
     <Link
       to={url}
-      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150"
+      className="w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-150 min-h-[44px]"
       style={CARD}
     >
       <div
@@ -36,10 +36,10 @@ function NavTile({ icon: Icon, title, desc, url }) {
         <Icon className="w-5 h-5 text-white/80" />
       </div>
       <div className="flex flex-col flex-1 min-w-0">
-        <span className="text-white font-medium text-sm leading-tight">{title}</span>
-        <span className="text-xs text-white/40 mt-0.5">{desc}</span>
+        <span className="text-white font-semibold text-base leading-tight">{title}</span>
+        <span className="text-sm text-white/40 mt-0.5">{desc}</span>
       </div>
-      <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />
+      <ChevronRight className="w-5 h-5 text-white/20 shrink-0" />
     </Link>
   );
 }
