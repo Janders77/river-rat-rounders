@@ -26,14 +26,14 @@ function NavTile({ icon: Icon, title, desc, url }) {
   return (
     <Link
       to={url}
-      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150"
+      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150"
       style={CARD}
     >
       <div
         className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0"
         style={{ background: "rgba(255,255,255,0.06)" }}
       >
-        <Icon className="w-5 h-5 text-white/70" />
+        <Icon className="w-5 h-5 text-white/80" />
       </div>
       <div className="flex flex-col flex-1 min-w-0">
         <span className="text-white font-medium text-sm leading-tight">{title}</span>
@@ -90,7 +90,7 @@ export default function Home() {
     return (
       <div className="min-h-screen relative" style={BG}>
         <div className="absolute inset-0 pointer-events-none" style={GLOW} />
-        <div className="relative max-w-md mx-auto w-full px-4 flex flex-col gap-4 pb-10">
+        <div className="relative max-w-md mx-auto w-full px-4 flex flex-col gap-3 pb-10">
           <Brand />
           <PlayerSignIn />
           <Divider label="Explore" />

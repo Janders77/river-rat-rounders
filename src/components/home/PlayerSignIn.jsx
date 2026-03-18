@@ -56,9 +56,9 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
   return (
     <div className="rounded-xl overflow-hidden" style={CARD}>
       {/* Header row */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+      <div className="flex items-center gap-3 px-3 py-2.5 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
         <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
-          <MapPin className="w-5 h-5 text-white/70" />
+          <MapPin className="w-5 h-5 text-white/80" />
         </div>
         <div className="flex flex-col flex-1 min-w-0">
           <span className="text-white font-medium text-sm leading-tight">{session.location}</span>
@@ -248,7 +248,7 @@ export default function PlayerSignIn() {
     return (
       <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl" style={PRIMARY_CARD}>
         <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
-          <Loader2 className="w-5 h-5 text-white/70 animate-spin" />
+          <Loader2 className="w-5 h-5 text-white/80 animate-spin" />
         </div>
         <div className="flex flex-col">
           <span className="text-white font-semibold text-sm">Sign In to Today's Game</span>
@@ -262,7 +262,7 @@ export default function PlayerSignIn() {
     return (
       <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl" style={PRIMARY_CARD}>
         <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
-          <LogIn className="w-5 h-5 text-white/70" />
+          <LogIn className="w-5 h-5 text-white/80" />
         </div>
         <div className="flex flex-col">
           <span className="text-white font-semibold text-sm">Sign In to Today's Game</span>
@@ -275,9 +275,9 @@ export default function PlayerSignIn() {
   return (
     <div className="flex flex-col gap-2">
       {/* Section label */}
-      <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={PRIMARY_CARD}>
+      <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl" style={PRIMARY_CARD}>
         <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
-          <LogIn className="w-5 h-5 text-white/70" />
+          <LogIn className="w-5 h-5 text-white/80" />
         </div>
         <div className="flex flex-col">
           <span className="text-white font-semibold text-sm">Sign In to Tonight's Game</span>

@@ -37,7 +37,7 @@ export default function PlayerSignUp() {
         style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)" }}
       >
         <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
-          <UserPlus className="w-4 h-4 text-white/70" />
+          <UserPlus className="w-4 h-4 text-white/80" />
         </div>
         <div className="flex-1 text-left">
           <div className="font-semibold text-white text-sm leading-tight">New Player? Sign Up</div>
