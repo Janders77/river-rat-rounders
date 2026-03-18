@@ -200,114 +200,118 @@ export default function Locations() {
             <MapPin className="w-10 h-10 mx-auto mb-3 text-gray-800" />
             <p className="text-gray-600 text-sm">No locations added yet</p>
           </div>
-        ) : (() => {
-          const fixedOrder = [
-            "Tavern 018 Sun",
-            "East End Bar & Grill",
-            "Habana Club",
-            "Tavern 018 Wed",
-            "Meddlesome Brewery",
-            "MFS Brewing"
-          ];
-          
-          const orderedLocations = [...locations].sort((a, b) => {
-            const aIndex = fixedOrder.indexOf((a.name || "").trim());
-            const bIndex = fixedOrder.indexOf((b.name || "").trim());
+        ) : (
+          <>
+            {(() => {
+              const fixedOrder = [
+                "Tavern 018 Sun",
+                "East End Bar & Grill",
+                "Habana Club",
+                "Tavern 018 Wed",
+                "Meddlesome Brewery",
+                "MFS Brewing"
+              ];
+              
+              const orderedLocations = [...locations].sort((a, b) => {
+                const aIndex = fixedOrder.indexOf((a.name || "").trim());
+                const bIndex = fixedOrder.indexOf((b.name || "").trim());
 
-            if (aIndex === -1 && bIndex === -1) {
-              return (a.order ?? 9999) - (b.order ?? 9999);
-            }
-            if (aIndex === -1) return 1;
-            if (bIndex === -1) return -1;
+                if (aIndex === -1 && bIndex === -1) {
+                  return (a.order ?? 9999) - (b.order ?? 9999);
+                }
+                if (aIndex === -1) return 1;
+                if (bIndex === -1) return -1;
 
-            return aIndex - bIndex;
-          });
+                return aIndex - bIndex;
+              });
 
-          return (
-          <DragDropContext onDragEnd={isAdmin ? handleDragEnd : undefined}>
-            <Droppable droppableId="locations" type="LOCATION" isDropDisabled={!isAdmin}>
-              {(provided) => (
-                <div
-                  className="flex flex-col gap-2"
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {orderedLocations.map((loc, index) => (
-                    <Draggable key={loc.id} draggableId={loc.id} index={index} isDragDisabled={!isAdmin}>
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...(isAdmin ? provided.dragHandleProps : {})}
-                          style={{ opacity: snapshot.isDragging ? 0.6 : 1, ...provided.draggableProps.style }}
-                        >
-                          {editingId === loc.id ? (
-                            <LocationForm
-                              title="Edit Location"
-                              initial={{ name: loc.name, address: loc.address, game_time: loc.game_time, description: loc.description, image_url: loc.image_url }}
-                              onSave={handleEdit}
-                              onCancel={() => setEditingId(null)}
-                            />
-                          ) : (
-                            <div className="rounded-xl overflow-hidden" style={CARD}>
-                              {loc.image_url && (
-                                <img src={loc.image_url} alt={loc.name} className="w-full h-36 object-cover" />
-                              )}
-                              <div className="px-3.5 py-3">
-                                {/* Name row */}
-                                <div className="flex items-start justify-between gap-2 mb-2">
-                                  <span className="text-white font-semibold text-sm leading-tight">{loc.name}</span>
-                                  {isAdmin && (
-                                    <div className="flex gap-1 shrink-0 mt-0.5">
-                                      <button
-                                        onClick={() => { setEditingId(loc.id); setShowAddForm(false); }}
-                                        className="w-6 h-6 flex items-center justify-center rounded transition-colors text-white/20 hover:text-white/60"
-                                      >
-                                        <Pencil className="w-3.5 h-3.5" />
-                                      </button>
-                                      <button
-                                        onClick={() => handleDelete(loc.id)}
-                                        className="w-6 h-6 flex items-center justify-center rounded transition-colors text-white/20 hover:text-red-400"
-                                      >
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                      </button>
+              return (
+                <DragDropContext onDragEnd={isAdmin ? handleDragEnd : undefined}>
+                  <Droppable droppableId="locations" type="LOCATION" isDropDisabled={!isAdmin}>
+                    {(provided) => (
+                      <div
+                        className="flex flex-col gap-2"
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                      >
+                        {orderedLocations.map((loc, index) => (
+                          <Draggable key={loc.id} draggableId={loc.id} index={index} isDragDisabled={!isAdmin}>
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...(isAdmin ? provided.dragHandleProps : {})}
+                                style={{ opacity: snapshot.isDragging ? 0.6 : 1, ...provided.draggableProps.style }}
+                              >
+                                {editingId === loc.id ? (
+                                  <LocationForm
+                                    title="Edit Location"
+                                    initial={{ name: loc.name, address: loc.address, game_time: loc.game_time, description: loc.description, image_url: loc.image_url }}
+                                    onSave={handleEdit}
+                                    onCancel={() => setEditingId(null)}
+                                  />
+                                ) : (
+                                  <div className="rounded-xl overflow-hidden" style={CARD}>
+                                    {loc.image_url && (
+                                      <img src={loc.image_url} alt={loc.name} className="w-full h-36 object-cover" />
+                                    )}
+                                    <div className="px-3.5 py-3">
+                                      {/* Name row */}
+                                      <div className="flex items-start justify-between gap-2 mb-2">
+                                        <span className="text-white font-semibold text-sm leading-tight">{loc.name}</span>
+                                        {isAdmin && (
+                                          <div className="flex gap-1 shrink-0 mt-0.5">
+                                            <button
+                                              onClick={() => { setEditingId(loc.id); setShowAddForm(false); }}
+                                              className="w-6 h-6 flex items-center justify-center rounded transition-colors text-white/20 hover:text-white/60"
+                                            >
+                                              <Pencil className="w-3.5 h-3.5" />
+                                            </button>
+                                            <button
+                                              onClick={() => handleDelete(loc.id)}
+                                              className="w-6 h-6 flex items-center justify-center rounded transition-colors text-white/20 hover:text-red-400"
+                                            >
+                                              <Trash2 className="w-3.5 h-3.5" />
+                                            </button>
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Metadata */}
+                                      <div className="flex flex-col gap-1">
+                                        {loc.address && (
+                                          <div className="flex items-start gap-1.5">
+                                            <MapPin className="w-3 h-3 text-white/30 shrink-0 mt-0.5" />
+                                            <span className="text-xs text-white/40 leading-snug">{loc.address}</span>
+                                          </div>
+                                        )}
+                                        {loc.game_time && (
+                                          <div className="flex items-center gap-1.5">
+                                            <Clock className="w-3 h-3 text-white/30 shrink-0" />
+                                            <span className="text-xs text-white/40">{loc.game_time}</span>
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {loc.description && (
+                                        <p className="text-white/30 text-xs mt-2 leading-relaxed">{loc.description}</p>
+                                      )}
                                     </div>
-                                  )}
-                                </div>
-
-                                {/* Metadata */}
-                                <div className="flex flex-col gap-1">
-                                  {loc.address && (
-                                    <div className="flex items-start gap-1.5">
-                                      <MapPin className="w-3 h-3 text-white/30 shrink-0 mt-0.5" />
-                                      <span className="text-xs text-white/40 leading-snug">{loc.address}</span>
-                                    </div>
-                                  )}
-                                  {loc.game_time && (
-                                    <div className="flex items-center gap-1.5">
-                                      <Clock className="w-3 h-3 text-white/30 shrink-0" />
-                                      <span className="text-xs text-white/40">{loc.game_time}</span>
-                                    </div>
-                                  )}
-                                </div>
-
-                                {loc.description && (
-                                  <p className="text-white/30 text-xs mt-2 leading-relaxed">{loc.description}</p>
+                                  </div>
                                 )}
                               </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-          );
-        })()}
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+              );
+            })()}
+          </>
+        )}
     </div>
   );
 }
