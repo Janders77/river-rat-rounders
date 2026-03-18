@@ -203,7 +203,7 @@ export default function PlayerProfile() {
         </div>
 
         {/* User Information Section */}
-        <div className="bg-transparent border border-red-500/40 rounded-xl p-8 mb-8">
+        <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-8 mb-8">
           <h2 className="text-lg font-semibold text-white mb-4">Account Information</h2>
           <div className="space-y-4">
             <div>
@@ -308,7 +308,7 @@ export default function PlayerProfile() {
 
         {/* Win History Section */}
         {playerData && (
-          <div className="bg-transparent border border-red-500/40 rounded-xl p-8 mb-8">
+          <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-8 mb-8">
             <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
               🏆 Win History
               {!winsLoading && (
@@ -340,7 +340,7 @@ export default function PlayerProfile() {
 
         {/* Games Played Section */}
         {playerData && (
-          <div className="bg-transparent border border-red-500/40 rounded-xl p-6 mb-8">
+          <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-6 mb-8">
             <h2 className="text-lg font-semibold text-white mb-3">🂡🂭 Games Played</h2>
             {gamesLoading ? (
               <div className="text-gray-500 text-sm">Loading...</div>

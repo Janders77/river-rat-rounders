@@ -169,24 +169,26 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          {/* Quarter tabs */}
-          <div className="w-full flex justify-center gap-3">
-            {getAllQuarters().map(q => {
-              const label = q.split('-')[1];
-              return (
-                <button
-                  key={q}
-                  onClick={() => setSelectedQuarter(q)}
-                  className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
-                    selectedQuarter === q
-                      ? 'bg-gradient-to-r from-red-700 to-red-900 text-white shadow-md shadow-red-900/40'
-                      : 'bg-gray-800/80 text-gray-400 hover:text-white hover:bg-gray-700'
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
+          {/* Quarter tabs — segmented control */}
+          <div className="w-full flex justify-center">
+            <div className="inline-flex bg-gray-900/70 border border-gray-800 rounded-xl p-1 gap-0.5">
+              {getAllQuarters().map(q => {
+                const label = q.split('-')[1];
+                return (
+                  <button
+                    key={q}
+                    onClick={() => setSelectedQuarter(q)}
+                    className={`px-5 py-2 rounded-lg font-semibold text-sm transition-all duration-200 min-w-[52px] ${
+                      selectedQuarter === q
+                        ? 'bg-gradient-to-br from-red-700 to-red-900 text-white shadow-sm'
+                        : 'text-gray-500 hover:text-gray-200'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Location dropdown */}
@@ -256,35 +258,50 @@ export default function Leaderboard() {
             </p>
           </div>
         ) : (
-          <div className="space-y-2 mt-2">
+          <div className="space-y-1.5 mt-2">
             {leaderboard.map((entry, index) => (
               <div
                 key={entry.id}
-                className="glass-link flex items-center justify-between p-5 rounded-lg border border-gray-800 transition-all"
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-150 ${
+                  index === 0 ? 'border-yellow-600/25 bg-yellow-950/20' :
+                  index === 1 ? 'border-gray-600/25 bg-gray-800/20' :
+                  index === 2 ? 'border-orange-700/25 bg-orange-950/15' :
+                  'border-gray-800/50 hover:border-gray-700/60 hover:bg-gray-800/20'
+                }`}
               >
-                <div className="flex items-center gap-4 flex-1">
-                  <div className="w-10 h-10 bg-gradient-to-br from-red-700 to-red-900 rounded-lg flex items-center justify-center text-white font-bold text-base shrink-0 min-w-10">
-                    {index + 1}
+                {/* Rank badge */}
+                <div className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold shrink-0 ${
+                  index === 0 ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-600/30' :
+                  index === 1 ? 'bg-gray-600/20 text-gray-300 border border-gray-600/30' :
+                  index === 2 ? 'bg-orange-700/15 text-orange-400 border border-orange-700/30' :
+                  'bg-gray-800/60 text-gray-500'
+                }`}>
+                  {index + 1}
+                </div>
+                {/* Avatar */}
+                {entry.image ? (
+                  <img src={entry.image} alt={entry.name} className="w-9 h-9 rounded-full object-cover border border-gray-700/60 shrink-0" />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-gray-800 border border-gray-700/40 flex items-center justify-center text-white text-sm font-semibold shrink-0">
+                    {entry.name?.[0]}
                   </div>
-                  {entry.image ? (
-                    <img src={entry.image} alt={entry.name} className="w-12 h-12 rounded-full object-cover border-2 border-gray-700 shrink-0" />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold shrink-0">
-                      {entry.name?.[0]}
-                    </div>
-                  )}
-                  <div className="text-white font-semibold text-lg">
+                )}
+                {/* Name */}
+                <div className="flex-1 min-w-0">
+                  <div className={`font-semibold truncate ${index < 3 ? 'text-white' : 'text-gray-200'}`}>
                     {entry.name}
                   </div>
                 </div>
-                <div className="flex items-center gap-8 text-base">
-                  <div className="text-right">
-                    <div className="text-gray-400 text-sm">Wins</div>
-                    <div className="text-emerald-400 font-bold text-xl">{entry.wins}</div>
+                {/* Stats */}
+                <div className="flex items-center gap-4 shrink-0">
+                  <div className="text-center">
+                    <div className="text-[10px] text-gray-600 uppercase tracking-wider leading-none mb-0.5">W</div>
+                    <div className="text-emerald-400 font-bold text-base leading-tight">{entry.wins}</div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-gray-400 text-sm">Points</div>
-                    <div className="text-red-400 font-bold text-xl">{entry.points}</div>
+                  <div className="w-px h-5 bg-gray-800" />
+                  <div className="text-center min-w-[48px]">
+                    <div className="text-[10px] text-gray-600 uppercase tracking-wider leading-none mb-0.5">PTS</div>
+                    <div className="text-red-400 font-bold text-base leading-tight">{entry.points}</div>
                   </div>
                 </div>
               </div>
