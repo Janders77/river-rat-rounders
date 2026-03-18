@@ -59,7 +59,7 @@ function Brand() {
 
 function Divider({ label }) {
   return (
-    <div className="w-full flex items-center gap-3 text-xs text-white/30 uppercase tracking-widest">
+    <div className="w-full flex items-center gap-4 text-sm text-white/30 uppercase tracking-widest font-medium">
       <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
       <span>{label}</span>
       <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
