@@ -274,7 +274,7 @@ export default function PlayerSignIn() {
       onClick={!signed && !loading ? () => handleSignIn(firstSession) : undefined}
     >
       {signed && (
-        <span className="absolute top-3 right-3 text-[11px] font-semibold tracking-[0.14em] text-red-400 animate-[openTextPulse_1.8s_ease-in-out_infinite]">OPEN</span>
+        <span className="absolute top-3 right-3 text-[11px] font-semibold tracking-[0.14em] text-red-400 animate-[openTextPulse_2.8s_ease-in-out_infinite]">OPEN</span>
       )}
       <div className="flex items-center gap-3 px-3 py-2.5">
         <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
