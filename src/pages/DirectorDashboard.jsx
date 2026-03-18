@@ -644,29 +644,38 @@ export default function DirectorDashboard() {
                           <div className="flex flex-col divide-y" style={{ divideColor: "rgba(255,255,255,0.05)" }}>
                             {signedInIds.length === 0 ? (
                               <div className="py-2.5 text-sm text-white/60">No players signed in yet</div>
-                            ) : signedInIds.map((pid) => (
-                              <div key={pid} className="flex items-center justify-between gap-3 py-2.5">
-                                <div className="flex items-center gap-3 flex-1 min-w-0">
-                                  <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center shrink-0">
-                                    <span className="text-[11px] font-medium text-white/70">
-                                      {(playersById[pid]?.first_name?.[0] || "").toUpperCase()}{(playersById[pid]?.last_name?.[0] || "").toUpperCase()}
-                                    </span>
+                            ) : signedInIds.map((pid, index) => {
+                              const player = playersById[pid];
+                              const hasProfilePic = player?.profile_picture;
+                              return (
+                                <div key={pid} className="flex items-center justify-between gap-3 py-2.5">
+                                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                                    <div className="w-7 h-7 rounded-full bg-white/5 overflow-hidden flex items-center justify-center shrink-0">
+                                      {hasProfilePic ? (
+                                        <img src={player.profile_picture} alt={nameById(pid)} className="w-full h-full object-cover" />
+                                      ) : (
+                                        <span className="text-[11px] font-medium text-white/70">
+                                          {(player?.first_name?.[0] || "").toUpperCase()}{(player?.last_name?.[0] || "").toUpperCase()}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <span className="text-xs font-medium text-white/50 shrink-0">#{index + 1}</span>
+                                    <span className="text-sm text-white/85 truncate">{nameById(pid)}</span>
                                   </div>
-                                  <span className="text-sm text-white/85 truncate">{nameById(pid)}</span>
+                                  <button
+                                    onClick={async (e) => {
+                                      e.stopPropagation();
+                                      const updatedIds = signedInIds.filter(id => id !== pid);
+                                      const updatedEmails = (session.signed_in_players || []).filter((_, idx) => signedInIds[idx] !== pid);
+                                      await base44.entities.GameSession.update(session.id, { signed_in_player_ids: updatedIds, signed_in_players: updatedEmails });
+                                      setSessions(prev => prev.map(s => s.id === session.id ? { ...s, signed_in_player_ids: updatedIds, signed_in_players: updatedEmails } : s));
+                                    }}
+                                    className="text-white/20 hover:text-red-400 transition-colors shrink-0">
+                                    <X className="w-3.5 h-3.5" />
+                                  </button>
                                 </div>
-                                <button
-                                  onClick={async (e) => {
-                                    e.stopPropagation();
-                                    const updatedIds = signedInIds.filter(id => id !== pid);
-                                    const updatedEmails = (session.signed_in_players || []).filter((_, idx) => signedInIds[idx] !== pid);
-                                    await base44.entities.GameSession.update(session.id, { signed_in_player_ids: updatedIds, signed_in_players: updatedEmails });
-                                    setSessions(prev => prev.map(s => s.id === session.id ? { ...s, signed_in_player_ids: updatedIds, signed_in_players: updatedEmails } : s));
-                                  }}
-                                  className="text-white/20 hover:text-red-400 transition-colors shrink-0">
-                                  <X className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         )}
 
