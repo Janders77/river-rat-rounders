@@ -29,7 +29,7 @@ export default function PlayerProfile() {
   const [gamesLoading, setGamesLoading] = useState(false);
   const [expandedLocations, setExpandedLocations] = useState({});
 
-  const ALL_LOCATIONS = ["Tavern 018 Sunday", "Tavern 018 Wednesday", "East End Grill", "Habana Club", "Meddlesome"];
+  const ALL_LOCATIONS = ["Tavern 018 Sun", "East End Bar & Grill", "Habana Club", "Tavern 018 Wed", "Meddlesome Brewery", "MFS Brewing"];
 
   useEffect(() => {
     loadUserData();
