@@ -274,26 +274,26 @@ export default function PlayerSignIn() {
       onClick={!signed && !loading ? () => handleSignIn(firstSession) : undefined}
     >
       {/* Top Section: Icon, Text, OPEN */}
-      <div className="flex items-start gap-3 px-3 py-3">
-        <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
-          {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <LogIn className="w-5 h-5 text-white/80" />}
+      <div className="flex items-start gap-4 px-4 py-4 min-h-[56px]">
+        <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+          {loading ? <Loader2 className="w-6 h-6 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-6 h-6 text-green-400" /> : <LogIn className="w-6 h-6 text-white/80" />}
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-white truncate leading-tight">
+          <div className="text-base font-semibold text-white truncate leading-tight">
             {signed ? "You're signed in!" : "Sign In to Tonight's Game"}
           </div>
-          <div className="mt-1 text-xs text-white/60 truncate">
+          <div className="mt-1 text-sm text-white/60 truncate">
             {firstSession.location} · {new Date(firstSession.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
             {firstSession.game_type && ` · ${firstSession.game_type}`}
           </div>
         </div>
 
         {signed && (
-          <span className="text-[11px] font-semibold tracking-[0.14em] text-red-400 animate-[openTextPulse_2.8s_ease-in-out_infinite] shrink-0 mt-0.5">OPEN</span>
+          <span className="text-sm font-semibold tracking-[0.14em] text-red-400 animate-[openTextPulse_2.8s_ease-in-out_infinite] shrink-0 mt-0.5">OPEN</span>
         )}
 
-        {!signed && !loading && <ChevronRight className="w-4 h-4 text-white/20 shrink-0 mt-0.5" />}
+        {!signed && !loading && <ChevronRight className="w-5 h-5 text-white/20 shrink-0 mt-0.5" />}
       </div>
 
       {/* Players Signed In Section */}
