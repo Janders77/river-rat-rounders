@@ -133,7 +133,7 @@ export default function GameHistory() {
                     {/* Row 2: winner + points */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Trophy className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                        <Trophy className="w-3.5 h-3.5 text-white/60 shrink-0" />
                         <span className="text-white font-semibold text-sm">{winner}</span>
                         <span className="text-emerald-400 text-xs font-bold">+{game.points_awarded} pts</span>
                       </div>

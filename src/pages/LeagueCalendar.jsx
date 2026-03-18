@@ -127,8 +127,8 @@ export default function LeagueCalendar() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-red-700 to-red-900 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-              <CalendarDays className="w-7 h-7 text-white" />
+            <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0">
+              <CalendarDays className="w-5 h-5 text-white/80" />
             </div>
             <div className="min-w-0">
               <h1 className="text-xl sm:text-3xl font-bold text-white">League Calendar</h1>
