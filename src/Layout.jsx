@@ -196,8 +196,8 @@ function LayoutInner({ children }) {
                                 : 'text-gray-500 hover:text-gray-100 hover:bg-gray-700/30 hover:border-l-2 hover:border-gray-500 border-l-2 border-transparent'
                             }`}
                           >
-                            <item.icon className="w-5 h-5" />
-                            <span className="font-medium">{item.title}</span>
+                            <item.icon className="w-6 h-6" />
+                            <span className="font-medium text-lg">{item.title}</span>
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
