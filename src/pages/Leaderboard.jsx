@@ -150,25 +150,25 @@ export default function Leaderboard() {
       <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
 
-      <div className="relative max-w-md mx-auto px-4 pt-5 pb-10">
+      <div className="relative w-full px-4 pt-6 pb-10">
 
         {/* ── HEADER ── */}
-        <div className="flex items-center gap-2.5 mb-4">
-          <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-            <Trophy className="w-5 h-5 text-white/80" />
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+            <Trophy className="w-6 h-6 text-white/80" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white tracking-tight leading-none">Leaderboard</h1>
-            <p className="text-[10px] text-gray-600 mt-0.5 leading-none">Season standings · live results</p>
+            <h1 className="text-2xl font-bold text-white tracking-tight leading-none">Leaderboard</h1>
+            <p className="text-sm text-gray-600 mt-0.5 leading-none">Season standings · live results</p>
           </div>
         </div>
 
         {/* ── CONTROLS BLOCK ── */}
-        <div className="flex flex-col items-center gap-2 mb-4"
-          style={{ padding: "10px 12px", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px" }}>
+        <div className="flex flex-col items-center gap-3 mb-5"
+          style={{ padding: "14px 16px", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px" }}>
 
           {/* Quarter tabs */}
-          <div className="inline-flex rounded-lg p-0.5 gap-0.5 w-full"
+          <div className="inline-flex rounded-lg p-1 gap-1 w-full"
             style={{ background: "rgba(255,255,255,0.05)" }}>
             {getAllQuarters().map(q => {
               const label = q.split('-')[1];
@@ -177,7 +177,7 @@ export default function Leaderboard() {
                 <button
                   key={q}
                   onClick={() => setSelectedQuarter(q)}
-                  className={`flex-1 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all duration-150 ${
+                  className={`flex-1 py-2 rounded-md text-sm font-bold tracking-wide transition-all duration-150 min-h-[40px] ${
                     active ? "text-white" : "text-gray-600 hover:text-gray-400"
                   }`}
                   style={active ? {
@@ -195,16 +195,16 @@ export default function Leaderboard() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded-md text-xs font-medium transition-all"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md text-sm font-medium transition-all min-h-[44px]"
                 style={{
                   background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(255,255,255,0.08)",
                   color: selectedLocation ? "#e2e8f0" : "#6b7280"
                 }}
               >
-                <MapPin className="w-3 h-3 text-red-500/60 shrink-0" />
-                <span className="truncate">{selectedLocation || "All Locations"}</span>
-                <ChevronDown className="w-3 h-3 opacity-40 shrink-0" />
+                <MapPin className="w-4 h-4 text-red-500/60 shrink-0" />
+                <span className="truncate text-base">{selectedLocation || "All Locations"}</span>
+                <ChevronDown className="w-4 h-4 opacity-40 shrink-0" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -214,7 +214,7 @@ export default function Leaderboard() {
             >
               <DropdownMenuItem
                 onClick={() => setSelectedLocation(null)}
-                className={`text-sm ${!selectedLocation ? "text-red-400 font-semibold" : "text-gray-300"}`}
+                className={`text-base ${!selectedLocation ? "text-red-400 font-semibold" : "text-gray-300"}`}
               >
                 All Locations
               </DropdownMenuItem>
@@ -222,7 +222,7 @@ export default function Leaderboard() {
                 <DropdownMenuItem
                   key={loc}
                   onClick={() => setSelectedLocation(loc)}
-                  className={`text-sm ${selectedLocation === loc ? "text-red-400 font-semibold" : "text-gray-300"}`}
+                  className={`text-base ${selectedLocation === loc ? "text-red-400 font-semibold" : "text-gray-300"}`}
                 >
                   {loc}
                 </DropdownMenuItem>
