@@ -8,6 +8,7 @@ import { InviteRequest } from "@/entities/InviteRequest";
 import { hasPermission } from "@/components/directorPermissions";
 import WinnerPhotoReminderModal from "@/components/director/WinnerPhotoReminderModal";
 import EditGameModal from "@/components/director/EditGameModal";
+import LiveStatusIndicator from "@/components/LiveStatusIndicator";
 import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, getEffectiveHandOfWeekIds, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
 import { searchPlayers } from "@/functions/searchPlayers";
 import { Button } from "@/components/ui/button";
@@ -591,11 +592,11 @@ export default function DirectorDashboard() {
                   return (
                     <div key={session.id} className="rounded-xl border border-white/10 bg-white/5 p-3 flex flex-col gap-3">
                       {/* Top: LIVE badge + location + delete button */}
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <span className="text-[9px] font-bold text-green-400 tracking-widest shrink-0 animate-pulse">🟢 LIVE</span>
-                            <span className="font-medium text-white text-sm truncate">{session.location}</span>
-                          </div>
+                       <div className="flex items-center justify-between gap-2">
+                         <div className="flex items-center gap-2 flex-1 min-w-0">
+                             <LiveStatusIndicator />
+                             <span className="font-medium text-white text-sm truncate">{session.location}</span>
+                           </div>
                         <button onClick={() => handleDeleteSession(session.id)}
                           className="w-7 h-7 flex items-center justify-center rounded-lg text-white/20 hover:text-red-400 transition-colors shrink-0"
                           style={{ border: "1px solid rgba(255,255,255,0.07)" }}>

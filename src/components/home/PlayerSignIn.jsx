@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Users, Loader2, LogIn, MapPin, ChevronDown, ChevronRight, X } from "lucide-react";
 import { getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, buildPlayersById } from "@/utils/playerUtils";
+import LiveStatusIndicator from "@/components/LiveStatusIndicator";
 
 const CARD = {
   background: "rgba(255,255,255,0.03)",
@@ -287,12 +288,7 @@ export default function PlayerSignIn() {
           </div>
         </div>
 
-        {signed && (
-          <div className="flex items-center gap-1.5 shrink-0">
-            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-xs font-medium text-green-400 tracking-wide">LIVE</span>
-          </div>
-        )}
+        {signed && <LiveStatusIndicator />}
 
         {!signed && !loading && <ChevronRight className="w-5 h-5 text-white/20 shrink-0 mt-0.5" />}
       </div>
