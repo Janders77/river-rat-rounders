@@ -186,7 +186,7 @@ function LayoutInner({ children }) {
                   setOpenMobile(false);
                   window.location.href = createPageUrl("Home");
                 }}
-                className="w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-white/35 hover:text-white/65 hover:bg-white/4 transition-all"
+                className="w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-white/60 hover:text-white/90 hover:bg-white/5 transition-all"
               >
                 <LogOut className="w-4 h-4 shrink-0" />
                 <span>Sign Out</span>
