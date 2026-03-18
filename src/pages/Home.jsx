@@ -26,18 +26,14 @@ function NavTile({ icon: Icon, title, desc, url }) {
   return (
     <Link
       to={url}
-      className="w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-150 min-h-[44px]"
-      style={CARD}
+      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 min-h-[48px] border border-white/10 bg-white/[0.05]"
     >
-      <div
-        className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0"
-        style={{ background: "rgba(255,255,255,0.06)" }}
-      >
+      <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0 bg-white/5">
         <Icon className="w-5 h-5 text-white/80" />
       </div>
       <div className="flex flex-col flex-1 min-w-0">
-        <span className="text-white font-semibold text-base leading-tight">{title}</span>
-        <span className="text-sm text-white/40 mt-0.5">{desc}</span>
+        <span className="text-base font-semibold text-white leading-tight">{title}</span>
+        <span className="text-sm text-white/65 mt-0.5">{desc}</span>
       </div>
       <ChevronRight className="w-5 h-5 text-white/20 shrink-0" />
     </Link>
@@ -46,23 +42,23 @@ function NavTile({ icon: Icon, title, desc, url }) {
 
 function Brand() {
   return (
-    <div className="flex flex-col items-center pt-6 pb-3">
+    <div className="flex flex-col items-center pt-8 pb-4">
       <img
         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/8de2d69e1_ChatGPTImageMar2202603_07_22PM.png"
         alt="River Rat Rounders"
         className="w-48 object-contain"
       />
-      <p className="text-white/30 text-sm tracking-wide mt-2">Memphis' Freeroll Bar Poker League</p>
+      <p className="text-white/50 text-sm tracking-wide mt-3">Memphis' Freeroll Bar Poker League</p>
     </div>
   );
 }
 
 function Divider({ label }) {
   return (
-    <div className="w-full flex items-center gap-4 text-sm text-white/30 uppercase tracking-widest font-medium">
-      <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+    <div className="w-full flex items-center gap-4 text-xs text-white/50 uppercase tracking-widest font-medium">
+      <div className="flex-1 h-px border-t border-white/10" />
       <span>{label}</span>
-      <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+      <div className="flex-1 h-px border-t border-white/10" />
     </div>
   );
 }
@@ -109,7 +105,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative px-4" style={BG}>
       <div className="absolute inset-0 pointer-events-none" style={GLOW} />
-      <div className="relative w-full flex flex-col gap-6">
+      <div className="relative w-full flex flex-col gap-8 max-w-md">
         <Brand />
         <LoginCard onLoginSuccess={() => {
           const email = localStorage.getItem("playerEmail");
