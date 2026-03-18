@@ -291,29 +291,33 @@ export default function PlayerSignIn() {
 
       {signed && (
         <button
-          className="w-full mt-2 pt-2 px-3 border-t flex items-center justify-between text-sm text-white/80 hover:text-white/90 transition-colors"
-          style={{ borderColor: "rgba(255,255,255,0.1)" }}
+          className="w-full flex items-center justify-between px-3 py-2.5 border-t transition-colors hover:bg-white/[0.02]"
+          style={{ borderColor: "rgba(255,255,255,0.08)" }}
           onClick={e => { e.stopPropagation(); setDropdownOpen(!dropdownOpen); }}
         >
-          <span>Players signed in ({signedInIds.length})</span>
-          <ChevronDown className={`w-4 h-4 text-white/60 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-white">Players signed in</span>
+            <span className="text-xs text-white/50">({signedInIds.length})</span>
+          </div>
+          <ChevronDown className={`w-4 h-4 text-white/50 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
         </button>
       )}
 
       {signed && dropdownOpen && (
-        <div className="mt-2 flex flex-col divide-y divide-white/5" style={{ divideColor: "rgba(255,255,255,0.05)" }}>
-          {otherPlayers.map(player => (
-            <div key={player.id} className="flex items-center justify-between py-2 px-3 text-sm text-white/80">
-              <div className="flex items-center gap-2 flex-1 min-w-0">
-                <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-xs text-white/70 shrink-0">
-                  {(player.first_name?.[0] || "").toUpperCase()}{(player.last_name?.[0] || "").toUpperCase()}
+        <div className="flex flex-col divide-y" style={{ divideColor: "rgba(255,255,255,0.05)" }}>
+          {otherPlayers.length > 0 ? (
+            otherPlayers.map(player => (
+              <div key={player.id} className="flex items-center gap-3 px-3 py-2.5">
+                <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                  <span className="text-[11px] font-medium text-white/70">
+                    {(player.first_name?.[0] || "").toUpperCase()}{(player.last_name?.[0] || "").toUpperCase()}
+                  </span>
                 </div>
-                <span className="truncate">{getPlayerDisplayName(player)}</span>
+                <span className="text-sm text-white/85 truncate flex-1">{getPlayerDisplayName(player)}</span>
               </div>
-            </div>
-          ))}
-          {otherPlayers.length === 0 && (
-            <div className="py-2 px-3 text-xs text-white/30">No other players signed in yet</div>
+            ))
+          ) : (
+            <div className="px-3 py-2.5 text-sm text-white/60">No other players signed in yet</div>
           )}
         </div>
       )}
