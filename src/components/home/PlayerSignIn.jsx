@@ -57,19 +57,18 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
 
   return (
     <div
-      className={`rounded-xl overflow-hidden transition-all ${!signed && !loading ? "cursor-pointer" : ""}`}
-      style={signed ? { background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.18)" } : CARD}
+      className={`rounded-xl overflow-hidden transition-all border ${!signed && !loading ? "cursor-pointer" : ""} ${signed ? "border-green-500/20 bg-green-500/5" : "border-white/10 bg-white/[0.05]"}`}
       onClick={!signed && !loading ? () => handleSignIn(session) : undefined}
     >
-      <div className="flex items-center gap-3 px-3 py-2.5">
-        <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
+      <div className="flex items-center gap-3 px-4 py-3 min-h-[48px]">
+        <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0 bg-white/5">
           {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <MapPin className="w-5 h-5 text-white/80" />}
         </div>
         <div className="flex flex-col flex-1 min-w-0">
-          <span className={`font-medium text-sm leading-tight ${signed ? "text-green-400" : "text-white"}`}>
+          <span className={`font-semibold text-base leading-tight ${signed ? "text-green-400" : "text-white"}`}>
             {signed ? "You're signed in!" : session.location}
           </span>
-          <span className="text-xs text-white/40 mt-0.5 truncate">
+          <span className="text-xs text-white/50 mt-1 truncate">
             {signed ? session.location + " · " : ""}
             {new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
             {session.game_type && ` · ${session.game_type}`}
@@ -233,13 +232,13 @@ export default function PlayerSignIn() {
 
   if (isLoading) {
     return (
-      <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl" style={PRIMARY_CARD}>
-        <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
+      <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl min-h-[48px] border border-white/10 bg-white/[0.05]">
+        <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0 bg-white/5">
           <Loader2 className="w-5 h-5 text-white/80 animate-spin" />
         </div>
         <div className="flex flex-col">
-          <span className="text-white font-semibold text-sm">Sign In to Today's Game</span>
-          <span className="text-xs text-white/40 mt-0.5">Loading sessions...</span>
+          <span className="text-base font-semibold text-white">Sign In to Today's Game</span>
+          <span className="text-xs text-white/50 mt-1">Loading sessions...</span>
         </div>
       </div>
     );
@@ -247,13 +246,13 @@ export default function PlayerSignIn() {
 
   if (sessions.length === 0) {
     return (
-      <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl" style={PRIMARY_CARD}>
-        <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
+      <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl min-h-[48px] border border-white/10 bg-white/[0.05]">
+        <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0 bg-white/5">
           <LogIn className="w-5 h-5 text-white/80" />
         </div>
         <div className="flex flex-col">
-          <span className="text-white font-semibold text-sm">Sign In to Today's Game</span>
-          <span className="text-xs text-white/40 mt-0.5">No open sessions right now. Check back later.</span>
+          <span className="text-base font-semibold text-white">Sign In to Today's Game</span>
+          <span className="text-xs text-white/50 mt-1">No open sessions right now. Check back later.</span>
         </div>
       </div>
     );
@@ -269,28 +268,27 @@ export default function PlayerSignIn() {
 
   return (
     <div
-      className={`relative w-full rounded-xl overflow-hidden transition-all ${!signed && !loading ? "cursor-pointer" : ""}`}
-      style={signed ? { background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.18)" } : PRIMARY_CARD}
+      className={`relative w-full rounded-xl overflow-hidden transition-all border ${!signed && !loading ? "cursor-pointer" : ""} ${signed ? "border-green-500/20 bg-green-500/5" : "border-white/10 bg-white/[0.05]"}`}
       onClick={!signed && !loading ? () => handleSignIn(firstSession) : undefined}
     >
       {/* Top Section: Icon, Text, OPEN */}
       <div className="flex items-start gap-4 px-4 py-4 min-h-[56px]">
-        <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
-          {loading ? <Loader2 className="w-6 h-6 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-6 h-6 text-green-400" /> : <LogIn className="w-6 h-6 text-white/80" />}
+        <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+          {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <LogIn className="w-5 h-5 text-white/80" />}
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="text-base font-semibold text-white truncate leading-tight">
             {signed ? "You're signed in!" : "Sign In to Tonight's Game"}
           </div>
-          <div className="mt-1 text-sm text-white/60 truncate">
+          <div className="mt-1 text-sm text-white/65 truncate">
             {firstSession.location} · {new Date(firstSession.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
             {firstSession.game_type && ` · ${firstSession.game_type}`}
           </div>
         </div>
 
         {signed && (
-          <span className="text-sm font-semibold tracking-[0.14em] text-red-400 animate-[openTextPulse_2.8s_ease-in-out_infinite] shrink-0 mt-0.5">OPEN</span>
+          <span className="text-xs font-bold tracking-widest text-red-400 animate-[openTextPulse_2.8s_ease-in-out_infinite] shrink-0 mt-0.5 whitespace-nowrap">🟢 OPEN</span>
         )}
 
         {!signed && !loading && <ChevronRight className="w-5 h-5 text-white/20 shrink-0 mt-0.5" />}
