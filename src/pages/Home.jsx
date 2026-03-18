@@ -90,11 +90,11 @@ export default function Home() {
     return (
       <div className="min-h-screen relative" style={BG}>
         <div className="absolute inset-0 pointer-events-none" style={GLOW} />
-        <div className="relative max-w-md mx-auto w-full px-4 flex flex-col gap-3 pb-10">
+        <div className="relative w-full px-4 flex flex-col gap-4 pb-10">
           <Brand />
           <PlayerSignIn />
           <Divider label="Explore" />
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {NAV_ITEMS.map(item => (
               <NavTile key={item.title} {...item} />
             ))}
@@ -109,7 +109,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative px-4" style={BG}>
       <div className="absolute inset-0 pointer-events-none" style={GLOW} />
-      <div className="relative w-full max-w-sm flex flex-col gap-5">
+      <div className="relative w-full flex flex-col gap-6">
         <Brand />
         <LoginCard onLoginSuccess={() => {
           const email = localStorage.getItem("playerEmail");
