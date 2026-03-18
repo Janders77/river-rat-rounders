@@ -52,8 +52,8 @@ export default function DirectorSignIn() {
     <div className="min-h-screen p-6 flex items-center justify-center">
       <Card className="w-full max-w-md bg-transparent border border-red-500/40 backdrop-blur-sm">
         <CardHeader>
-          <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center mb-4">
-            <Lock className="w-6 h-6 text-red-500" />
+          <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center mb-4">
+            <Lock className="w-5 h-5 text-white/80" />
           </div>
           <CardTitle className="text-white text-2xl">Director Access</CardTitle>
           <p className="text-gray-400 text-sm mt-2">Enter the director code to access the dashboard</p>
