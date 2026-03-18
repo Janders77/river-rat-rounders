@@ -154,9 +154,8 @@ export default function Leaderboard() {
 
         {/* ── HEADER ── */}
         <div className="flex items-center gap-2.5 mb-4">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-            style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.2)" }}>
-            <Trophy className="w-3.5 h-3.5 text-red-400" />
+          <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+            <Trophy className="w-5 h-5 text-white/80" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-white tracking-tight leading-none">Leaderboard</h1>

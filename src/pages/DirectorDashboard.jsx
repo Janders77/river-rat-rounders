@@ -505,8 +505,8 @@ export default function DirectorDashboard() {
       <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
       <div className="max-w-4xl mx-auto w-full relative">
         <div className="mb-8 flex items-center gap-3">
-          <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
-            <ShieldAlert className="w-5 h-5 text-red-400" />
+          <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
+            <ShieldAlert className="w-5 h-5 text-white/80" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-white">Director Dashboard</h1>

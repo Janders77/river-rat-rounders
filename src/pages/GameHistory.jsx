@@ -61,8 +61,8 @@ export default function GameHistory() {
         {/* Header */}
         <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-gray-900/60 rounded-lg flex items-center justify-center">
-              <History className="w-4 h-4 text-red-400" />
+            <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
+              <History className="w-5 h-5 text-white/80" />
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Game History</h1>
