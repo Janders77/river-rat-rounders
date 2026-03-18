@@ -236,19 +236,19 @@ export default function Leaderboard() {
         ) : (
           <div className="space-y-2 mt-2">
             {(topPoints || topWins) && (
-              <div className="flex gap-4 mb-6 flex-wrap">
+              <div className="flex gap-2 mb-4 flex-wrap justify-center">
                 {topPoints && (
-                  <div className="bg-gradient-to-br from-red-700/20 to-red-900/10 border border-red-700/30 rounded-lg px-5 py-3 flex items-center gap-3">
-                    <div className="text-red-400 text-sm font-semibold">Most Points:</div>
-                    <div className="text-white font-bold text-base">{topPoints.name}</div>
-                    <div className="text-red-300 text-sm">{topPoints.points} pts</div>
+                  <div className="flex items-center gap-2 bg-red-900/20 border border-red-700/30 rounded-full px-4 py-1.5 text-sm">
+                    <span className="text-red-400 font-medium">Most Points</span>
+                    <span className="text-white font-bold">{topPoints.name}</span>
+                    <span className="text-red-300">{topPoints.points} pts</span>
                   </div>
                 )}
                 {topWins && (
-                  <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 rounded-lg px-5 py-3 flex items-center gap-3">
-                    <div className="text-emerald-400 text-sm font-semibold">Most Wins:</div>
-                    <div className="text-white font-bold text-base">{topWins.name}</div>
-                    <div className="text-emerald-300 text-sm">{topWins.wins} wins</div>
+                  <div className="flex items-center gap-2 bg-emerald-900/20 border border-emerald-500/30 rounded-full px-4 py-1.5 text-sm">
+                    <span className="text-emerald-400 font-medium">Most Wins</span>
+                    <span className="text-white font-bold">{topWins.name}</span>
+                    <span className="text-emerald-300">{topWins.wins} wins</span>
                   </div>
                 )}
               </div>
