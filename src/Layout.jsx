@@ -17,66 +17,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const navigationItems = [
-  {
-    title: "Home",
-    url: createPageUrl("Home"),
-    icon: Home,
-  },
-  {
-    title: "My Profile",
-    url: createPageUrl("PlayerProfile"),
-    icon: Trophy,
-  },
-  {
-    title: "Leaderboard",
-    url: createPageUrl("Leaderboard"),
-    icon: Trophy,
-  },
-  {
-    title: "Game History",
-    url: createPageUrl("GameHistory"),
-    icon: History,
-  },
-  {
-    title: "Winners Gallery",
-    url: createPageUrl("WinnersGallery"),
-    icon: Image,
-  },
-  {
-    title: "Calendar",
-    url: createPageUrl("LeagueCalendar"),
-    icon: CalendarDays,
-  },
 
-  {
-    title: "Locations",
-    url: createPageUrl("Locations"),
-    icon: MapPin,
-  },
-  {
-    title: "Community",
-    url: createPageUrl("Community"),
-    icon: Users,
-  },
-
-  {
-    title: "Player Database",
-    url: createPageUrl("PlayerDatabase"),
-    icon: Database,
-    adminOnly: true,
-  },
-  {
-    title: "Director",
-    url: createPageUrl("DirectorSignIn"),
-    icon: ShieldAlert,
-  },
-  {
-    title: "Manage Directors",
-    url: createPageUrl("DirectorManagement"),
-    icon: ShieldAlert,
-  },
-];
 
 const NAV_GROUPS = [
   {
