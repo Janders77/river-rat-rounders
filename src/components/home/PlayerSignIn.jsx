@@ -287,8 +287,11 @@ export default function PlayerSignIn() {
           </span>
         </div>
         {signed && (
-          <div className="shrink-0 rounded-full border border-red-500/20 bg-red-500/5 px-2 py-0.5 animate-[openPulse_2.4s_ease-in-out_infinite]" style={{ boxShadow: "0 0 8px rgba(239,68,68,0.25)" }}>
-            <span className="text-[10px] font-semibold tracking-wide text-red-300">OPEN</span>
+          <div className="shrink-0 pl-2 flex items-center">
+            <div className="relative rounded-md border border-red-500/15 bg-red-500/[0.06] px-2 py-1 shadow-[0_0_10px_rgba(239,68,68,0.14)]">
+              <div className="absolute inset-0 rounded-md pointer-events-none animate-[openRipple_2.8s_ease-in-out_infinite]" style={{background: "rgba(239,68,68,0.08)"}} />
+              <span className="relative text-[10px] font-semibold tracking-[0.12em] text-red-300/90 leading-none">OPEN</span>
+            </div>
           </div>
         )}
         {!signed && !loading && <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />}
