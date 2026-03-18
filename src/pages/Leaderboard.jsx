@@ -156,66 +156,66 @@ export default function Leaderboard() {
     <div className="min-h-screen p-6 relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
       <div className="max-w-7xl mx-auto relative">
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-14 h-14 bg-gray-900/60 rounded-lg flex items-center justify-center">
-              <Trophy className="w-7 h-7 text-red-400" />
+        {/* Header + Filters */}
+        <div className="mb-6 flex flex-col items-center gap-5">
+          {/* Title */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-red-400" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-white">Leaderboard</h1>
-              <p className="text-gray-400 text-base">Live from recorded game results</p>
+              <h1 className="text-3xl font-bold text-white leading-tight">Leaderboard</h1>
+              <p className="text-gray-500 text-sm">Live from recorded game results</p>
             </div>
           </div>
 
-          <div className="w-full flex flex-col items-center gap-4">
-            <div className="flex justify-center gap-3 flex-wrap">
-              {getAllQuarters().map(q => {
-                const label = q.split('-')[1];
-                return (
-                  <button
-                    key={q}
-                    onClick={() => setSelectedQuarter(q)}
-                    className={`px-6 py-3 rounded-lg font-semibold text-base transition-all duration-200 ${
-                      selectedQuarter === q
-                        ? 'bg-gradient-to-r from-red-700 to-red-900 text-white shadow-lg shadow-red-900/40'
-                        : 'bg-gray-800 text-gray-300 hover:bg-gradient-to-r hover:from-red-700 hover:to-red-900 hover:text-white hover:shadow-lg hover:shadow-red-900/40'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="flex justify-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="gap-3 border-gray-800 text-gray-300 hover:text-white text-base px-6 py-3">
-                    <MapPin className="w-5 h-5" />
-                    {selectedLocation || "Overall"}
-                    <ChevronDown className="w-5 h-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="bg-gray-900 border-gray-800">
-                  <DropdownMenuItem
-                    onClick={() => setSelectedLocation(null)}
-                    className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
-                  >
-                    Overall
-                  </DropdownMenuItem>
-                  {ALL_LOCATIONS.map(loc => (
-                    <DropdownMenuItem
-                      key={loc}
-                      onClick={() => setSelectedLocation(loc)}
-                      className={`text-white ${selectedLocation === loc ? "bg-red-700/20" : ""}`}
-                    >
-                      {loc}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+          {/* Quarter tabs */}
+          <div className="flex justify-center gap-2">
+            {getAllQuarters().map(q => {
+              const label = q.split('-')[1];
+              return (
+                <button
+                  key={q}
+                  onClick={() => setSelectedQuarter(q)}
+                  className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
+                    selectedQuarter === q
+                      ? 'bg-gradient-to-r from-red-700 to-red-900 text-white shadow-md shadow-red-900/40'
+                      : 'bg-gray-800/80 text-gray-400 hover:text-white hover:bg-gray-700'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
+
+          {/* Location dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2 border-gray-700 bg-gray-800/60 text-gray-300 hover:text-white hover:border-gray-500 text-sm px-4 py-2 h-9">
+                <MapPin className="w-4 h-4" />
+                {selectedLocation || "All Locations"}
+                <ChevronDown className="w-4 h-4 opacity-60" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="bg-gray-900 border-gray-800">
+              <DropdownMenuItem
+                onClick={() => setSelectedLocation(null)}
+                className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
+              >
+                All Locations
+              </DropdownMenuItem>
+              {ALL_LOCATIONS.map(loc => (
+                <DropdownMenuItem
+                  key={loc}
+                  onClick={() => setSelectedLocation(loc)}
+                  className={`text-white ${selectedLocation === loc ? "bg-red-700/20" : ""}`}
+                >
+                  {loc}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {isLoading || isFetchingMissingPlayers ? (
