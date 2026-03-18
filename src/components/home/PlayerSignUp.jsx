@@ -50,7 +50,7 @@ export default function PlayerSignUp() {
 
   if (status === "done") {
     return (
-      <div className="w-full flex flex-col items-center gap-3 p-6 rounded-xl border border-red-600/40 bg-gradient-to-r from-red-600/20 to-red-700/10 text-center">
+      <div className="w-full flex flex-col items-center gap-3 p-5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(220,38,38,0.22)" }}>
         <CheckCircle2 className="w-10 h-10 text-green-400" />
         <p className="text-white font-semibold">Request Sent!</p>
         <p className="text-gray-400 text-sm">The director will send you an invite to join soon.</p>
