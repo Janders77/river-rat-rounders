@@ -307,23 +307,32 @@ export default function PlayerSignIn() {
       )}
 
       {signed && dropdownOpen && (
-        <div className="flex flex-col divide-y" style={{ divideColor: "rgba(255,255,255,0.05)" }}>
-          {otherPlayers.length > 0 ? (
-            otherPlayers.map(player => (
-              <div key={player.id} className="flex items-center gap-3 px-3 py-2.5">
-                <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center shrink-0">
-                  <span className="text-[11px] font-medium text-white/70">
-                    {(player.first_name?.[0] || "").toUpperCase()}{(player.last_name?.[0] || "").toUpperCase()}
-                  </span>
-                </div>
-                <span className="text-sm text-white/85 truncate flex-1">{getPlayerDisplayName(player)}</span>
-              </div>
-            ))
-          ) : (
-            <div className="px-3 py-2.5 text-sm text-white/60">No other players signed in yet</div>
-          )}
-        </div>
-      )}
+          <div className="flex flex-col divide-y" style={{ divideColor: "rgba(255,255,255,0.05)" }}>
+            {signedInIds.length > 0 ? (
+              signedInIds.map((pid, index) => {
+                const player = playersById[pid];
+                const hasProfilePic = player?.profile_picture;
+                return (
+                  <div key={pid} className="flex items-center gap-3 px-3 py-2.5">
+                    <div className="w-7 h-7 rounded-full bg-white/5 overflow-hidden flex items-center justify-center shrink-0">
+                      {hasProfilePic ? (
+                        <img src={player.profile_picture} alt={getPlayerDisplayName(player)} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-[11px] font-medium text-white/70">
+                          {(player?.first_name?.[0] || "").toUpperCase()}{(player?.last_name?.[0] || "").toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs font-medium text-white/50 shrink-0">{index + 1}.</span>
+                    <span className="text-sm text-white/85 truncate">{player ? getPlayerDisplayName(player) : "Loading..."}</span>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="px-3 py-2.5 text-sm text-white/60">No players signed in yet</div>
+            )}
+          </div>
+        )}
     </div>
   );
 }
