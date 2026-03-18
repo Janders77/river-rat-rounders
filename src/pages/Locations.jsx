@@ -306,7 +306,8 @@ export default function Locations() {
               )}
             </Droppable>
           </DragDropContext>
-        )}
+          );
+        })()}
       </div>
     </div>
   );
