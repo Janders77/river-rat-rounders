@@ -149,12 +149,11 @@ function LayoutInner({ children }) {
                 </div>
               </button>
               {profileImageUrl && (
-                <div className="flex-shrink-0">
+                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-1 ring-white/10 bg-black/20">
                   <img
                     src={profileImageUrl}
                     alt="Profile"
-                    className="w-9 h-9 rounded-full object-cover border-2 border-green-700/60 shadow-lg"
-                    style={{boxShadow: "0 0 8px rgba(34,197,94,0.3)"}}
+                    className="w-full h-full object-cover"
                   />
                 </div>
               )}
