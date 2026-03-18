@@ -119,6 +119,7 @@ export default function PlayerSignIn() {
   const [currentPlayerId, setCurrentPlayerId] = useState(null);
   const [isDirector, setIsDirector] = useState(false);
   const [allPlayers, setAllPlayers] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     async function loadData() {
