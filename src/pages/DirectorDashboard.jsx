@@ -515,35 +515,33 @@ export default function DirectorDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-3 gap-1 w-full h-auto p-1">
+          <div className="flex flex-wrap gap-2 mb-6">
             {hasPermission(directorRole, "canManageSessions") && (
-              <TabsTrigger value="sessions" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
-                <CalendarPlus className="w-4 h-4 mr-2" /> Sessions
-              </TabsTrigger>
+              <button onClick={() => setActiveTab("sessions")}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border font-medium text-sm transition-all ${activeTab === "sessions" ? "border-red-500 text-red-400 bg-red-900/15" : "border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white"}`}>
+                <CalendarPlus className="w-4 h-4" /> Sessions
+              </button>
             )}
             {hasPermission(directorRole, "canRecordGames") && (
-              <TabsTrigger value="record" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
-                <Plus className="w-4 h-4 mr-2" /> Record Game
-              </TabsTrigger>
+              <button onClick={() => setActiveTab("record")}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border font-medium text-sm transition-all ${activeTab === "record" ? "border-red-500 text-red-400 bg-red-900/15" : "border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white"}`}>
+                <Plus className="w-4 h-4" /> Record Game
+              </button>
             )}
             {hasPermission(directorRole, "canApproveRequests") && (
-              <TabsTrigger value="requests" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50 relative">
-                <Mail className="w-4 h-4 mr-2" /> Requests
+              <button onClick={() => setActiveTab("requests")}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border font-medium text-sm transition-all ${activeTab === "requests" ? "border-red-500 text-red-400 bg-red-900/15" : "border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white"}`}>
+                <Mail className="w-4 h-4" /> Requests
                 {inviteRequests.length > 0 && (
-                  <span className="ml-1 bg-red-400 text-white text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
+                  <span className="bg-red-500 text-white text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
                 )}
-              </TabsTrigger>
+              </button>
             )}
-            {hasPermission(directorRole, "canManagePlayers") && (
-              <TabsTrigger value="players" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
-                <Users className="w-4 h-4 mr-2" /> Players
-              </TabsTrigger>
-            )}
-            <TabsTrigger value="history" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
-              <Trophy className="w-4 h-4 mr-2" /> Games
-            </TabsTrigger>
-
-          </TabsList>
+            <button onClick={() => setActiveTab("history")}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border font-medium text-sm transition-all ${activeTab === "history" ? "border-red-500 text-red-400 bg-red-900/15" : "border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white"}`}>
+              <Trophy className="w-4 h-4" /> Games
+            </button>
+          </div>
 
           {/* Sessions Tab */}
           {hasPermission(directorRole, "canManageSessions") && (
