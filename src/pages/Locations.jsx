@@ -120,6 +120,11 @@ export default function Locations() {
     const [movedLocation] = reorderedLocations.splice(source.index, 1);
     reorderedLocations.splice(destination.index, 0, movedLocation);
     setLocations(reorderedLocations);
+    
+    // Save new order to database by updating display_order field
+    for (let i = 0; i < reorderedLocations.length; i++) {
+      await base44.entities.Location.update(reorderedLocations[i].id, { display_order: i });
+    }
   };
 
   useEffect(() => { loadData(); }, []);
