@@ -233,21 +233,21 @@ export default function Leaderboard() {
 
         {/* ── STAT CHIPS ── */}
         {!loading && (topPoints || topWins) && (
-          <div className="flex gap-2 mb-3">
+          <div className="flex gap-3 mb-4">
             {topPoints && (
-              <div className="flex-1 flex items-center justify-between px-2.5 py-1.5 rounded-lg"
+              <div className="flex-1 flex items-center justify-between px-4 py-3 rounded-lg"
                 style={{ background: "rgba(220,38,38,0.07)", border: "1px solid rgba(220,38,38,0.15)" }}>
-                <span className="text-[9px] text-gray-600 uppercase tracking-widest font-bold">PTS</span>
-                <span className="text-white text-xs font-semibold truncate mx-1.5">{topPoints.name.split(' ')[0]}</span>
-                <span className="text-xs font-black tabular-nums shrink-0" style={{ color: "#f87171" }}>{topPoints.points}</span>
+                <span className="text-xs text-gray-600 uppercase tracking-widest font-bold">PTS</span>
+                <span className="text-white text-sm font-semibold truncate mx-2">{topPoints.name.split(' ')[0]}</span>
+                <span className="text-base font-black tabular-nums shrink-0" style={{ color: "#f87171" }}>{topPoints.points}</span>
               </div>
             )}
             {topWins && (
-              <div className="flex-1 flex items-center justify-between px-2.5 py-1.5 rounded-lg"
+              <div className="flex-1 flex items-center justify-between px-4 py-3 rounded-lg"
                 style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
-                <span className="text-[9px] text-gray-600 uppercase tracking-widest font-bold">W</span>
-                <span className="text-white text-xs font-semibold truncate mx-1.5">{topWins.name.split(' ')[0]}</span>
-                <span className="text-xs font-black tabular-nums shrink-0" style={{ color: "#34d399" }}>{topWins.wins}</span>
+                <span className="text-xs text-gray-600 uppercase tracking-widest font-bold">W</span>
+                <span className="text-white text-sm font-semibold truncate mx-2">{topWins.name.split(' ')[0]}</span>
+                <span className="text-base font-black tabular-nums shrink-0" style={{ color: "#34d399" }}>{topWins.wins}</span>
               </div>
             )}
           </div>
