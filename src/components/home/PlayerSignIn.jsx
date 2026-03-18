@@ -277,23 +277,22 @@ export default function PlayerSignIn() {
         <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
           {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <LogIn className="w-5 h-5 text-white/80" />}
         </div>
-        <div className="flex flex-col flex-1 min-w-0">
-          <span className={`font-semibold text-sm leading-tight ${signed ? "text-green-400" : "text-white"}`}>
+        <div className="flex-1 min-w-0 flex flex-col">
+          <span className={`text-sm font-semibold ${signed ? "text-green-400" : "text-white"}`}>
             {signed ? "You're signed in!" : "Sign In to Tonight's Game"}
           </span>
-          <span className="text-xs text-white/40 mt-0.5 truncate">
-            {firstSession.location} · {new Date(firstSession.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
-            {firstSession.game_type && ` · ${firstSession.game_type}`}
-          </span>
-        </div>
-        {signed && (
-          <div className="shrink-0 pl-2 flex items-center">
-            <div className="relative rounded-md border border-red-500/15 bg-red-500/[0.06] px-2 py-1 shadow-[0_0_10px_rgba(239,68,68,0.14)]">
-              <div className="absolute inset-0 rounded-md pointer-events-none animate-[openRipple_2.8s_ease-in-out_infinite]" style={{background: "rgba(239,68,68,0.08)"}} />
-              <span className="relative text-[10px] font-semibold tracking-[0.12em] text-red-300/90 leading-none">OPEN</span>
-            </div>
+          <div className="mt-0.5 flex items-center gap-2 min-w-0 flex-wrap">
+            <span className="text-xs text-white/60">
+              {firstSession.location} · {new Date(firstSession.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+              {firstSession.game_type && ` · ${firstSession.game_type}`}
+            </span>
+            {signed && (
+              <div className="shrink-0 rounded-md border border-red-500/15 bg-red-500/[0.06] px-1.5 py-0.5">
+                <span className="text-[9px] font-semibold tracking-[0.12em] text-red-300/90 leading-none">OPEN</span>
+              </div>
+            )}
           </div>
-        )}
+        </div>
         {!signed && !loading && <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />}
       </div>
 
