@@ -376,12 +376,16 @@ export default function DirectorDashboard() {
       }
     }
     
-    // Remove card guard from winner if applicable
+    // Handle card guard removal from winner
     if (game.winner_player_id && playersById[game.winner_player_id]) {
       const winner = playersById[game.winner_player_id];
+      // Decrement card guard count
+      const newCardGuards = Math.max(0, (winner.card_guards || 0) - 1);
       await base44.entities.Player.update(winner.id, {
-        card_guards: Math.max(0, (winner.card_guards || 0) - 1),
+        card_guards: newCardGuards,
       });
+      // Update local state
+      setPlayers(prev => prev.map(p => p.id === winner.id ? { ...p, card_guards: newCardGuards } : p));
     }
     
     // Delete the game
