@@ -31,9 +31,9 @@ function NavTile({ icon: Icon, title, desc, url }) {
     >
       <div
         className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0"
-        style={{ background: "rgba(255,255,255,0.05)" }}
+        style={{ background: "rgba(255,255,255,0.06)" }}
       >
-        <Icon className="w-5 h-5 text-gray-400" />
+        <Icon className="w-5 h-5 text-white/70" />
       </div>
       <div className="flex flex-col flex-1 min-w-0">
         <span className="text-white font-medium text-sm leading-tight">{title}</span>
