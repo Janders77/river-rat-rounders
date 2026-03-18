@@ -271,7 +271,7 @@ export default function Leaderboard() {
         {loading ? (
           <div className="space-y-2 mt-2">
             {Array(10).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-14 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }} />
+              <Skeleton key={i} className="h-16 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }} />
             ))}
           </div>
         ) : leaderboard.length === 0 ? (
