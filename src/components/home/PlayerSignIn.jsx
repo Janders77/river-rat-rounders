@@ -269,70 +269,77 @@ export default function PlayerSignIn() {
 
   return (
     <div
-      className={`rounded-xl transition-all overflow-hidden relative ${!signed && !loading ? "cursor-pointer" : ""}`}
+      className={`relative w-full rounded-xl overflow-hidden transition-all ${!signed && !loading ? "cursor-pointer" : ""}`}
       style={signed ? { background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.18)" } : PRIMARY_CARD}
       onClick={!signed && !loading ? () => handleSignIn(firstSession) : undefined}
     >
-      {signed && (
-        <span className="absolute top-3 right-3 text-[11px] font-semibold tracking-[0.14em] text-red-400 animate-[openTextPulse_2.8s_ease-in-out_infinite]">OPEN</span>
-      )}
-      <div className="flex items-center gap-3 px-3 py-2.5">
-        <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
+      {/* Top Section: Icon, Text, OPEN */}
+      <div className="flex items-start gap-3 px-3 py-3">
+        <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
           {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <LogIn className="w-5 h-5 text-white/80" />}
         </div>
-        <div className="flex-1 min-w-0 flex flex-col">
-          <span className={`text-sm font-semibold ${signed ? "text-green-400" : "text-white"}`}>
+
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-semibold text-white truncate leading-tight">
             {signed ? "You're signed in!" : "Sign In to Tonight's Game"}
-          </span>
-          <span className="text-xs text-white/40 mt-0.5 truncate">
+          </div>
+          <div className="mt-1 text-xs text-white/60 truncate">
             {firstSession.location} · {new Date(firstSession.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
             {firstSession.game_type && ` · ${firstSession.game_type}`}
-          </span>
+          </div>
         </div>
-        {!signed && !loading && <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />}
+
+        {signed && (
+          <span className="text-[11px] font-semibold tracking-[0.14em] text-red-400 animate-[openTextPulse_2.8s_ease-in-out_infinite] shrink-0 mt-0.5">OPEN</span>
+        )}
+
+        {!signed && !loading && <ChevronRight className="w-4 h-4 text-white/20 shrink-0 mt-0.5" />}
       </div>
 
+      {/* Players Signed In Section */}
       {signed && (
-        <button
-          className="w-full flex items-center justify-between px-3 py-2.5 border-t transition-colors hover:bg-white/[0.02]"
-          style={{ borderColor: "rgba(255,255,255,0.08)" }}
-          onClick={e => { e.stopPropagation(); setDropdownOpen(!dropdownOpen); }}
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-white">Players signed in</span>
-            <span className="text-xs text-white/50">({signedInIds.length})</span>
-          </div>
-          <ChevronDown className={`w-4 h-4 text-white/50 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
-        </button>
-      )}
+        <>
+          <button
+            className="w-full flex items-center justify-between px-3 py-2 border-t transition-colors hover:bg-white/[0.02]"
+            style={{ borderColor: "rgba(255,255,255,0.08)" }}
+            onClick={e => { e.stopPropagation(); setDropdownOpen(!dropdownOpen); }}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-white">Players signed in</span>
+              <span className="text-xs text-white/50">({signedInIds.length})</span>
+            </div>
+            <ChevronDown className={`w-4 h-4 text-white/50 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
+          </button>
 
-      {signed && dropdownOpen && (
-          <div className="flex flex-col divide-y" style={{ divideColor: "rgba(255,255,255,0.05)" }}>
-            {signedInIds.length > 0 ? (
-              signedInIds.map((pid, index) => {
-                const player = playersById[pid];
-                const hasProfilePic = player?.profile_picture;
-                return (
-                  <div key={pid} className="flex items-center gap-3 px-3 py-2.5">
-                    <div className="w-7 h-7 rounded-full bg-white/5 overflow-hidden flex items-center justify-center shrink-0">
-                      {hasProfilePic ? (
-                        <img src={player.profile_picture} alt={getPlayerDisplayName(player)} className="w-full h-full object-cover" />
-                      ) : (
-                        <span className="text-[11px] font-medium text-white/70">
-                          {(player?.first_name?.[0] || "").toUpperCase()}{(player?.last_name?.[0] || "").toUpperCase()}
-                        </span>
-                      )}
+          {dropdownOpen && (
+            <div className="mt-1 flex flex-col divide-y" style={{ divideColor: "rgba(255,255,255,0.05)" }}>
+              {signedInIds.length > 0 ? (
+                signedInIds.map((pid, index) => {
+                  const player = playersById[pid];
+                  const hasProfilePic = player?.profile_picture;
+                  return (
+                    <div key={pid} className="flex items-center gap-3 px-3 py-2">
+                      <div className="w-7 h-7 rounded-full bg-white/5 overflow-hidden flex items-center justify-center shrink-0">
+                        {hasProfilePic ? (
+                          <img src={player.profile_picture} alt={getPlayerDisplayName(player)} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-[11px] font-medium text-white/70">
+                            {(player?.first_name?.[0] || "").toUpperCase()}{(player?.last_name?.[0] || "").toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs font-medium text-white/50 shrink-0">{index + 1}.</span>
+                      <span className="text-sm text-white/85 truncate">{player ? getPlayerDisplayName(player) : "Loading..."}</span>
                     </div>
-                    <span className="text-xs font-medium text-white/50 shrink-0">{index + 1}.</span>
-                    <span className="text-sm text-white/85 truncate">{player ? getPlayerDisplayName(player) : "Loading..."}</span>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="px-3 py-2.5 text-sm text-white/60">No players signed in yet</div>
-            )}
-          </div>
-        )}
+                  );
+                })
+              ) : (
+                <div className="px-3 py-2 text-sm text-white/60">No other players signed in yet</div>
+              )}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
