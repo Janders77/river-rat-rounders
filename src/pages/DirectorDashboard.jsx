@@ -589,9 +589,9 @@ export default function DirectorDashboard() {
                       {/* Top: LIVE badge + location + delete button */}
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2 flex-1 min-w-0">
-                          <span className="text-[9px] font-bold text-green-400 tracking-widest shrink-0">🟢 LIVE</span>
-                          <span className="font-medium text-white text-sm truncate">{session.location}</span>
-                        </div>
+                            <span className="text-[9px] font-bold text-green-400 tracking-widest shrink-0 animate-pulse">🟢 LIVE</span>
+                            <span className="font-medium text-white text-sm truncate">{session.location}</span>
+                          </div>
                         <button onClick={() => handleDeleteSession(session.id)}
                           className="w-7 h-7 flex items-center justify-center rounded-lg text-white/20 hover:text-red-400 transition-colors shrink-0"
                           style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
