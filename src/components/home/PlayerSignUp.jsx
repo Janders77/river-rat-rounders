@@ -34,7 +34,7 @@ export default function PlayerSignUp() {
       <button
         onClick={() => setExpanded(true)}
         className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 group"
-        style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(220,38,38,0.22)" }}
+        style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)" }}
       >
         <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(220,38,38,0.12)", border: "1px solid rgba(220,38,38,0.2)" }}>
           <UserPlus className="w-3.5 h-3.5 text-red-400" />
@@ -50,7 +50,7 @@ export default function PlayerSignUp() {
 
   if (status === "done") {
     return (
-      <div className="w-full flex flex-col items-center gap-3 p-5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(220,38,38,0.22)" }}>
+      <div className="w-full flex flex-col items-center gap-3 p-5 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)" }}>
         <CheckCircle2 className="w-10 h-10 text-green-400" />
         <p className="text-white font-semibold">Request Sent!</p>
         <p className="text-gray-400 text-sm">The director will send you an invite to join soon.</p>
@@ -59,7 +59,7 @@ export default function PlayerSignUp() {
   }
 
   return (
-    <div className="w-full p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(220,38,38,0.22)" }}>
+    <div className="w-full p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)" }}>
       <div className="flex items-center gap-3 mb-4">
         <UserPlus className="w-5 h-5 text-red-400" />
         <span className="font-semibold text-white">New Player Sign Up</span>
