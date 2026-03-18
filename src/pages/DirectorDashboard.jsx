@@ -1139,10 +1139,7 @@ export default function DirectorDashboard() {
     {showWinnerPhotoModal && (
       <WinnerPhotoReminderModal
         onClose={() => setShowWinnerPhotoModal(false)}
-        onTakePhoto={() => {
-          setShowWinnerPhotoModal(false);
-          setActiveTab("photos");
-        }}
+        onTakePhoto={() => setShowWinnerPhotoModal(false)}
       />
     )}
 
