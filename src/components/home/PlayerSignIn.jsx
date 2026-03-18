@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import ReactDOM from "react-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Users, Loader2, LogIn, MapPin, Calendar, ChevronDown, X } from "lucide-react";
+import { CheckCircle2, Users, Loader2, LogIn, MapPin, ChevronDown, ChevronRight, X } from "lucide-react";
 import { getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, buildPlayersById } from "@/utils/playerUtils";
 
 const CARD = {
