@@ -542,11 +542,7 @@ export default function DirectorDashboard() {
             <TabsTrigger value="history" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
               <Trophy className="w-4 h-4 mr-2" /> Games
             </TabsTrigger>
-            {hasPermission(directorRole, "canUploadPhotos") && (
-              <TabsTrigger value="photos" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-700 data-[state=active]:to-red-900 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-red-900/50">
-                <ImagePlus className="w-4 h-4 mr-2" /> Photos
-              </TabsTrigger>
-            )}
+
           </TabsList>
 
           {/* Sessions Tab */}
