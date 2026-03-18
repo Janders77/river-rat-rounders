@@ -156,8 +156,8 @@ export default function Leaderboard() {
     <div className="min-h-screen p-6 relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
       <div className="max-w-7xl mx-auto relative">
-        {/* Header + Filters */}
-        <div className="mb-6 flex flex-col items-center gap-5">
+        {/* Unified header + filters block */}
+        <div className="w-full flex flex-col items-center gap-4 mb-6">
           {/* Title */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
@@ -170,7 +170,7 @@ export default function Leaderboard() {
           </div>
 
           {/* Quarter tabs */}
-          <div className="flex justify-center gap-2">
+          <div className="w-full flex justify-center gap-3">
             {getAllQuarters().map(q => {
               const label = q.split('-')[1];
               return (
@@ -190,32 +190,54 @@ export default function Leaderboard() {
           </div>
 
           {/* Location dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="gap-2 border-gray-700 bg-gray-800/60 text-gray-300 hover:text-white hover:border-gray-500 text-sm px-4 py-2 h-9">
-                <MapPin className="w-4 h-4" />
-                {selectedLocation || "All Locations"}
-                <ChevronDown className="w-4 h-4 opacity-60" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" className="bg-gray-900 border-gray-800">
-              <DropdownMenuItem
-                onClick={() => setSelectedLocation(null)}
-                className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
-              >
-                All Locations
-              </DropdownMenuItem>
-              {ALL_LOCATIONS.map(loc => (
+          <div className="w-full flex justify-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="mx-auto gap-2 border-gray-700 bg-gray-800/60 text-gray-300 hover:text-white hover:border-gray-500 text-sm px-4 py-2 h-9">
+                  <MapPin className="w-4 h-4" />
+                  {selectedLocation || "All Locations"}
+                  <ChevronDown className="w-4 h-4 opacity-60" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="bg-gray-900 border-gray-800">
                 <DropdownMenuItem
-                  key={loc}
-                  onClick={() => setSelectedLocation(loc)}
-                  className={`text-white ${selectedLocation === loc ? "bg-red-700/20" : ""}`}
+                  onClick={() => setSelectedLocation(null)}
+                  className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
                 >
-                  {loc}
+                  All Locations
                 </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                {ALL_LOCATIONS.map(loc => (
+                  <DropdownMenuItem
+                    key={loc}
+                    onClick={() => setSelectedLocation(loc)}
+                    className={`text-white ${selectedLocation === loc ? "bg-red-700/20" : ""}`}
+                  >
+                    {loc}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Stat chips — always rendered here, inside the unified block */}
+          {!isLoading && !isFetchingMissingPlayers && (topPoints || topWins) && (
+            <div className="w-full flex justify-center gap-3 flex-wrap">
+              {topPoints && (
+                <div className="flex items-center gap-2 bg-red-900/20 border border-red-700/30 rounded-full px-4 py-1.5 text-sm">
+                  <span className="text-red-400 font-medium">Most Points</span>
+                  <span className="text-white font-bold">{topPoints.name}</span>
+                  <span className="text-red-300">{topPoints.points} pts</span>
+                </div>
+              )}
+              {topWins && (
+                <div className="flex items-center gap-2 bg-emerald-900/20 border border-emerald-500/30 rounded-full px-4 py-1.5 text-sm">
+                  <span className="text-emerald-400 font-medium">Most Wins</span>
+                  <span className="text-white font-bold">{topWins.name}</span>
+                  <span className="text-emerald-300">{topWins.wins} wins</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {isLoading || isFetchingMissingPlayers ? (
@@ -234,26 +256,7 @@ export default function Leaderboard() {
             </p>
           </div>
         ) : (
-          <div className="space-y-2 mt-2">
-            {(topPoints || topWins) && (
-              <div className="flex gap-2 mb-4 flex-wrap justify-center">
-                {topPoints && (
-                  <div className="flex items-center gap-2 bg-red-900/20 border border-red-700/30 rounded-full px-4 py-1.5 text-sm">
-                    <span className="text-red-400 font-medium">Most Points</span>
-                    <span className="text-white font-bold">{topPoints.name}</span>
-                    <span className="text-red-300">{topPoints.points} pts</span>
-                  </div>
-                )}
-                {topWins && (
-                  <div className="flex items-center gap-2 bg-emerald-900/20 border border-emerald-500/30 rounded-full px-4 py-1.5 text-sm">
-                    <span className="text-emerald-400 font-medium">Most Wins</span>
-                    <span className="text-white font-bold">{topWins.name}</span>
-                    <span className="text-emerald-300">{topWins.wins} wins</span>
-                  </div>
-                )}
-              </div>
-            )}
-
+          <div className="space-y-2">
             {leaderboard.map((entry, index) => (
               <div
                 key={entry.id}
