@@ -113,15 +113,17 @@
 
 @keyframes openTextPulse {
   0%, 100% {
-    opacity: 0.75;
-    text-shadow: 0 0 6px rgba(248,113,113,0.18), 0 0 12px rgba(239,68,68,0.10);
+    opacity: 0.82;
     transform: scale(1);
-    filter: drop-shadow(0 0 4px rgba(220,38,38,0.25));
+    text-shadow:
+      0 0 4px rgba(248,113,113,0.12),
+      0 0 8px rgba(239,68,68,0.08);
   }
   50% {
     opacity: 1;
-    text-shadow: 0 0 10px rgba(248,113,113,0.42), 0 0 18px rgba(239,68,68,0.22);
-    transform: scale(1.15);
-    filter: drop-shadow(0 0 12px rgba(220,38,38,0.7)) drop-shadow(0 0 20px rgba(239,68,68,0.5));
+    transform: scale(1.06);
+    text-shadow:
+      0 0 8px rgba(248,113,113,0.22),
+      0 0 14px rgba(239,68,68,0.14);
   }
 }
