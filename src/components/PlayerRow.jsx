@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Check, X, Eye } from "lucide-react";
 
@@ -36,64 +35,41 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
     setEditing(false);
   };
 
+  const initials = `${player.first_name?.[0] || ""}${player.last_name?.[0] || ""}`.toUpperCase();
+
   if (editing && isAdmin) {
     return (
-      <div className="p-4 rounded-lg bg-transparent border border-amber-500/50 space-y-3">
-        <div className="flex gap-3">
-          <Input
-            placeholder="First name"
-            value={form.first_name}
-            onChange={(e) => setForm(prev => ({ ...prev, first_name: e.target.value }))}
-            className="bg-gray-900 border-gray-700 text-white flex-1"
-          />
-          <Input
-            placeholder="Last name"
-            value={form.last_name}
-            onChange={(e) => setForm(prev => ({ ...prev, last_name: e.target.value }))}
-            className="bg-gray-900 border-gray-700 text-white flex-1"
-          />
+      <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,200,100,0.25)" }}>
+        <div className="flex gap-2">
+          <Input placeholder="First name" value={form.first_name}
+            onChange={e => setForm(p => ({ ...p, first_name: e.target.value }))}
+            className="bg-black/20 border-white/10 text-white flex-1" />
+          <Input placeholder="Last name" value={form.last_name}
+            onChange={e => setForm(p => ({ ...p, last_name: e.target.value }))}
+            className="bg-black/20 border-white/10 text-white flex-1" />
         </div>
-        <Input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
-          className="bg-gray-900 border-gray-700 text-white w-full"
-        />
-        <div className="flex gap-3">
-          <Input
-            type="number"
-            placeholder="Card guards"
-            value={form.card_guards}
-            onChange={(e) => setForm(prev => ({ ...prev, card_guards: parseInt(e.target.value) || 0 }))}
-            className="bg-gray-900 border-gray-700 text-white flex-1"
-          />
-          <Input
-            type="date"
-            value={form.date_joined}
-            onChange={(e) => setForm(prev => ({ ...prev, date_joined: e.target.value }))}
-            className="bg-gray-900 border-gray-700 text-white flex-1"
-          />
+        <Input type="email" placeholder="Email" value={form.email}
+          onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
+          className="bg-black/20 border-white/10 text-white w-full" />
+        <div className="flex gap-2">
+          <Input type="number" placeholder="Card guards" value={form.card_guards}
+            onChange={e => setForm(p => ({ ...p, card_guards: parseInt(e.target.value) || 0 }))}
+            className="bg-black/20 border-white/10 text-white flex-1" />
+          <Input type="date" value={form.date_joined}
+            onChange={e => setForm(p => ({ ...p, date_joined: e.target.value }))}
+            className="bg-black/20 border-white/10 text-white flex-1 [color-scheme:dark]" />
         </div>
         <div className="flex gap-2 justify-end">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCancel}
-            disabled={saving}
-            className="border-gray-700 text-gray-400"
-          >
-            <X className="w-4 h-4" />
-          </Button>
-          <Button
-            size="sm"
-            onClick={handleSave}
-            disabled={saving}
-            className="bg-amber-500 hover:bg-amber-600 text-black font-semibold"
-          >
-            <Check className="w-4 h-4 mr-1" />
-            {saving ? "Saving..." : "Save"}
-          </Button>
+          <button onClick={handleCancel} disabled={saving}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white/40 transition-colors"
+            style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
+            <X className="w-3.5 h-3.5" /> Cancel
+          </button>
+          <button onClick={handleSave} disabled={saving}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-colors"
+            style={{ background: "rgba(255,200,100,0.15)", border: "1px solid rgba(255,200,100,0.25)" }}>
+            <Check className="w-3.5 h-3.5" /> {saving ? "Saving…" : "Save"}
+          </button>
         </div>
       </div>
     );
@@ -102,41 +78,48 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
   return (
     <div
       onClick={() => isAdmin && setEditing(true)}
-      className={`px-2 py-1.5 rounded-lg bg-transparent border border-red-500/30 w-full overflow-hidden transition-colors ${
-        isAdmin ? "cursor-pointer hover:border-red-400/70" : ""
-      }`}
+      className={`w-full rounded-xl px-3.5 py-3 flex items-center gap-3 transition-colors ${isAdmin ? "cursor-pointer" : ""}`}
+      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
     >
-      <div className="flex items-center gap-1.5 w-full min-w-0 overflow-hidden">
-        <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold shrink-0" style={{fontSize: player.player_number >= 1000 ? "8px" : player.player_number >= 100 ? "9px" : "11px", fontFamily: "monospace"}}>
-          {player.player_number ?? "?"}
-        </div>
-        <div className="flex-1 min-w-0 overflow-hidden">
-          <div className="flex items-center gap-1 min-w-0 overflow-hidden">
-            <span className="text-white font-medium text-xs truncate">{player.first_name} {player.last_name}</span>
-            {player.card_guards > 0 && <span className="text-amber-400 text-xs shrink-0">🛡️{player.card_guards}</span>}
-          </div>
-          <div className="text-gray-500 text-xs truncate overflow-hidden" style={{maxWidth: "100%"}}>{player.email}</div>
-        </div>
-        {isAdmin && (
-          <div className="flex items-center shrink-0 gap-0">
-            <Link
-              to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
-              onClick={e => e.stopPropagation()}
-              className="p-1 rounded text-gray-500 hover:text-blue-400 transition-colors"
-            >
-              <Eye className="w-3 h-3" />
-            </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => { e.stopPropagation(); onDelete(player.id); }}
-              className="text-gray-600 hover:text-red-400 hover:bg-red-400/10 h-6 w-6"
-            >
-              <Trash2 className="w-3 h-3" />
-            </Button>
-          </div>
-        )}
+      {/* Avatar */}
+      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-xs font-bold text-white/50"
+        style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
+        {initials || <span style={{ fontSize: 10 }}>{player.player_number ?? "?"}</span>}
       </div>
+
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5">
+          <span className="text-white text-sm font-semibold leading-tight truncate">
+            {player.first_name} {player.last_name}
+          </span>
+          {player.card_guards > 0 && (
+            <span className="text-[10px] text-amber-400/70 shrink-0">🛡️{player.card_guards}</span>
+          )}
+        </div>
+        <div className="flex items-center gap-2 mt-0.5">
+          {player.player_number != null && (
+            <span className="text-[10px] text-white/25 font-mono">#{player.player_number}</span>
+          )}
+          <span className="text-[10px] text-white/30 truncate">{player.email}</span>
+        </div>
+      </div>
+
+      {/* Actions */}
+      {isAdmin && (
+        <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+          <Link to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
+            className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors text-white/20 hover:text-white/60"
+            style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+            <Eye className="w-3.5 h-3.5" />
+          </Link>
+          <button onClick={() => onDelete(player.id)}
+            className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors text-white/20 hover:text-red-400"
+            style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
