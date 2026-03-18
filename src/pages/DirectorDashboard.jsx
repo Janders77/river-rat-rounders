@@ -499,638 +499,542 @@ export default function DirectorDashboard() {
     );
   }
 
+  const CARD = "w-full rounded-xl border border-white/10 bg-white/5 p-3 flex flex-col gap-3";
+  const CARD_HEADER = "flex items-center gap-3";
+  const ICON_BOX = "w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center shrink-0";
+  const tabBtn = (tab) =>
+    `flex-1 rounded-lg border py-2 text-sm text-center transition-all ${
+      activeTab === tab
+        ? "border-white/20 bg-white/10 text-white font-semibold"
+        : "border-white/10 bg-white/5 text-white/50 hover:text-white/80"
+    }`;
+
   return (
     <>
-    <div className="min-h-screen p-3 md:p-6 overflow-x-hidden relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
-      <div className="max-w-4xl mx-auto w-full relative">
-        <div className="mb-8 flex items-center gap-3">
-          <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
-            <ShieldAlert className="w-5 h-5 text-white/80" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-white">Director Dashboard</h1>
-            <p className="text-gray-400 text-sm">Tournament Directors only</p>
+    <div className="min-h-screen relative overflow-x-hidden" style={{ background: "linear-gradient(170deg, #14141c 0%, #1a1a26 60%, #14141c 100%)" }}>
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
+
+      <div className="relative max-w-md mx-auto w-full px-4 pt-5 pb-10 flex flex-col gap-3">
+
+        {/* Header */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2.5">
+            <div className={ICON_BOX}>
+              <ShieldAlert className="w-5 h-5 text-white/80" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-white tracking-tight leading-none">Director Dashboard</h1>
+              <p className="text-[10px] text-white/30 mt-0.5 leading-none">Tournament Directors only</p>
+            </div>
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <div className="w-full flex flex-wrap justify-center gap-3 mb-6">
-            {hasPermission(directorRole, "canManageSessions") && (
-              <button onClick={() => setActiveTab("sessions")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium text-sm transition-all ${activeTab === "sessions" ? "border-red-600/60 text-red-400 bg-red-900/20" : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200 bg-gray-900/40"}`}>
-                <CalendarPlus className="w-3.5 h-3.5" /> Sessions
-              </button>
-            )}
-            {hasPermission(directorRole, "canRecordGames") && (
-              <button onClick={() => setActiveTab("record")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium text-sm transition-all ${activeTab === "record" ? "border-red-600/60 text-red-400 bg-red-900/20" : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200 bg-gray-900/40"}`}>
-                <Plus className="w-3.5 h-3.5" /> Record
-              </button>
-            )}
-            {hasPermission(directorRole, "canApproveRequests") && (
-              <button onClick={() => setActiveTab("requests")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium text-sm transition-all ${activeTab === "requests" ? "border-red-600/60 text-red-400 bg-red-900/20" : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200 bg-gray-900/40"}`}>
-                <Mail className="w-3.5 h-3.5" /> Requests
-                {inviteRequests.length > 0 && (
-                  <span className="bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
-                )}
-              </button>
-            )}
-            <button onClick={() => setActiveTab("history")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium text-sm transition-all ${activeTab === "history" ? "border-red-600/60 text-red-400 bg-red-900/20" : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200 bg-gray-900/40"}`}>
-              <Trophy className="w-3.5 h-3.5" /> Games
-            </button>
-          </div>
-
-          {/* Sessions Tab */}
+        {/* Tab nav */}
+        <div className="flex items-center gap-1.5">
           {hasPermission(directorRole, "canManageSessions") && (
-          <TabsContent value="sessions">
-            <div className="space-y-6">
-              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
-                <div className="flex items-center gap-3 mb-4 pb-4 border-t-0 border-b border-gray-800">
-                  <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
-                    <CalendarPlus className="w-5 h-5 text-white/80" />
-                  </div>
-                  <h2 className="text-lg font-semibold text-white">Open Games</h2>
+            <button onClick={() => setActiveTab("sessions")} className={tabBtn("sessions")}>
+              Sessions
+            </button>
+          )}
+          {hasPermission(directorRole, "canRecordGames") && (
+            <button onClick={() => setActiveTab("record")} className={tabBtn("record")}>
+              Record
+            </button>
+          )}
+          {hasPermission(directorRole, "canApproveRequests") && (
+            <button onClick={() => setActiveTab("requests")} className={`${tabBtn("requests")} relative`}>
+              Requests
+              {inviteRequests.length > 0 && (
+                <span className="ml-1 inline-flex items-center justify-center bg-red-600 text-white text-[9px] font-bold rounded-full w-4 h-4 leading-none">{inviteRequests.length}</span>
+              )}
+            </button>
+          )}
+          <button onClick={() => setActiveTab("history")} className={tabBtn("history")}>
+            Games
+          </button>
+        </div>
+
+        {/* ── SESSIONS TAB ── */}
+        {activeTab === "sessions" && hasPermission(directorRole, "canManageSessions") && (
+          <div className="flex flex-col gap-3">
+
+            {/* Open Games */}
+            <div className={CARD}>
+              <div className={CARD_HEADER}>
+                <div className={ICON_BOX}><CalendarPlus className="w-5 h-5 text-white/80" /></div>
+                <span className="text-white font-medium">Open Games</span>
+              </div>
+
+              {sessions.filter(s => s.is_open).length === 0 ? (
+                <div className="flex flex-col items-center py-4 gap-1">
+                  <CalendarPlus className="w-5 h-5 text-white/15" />
+                  <p className="text-white/50 text-sm">No open games</p>
+                  <p className="text-white/25 text-xs">Start a new game below</p>
                 </div>
-                <div className="space-y-3">
-                    {sessions.filter(s => s.is_open).sort((a, b) => {
-                      if (a.location < b.location) return -1;
-                      if (a.location > b.location) return 1;
-                      // Within same location: Main Game before Turbo
-                      const order = { "Main Game": 0, "Turbo": 1 };
-                      return (order[a.game_type] ?? 0) - (order[b.game_type] ?? 0);
-                    }).map(session => {
-                      const signedInIds = getEffectiveSignedInIds(session, players);
-                      const handIds = getEffectiveHandOfWeekIds(session, players);
-                      const isExpanded = !!expandedSessions[session.id];
-                      const isHotwExpanded = !!expandedSessions[`hotw_${session.id}`];
-                      return (
-                        <div key={session.id} className="p-4 bg-gray-900/50 rounded-xl border border-green-900/30">
-                          {/* LIVE Badge */}
-                          <div className="mb-2">
-                            <Badge className="bg-green-500/20 text-green-400 border border-green-500/30 text-xs font-semibold px-2 py-0.5">
-                              🟢 LIVE GAME
-                            </Badge>
-                          </div>
-
-                          {/* Location + delete */}
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <div className="font-medium text-white text-base">{session.location}</div>
-                              <div className="text-sm text-gray-400">
-                                {session.session_date ? new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", {month: "short", day: "numeric"}) : ''} · {session.game_type}
-                              </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {sessions.filter(s => s.is_open).sort((a, b) => {
+                    if (a.location < b.location) return -1;
+                    if (a.location > b.location) return 1;
+                    const order = { "Main Game": 0, "Turbo": 1 };
+                    return (order[a.game_type] ?? 0) - (order[b.game_type] ?? 0);
+                  }).map(session => {
+                    const signedInIds = getEffectiveSignedInIds(session, players);
+                    const handIds = getEffectiveHandOfWeekIds(session, players);
+                    const isExpanded = !!expandedSessions[session.id];
+                    const isHotwExpanded = !!expandedSessions[`hotw_${session.id}`];
+                    return (
+                      <div key={session.id} className="rounded-xl border border-green-500/20 bg-green-500/5 p-3 flex flex-col gap-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[9px] font-bold text-green-400 tracking-widest">🟢 LIVE</span>
                             </div>
-                            <Button size="icon" variant="ghost"
-                              className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
-                              onClick={() => handleDeleteSession(session.id)}>
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                            <div className="font-medium text-white text-sm mt-0.5">{session.location}</div>
+                            <div className="text-xs text-white/40">
+                              {session.session_date ? new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", {month: "short", day: "numeric"}) : ''} · {session.game_type}
+                            </div>
                           </div>
-
-                          {/* Director Actions Row */}
-                          <div className="flex flex-wrap gap-2 mt-3 pb-3 border-b border-gray-800">
-                            <Button size="sm"
-                              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3"
-                              onClick={() => { setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 50); }}>
-                              <Plus className="w-3.5 h-3.5 mr-1" /> Add Player
-                            </Button>
-                            <Button size="sm"
-                              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3"
-                              onClick={() => setActiveTab("record")}>
-                              <Trophy className="w-3.5 h-3.5 mr-1" /> Record Game
-                            </Button>
-                            <Button size="sm"
-                              className={`rounded-lg text-xs px-3 ${isHotwExpanded ? 'bg-red-900/40 border border-red-700 text-red-300' : 'bg-gray-800 hover:bg-gray-700 text-white border border-gray-700'}`}
-                              onClick={() => setExpandedSessions(prev => ({ ...prev, [`hotw_${session.id}`]: !prev[`hotw_${session.id}`] }))}>
-                              🃏 Hand of Week
-                            </Button>
-                            <Button size="sm"
-                              className="border border-red-500 text-red-400 hover:bg-red-600/20 bg-transparent rounded-lg text-xs px-3"
-                              onClick={() => handleToggleSession(session)}>
-                              {session.is_open ? "End Game" : "Reopen"}
-                            </Button>
-                          </div>
-
-                          {/* Collapsible Players Signed In */}
-                          <button
-                            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-300 transition-colors mt-3 w-full text-left"
-                            onClick={() => setExpandedSessions(prev => ({ ...prev, [session.id]: !prev[session.id] }))}
-                          >
-                            <Users className="w-3.5 h-3.5" />
-                            <span>Players Signed In ({signedInIds.length})</span>
-                            {isExpanded ? <ChevronUp className="w-3.5 h-3.5 ml-auto" /> : <ChevronDown className="w-3.5 h-3.5 ml-auto" />}
+                          <button onClick={() => handleDeleteSession(session.id)}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg text-white/20 hover:text-red-400 transition-colors shrink-0"
+                            style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
-
-                          {isExpanded && signedInIds.length > 0 && (
-                            <div className="mt-2 border-t border-gray-800 pt-2 space-y-1">
-                              {signedInIds.map((pid, i) => (
-                                <div key={pid} className="flex items-center justify-between text-xs p-2 hover:bg-gray-800/40 rounded transition-colors">
-                                  <div className="flex items-center gap-2 flex-1 text-gray-300 min-w-0">
-                                    <span className="text-gray-500 shrink-0 w-6 text-right">{i + 1}.</span>
-                                    <span className="truncate">{nameById(pid)}</span>
-                                  </div>
-                                  <button
-                                    onClick={async () => {
-                                      const updatedIds = signedInIds.filter(id => id !== pid);
-                                      const updatedEmails = (session.signed_in_players || []).filter((_, idx) => signedInIds[idx] !== pid);
-                                      await base44.entities.GameSession.update(session.id, {
-                                        signed_in_player_ids: updatedIds,
-                                        signed_in_players: updatedEmails
-                                      });
-                                      setSessions(prev => prev.map(s => s.id === session.id
-                                        ? { ...s, signed_in_player_ids: updatedIds, signed_in_players: updatedEmails }
-                                        : s));
-                                    }}
-                                    className="text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded px-1.5 py-0.5 ml-2 shrink-0">
-                                    ✕
-                                  </button>
-                                </div>
-                              ))}
-                              {signedInIds.length > 20 && (
-                                <p className="text-xs text-gray-600 pt-1">Total: {signedInIds.length} players</p>
-                              )}
-                            </div>
-                          )}
-                          {isExpanded && signedInIds.length === 0 && (
-                            <p className="text-xs text-gray-500 mt-2 pl-1">No players signed in yet.</p>
-                          )}
-
-                          {/* Hand of the Week (expandable) */}
-                          {isHotwExpanded && (
-                            <div className="mt-3 space-y-2 border-t border-gray-800 pt-3">
-                              <label className="text-xs text-red-400 font-semibold">🃏 Hand of the Week</label>
-                              <Select
-                                value="__none__"
-                                onValueChange={async (pid) => {
-                                  if (pid === "__none__") return;
-                                  if (handIds.includes(pid)) return;
-                                  const playerRecord = playersById[pid];
-                                  const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
-                                  if (user) {
-                                    await base44.entities.User.update(user.id, { total_points: (user.total_points || 0) + 50 });
-                                    setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: (u.total_points || 0) + 50 } : u));
-                                  }
-                                  const newIds = [...handIds, pid];
-                                  await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
-                                  setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
-                                }}
-                              >
-                                <SelectTrigger className="bg-gray-800 border-gray-700 text-white text-sm h-8">
-                                  <SelectValue placeholder="Add player..." />
-                                </SelectTrigger>
-                                <SelectContent className="bg-gray-900 border-gray-700">
-                                  <SelectItem value="__none__" disabled className="text-gray-500">Add player...</SelectItem>
-                                  {signedInSearchIndex
-                                    .filter(entry => !handIds.includes(entry.id))
-                                    .map(entry => (
-                                      <SelectItem key={entry.id} value={entry.id} className="text-white">{entry.displayName}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                              </Select>
-                              {handIds.length > 0 && (
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                  {handIds.map(pid => (
-                                    <span key={pid} className="flex items-center gap-1 bg-red-900/40 border border-red-700 text-red-300 text-xs rounded-full px-2 py-0.5">
-                                      {nameById(pid)}
-                                      <button onClick={async () => {
-                                        const playerRecord = playersById[pid];
-                                        const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
-                                        if (user) {
-                                          await base44.entities.User.update(user.id, { total_points: Math.max(0, (user.total_points || 0) - 50) });
-                                          setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: Math.max(0, (u.total_points || 0) - 50) } : u));
-                                        }
-                                        const newIds = handIds.filter(id => id !== pid);
-                                        await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
-                                        setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
-                                      }} className="ml-1 hover:text-white">×</button>
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          )}
                         </div>
-                      );
-                    })}
-                    {sessions.filter(s => s.is_open).length === 0 && <p className="text-gray-500 text-center py-4">No open games.</p>}
-                </div>
-              </div>
 
-              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
-                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
-                  <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
-                    <Plus className="w-5 h-5 text-white/80" />
-                  </div>
-                  <h2 className="text-lg font-semibold text-white">Open a New Game</h2>
-                </div>
-                <form onSubmit={handleCreateSession} className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2 min-w-0 overflow-hidden">
-                      <label className="text-gray-300 text-sm">Date</label>
-                      <input type="date" value={newSession.session_date}
-                        onChange={e => setNewSession({...newSession, session_date: e.target.value})}
-                        className="w-full max-w-full h-10 bg-gray-900 border border-gray-800 text-white rounded-lg px-3 py-2 text-sm [color-scheme:dark] box-border focus:ring-2 focus:ring-red-600"
-                        required />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-gray-300 text-sm">Game Type</label>
-                      <Select value={newSession.game_type || "__none__"} onValueChange={v => setNewSession({...newSession, game_type: v === "__none__" ? "" : v})}>
-                        <SelectTrigger className="bg-gray-900 border-gray-800 text-white rounded-lg"><SelectValue placeholder="Select game type" /></SelectTrigger>
-                        <SelectContent className="bg-gray-900 border-gray-700 text-white">
-                          <SelectItem value="__none__" disabled className="text-gray-400">Select game type</SelectItem>
-                          {["Main Game","Turbo"].map(t => <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2 md:col-span-2">
-                      <label className="text-gray-300 text-sm">Location</label>
-                      <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
-                        <SelectTrigger className="bg-gray-900 border-gray-800 text-white rounded-lg"><SelectValue placeholder="Select location" /></SelectTrigger>
-                        <SelectContent className="bg-gray-900 border-gray-700 text-white">
-                          <SelectItem value="__none__" disabled className="text-gray-400">Select location</SelectItem>
-                          {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc =>
-                            <SelectItem key={loc} value={loc} className="text-white">{loc}</SelectItem>
-                          )}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <Button type="submit" disabled={isCreatingSession || !newSession.location}
-                    className="w-full bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-4 py-2">
-                    {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin" /> : "Open Game"}
-                  </Button>
-                </form>
-              </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          <button
+                            className="text-xs px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 text-white/70 hover:text-white transition-colors"
+                            onClick={() => { setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 50); }}>
+                            + Add Player
+                          </button>
+                          <button
+                            className="text-xs px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 text-white/70 hover:text-white transition-colors"
+                            onClick={() => setActiveTab("record")}>
+                            Record Game
+                          </button>
+                          <button
+                            className={`text-xs px-2.5 py-1 rounded-lg border transition-colors ${isHotwExpanded ? 'border-white/20 bg-white/10 text-white' : 'border-white/10 bg-white/5 text-white/70 hover:text-white'}`}
+                            onClick={() => setExpandedSessions(prev => ({ ...prev, [`hotw_${session.id}`]: !prev[`hotw_${session.id}`] }))}>
+                            🃏 Hand of Week
+                          </button>
+                          <button
+                            className="text-xs px-2.5 py-1 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 hover:text-red-300 transition-colors"
+                            onClick={() => handleToggleSession(session)}>
+                            {session.is_open ? "End Game" : "Reopen"}
+                          </button>
+                        </div>
 
-              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
-                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
-                  <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
-                    <Users className="w-5 h-5 text-red-400" />
-                  </div>
-                  <h2 className="text-lg font-semibold text-white">Sign In Player</h2>
-                </div>
-                <div>
-                  <form onSubmit={handleDirectorSignInPlayer} className="space-y-4">
-                    <div className="relative">
-                        <Input
-                          id="dir-sign-in-search"
-                          placeholder="Search player name or player #..."
-                          value={dirSignInSearch}
-                          onChange={e => { setDirSignInSearch(e.target.value); if (dirSignInSelectedPlayer) setDirSignInSelectedPlayer(null); }}
-                          className="bg-gray-900 border-gray-800 text-white rounded-lg focus:ring-2 focus:ring-red-600"
-                          autoComplete="off"
-                        />
-                        {dirSignInSearchLoading && (
-                          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                            <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
-                          </div>
-                        )}
-                        {!dirSignInSelectedPlayer && !dirSignInSearchLoading && dirSignInSearch.trim().length >= 1 && dirSignInResults.length === 0 && (
-                          <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg p-3 text-gray-500 text-sm text-center">
-                            {/^\d+$/.test(dirSignInSearch.trim()) ? "No player found for that number" : "No players found"}
-                          </div>
-                        )}
-                        {!dirSignInSelectedPlayer && dirSignInResults.length > 0 && (
-                          <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg overflow-hidden max-h-48 overflow-y-auto">
-                            {dirSignInResults.map(p => (
-                              <button key={p.id} type="button"
-                                className="w-full text-left px-3 py-2 hover:bg-gray-800 transition-colors border-b border-gray-800 last:border-0"
-                                onMouseDown={() => {
-                                  setDirSignInSelectedPlayer(p);
-                                  setDirSignInSearch(p.display_name);
-                                  setDirSignInResults([]);
-                                }}>
-                                <div className="text-white text-sm font-medium">{p.display_name}{p.player_number != null ? ` (#${p.player_number})` : ''}</div>
-                              </button>
+                        <button
+                          className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors text-left"
+                          onClick={() => setExpandedSessions(prev => ({ ...prev, [session.id]: !prev[session.id] }))}
+                        >
+                          <Users className="w-3.5 h-3.5" />
+                          <span>Players Signed In ({signedInIds.length})</span>
+                          {isExpanded ? <ChevronUp className="w-3 h-3 ml-auto" /> : <ChevronDown className="w-3 h-3 ml-auto" />}
+                        </button>
+
+                        {isExpanded && (
+                          <div className="border-t border-white/5 pt-2 flex flex-col gap-0.5">
+                            {signedInIds.length === 0 ? (
+                              <p className="text-xs text-white/25 px-1">No players signed in yet.</p>
+                            ) : signedInIds.map((pid, i) => (
+                              <div key={pid} className="flex items-center gap-2 text-xs text-white/60 py-1 px-1 rounded hover:bg-white/5">
+                                <span className="text-white/25 w-5 text-right shrink-0">{i + 1}.</span>
+                                <span className="truncate flex-1">{nameById(pid)}</span>
+                                <button
+                                  onClick={async () => {
+                                    const updatedIds = signedInIds.filter(id => id !== pid);
+                                    const updatedEmails = (session.signed_in_players || []).filter((_, idx) => signedInIds[idx] !== pid);
+                                    await base44.entities.GameSession.update(session.id, { signed_in_player_ids: updatedIds, signed_in_players: updatedEmails });
+                                    setSessions(prev => prev.map(s => s.id === session.id ? { ...s, signed_in_player_ids: updatedIds, signed_in_players: updatedEmails } : s));
+                                  }}
+                                  className="text-white/20 hover:text-red-400 transition-colors shrink-0 ml-1">✕</button>
+                              </div>
                             ))}
                           </div>
                         )}
-                        {dirSignInSelectedPlayer && (
-                          <div className="mt-1 flex items-center justify-between text-sm px-1">
-                            <span className="text-green-400">✓ {dirSignInSelectedPlayer.display_name}</span>
-                            <button type="button" onClick={() => { setDirSignInSelectedPlayer(null); setDirSignInSearch(""); setDirSignInResults([]); }} className="text-gray-500 hover:text-red-400 ml-2">
-                              <X className="w-3.5 h-3.5" />
-                            </button>
+
+                        {isHotwExpanded && (
+                          <div className="border-t border-white/5 pt-2 flex flex-col gap-2">
+                            <p className="text-xs text-white/40 uppercase tracking-wide">🃏 Hand of the Week</p>
+                            <Select value="__none__" onValueChange={async (pid) => {
+                              if (pid === "__none__" || handIds.includes(pid)) return;
+                              const playerRecord = playersById[pid];
+                              const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
+                              if (user) {
+                                await base44.entities.User.update(user.id, { total_points: (user.total_points || 0) + 50 });
+                                setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: (u.total_points || 0) + 50 } : u));
+                              }
+                              const newIds = [...handIds, pid];
+                              await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
+                              setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
+                            }}>
+                              <SelectTrigger className="bg-white/5 border-white/10 text-white text-sm h-9">
+                                <SelectValue placeholder="Add player..." />
+                              </SelectTrigger>
+                              <SelectContent className="bg-gray-900 border-gray-700">
+                                <SelectItem value="__none__" disabled className="text-gray-500">Add player...</SelectItem>
+                                {signedInSearchIndex.filter(e => !handIds.includes(e.id)).map(e => (
+                                  <SelectItem key={e.id} value={e.id} className="text-white">{e.displayName}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            {handIds.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {handIds.map(pid => (
+                                  <span key={pid} className="flex items-center gap-1 bg-white/5 border border-white/10 text-white/70 text-xs rounded-full px-2 py-0.5">
+                                    {nameById(pid)}
+                                    <button onClick={async () => {
+                                      const playerRecord = playersById[pid];
+                                      const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
+                                      if (user) {
+                                        await base44.entities.User.update(user.id, { total_points: Math.max(0, (user.total_points || 0) - 50) });
+                                        setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: Math.max(0, (u.total_points || 0) - 50) } : u));
+                                      }
+                                      const newIds = handIds.filter(id => id !== pid);
+                                      await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
+                                      setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
+                                    }} className="ml-0.5 hover:text-white">×</button>
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         )}
-                    </div>
-                    <Button type="submit" disabled={dirSignInStatus === "loading"}
-                      className="w-full bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-4 py-2">
-                      {dirSignInStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In Player"}
-                    </Button>
-                    {dirSignInMessage && (
-                      <p className={`text-sm text-center ${dirSignInStatus === "success" ? "text-green-400" : "text-red-400"}`}>
-                        {dirSignInMessage}
-                      </p>
-                    )}
-                  </form>
+                      </div>
+                    );
+                  })}
                 </div>
+              )}
+            </div>
+
+            {/* Open a New Game */}
+            <div className={CARD}>
+              <div className={CARD_HEADER}>
+                <div className={ICON_BOX}><Plus className="w-5 h-5 text-white/80" /></div>
+                <span className="text-white font-medium">Open a New Game</span>
+              </div>
+              <form onSubmit={handleCreateSession} className="flex flex-col gap-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] text-white/40 uppercase tracking-wide">Date</label>
+                    <input type="date" value={newSession.session_date}
+                      onChange={e => setNewSession({...newSession, session_date: e.target.value})}
+                      className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white [color-scheme:dark] outline-none"
+                      required />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] text-white/40 uppercase tracking-wide">Type</label>
+                    <Select value={newSession.game_type || "__none__"} onValueChange={v => setNewSession({...newSession, game_type: v === "__none__" ? "" : v})}>
+                      <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-lg h-9 text-sm"><SelectValue placeholder="Type" /></SelectTrigger>
+                      <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                        <SelectItem value="__none__" disabled className="text-gray-400">Select type</SelectItem>
+                        {["Main Game","Turbo"].map(t => <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Location</label>
+                  <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-lg h-9 text-sm"><SelectValue placeholder="Select location" /></SelectTrigger>
+                    <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                      <SelectItem value="__none__" disabled className="text-gray-400">Select location</SelectItem>
+                      {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc =>
+                        <SelectItem key={loc} value={loc} className="text-white">{loc}</SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <button type="submit" disabled={isCreatingSession || !newSession.location}
+                  className="w-full rounded-lg border border-white/15 bg-white/8 py-2 text-white text-sm font-medium transition-all disabled:opacity-40"
+                  style={{ background: "rgba(255,255,255,0.07)" }}>
+                  {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Open Game"}
+                </button>
+              </form>
+            </div>
+
+            {/* Sign In Player */}
+            <div className={CARD}>
+              <div className={CARD_HEADER}>
+                <div className={ICON_BOX}><Users className="w-5 h-5 text-white/80" /></div>
+                <span className="text-white font-medium">Sign In Player</span>
+              </div>
+              <form onSubmit={handleDirectorSignInPlayer} className="flex flex-col gap-2">
+                <div className="relative">
+                  <input
+                    id="dir-sign-in-search"
+                    placeholder="Search player name or #..."
+                    value={dirSignInSearch}
+                    onChange={e => { setDirSignInSearch(e.target.value); if (dirSignInSelectedPlayer) setDirSignInSelectedPlayer(null); }}
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/25 outline-none"
+                    autoComplete="off"
+                  />
+                  {dirSignInSearchLoading && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <Loader2 className="w-4 h-4 animate-spin text-white/30" />
+                    </div>
+                  )}
+                  {!dirSignInSelectedPlayer && !dirSignInSearchLoading && dirSignInSearch.trim().length >= 1 && dirSignInResults.length === 0 && (
+                    <div className="absolute z-50 w-full mt-1 rounded-lg border border-white/10 bg-gray-900 p-3 text-white/40 text-sm text-center shadow-lg">
+                      No players found
+                    </div>
+                  )}
+                  {!dirSignInSelectedPlayer && dirSignInResults.length > 0 && (
+                    <div className="absolute z-50 w-full mt-1 rounded-lg border border-white/10 bg-gray-900 overflow-hidden max-h-48 overflow-y-auto shadow-lg">
+                      {dirSignInResults.map(p => (
+                        <button key={p.id} type="button"
+                          className="w-full text-left px-3 py-2 hover:bg-white/5 text-sm text-white border-b border-white/5 last:border-0"
+                          onMouseDown={() => { setDirSignInSelectedPlayer(p); setDirSignInSearch(p.display_name); setDirSignInResults([]); }}>
+                          {p.display_name}{p.player_number != null ? ` (#${p.player_number})` : ''}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {dirSignInSelectedPlayer && (
+                    <div className="mt-1 flex items-center justify-between text-sm px-1">
+                      <span className="text-green-400 text-xs">✓ {dirSignInSelectedPlayer.display_name}</span>
+                      <button type="button" onClick={() => { setDirSignInSelectedPlayer(null); setDirSignInSearch(""); setDirSignInResults([]); }} className="text-white/25 hover:text-red-400 ml-2">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <button type="submit" disabled={dirSignInStatus === "loading"}
+                  className="w-full rounded-lg border border-white/15 py-2 text-white text-sm font-medium transition-all"
+                  style={{ background: "rgba(255,255,255,0.07)" }}>
+                  {dirSignInStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Sign In Player"}
+                </button>
+                {dirSignInMessage && (
+                  <p className={`text-xs text-center ${dirSignInStatus === "success" ? "text-green-400" : "text-red-400"}`}>
+                    {dirSignInMessage}
+                  </p>
+                )}
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* ── RECORD TAB ── */}
+        {activeTab === "record" && hasPermission(directorRole, "canRecordGames") && (
+          !sessions.find(s => s.is_open) ? (
+            <div className={CARD}>
+              <div className="flex flex-col items-center py-6 gap-1.5">
+                <Trophy className="w-5 h-5 text-white/15" />
+                <p className="text-white/50 text-sm">No open game session</p>
+                <p className="text-white/25 text-xs">Open a game in the Sessions tab first</p>
               </div>
             </div>
-          </TabsContent>
-          )}
-
-          {hasPermission(directorRole, "canRecordGames") && (
-          <TabsContent value="record">
-            {!sessions.find(s => s.is_open) ? (
-              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-10 text-center text-gray-500">
-                No open game session. Open a game in the Sessions tab first.
-              </div>
-            ) : (
+          ) : (
             <form onSubmit={handleRecordGame}>
-              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-6 transition hover:border-gray-700 hover:bg-gray-900/60">
-                <div className="flex items-center gap-3 pb-4 border-b border-gray-800">
-                  <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
-                    <Trophy className="w-5 h-5 text-white/80" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold text-white">
-                      Record Game — <span className="text-red-400">{sessions.find(s => s.is_open)?.location}</span>
-                    </h2>
-                    <p className="text-sm text-gray-400">
-                      {sessions.find(s => s.is_open)?.session_date ? new Date(sessions.find(s => s.is_open).session_date + 'T12:00:00').toLocaleDateString() : ''} · {sessions.find(s => s.is_open)?.game_type} · {getEffectiveSignedInIds(sessions.find(s => s.is_open) || {}, players).length} players signed in
+              <div className={CARD}>
+                <div className={CARD_HEADER}>
+                  <div className={ICON_BOX}><Trophy className="w-5 h-5 text-white/80" /></div>
+                  <div className="min-w-0">
+                    <p className="text-white font-medium text-sm leading-tight truncate">
+                      Record Game — {sessions.find(s => s.is_open)?.location}
+                    </p>
+                    <p className="text-white/35 text-xs mt-0.5">
+                      {sessions.find(s => s.is_open)?.game_type} · {getEffectiveSignedInIds(sessions.find(s => s.is_open) || {}, players).length} signed in
                     </p>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-gray-300">Game Date</Label>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Game Date</label>
                   <input type="date" value={gameData.game_date}
                     onChange={e => setGameData({...gameData, game_date: e.target.value})}
-                    className="w-full bg-gray-900 border border-gray-800 text-white rounded-lg px-3 py-2 text-sm [color-scheme:dark] focus:ring-2 focus:ring-red-600" required />
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white [color-scheme:dark] outline-none"
+                    required />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-gray-300">Placements</Label>
-                  <p className="text-xs text-gray-500">1st=1000pts, 2nd=750pts … 9th=50pts</p>
-                  <div className="space-y-2">
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Placements</label>
+                  <p className="text-[10px] text-white/25">1st=1000pts · 2nd=750pts · … · 9th=50pts</p>
+                  <div className="flex flex-col gap-1.5 mt-1">
                     {PLACE_LABELS.map((label, i) => (
-                      <div key={i} className="flex items-center gap-3">
-                        <div className="w-10 text-sm font-bold text-right shrink-0 text-gray-400">{label}</div>
-                        <div className="text-sm text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
+                      <div key={i} className="flex items-center gap-2">
+                        <div className="w-8 text-xs font-bold text-right shrink-0 text-white/40">{label}</div>
+                        <div className="text-xs text-white/25 w-14 shrink-0">{POINTS[i]}pts</div>
                         <div className="relative flex-1">
-                          <Input
-                            placeholder={`Search ${label} place...`}
+                          <input
+                            placeholder={`${label} place…`}
                             value={placements[i] ? nameById(placements[i]) : placementSearches[i]}
                             onChange={e => {
-                              if (placements[i]) {
-                                const u = [...placements]; u[i] = ""; setPlacements(u);
-                              }
+                              if (placements[i]) { const u = [...placements]; u[i] = ""; setPlacements(u); }
                               const u = [...placementSearches]; u[i] = e.target.value; setPlacementSearches(u);
                               const v = [...showPlacementSuggestions]; v[i] = true; setShowPlacementSuggestions(v);
                             }}
                             onFocus={() => { const u = [...showPlacementSuggestions]; u[i] = true; setShowPlacementSuggestions(u); }}
                             onBlur={() => setTimeout(() => { const u = [...showPlacementSuggestions]; u[i] = false; setShowPlacementSuggestions(u); }, 150)}
-                            className="bg-gray-900 border-gray-800 text-white w-full rounded-lg focus:ring-2 focus:ring-red-600"
+                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white placeholder:text-white/20 outline-none"
                           />
-                            {placements[i] && (
-                              <button type="button" onClick={() => {
-                                const u = [...placements]; u[i] = ""; setPlacements(u);
-                                const s = [...placementSearches]; s[i] = ""; setPlacementSearches(s);
-                              }} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
-                                <X className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-                            {showPlacementSuggestions[i] && !placements[i] && getPlacementSuggestions(i).length > 0 && (
-                              <div className="absolute z-50 w-full mt-1 bg-gray-900 border border-gray-700 rounded-md shadow-lg overflow-hidden">
-                                {getPlacementSuggestions(i).map(entry => (
-                                  <button key={entry.id} type="button"
-                                    className="w-full text-left px-3 py-2 hover:bg-gray-800 transition-colors"
-                                    onMouseDown={() => {
-                                      const u = [...placements];
-                                      for (let j = 0; j < u.length; j++) { if (u[j] === entry.id) u[j] = ""; }
-                                      u[i] = entry.id; setPlacements(u);
-                                      const s = [...placementSearches]; s[i] = ""; setPlacementSearches(s);
-                                      const v = [...showPlacementSuggestions]; v[i] = false; setShowPlacementSuggestions(v);
-                                    }}>
-                                    <span className="text-white text-sm">{entry.displayName}</span>
-                                  </button>
-                                ))}
-                              </div>
-                            )}
-                          </div>
+                          {placements[i] && (
+                            <button type="button" onClick={() => {
+                              const u = [...placements]; u[i] = ""; setPlacements(u);
+                              const s = [...placementSearches]; s[i] = ""; setPlacementSearches(s);
+                            }} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/25 hover:text-white">
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                          {showPlacementSuggestions[i] && !placements[i] && getPlacementSuggestions(i).length > 0 && (
+                            <div className="absolute z-50 w-full mt-1 rounded-lg border border-white/10 bg-gray-900 overflow-hidden shadow-lg">
+                              {getPlacementSuggestions(i).map(entry => (
+                                <button key={entry.id} type="button"
+                                  className="w-full text-left px-3 py-2 hover:bg-white/5 text-sm text-white border-b border-white/5 last:border-0"
+                                  onMouseDown={() => {
+                                    const u = [...placements];
+                                    for (let j = 0; j < u.length; j++) { if (u[j] === entry.id) u[j] = ""; }
+                                    u[i] = entry.id; setPlacements(u);
+                                    const s = [...placementSearches]; s[i] = ""; setPlacementSearches(s);
+                                    const v = [...showPlacementSuggestions]; v[i] = false; setShowPlacementSuggestions(v);
+                                  }}>
+                                  {entry.displayName}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
-                <div className="space-y-2">
-                  <Label className="text-gray-300">Notes (Optional)</Label>
-                  <Textarea value={gameData.notes}
-                    onChange={e => setGameData({...gameData, notes: e.target.value})}
-                    className="bg-gray-900 border-gray-800 text-white h-20 rounded-lg"
-                    placeholder="Any notes about the game..." />
                 </div>
-                <Button type="submit" disabled={isSubmitting}
-                  className="w-full bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-4 py-2">
-                  {isSubmitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Recording...</> : <><Trophy className="w-4 h-4 mr-2" />Record Game</>}
-                </Button>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Notes (optional)</label>
+                  <textarea value={gameData.notes}
+                    onChange={e => setGameData({...gameData, notes: e.target.value})}
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/20 outline-none h-16 resize-none"
+                    placeholder="Any notes…" />
+                </div>
+
+                <button type="submit" disabled={isSubmitting}
+                  className="w-full rounded-lg border border-white/15 py-2 text-white text-sm font-semibold transition-all"
+                  style={{ background: "rgba(255,255,255,0.07)" }}>
+                  {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Record Game"}
+                </button>
               </div>
             </form>
+          )
+        )}
+
+        {/* ── REQUESTS TAB ── */}
+        {activeTab === "requests" && hasPermission(directorRole, "canApproveRequests") && (
+          <div className={CARD}>
+            <div className={CARD_HEADER}>
+              <div className={ICON_BOX}><Mail className="w-5 h-5 text-white/80" /></div>
+              <div className="flex items-center gap-2">
+                <span className="text-white font-medium">Pending Requests</span>
+                {inviteRequests.length > 0 && (
+                  <span className="text-[10px] font-bold bg-red-600/80 text-white rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
+                )}
+              </div>
+            </div>
+            {inviteRequests.length === 0 ? (
+              <div className="flex flex-col items-center py-6 gap-1">
+                <Mail className="w-5 h-5 text-white/15" />
+                <p className="text-white/50 text-sm">No pending requests</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {inviteRequests.map(req => (
+                  <div key={req.id} className="flex items-center justify-between gap-3 rounded-xl border border-white/8 bg-white/3 px-3 py-2.5"
+                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                    <div className="min-w-0">
+                      <p className="text-white text-sm font-medium truncate">{req.first_name} {req.last_name}</p>
+                      <p className="text-white/35 text-xs truncate">{req.email}</p>
+                    </div>
+                    <div className="flex gap-1.5 shrink-0">
+                      <button onClick={() => handleApproveRequest(req)}
+                        className="text-xs px-2.5 py-1.5 rounded-lg border border-white/15 bg-white/8 text-white font-medium transition-colors hover:bg-white/15"
+                        style={{ background: "rgba(255,255,255,0.07)" }}>
+                        Approve
+                      </button>
+                      <button onClick={() => handleDeclineRequest(req)}
+                        className="text-xs px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/3 text-white/50 transition-colors hover:text-white/80">
+                        Decline
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
-          </TabsContent>
-          )}
+          </div>
+        )}
 
-          {hasPermission(directorRole, "canApproveRequests") && (
-          <TabsContent value="requests">
-            <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
-              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
-                <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-red-400" />
-                </div>
-                <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                  Pending Invite Requests
-                  {inviteRequests.length > 0 && (
-                    <span className="bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5">{inviteRequests.length}</span>
-                  )}
-                </h2>
-              </div>
-              {inviteRequests.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No pending invite requests.</p>
-              ) : (
-                <div className="space-y-3">
-                  {inviteRequests.map(req => (
-                    <div key={req.id} className="flex items-center justify-between p-4 bg-gray-900/60 rounded-xl border border-gray-800">
-                      <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
-                      <div className="flex gap-2">
-                        <Button size="sm" onClick={() => handleApproveRequest(req)}
-                          className="bg-red-600 hover:bg-red-500 text-white rounded-lg px-3">
-                          Approve & Invite
-                        </Button>
-                        <Button size="sm" onClick={() => handleDeclineRequest(req)}
-                          className="border border-red-500 text-red-400 hover:bg-red-600/20 bg-transparent rounded-lg px-3">
-                          Decline
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+        {/* ── GAMES HISTORY TAB ── */}
+        {activeTab === "history" && (
+          <div className={CARD}>
+            <div className={CARD_HEADER}>
+              <div className={ICON_BOX}><Trophy className="w-5 h-5 text-white/80" /></div>
+              <span className="text-white font-medium">Recent Games</span>
             </div>
-          </TabsContent>
-          )}
-
-          {hasPermission(directorRole, "canManagePlayers") && (
-          <TabsContent value="players">
-            <div className="space-y-6">
-              {inviteRequests.length > 0 && (
-                <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-3 transition hover:border-gray-700 hover:bg-gray-900/60">
-                  <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-800">
-                    <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-                    <h2 className="text-lg font-semibold text-white">Pending Invite Requests ({inviteRequests.length})</h2>
-                  </div>
-                  {inviteRequests.map(req => (
-                    <div key={req.id} className="flex items-center justify-between p-3 bg-gray-900/60 rounded-xl border border-gray-800">
-                      <div className="font-medium text-white">{req.first_name} {req.last_name}</div>
-                      <div className="flex gap-2">
-                        <Button size="sm" onClick={() => handleApproveRequest(req)}
-                          className="bg-red-600 hover:bg-red-500 text-white rounded-lg px-3">Approve & Invite</Button>
-                        <Button size="sm" onClick={() => handleDeclineRequest(req)}
-                          className="border border-red-500 text-red-400 hover:bg-red-600/20 bg-transparent rounded-lg px-3">Decline</Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
-                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
-                  <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
-                    <Users className="w-5 h-5 text-white/80" />
-                  </div>
-                  <h2 className="text-lg font-semibold text-white">
-                    {(() => {
-                      const openSession = sessions.find(s => s.is_open);
-                      const ids = getEffectiveSignedInIds(openSession || {}, players);
-                      return `Players Signed In (${ids.length})`;
-                    })()}
-                  </h2>
-                </div>
-                {(() => {
-                  const openSession = sessions.find(s => s.is_open);
-                  if (!openSession) return <p className="text-gray-500 text-center py-4">No open game session.</p>;
-                  const signedInIds = getEffectiveSignedInIds(openSession, players);
-                  if (signedInIds.length === 0) return <p className="text-gray-500 text-center py-4">No players have signed in yet.</p>;
-                  const signedInPlayers = signedInIds.map(id => playersById[id]).filter(Boolean);
-                  const filtered = signedInPlayers.filter(p =>
-                    !playerSearch || getPlayerDisplayName(p).toLowerCase().includes(playerSearch.toLowerCase())
-                  );
-                  return (
-                    <>
-                      <div className="relative mb-4">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                        <Input placeholder="Search by name..."
-                          value={playerSearch}
-                          onChange={e => setPlayerSearch(e.target.value)}
-                          className="bg-gray-900 border-gray-800 text-white pl-9 rounded-lg focus:ring-2 focus:ring-red-600" />
-                      </div>
-                      <div className="space-y-2">
-                        {filtered.map(player => (
-                          <div key={player.id} className="flex items-center gap-2 text-sm text-gray-300 py-1.5 border-b border-gray-800/60 last:border-0">
-                            <span className="text-red-500">•</span>
-                            <span className="font-medium text-white truncate">{getPlayerDisplayName(player)}</span>
-                          </div>
-                        ))}
-                        {filtered.length === 0 && playerSearch && <p className="text-gray-500 text-center py-4">No players match your search.</p>}
-                      </div>
-                    </>
-                  );
-                })()}
+            {games.length === 0 ? (
+              <div className="flex flex-col items-center py-6 gap-1">
+                <Trophy className="w-5 h-5 text-white/15" />
+                <p className="text-white/50 text-sm">No games recorded yet</p>
               </div>
-              <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
-                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
-                  <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-white/80" />
-                  </div>
-                  <h2 className="text-lg font-semibold text-white">Invite Player</h2>
-                </div>
-                <form onSubmit={handleInvite} className="flex gap-3">
-                  <Input type="email" placeholder="player@email.com"
-                    value={inviteEmail}
-                    onChange={e => setInviteEmail(e.target.value)}
-                    className="bg-gray-900 border-gray-800 text-white flex-1 rounded-lg focus:ring-2 focus:ring-red-600"
-                    required />
-                  <Button type="submit" disabled={inviteStatus === "sending"}
-                    className="bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg px-4 py-2">
-                    {inviteStatus === "sending" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Invite"}
-                  </Button>
-                </form>
-                {inviteStatus === "sent" && <p className="text-green-400 text-sm mt-2">Invitation sent!</p>}
-              </div>
-            </div>
-          </TabsContent>
-          )}
-
-          <TabsContent value="history">
-            <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
-              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
-                <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
-                  <Trophy className="w-5 h-5 text-red-400" />
-                </div>
-                <h2 className="text-lg font-semibold text-white">Recent Games</h2>
-              </div>
-              <div className="space-y-3">
+            ) : (
+              <div className="flex flex-col gap-2">
                 {games.map(game => {
                   const isExpanded = expandedGameId === game.id;
                   const placementIds = game.player_ids || [];
                   return (
-                    <div key={game.id} className="bg-gray-900/60 rounded-xl border border-gray-800 overflow-hidden">
-                      <div
-                        className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/40 transition-colors"
-                        onClick={() => setExpandedGameId(isExpanded ? null : game.id)}
-                      >
-                        <div>
-                          <div className="font-medium text-white">{game.game_type}</div>
-                          <div className="text-sm text-gray-400">
-                            {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString() : ''} {game.location && `· ${game.location}`}
-                          </div>
-                          <div className="text-sm text-red-400 mt-1">Winner: {resolveGameWinner(game)}</div>
+                    <div key={game.id} className="rounded-xl overflow-hidden"
+                      style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                      <div className="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-white/3 transition-colors"
+                        onClick={() => setExpandedGameId(isExpanded ? null : game.id)}>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white text-sm font-medium truncate">{game.game_type} {game.location && `· ${game.location}`}</p>
+                          <p className="text-white/35 text-xs">
+                            {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString() : ''} · Winner: {resolveGameWinner(game)}
+                          </p>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-500 text-xs">{isExpanded ? '▲' : '▼'}</span>
+                        <div className="flex items-center gap-1.5 shrink-0" onClick={e => e.stopPropagation()}>
                           {directorRole === "Head Director" && (
                             <>
-                              <Button size="icon" variant="ghost"
-                                className="border border-gray-600 text-gray-400 hover:bg-gray-700/40 rounded-lg"
-                                onClick={e => { e.stopPropagation(); setEditingGame(game); }}>
-                                <Pencil className="w-4 h-4" />
-                              </Button>
-                              <Button size="icon" variant="ghost"
-                                className="border border-red-500 text-red-400 hover:bg-red-600/20 rounded-lg"
-                                onClick={e => { e.stopPropagation(); handleDeleteGame(game.id); }}>
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
+                              <button
+                                className="w-7 h-7 flex items-center justify-center rounded-lg text-white/25 hover:text-white/70 transition-colors"
+                                style={{ border: "1px solid rgba(255,255,255,0.07)" }}
+                                onClick={() => setEditingGame(game)}>
+                                <Pencil className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                className="w-7 h-7 flex items-center justify-center rounded-lg text-white/25 hover:text-red-400 transition-colors"
+                                style={{ border: "1px solid rgba(255,255,255,0.07)" }}
+                                onClick={() => handleDeleteGame(game.id)}>
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
                             </>
                           )}
+                          <span className="text-white/20 text-xs" onClick={() => setExpandedGameId(isExpanded ? null : game.id)}>
+                            {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                          </span>
                         </div>
                       </div>
                       {isExpanded && (
-                        <div className="px-4 pb-4 border-t border-gray-800 pt-3">
-                          <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Placements</p>
-                          {placementIds.length > 0 ? (
-                            <div className="space-y-1">
-                              {placementIds.map((pid, i) => (
-                                <div key={pid} className="flex items-center gap-3 text-sm">
-                                  <span className="text-gray-500 w-6 text-right shrink-0">{i + 1}.</span>
-                                  <span className={i === 0 ? 'text-yellow-400 font-semibold' : 'text-gray-300'}>
-                                    {nameById(pid)}
-                                  </span>
-                                  <span className="text-gray-600 text-xs ml-auto">{POINTS[i] ? `${POINTS[i]} pts` : ''}</span>
-                                </div>
-                              ))}
+                        <div className="px-3 pb-3 border-t border-white/5 pt-2 flex flex-col gap-0.5">
+                          {placementIds.length === 0 ? (
+                            <p className="text-white/25 text-xs">No placement data.</p>
+                          ) : placementIds.map((pid, i) => (
+                            <div key={pid} className="flex items-center gap-2 text-xs">
+                              <span className="text-white/25 w-5 text-right shrink-0">{i + 1}.</span>
+                              <span className={i === 0 ? 'text-yellow-400 font-semibold' : 'text-white/60'}>{nameById(pid)}</span>
+                              <span className="text-white/20 ml-auto">{POINTS[i] ? `${POINTS[i]}pts` : ''}</span>
                             </div>
-                          ) : (
-                            <p className="text-gray-600 text-sm">No placement data recorded.</p>
-                          )}
+                          ))}
                         </div>
                       )}
                     </div>
                   );
                 })}
-                {games.length === 0 && <p className="text-gray-500 text-center py-4">No games recorded yet.</p>}
               </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+            )}
+          </div>
+        )}
+
       </div>
     </div>
 
