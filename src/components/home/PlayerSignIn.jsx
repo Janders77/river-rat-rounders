@@ -269,10 +269,15 @@ export default function PlayerSignIn() {
 
   return (
     <div
-      className={`rounded-xl transition-all overflow-hidden ${!signed && !loading ? "cursor-pointer" : ""}`}
+      className={`rounded-xl transition-all overflow-hidden relative ${!signed && !loading ? "cursor-pointer" : ""}`}
       style={signed ? { background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.18)" } : PRIMARY_CARD}
       onClick={!signed && !loading ? () => handleSignIn(firstSession) : undefined}
     >
+      {signed && (
+        <div className="absolute top-3 right-3 rounded-full border border-red-500/20 bg-red-500/5 px-2 py-0.5 shadow-[0_0_8px_rgba(239,68,68,0.18)] animate-[openPulse_2.4s_ease-in-out_infinite]">
+          <span className="text-[10px] font-semibold tracking-wide text-red-300">OPEN</span>
+        </div>
+      )}
       <div className="flex items-center gap-3 px-3 py-2.5">
         <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
           {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <LogIn className="w-5 h-5 text-white/80" />}
@@ -281,17 +286,10 @@ export default function PlayerSignIn() {
           <span className={`text-sm font-semibold ${signed ? "text-green-400" : "text-white"}`}>
             {signed ? "You're signed in!" : "Sign In to Tonight's Game"}
           </span>
-          <div className="mt-0.5 flex items-center gap-2 min-w-0 flex-wrap">
-            <span className="text-xs text-white/60">
-              {firstSession.location} · {new Date(firstSession.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
-              {firstSession.game_type && ` · ${firstSession.game_type}`}
-            </span>
-            {signed && (
-              <div className="shrink-0 rounded-md border border-red-500/15 bg-red-500/[0.06] px-1.5 py-0.5">
-                <span className="text-[9px] font-semibold tracking-[0.12em] text-red-300/90 leading-none">OPEN</span>
-              </div>
-            )}
-          </div>
+          <span className="text-xs text-white/40 mt-0.5 truncate">
+            {firstSession.location} · {new Date(firstSession.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+            {firstSession.game_type && ` · ${firstSession.game_type}`}
+          </span>
         </div>
         {!signed && !loading && <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />}
       </div>
