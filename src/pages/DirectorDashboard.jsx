@@ -994,8 +994,8 @@ export default function DirectorDashboard() {
               )}
               <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 space-y-4 transition hover:border-gray-700 hover:bg-gray-900/60">
                 <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-800">
-                  <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
-                    <Users className="w-5 h-5 text-red-400" />
+                  <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
+                    <Users className="w-5 h-5 text-white/80" />
                   </div>
                   <h2 className="text-lg font-semibold text-white">
                     {(() => {
