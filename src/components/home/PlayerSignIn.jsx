@@ -287,7 +287,7 @@ export default function PlayerSignIn() {
           </span>
         </div>
         {signed && (
-          <div className="shrink-0 rounded-full border border-red-500/20 bg-red-500/5 px-2 py-0.5 animate-pulse">
+          <div className="shrink-0 rounded-full border border-red-500/20 bg-red-500/5 px-2 py-0.5 animate-[openPulse_2.4s_ease-in-out_infinite]" style={{ boxShadow: "0 0 8px rgba(239,68,68,0.25)" }}>
             <span className="text-[10px] font-semibold tracking-wide text-red-300">OPEN</span>
           </div>
         )}
