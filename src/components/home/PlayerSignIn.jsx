@@ -1,11 +1,19 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import ReactDOM from "react-dom";
 import { base44 } from "@/api/base44Client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Users, Loader2, LogIn, MapPin, Calendar, ChevronDown, X } from "lucide-react";
 import { getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, buildPlayersById } from "@/utils/playerUtils";
+
+const CARD = {
+  background: "rgba(255,255,255,0.03)",
+  border: "1px solid rgba(255,255,255,0.08)",
+};
+
+const PRIMARY_CARD = {
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.12)",
+};
 
 // Portal dropdown rendered at body level to escape any overflow-hidden parents
 function PortalDropdown({ anchorRef, children, onClose }) {
@@ -14,18 +22,12 @@ function PortalDropdown({ anchorRef, children, onClose }) {
   useEffect(() => {
     if (!anchorRef.current) return;
     const rect = anchorRef.current.getBoundingClientRect();
-    setPos({
-      top: rect.bottom + window.scrollY,
-      left: rect.left + window.scrollX,
-      width: rect.width,
-    });
+    setPos({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX, width: rect.width });
   }, [anchorRef]);
 
   useEffect(() => {
     const handleClick = (e) => {
-      if (anchorRef.current && !anchorRef.current.contains(e.target)) {
-        onClose();
-      }
+      if (anchorRef.current && !anchorRef.current.contains(e.target)) onClose();
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -34,21 +36,12 @@ function PortalDropdown({ anchorRef, children, onClose }) {
   if (!pos) return null;
 
   return ReactDOM.createPortal(
-    <div
-      style={{
-        position: "absolute",
-        top: pos.top,
-        left: pos.left,
-        width: pos.width,
-        zIndex: 9999,
-        maxHeight: "320px",
-        overflowY: "auto",
-        background: "#111827",
-        border: "1px solid #374151",
-        borderRadius: "0 0 12px 12px",
-        boxShadow: "0 16px 40px rgba(0,0,0,0.6)",
-      }}
-    >
+    <div style={{
+      position: "absolute", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999,
+      maxHeight: "320px", overflowY: "auto", background: "#111827",
+      border: "1px solid #374151", borderRadius: "0 0 12px 12px",
+      boxShadow: "0 16px 40px rgba(0,0,0,0.6)",
+    }}>
       {children}
     </div>,
     document.body
@@ -61,33 +54,30 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
   const signedInIds = getSignedInIds(session);
 
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-      {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-gray-800/60">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-white font-semibold text-base">
-            <MapPin className="w-4 h-4 text-red-400 shrink-0" />
-            <span>{session.location}</span>
-          </div>
-          <Badge className="bg-red-700/30 text-red-300 border-red-700/50 text-sm font-bold tracking-widest shrink-0 animate-pulse px-3 py-1" style={{ boxShadow: "0 0 8px rgba(220,38,38,0.6), 0 0 16px rgba(220,38,38,0.3)" }}>OPEN</Badge>
+    <div className="rounded-xl overflow-hidden" style={CARD}>
+      {/* Header row */}
+      <div className="flex items-center gap-3 px-4 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(220,38,38,0.1)" }}>
+          <MapPin className="w-5 h-5 text-red-400" />
         </div>
-        <div className="flex items-center gap-3 mt-1.5 text-sm text-gray-400">
-          <span className="flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5" />
+        <div className="flex flex-col flex-1 min-w-0">
+          <span className="text-white font-medium text-sm leading-tight">{session.location}</span>
+          <span className="text-xs text-white/40 mt-0.5">
             {new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+            {session.game_type && ` · ${session.game_type}`}
           </span>
-          {session.game_type && <><span className="text-gray-600">·</span><span className="text-gray-500">{session.game_type}</span></>}
         </div>
+        <span className="text-[10px] font-bold tracking-widest text-red-400 uppercase shrink-0 animate-pulse">OPEN</span>
       </div>
 
-      {/* Player count toggle — anchor for the portal dropdown */}
+      {/* Player count toggle */}
       <div ref={anchorRef}>
         <button
-          className="flex items-center justify-between w-full px-4 py-2.5 text-sm text-gray-400 hover:text-red-400 hover:bg-gray-800/40 transition-colors"
+          className="flex items-center justify-between w-full px-4 py-2.5 text-xs text-white/40 hover:text-white/70 transition-colors"
           onClick={() => setOpen(o => !o)}
         >
           <span className="flex items-center gap-1.5">
-            <Users className="w-4 h-4" />
+            <Users className="w-3.5 h-3.5" />
             {signedInIds.length} player{signedInIds.length !== 1 ? "s" : ""} signed in
           </span>
           {signedInIds.length > 0 && (
@@ -103,7 +93,7 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
                 <span className="truncate flex-1">{index + 1}. {getPlayerDisplayName(playersById[pid])}</span>
                 {isDirector && (
                   <button onClick={() => handleRemovePlayer(session, pid)}
-                    className="shrink-0 text-gray-600 hover:text-red-400 transition-colors" title="Remove player">
+                    className="shrink-0 text-gray-600 hover:text-red-400 transition-colors">
                     <X className="w-3.5 h-3.5" />
                   </button>
                 )}
@@ -114,9 +104,9 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
       </div>
 
       {/* Sign in button */}
-      <div className="px-4 pb-4">
+      <div className="px-4 pb-3">
         {isSignedIn(session) ? (
-          <div className="flex items-center justify-center gap-2 text-green-400 font-medium text-sm py-2 rounded-lg bg-green-500/10 border border-green-500/20">
+          <div className="flex items-center justify-center gap-2 text-green-400 font-medium text-sm py-2 rounded-lg" style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}>
             <CheckCircle2 className="w-4 h-4" />
             You're signed in!
           </div>
@@ -124,11 +114,11 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
           <Button
             onClick={() => handleSignIn(session)}
             disabled={signingIn === session.id}
-            className="w-full bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200"
+            className="w-full bg-red-700 hover:bg-red-600 text-white text-sm font-semibold"
           >
             {signingIn === session.id
-              ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing in...</>
-              : <><LogIn className="w-4 h-4 mr-2" /> Sign In</>}
+              ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Signing in...</>
+              : <><LogIn className="w-4 h-4 mr-2" />Sign In</>}
           </Button>
         )}
       </div>
@@ -158,7 +148,7 @@ export default function PlayerSignIn() {
       const me = meArr[0] || null;
       setCurrentPlayerId(me?.id || null);
       setIsDirector(directorCheck.length > 0);
-      // Sort: Main Game before Turbo within same location
+
       const sorted = [...fetchedSessions].sort((a, b) => {
         if (a.location < b.location) return -1;
         if (a.location > b.location) return 1;
@@ -175,7 +165,6 @@ export default function PlayerSignIn() {
       } else if (me) {
         setAllPlayers([me]);
       }
-
       setIsLoading(false);
     }
 
@@ -201,8 +190,7 @@ export default function PlayerSignIn() {
               const map = new Map(cur.map(p => [p.id, p]));
               fetched.forEach(p => map.set(p.id, p));
               return Array.from(map.values());
-            }))
-            .catch(() => {});
+            })).catch(() => {});
           return prev;
         });
       }
@@ -226,8 +214,6 @@ export default function PlayerSignIn() {
         signed_in_player_ids: [...currentIds, me.id],
         signed_in_players: [...(session.signed_in_players || []), me.email],
       });
-
-      // If signing into Main Game, also auto-sign into Turbo at same location
       if (session.game_type === "Main Game") {
         setSessions(prev => {
           const turbo = prev.find(s => s.is_open && s.game_type === "Turbo" && s.location === session.location);
@@ -260,57 +246,57 @@ export default function PlayerSignIn() {
 
   if (isLoading) {
     return (
-      <Card className="bg-gradient-to-r from-red-900/20 to-red-950/60 border-red-900/40">
-        <CardContent className="flex items-center justify-center py-10">
-          <Loader2 className="w-6 h-6 animate-spin text-red-400" />
-        </CardContent>
-      </Card>
+      <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl" style={PRIMARY_CARD}>
+        <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(220,38,38,0.1)" }}>
+          <Loader2 className="w-5 h-5 text-red-400 animate-spin" />
+        </div>
+        <div className="flex flex-col">
+          <span className="text-white font-semibold text-sm">Sign In to Today's Game</span>
+          <span className="text-xs text-white/40 mt-0.5">Loading sessions...</span>
+        </div>
+      </div>
     );
   }
 
   if (sessions.length === 0) {
     return (
-      <Card className="bg-gradient-to-r from-red-900/20 to-red-950/60 border-red-900/40">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-4">
-            <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
-              <LogIn className="w-6 h-6 text-red-400" />
-            </div>
-            Sign In to Today's Game
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-500 text-center py-4">No open sessions right now. Check back later!</p>
-        </CardContent>
-      </Card>
+      <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl" style={PRIMARY_CARD}>
+        <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(220,38,38,0.1)" }}>
+          <LogIn className="w-5 h-5 text-red-400" />
+        </div>
+        <div className="flex flex-col">
+          <span className="text-white font-semibold text-sm">Sign In to Today's Game</span>
+          <span className="text-xs text-white/40 mt-0.5">No open sessions right now. Check back later.</span>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="bg-gradient-to-r from-red-900/20 to-red-950/60 border-red-900/40">
-      <CardHeader>
-        <CardTitle className="text-white flex items-center gap-4">
-          <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
-            <LogIn className="w-6 h-6 text-red-400" />
-          </div>
-          Sign In to Tonight's Game
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3 pt-0">
-        {sessions.map((session) => (
-          <SessionRow
-            key={session.id}
-            session={session}
-            playersById={playersById}
-            getSignedInIds={getSignedInIds}
-            isSignedIn={isSignedIn}
-            signingIn={signingIn}
-            handleSignIn={handleSignIn}
-            handleRemovePlayer={handleRemovePlayer}
-            isDirector={isDirector}
-          />
-        ))}
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-2">
+      {/* Section label */}
+      <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={PRIMARY_CARD}>
+        <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(220,38,38,0.1)" }}>
+          <LogIn className="w-5 h-5 text-red-400" />
+        </div>
+        <div className="flex flex-col">
+          <span className="text-white font-semibold text-sm">Sign In to Tonight's Game</span>
+          <span className="text-xs text-white/40 mt-0.5">{sessions.length} open session{sessions.length !== 1 ? "s" : ""} available</span>
+        </div>
+      </div>
+      {sessions.map((session) => (
+        <SessionRow
+          key={session.id}
+          session={session}
+          playersById={playersById}
+          getSignedInIds={getSignedInIds}
+          isSignedIn={isSignedIn}
+          signingIn={signingIn}
+          handleSignIn={handleSignIn}
+          handleRemovePlayer={handleRemovePlayer}
+          isDirector={isDirector}
+        />
+      ))}
+    </div>
   );
 }

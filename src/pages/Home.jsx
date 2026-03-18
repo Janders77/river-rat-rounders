@@ -10,51 +10,59 @@ import LoginCard from "../components/home/LoginCard";
 const BG = { background: "linear-gradient(170deg, #14141c 0%, #1a1a26 60%, #14141c 100%)" };
 const GLOW = { background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.09), transparent 60%)" };
 
+const CARD = {
+  background: "rgba(255,255,255,0.03)",
+  border: "1px solid rgba(255,255,255,0.08)",
+};
+
 const NAV_ITEMS = [
-  { title: "Leaderboard",    desc: "Season rankings & stats",   icon: Trophy,       url: createPageUrl("Leaderboard") },
-  { title: "Game History",   desc: "Browse all past sessions",  icon: History,      url: createPageUrl("GameHistory") },
-  { title: "Calendar",       desc: "Upcoming events & games",   icon: CalendarDays, url: createPageUrl("LeagueCalendar") },
-  { title: "Join the League",desc: "Pay dues · enter the action",icon: UserPlus,    url: createPageUrl("JoinTheLeague") },
+  { title: "Leaderboard",     desc: "Season rankings & stats",    icon: Trophy,       url: createPageUrl("Leaderboard") },
+  { title: "Game History",    desc: "Browse all past sessions",   icon: History,      url: createPageUrl("GameHistory") },
+  { title: "Calendar",        desc: "Upcoming events & games",    icon: CalendarDays, url: createPageUrl("LeagueCalendar") },
+  { title: "Join the League", desc: "Pay dues · enter the action", icon: UserPlus,    url: createPageUrl("JoinTheLeague") },
 ];
 
 function NavTile({ icon: Icon, title, desc, url }) {
   return (
     <Link
       to={url}
-      className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 group"
-      style={{
-        background: "rgba(255,255,255,0.025)",
-        border: "1px solid rgba(255,255,255,0.06)",
-      }}
-      onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.11)"}
-      onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"}
+      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150"
+      style={CARD}
     >
       <div
-        className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-        style={{ background: "rgba(220,38,38,0.12)", border: "1px solid rgba(220,38,38,0.2)" }}
+        className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0"
+        style={{ background: "rgba(255,255,255,0.05)" }}
       >
-        <Icon className="w-3.5 h-3.5 text-red-400" />
+        <Icon className="w-5 h-5 text-gray-400" />
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-white font-semibold text-sm leading-tight">{title}</div>
-        <div className="text-gray-600 text-xs mt-0.5 truncate">{desc}</div>
+      <div className="flex flex-col flex-1 min-w-0">
+        <span className="text-white font-medium text-sm leading-tight">{title}</span>
+        <span className="text-xs text-white/40 mt-0.5">{desc}</span>
       </div>
-      <ChevronRight className="w-3.5 h-3.5 text-gray-700 shrink-0 group-hover:text-gray-500 transition-colors" />
+      <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />
     </Link>
   );
 }
 
-function Brand({ compact = false }) {
+function Brand() {
   return (
-    <div className={`flex flex-col items-center ${compact ? "pt-2 pb-0" : "pt-4 pb-2"}`}>
+    <div className="flex flex-col items-center pt-4 pb-2">
       <img
         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/8de2d69e1_ChatGPTImageMar2202603_07_22PM.png"
         alt="River Rat Rounders"
-        className={`object-contain ${compact ? "w-36" : "w-44"}`}
+        className="w-40 object-contain"
       />
-      {!compact && (
-        <p className="text-gray-600 text-xs tracking-wide mt-1">Memphis' Freeroll Bar Poker League</p>
-      )}
+      <p className="text-white/30 text-xs tracking-wide mt-1">Memphis' Freeroll Bar Poker League</p>
+    </div>
+  );
+}
+
+function Divider({ label }) {
+  return (
+    <div className="w-full flex items-center gap-3 text-xs text-white/30 uppercase tracking-widest">
+      <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+      <span>{label}</span>
+      <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
     </div>
   );
 }
@@ -72,44 +80,32 @@ export default function Home() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={BG}>
-        <div className="w-4 h-4 border-2 border-gray-700 border-t-gray-400 rounded-full animate-spin" />
+        <div className="w-4 h-4 border-2 border-white/10 border-t-white/40 rounded-full animate-spin" />
       </div>
     );
   }
 
-  /* ── LOGGED IN ─────────────────────────────────── */
+  /* ── LOGGED IN ── */
   if (loggedInPlayer) {
     return (
       <div className="min-h-screen relative" style={BG}>
         <div className="absolute inset-0 pointer-events-none" style={GLOW} />
-        <div className="relative max-w-md mx-auto px-4 pt-5 pb-10 flex flex-col gap-4">
-
-          <Brand compact />
-
-          {/* Primary action */}
+        <div className="relative max-w-md mx-auto w-full px-4 flex flex-col gap-4 pb-10">
+          <Brand />
           <PlayerSignIn />
-
-          {/* Divider */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.05)" }} />
-            <span className="text-gray-700 text-[10px] uppercase tracking-widest font-semibold">Explore</span>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.05)" }} />
-          </div>
-
-          {/* Secondary nav */}
-          <div className="flex flex-col gap-1.5">
+          <Divider label="Explore" />
+          <div className="flex flex-col gap-2">
             {NAV_ITEMS.map(item => (
               <NavTile key={item.title} {...item} />
             ))}
+            <PlayerSignUp />
           </div>
-
-          <PlayerSignUp />
         </div>
       </div>
     );
   }
 
-  /* ── LOGGED OUT ────────────────────────────────── */
+  /* ── LOGGED OUT ── */
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative px-4" style={BG}>
       <div className="absolute inset-0 pointer-events-none" style={GLOW} />
