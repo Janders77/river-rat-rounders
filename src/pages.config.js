@@ -53,7 +53,7 @@ import DirectorDashboard from './pages/DirectorDashboard';
 import DirectorManagement from './pages/DirectorManagement';
 import DirectorSignIn from './pages/DirectorSignIn';
 import GameHistory from './pages/GameHistory';
-import Home from './pages/Home.jsx';
+import Home from './pages/Home';
 import JoinTheLeague from './pages/JoinTheLeague';
 import Leaderboard from './pages/Leaderboard';
 import LeagueCalendar from './pages/LeagueCalendar';
