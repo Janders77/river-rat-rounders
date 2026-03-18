@@ -3,11 +3,15 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Clock, Plus, Trash2, Camera, Loader2, X, Pencil } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 const emptyForm = { name: "", address: "", game_time: "", description: "", image_url: "" };
+
+const CARD = {
+  background: "rgba(255,255,255,0.03)",
+  border: "1px solid rgba(255,255,255,0.08)",
+};
 
 function LocationForm({ initial, onSave, onCancel, title }) {
   const [form, setForm] = useState(initial || emptyForm);
@@ -32,70 +36,72 @@ function LocationForm({ initial, onSave, onCancel, title }) {
   };
 
   return (
-    <Card className="bg-transparent border border-red-500/40 mb-8">
-      <CardContent className="p-6">
-        <h2 className="text-white font-bold text-lg mb-4">{title}</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            placeholder="Venue Name *"
-            value={form.name}
-            onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
-            required
-            className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
-          />
-          <Input
-            placeholder="Address"
-            value={form.address}
-            onChange={e => setForm(p => ({ ...p, address: e.target.value }))}
-            className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
-          />
-          <Input
-            placeholder="Game Time (e.g. Every Sunday at 7:00 PM)"
-            value={form.game_time}
-            onChange={e => setForm(p => ({ ...p, game_time: e.target.value }))}
-            className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
-          />
-          <Textarea
-            placeholder="Additional info..."
-            value={form.description}
-            onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
-            className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 h-24"
-          />
+    <div className="rounded-xl mb-6 p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}>
+      <h2 className="text-white font-semibold text-base mb-4">{title}</h2>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <Input
+          placeholder="Venue Name *"
+          value={form.name}
+          onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
+          required
+          className="bg-black/20 border-white/10 text-white placeholder:text-white/30"
+        />
+        <Input
+          placeholder="Address"
+          value={form.address}
+          onChange={e => setForm(p => ({ ...p, address: e.target.value }))}
+          className="bg-black/20 border-white/10 text-white placeholder:text-white/30"
+        />
+        <Input
+          placeholder="Game Time (e.g. Every Sunday at 7:00 PM)"
+          value={form.game_time}
+          onChange={e => setForm(p => ({ ...p, game_time: e.target.value }))}
+          className="bg-black/20 border-white/10 text-white placeholder:text-white/30"
+        />
+        <Textarea
+          placeholder="Additional info..."
+          value={form.description}
+          onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
+          className="bg-black/20 border-white/10 text-white placeholder:text-white/30 h-20"
+        />
 
-          {/* Image upload */}
-          <div>
-            {form.image_url ? (
-              <div className="relative inline-block">
-                <img src={form.image_url} alt="preview" className="w-40 h-28 object-cover rounded-lg border border-gray-700" />
-                <button type="button" onClick={() => setForm(p => ({ ...p, image_url: "" }))} className="absolute top-1 right-1 bg-red-600 rounded-full p-0.5">
-                  <X className="w-3 h-3 text-white" />
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current.click()}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-dashed border-gray-600 text-gray-400 hover:border-red-500 hover:text-red-400 transition-colors"
-              >
-                {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
-                {uploadingImage ? "Uploading..." : "Upload Photo"}
+        <div>
+          {form.image_url ? (
+            <div className="relative inline-block">
+              <img src={form.image_url} alt="preview" className="w-36 h-24 object-cover rounded-lg border border-white/10" />
+              <button type="button" onClick={() => setForm(p => ({ ...p, image_url: "" }))}
+                className="absolute top-1 right-1 bg-black/60 rounded-full p-0.5 hover:bg-red-800/80 transition-colors">
+                <X className="w-3 h-3 text-white" />
               </button>
-            )}
-            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-          </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current.click()}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors"
+              style={{ border: "1px dashed rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.4)" }}
+            >
+              {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
+              {uploadingImage ? "Uploading..." : "Upload Photo"}
+            </button>
+          )}
+          <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+        </div>
 
-          <div className="flex gap-3">
-            <Button type="button" variant="outline" onClick={onCancel} className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800">
-              Cancel
-            </Button>
-            <Button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white font-semibold shadow-lg shadow-red-900/40 transition-all duration-200">
-              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              {saving ? "Saving..." : "Save"}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+        <div className="flex gap-2 pt-1">
+          <button type="button" onClick={onCancel}
+            className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)" }}>
+            Cancel
+          </button>
+          <button type="submit" disabled={saving}
+            className="flex-1 py-2.5 rounded-lg text-sm font-semibold text-white transition-all"
+            style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
+            {saving ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Save"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 
@@ -110,17 +116,13 @@ export default function Locations() {
     const { source, destination } = result;
     if (!destination) return;
     if (source.index === destination.index) return;
-
     const reorderedLocations = Array.from(locations);
     const [movedLocation] = reorderedLocations.splice(source.index, 1);
     reorderedLocations.splice(destination.index, 0, movedLocation);
-    
     setLocations(reorderedLocations);
   };
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
     setLoading(true);
@@ -151,61 +153,55 @@ export default function Locations() {
   };
 
   return (
-    <div className="min-h-screen p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-700/20 rounded-xl flex items-center justify-center">
-              <MapPin className="w-6 h-6 text-red-400" />
+    <div className="min-h-screen relative" style={{ background: "linear-gradient(170deg, #14141c 0%, #1a1a26 60%, #14141c 100%)" }}>
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
+
+      <div className="relative max-w-md mx-auto px-4 pt-5 pb-10">
+
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+              <MapPin className="w-5 h-5 text-white/80" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Locations</h1>
-              <p className="text-gray-400 text-sm">Where we play</p>
+              <h1 className="text-lg font-bold text-white tracking-tight leading-none">Locations</h1>
+              <p className="text-[10px] text-gray-600 mt-0.5 leading-none">Where we play</p>
             </div>
           </div>
           {isAdmin && !showAddForm && !editingId && (
-            <Button
+            <button
               onClick={() => setShowAddForm(true)}
-              size="sm"
-              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white font-semibold shadow-lg shadow-red-900/40 transition-all duration-200"
+              className="w-9 h-9 flex items-center justify-center rounded-lg transition-colors"
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
             >
-              <Plus className="w-4 h-4 mr-1" />
-              Add Location
-            </Button>
+              <Plus className="w-5 h-5 text-white/80" />
+            </button>
           )}
         </div>
 
-        {/* Add Location Form */}
+        {/* Add Form */}
         {showAddForm && (
-          <LocationForm
-            title="New Location"
-            onSave={handleAdd}
-            onCancel={() => setShowAddForm(false)}
-          />
+          <LocationForm title="New Location" onSave={handleAdd} onCancel={() => setShowAddForm(false)} />
         )}
 
-        {/* Locations Grid */}
+        {/* List */}
         {loading ? (
-          <div className="text-center py-16 text-gray-500">Loading...</div>
+          <div className="text-center py-16 text-gray-600 text-sm">Loading...</div>
         ) : locations.length === 0 ? (
-          <div className="text-center py-16 text-gray-500">
-            <MapPin className="w-16 h-16 mx-auto mb-4 opacity-20" />
-            <p className="text-lg">No locations added yet</p>
+          <div className="text-center py-16">
+            <MapPin className="w-10 h-10 mx-auto mb-3 text-gray-800" />
+            <p className="text-gray-600 text-sm">No locations added yet</p>
           </div>
         ) : (
           <DragDropContext onDragEnd={isAdmin ? handleDragEnd : () => {}}>
             <Droppable droppableId="locations" type="LOCATION" isDropDisabled={!isAdmin}>
-              {(provided, snapshot) => (
+              {(provided) => (
                 <div
-                  className="grid gap-6 md:grid-cols-2 justify-items-center"
+                  className="flex flex-col gap-2"
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  style={{
-                    backgroundColor: snapshot.isDraggingOver ? "rgba(153, 27, 27, 0.1)" : "transparent",
-                    borderRadius: "8px",
-                    padding: "8px",
-                    transition: "background-color 0.2s"
-                  }}
                 >
                   {locations.map((loc, index) => (
                     <Draggable key={loc.id} draggableId={loc.id} index={index} isDragDisabled={!isAdmin}>
@@ -214,11 +210,7 @@ export default function Locations() {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...(isAdmin ? provided.dragHandleProps : {})}
-                          className="w-full"
-                          style={{
-                            opacity: snapshot.isDragging ? 0.5 : 1,
-                            ...provided.draggableProps.style
-                          }}
+                          style={{ opacity: snapshot.isDragging ? 0.6 : 1, ...provided.draggableProps.style }}
                         >
                           {editingId === loc.id ? (
                             <LocationForm
@@ -228,46 +220,59 @@ export default function Locations() {
                               onCancel={() => setEditingId(null)}
                             />
                           ) : (
-                            <Card className="bg-transparent border border-red-500/40 overflow-hidden">
+                            <div className="rounded-xl overflow-hidden" style={CARD}>
                               {loc.image_url && (
-                                <img src={loc.image_url} alt={loc.name} className="w-full h-48 object-cover" />
+                                <img src={loc.image_url} alt={loc.name} className="w-full h-36 object-cover" />
                               )}
-                              <CardContent className="p-5">
-                                <div className="flex items-start justify-between">
-                                  <h3 className="text-xl font-bold text-white mb-3">{loc.name}</h3>
+                              <div className="px-3.5 py-3">
+                                {/* Name row */}
+                                <div className="flex items-start justify-between gap-2 mb-2">
+                                  <span className="text-white font-semibold text-sm leading-tight">{loc.name}</span>
                                   {isAdmin && (
-                                    <div className="flex gap-2 ml-2 shrink-0">
-                                      <button onClick={() => { setEditingId(loc.id); setShowAddForm(false); }} className="text-gray-500 hover:text-red-400 transition-colors">
-                                        <Pencil className="w-4 h-4" />
+                                    <div className="flex gap-1 shrink-0 mt-0.5">
+                                      <button
+                                        onClick={() => { setEditingId(loc.id); setShowAddForm(false); }}
+                                        className="w-6 h-6 flex items-center justify-center rounded transition-colors text-white/20 hover:text-white/60"
+                                      >
+                                        <Pencil className="w-3.5 h-3.5" />
                                       </button>
-                                      <button onClick={() => handleDelete(loc.id)} className="text-gray-500 hover:text-red-400 transition-colors">
-                                        <Trash2 className="w-4 h-4" />
+                                      <button
+                                        onClick={() => handleDelete(loc.id)}
+                                        className="w-6 h-6 flex items-center justify-center rounded transition-colors text-white/20 hover:text-red-400"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
                                       </button>
                                     </div>
                                   )}
                                 </div>
-                                {loc.address && (
-                                  <div className="flex items-start gap-2 text-gray-400 mb-2">
-                                    <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-red-400" />
-                                    <span className="text-sm">{loc.address}</span>
-                                  </div>
-                                )}
-                                {loc.game_time && (
-                                  <div className="flex items-center gap-2 text-gray-400 mb-2">
-                                    <Clock className="w-4 h-4 shrink-0 text-red-400" />
-                                    <span className="text-sm">{loc.game_time}</span>
-                                  </div>
-                                )}
+
+                                {/* Metadata */}
+                                <div className="flex flex-col gap-1">
+                                  {loc.address && (
+                                    <div className="flex items-start gap-1.5">
+                                      <MapPin className="w-3 h-3 text-white/30 shrink-0 mt-0.5" />
+                                      <span className="text-xs text-white/40 leading-snug">{loc.address}</span>
+                                    </div>
+                                  )}
+                                  {loc.game_time && (
+                                    <div className="flex items-center gap-1.5">
+                                      <Clock className="w-3 h-3 text-white/30 shrink-0" />
+                                      <span className="text-xs text-white/40">{loc.game_time}</span>
+                                    </div>
+                                  )}
+                                </div>
+
                                 {loc.description && (
-                                  <p className="text-gray-500 text-sm mt-3 leading-relaxed">{loc.description}</p>
+                                  <p className="text-white/30 text-xs mt-2 leading-relaxed">{loc.description}</p>
                                 )}
-                              </CardContent>
-                            </Card>
+                              </div>
+                            </div>
                           )}
                         </div>
                       )}
                     </Draggable>
                   ))}
+                  {provided.placeholder}
                 </div>
               )}
             </Droppable>
