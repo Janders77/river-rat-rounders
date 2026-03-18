@@ -127,7 +127,7 @@ export default function PlayerDatabase() {
       <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
 
-      <div className="relative max-w-md mx-auto px-4 pt-5 pb-10">
+      <div className="max-w-md mx-auto w-full px-4 pt-5 pb-10 flex flex-col gap-3">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
@@ -211,7 +211,7 @@ export default function PlayerDatabase() {
         )}
 
         {/* Search */}
-        <div className="relative mb-4">
+        <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 pointer-events-none" />
           <input
             placeholder="Search players…"
@@ -236,7 +236,7 @@ export default function PlayerDatabase() {
             <p className="text-white/25 text-xs">{search ? "Try a different search" : "Add a player to get started"}</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 w-full">
             {filtered.map((player) => (
               <PlayerRow
                 key={player.id}
