@@ -200,7 +200,7 @@ export default function Locations() {
             <p className="text-gray-600 text-sm">No locations added yet</p>
           </div>
         ) : (
-          <DragDropContext onDragEnd={isAdmin ? handleDragEnd : () => {}}>
+          <DragDropContext onDragEnd={isAdmin ? handleDragEnd : undefined}>
             <Droppable droppableId="locations" type="LOCATION" isDropDisabled={!isAdmin}>
               {(provided) => (
                 <div
