@@ -45,54 +45,51 @@ export default function LoginCard({ onLoginSuccess }) {
   };
 
   return (
-    <Card className="bg-transparent border-gray-700/40 w-full">
-      <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2 text-lg">
-          <LogIn className="w-5 h-5 text-red-400" /> Player Login
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-base text-gray-400 mb-3 font-medium">Email</label>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="bg-gray-900 border-gray-700 text-white h-12 text-base"
-              required
-            />
+    <div className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-4">
+      <div className="flex items-center gap-2 mb-4">
+        <LogIn className="w-5 h-5 text-red-400" />
+        <h2 className="text-lg font-semibold text-white">Player Login</h2>
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-white mb-2">Email</label>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            className="h-12 px-4 text-base rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder:text-white/30"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-white mb-2">Password</label>
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+            className="h-12 px-4 text-base rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder:text-white/30"
+            required
+          />
+        </div>
+        {error && (
+          <div className="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+            {error}
           </div>
-          <div>
-            <label className="block text-base text-gray-400 mb-3 font-medium">Password</label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="bg-gray-900 border-gray-700 text-white h-12 text-base"
-              required
-            />
-          </div>
-          {error && (
-            <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-base">
-              {error}
-            </div>
+        )}
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full h-12 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200 text-base font-semibold rounded-xl"
+        >
+          {loading ? (
+            <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Signing in...</>
+          ) : (
+            <><LogIn className="w-5 h-5 mr-2" /> Sign In</>
           )}
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full h-12 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200 text-base font-semibold"
-          >
-            {loading ? (
-              <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Signing in...</>
-            ) : (
-              <><LogIn className="w-5 h-5 mr-2" /> Sign In</>
-            )}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+        </Button>
+      </form>
+    </div>
   );
 }
