@@ -567,64 +567,66 @@ export default function DirectorDashboard() {
               </div>
 
               {sessions.filter(s => s.is_open).length === 0 ? (
-                <div className="flex flex-col items-center py-4 gap-1">
-                  <CalendarPlus className="w-5 h-5 text-white/15" />
-                  <p className="text-white/50 text-sm">No open games</p>
-                  <p className="text-white/25 text-xs">Start a new game below</p>
-                </div>
+              <div className="flex flex-col items-center py-4 gap-1">
+                <CalendarPlus className="w-5 h-5 text-white/15" />
+                <p className="text-white/50 text-sm">No open games</p>
+                <p className="text-white/25 text-xs">Start a new game below</p>
+              </div>
               ) : (
-                <div className="flex flex-col gap-2">
-                  {sessions.filter(s => s.is_open).sort((a, b) => {
-                    if (a.location < b.location) return -1;
-                    if (a.location > b.location) return 1;
-                    const order = { "Main Game": 0, "Turbo": 1 };
-                    return (order[a.game_type] ?? 0) - (order[b.game_type] ?? 0);
-                  }).map(session => {
-                    const signedInIds = getEffectiveSignedInIds(session, players);
-                    const handIds = getEffectiveHandOfWeekIds(session, players);
-                    const isExpanded = !!expandedSessions[session.id];
-                    const isHotwExpanded = !!expandedSessions[`hotw_${session.id}`];
-                    return (
-                      <div key={session.id} className="rounded-xl border border-green-500/20 bg-green-500/5 p-3 flex flex-col gap-2">
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-[9px] font-bold text-green-400 tracking-widest">🟢 LIVE</span>
-                            </div>
-                            <div className="font-medium text-white text-sm mt-0.5">{session.location}</div>
-                            <div className="text-xs text-white/40">
-                              {session.session_date ? new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", {month: "short", day: "numeric"}) : ''} · {session.game_type}
-                            </div>
-                          </div>
-                          <button onClick={() => handleDeleteSession(session.id)}
-                            className="w-7 h-7 flex items-center justify-center rounded-lg text-white/20 hover:text-red-400 transition-colors shrink-0"
-                            style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+              <div className="flex flex-col gap-2">
+                {sessions.filter(s => s.is_open).sort((a, b) => {
+                  if (a.location < b.location) return -1;
+                  if (a.location > b.location) return 1;
+                  const order = { "Main Game": 0, "Turbo": 1 };
+                  return (order[a.game_type] ?? 0) - (order[b.game_type] ?? 0);
+                }).map(session => {
+                  const signedInIds = getEffectiveSignedInIds(session, players);
+                  const handIds = getEffectiveHandOfWeekIds(session, players);
+                  const isExpanded = !!expandedSessions[session.id];
+                  const isHotwExpanded = !!expandedSessions[`hotw_${session.id}`];
+                  return (
+                    <div key={session.id} className="rounded-xl border border-white/10 bg-white/5 p-3 flex flex-col gap-3">
+                      {/* Top: LIVE badge + location + delete button */}
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <span className="text-[9px] font-bold text-green-400 tracking-widest shrink-0">🟢 LIVE</span>
+                          <span className="font-medium text-white text-sm truncate">{session.location}</span>
                         </div>
+                        <button onClick={() => handleDeleteSession(session.id)}
+                          className="w-7 h-7 flex items-center justify-center rounded-lg text-white/20 hover:text-red-400 transition-colors shrink-0"
+                          style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
 
-                        <div className="flex flex-wrap gap-1.5">
-                          <button
-                            className="text-xs px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 text-white/70 hover:text-white transition-colors"
-                            onClick={() => { setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 50); }}>
-                            + Add Player
-                          </button>
-                          <button
-                            className="text-xs px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 text-white/70 hover:text-white transition-colors"
-                            onClick={() => setActiveTab("record")}>
-                            Record Game
-                          </button>
-                          <button
-                            className={`text-xs px-2.5 py-1 rounded-lg border transition-colors ${isHotwExpanded ? 'border-white/20 bg-white/10 text-white' : 'border-white/10 bg-white/5 text-white/70 hover:text-white'}`}
-                            onClick={() => setExpandedSessions(prev => ({ ...prev, [`hotw_${session.id}`]: !prev[`hotw_${session.id}`] }))}>
-                            🃏 Hand of Week
-                          </button>
-                          <button
-                            className="text-xs px-2.5 py-1 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 hover:text-red-300 transition-colors"
-                            onClick={() => handleToggleSession(session)}>
-                            {session.is_open ? "End Game" : "Reopen"}
-                          </button>
-                        </div>
+                      {/* Metadata row */}
+                      <div className="text-xs text-white/40">
+                        {session.session_date ? new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", {month: "short", day: "numeric"}) : ''} · {session.game_type}
+                      </div>
+
+                      {/* Primary actions grid */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          className="text-xs px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
+                          onClick={() => { setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 50); }}>
+                          + Add Player
+                        </button>
+                        <button
+                          className="text-xs px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
+                          onClick={() => setActiveTab("record")}>
+                          Record Game
+                        </button>
+                        <button
+                          className={`text-xs px-3 py-2 rounded-lg border transition-colors text-center ${isHotwExpanded ? 'border-white/20 bg-white/10 text-white' : 'border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8'}`}
+                          onClick={() => setExpandedSessions(prev => ({ ...prev, [`hotw_${session.id}`]: !prev[`hotw_${session.id}`] }))}>
+                          🃏 Hand of Week
+                        </button>
+                        <button
+                          className="text-xs px-3 py-2 rounded-lg border border-red-500/20 bg-red-500/5 text-red-300 hover:text-red-200 hover:bg-red-500/10 transition-colors text-center"
+                          onClick={() => handleToggleSession(session)}>
+                          {session.is_open ? "End Game" : "Reopen"}
+                        </button>
+                      </div>
 
                         <button
                           className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors text-left"
