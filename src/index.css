@@ -110,14 +110,3 @@
     text-rendering: optimizeLegibility;
   }
 }
-
-@keyframes openRipple {
-  0%, 100% {
-    opacity: 0.18;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.32;
-    transform: scale(1.06);
-  }
-}
