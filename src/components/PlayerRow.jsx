@@ -89,8 +89,8 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
 
       {/* Text column */}
       <div className="flex flex-col flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <span className="text-white font-medium text-sm truncate">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-white font-medium text-sm truncate min-w-0">
             {player.first_name} {player.last_name}
           </span>
           {player.card_guards > 0 && (

@@ -123,7 +123,7 @@ export default function PlayerDatabase() {
   );
 
   return (
-    <div className="min-h-screen relative" style={{ background: "linear-gradient(170deg, #14141c 0%, #1a1a26 60%, #14141c 100%)" }}>
+    <div className="min-h-screen relative overflow-x-hidden" style={{ background: "linear-gradient(170deg, #14141c 0%, #1a1a26 60%, #14141c 100%)" }}>
       <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
 
