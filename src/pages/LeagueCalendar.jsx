@@ -125,7 +125,7 @@ export default function LeagueCalendar() {
     <div className="min-h-screen p-3 sm:p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+        <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0">
               <CalendarDays className="w-5 h-5 text-white/80" />
@@ -136,12 +136,15 @@ export default function LeagueCalendar() {
             </div>
           </div>
           {isAdmin && !showForm && (
-            <Button
+            <button
               onClick={() => setShowForm(true)}
-              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white gap-2 w-full sm:w-auto shadow-lg shadow-red-900/40 transition-all duration-200"
+              className="w-9 h-9 flex items-center justify-center rounded-lg transition-colors"
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.09)"}
+              onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
             >
-              <Plus className="w-4 h-4" /> Add Event
-            </Button>
+              <Plus className="w-5 h-5 text-white/80" />
+            </button>
           )}
         </div>
 
