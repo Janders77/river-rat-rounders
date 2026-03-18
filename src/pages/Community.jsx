@@ -3,8 +3,12 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Plus, Check, X, Loader2, Megaphone, Phone, Clock, Upload } from "lucide-react";
+
+const CARD = {
+  background: "rgba(255,255,255,0.03)",
+  border: "1px solid rgba(255,255,255,0.08)",
+};
 
 export default function Community() {
   const [posts, setPosts] = useState([]);
@@ -87,83 +91,98 @@ export default function Community() {
   const rejectedPosts = posts.filter(p => p.status === "rejected");
 
   return (
-    <div className="min-h-screen p-4 md:p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen relative" style={{ background: "linear-gradient(170deg, #14141c 0%, #1a1a26 60%, #14141c 100%)" }}>
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
+
+      <div className="relative max-w-md mx-auto px-4 pt-5 pb-10">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
               <Megaphone className="w-5 h-5 text-white/80" />
             </div>
-            <h1 className="text-2xl font-bold text-white">Community Board</h1>
+            <div>
+              <h1 className="text-lg font-bold text-white tracking-tight leading-none">Community Board</h1>
+              <p className="text-[10px] text-gray-600 mt-0.5 leading-none">Player ads & announcements</p>
+            </div>
           </div>
           {!showForm && (
-            <Button
+            <button
               onClick={() => setShowForm(true)}
-              className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200"
+              className="w-9 h-9 flex items-center justify-center rounded-lg transition-colors"
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
             >
-              <Plus className="w-4 h-4 mr-1" /> Post Ad
-            </Button>
+              <Plus className="w-5 h-5 text-white/80" />
+            </button>
           )}
         </div>
 
         {/* Submit Form */}
         {showForm && (
-          <div className="rounded-xl border border-red-700/30 bg-gradient-to-br from-red-950/30 to-red-900/10 p-4 mb-6">
-            <h2 className="text-white font-semibold mb-3">New Advertisement</h2>
+          <div className="rounded-xl mb-5 p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}>
+            <h2 className="text-white font-semibold text-base mb-4">New Advertisement</h2>
             <form onSubmit={handleSubmit} className="space-y-3">
               <Input
                 placeholder="Title / Business Name *"
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                className="bg-black/30 border-red-700/30 text-white placeholder:text-gray-500"
+                className="bg-black/20 border-white/10 text-white placeholder:text-white/30"
                 required
               />
               <Textarea
                 placeholder="Describe your service or business *"
                 value={form.body}
                 onChange={e => setForm(f => ({ ...f, body: e.target.value }))}
-                className="bg-black/30 border-red-700/30 text-white placeholder:text-gray-500 min-h-[100px]"
+                className="bg-black/20 border-white/10 text-white placeholder:text-white/30 min-h-[80px]"
                 required
               />
               <Input
                 placeholder="Contact info (phone, email, website)"
                 value={form.contact_info}
                 onChange={e => setForm(f => ({ ...f, contact_info: e.target.value }))}
-                className="bg-black/30 border-red-700/30 text-white placeholder:text-gray-500"
+                className="bg-black/20 border-white/10 text-white placeholder:text-white/30"
               />
               <div>
-                <label className="text-gray-400 text-xs mb-1 block">Image (optional)</label>
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="post-image" />
-                <label htmlFor="post-image" className="flex items-center gap-2 cursor-pointer text-sm text-red-400 hover:text-red-300">
-                  {imageUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                <label htmlFor="post-image"
+                  className="flex items-center gap-2 cursor-pointer text-xs px-3 py-2 rounded-lg w-fit transition-colors"
+                  style={{ border: "1px dashed rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.35)" }}>
+                  {imageUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
                   {form.image_url ? "Image uploaded ✓" : "Upload image"}
                 </label>
               </div>
-              <div className="flex gap-2">
-                <Button type="submit" disabled={submitting} className="flex-1 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200">
-                  {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null} Submit for Approval
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="border-gray-700 text-gray-300">
-                  <X className="w-4 h-4" />
-                </Button>
+              <div className="flex gap-2 pt-1">
+                <button type="button" onClick={() => setShowForm(false)}
+                  className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)" }}>
+                  Cancel
+                </button>
+                <button type="submit" disabled={submitting}
+                  className="flex-1 py-2.5 rounded-lg text-sm font-semibold text-white transition-all"
+                  style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                  {submitting ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Submit for Approval"}
+                </button>
               </div>
             </form>
           </div>
         )}
 
         {loading ? (
-          <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-red-400" /></div>
+          <div className="flex justify-center py-16">
+            <Loader2 className="w-5 h-5 animate-spin text-white/20" />
+          </div>
         ) : (
-          <>
+          <div className="flex flex-col gap-4">
+
             {/* Admin: Pending Posts */}
             {isAdmin && pendingPosts.length > 0 && (
-              <div className="mb-6">
-                <h2 className="text-red-400 font-semibold mb-3 flex items-center gap-2">
-                  <Clock className="w-4 h-4" /> Pending Approval ({pendingPosts.length})
-                </h2>
-                <div className="space-y-3">
+              <div>
+                <p className="text-[10px] text-white/25 uppercase tracking-widest font-semibold mb-2 px-0.5">
+                  Pending · {pendingPosts.length}
+                </p>
+                <div className="flex flex-col gap-2">
                   {pendingPosts.map(post => (
                     <PostCard key={post.id} post={post} isAdmin={isAdmin} onApprove={handleApprove} onReject={handleReject} onDelete={handleDelete} />
                   ))}
@@ -172,12 +191,22 @@ export default function Community() {
             )}
 
             {/* Approved Posts */}
-            <div className="mb-6">
-              {isAdmin && <h2 className="text-red-400 font-semibold mb-3">Approved Posts ({approvedPosts.length})</h2>}
+            <div>
+              {isAdmin && (
+                <p className="text-[10px] text-white/25 uppercase tracking-widest font-semibold mb-2 px-0.5">
+                  Approved · {approvedPosts.length}
+                </p>
+              )}
               {approvedPosts.length === 0 ? (
-                <p className="text-gray-500 text-center py-12">No posts yet. Be the first to advertise!</p>
+                <div className="flex flex-col items-center justify-center py-16 gap-2">
+                  <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center mb-1">
+                    <Megaphone className="w-5 h-5 text-white/20" />
+                  </div>
+                  <p className="text-white/50 text-sm font-medium">No posts yet</p>
+                  <p className="text-white/25 text-xs">Be the first to advertise</p>
+                </div>
               ) : (
-                <div className="space-y-3">
+                <div className="flex flex-col gap-2">
                   {approvedPosts.map(post => (
                     <PostCard key={post.id} post={post} isAdmin={isAdmin} onApprove={handleApprove} onReject={handleReject} onDelete={handleDelete} />
                   ))}
@@ -188,15 +217,17 @@ export default function Community() {
             {/* Admin: Rejected Posts */}
             {isAdmin && rejectedPosts.length > 0 && (
               <div>
-                <h2 className="text-red-400 font-semibold mb-3">Rejected ({rejectedPosts.length})</h2>
-                <div className="space-y-3">
+                <p className="text-[10px] text-white/25 uppercase tracking-widest font-semibold mb-2 px-0.5">
+                  Rejected · {rejectedPosts.length}
+                </p>
+                <div className="flex flex-col gap-2">
                   {rejectedPosts.map(post => (
                     <PostCard key={post.id} post={post} isAdmin={isAdmin} onApprove={handleApprove} onReject={handleReject} onDelete={handleDelete} />
                   ))}
                 </div>
               </div>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>
@@ -204,48 +235,53 @@ export default function Community() {
 }
 
 function PostCard({ post, isAdmin, onApprove, onReject, onDelete }) {
-  const statusColors = {
-    approved: "bg-red-700/20 border-red-500/50 text-red-300",
-    pending: "bg-red-600/20 border-red-500/50 text-red-300",
-    rejected: "bg-red-600/20 border-red-500/50 text-red-300"
-  };
-
   return (
-    <div className="rounded-xl border border-white/10 bg-gradient-to-br from-red-950/20 to-red-900/5 p-4 overflow-hidden">
-      <div className="flex items-start justify-between gap-2 min-w-0">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <h3 className="text-white font-semibold text-sm truncate">{post.title}</h3>
-            {isAdmin && <Badge className={`text-xs ${statusColors[post.status]}`}>{post.status}</Badge>}
-          </div>
-          <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{post.body}</p>
-          {post.contact_info && (
-            <div className="flex items-center gap-1 mt-2 text-red-400 text-xs">
-              <Phone className="w-3 h-3" /> {post.contact_info}
+    <div className="w-full rounded-xl overflow-hidden" style={{
+      background: "rgba(255,255,255,0.03)",
+      border: "1px solid rgba(255,255,255,0.08)",
+    }}>
+      {post.image_url && (
+        <img src={post.image_url} alt="post" className="w-full h-32 object-cover" />
+      )}
+      <div className="px-3.5 py-3 flex flex-col gap-1.5">
+        {/* Title row */}
+        <div className="flex items-start justify-between gap-2">
+          <span className="text-white font-semibold text-sm leading-tight">{post.title}</span>
+          {isAdmin && (
+            <div className="flex gap-1 shrink-0">
+              {post.status !== "approved" && (
+                <button onClick={() => onApprove(post)}
+                  className="w-6 h-6 flex items-center justify-center rounded transition-colors text-white/20 hover:text-green-400">
+                  <Check className="w-3.5 h-3.5" />
+                </button>
+              )}
+              {post.status !== "rejected" && (
+                <button onClick={() => onReject(post)}
+                  className="w-6 h-6 flex items-center justify-center rounded transition-colors text-white/20 hover:text-white/60">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <button onClick={() => onDelete(post.id)}
+                className="w-6 h-6 flex items-center justify-center rounded transition-colors text-white/20 hover:text-red-400">
+                <X className="w-3.5 h-3.5" />
+              </button>
             </div>
           )}
-          {post.image_url && (
-            <img src={post.image_url} alt="post" className="mt-3 rounded-lg max-h-48 object-cover w-full" />
-          )}
-          <p className="text-gray-600 text-xs mt-2">By {post.author_name || "Unknown Player"}</p>
         </div>
-        {isAdmin && (
-          <div className="flex gap-1 shrink-0">
-            {post.status !== "approved" && (
-              <Button size="icon" variant="ghost" onClick={() => onApprove(post)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 h-7 w-7">
-                <Check className="w-3.5 h-3.5" />
-              </Button>
-            )}
-            {post.status !== "rejected" && (
-              <Button size="icon" variant="ghost" onClick={() => onReject(post)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 h-7 w-7">
-                <X className="w-3.5 h-3.5" />
-              </Button>
-            )}
-            <Button size="icon" variant="ghost" onClick={() => onDelete(post.id)} className="text-red-400 hover:text-red-300 hover:bg-red-900/20 h-7 w-7">
-              <X className="w-3.5 h-3.5" />
-            </Button>
+
+        {/* Body */}
+        <p className="text-white/50 text-xs leading-relaxed">{post.body}</p>
+
+        {/* Contact */}
+        {post.contact_info && (
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <Phone className="w-3 h-3 text-white/25 shrink-0" />
+            <span className="text-white/40 text-xs">{post.contact_info}</span>
           </div>
         )}
+
+        {/* Author */}
+        <p className="text-white/20 text-[10px] mt-0.5">By {post.author_name || "Unknown Player"}</p>
       </div>
     </div>
   );
