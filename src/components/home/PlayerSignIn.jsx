@@ -12,7 +12,7 @@ const CARD = {
 
 const PRIMARY_CARD = {
   background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.12)",
+  border: "1px solid rgba(255,255,255,0.20)",
 };
 
 // Portal dropdown rendered at body level to escape any overflow-hidden parents
