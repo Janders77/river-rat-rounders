@@ -380,24 +380,29 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
 
         {/* ── EVENT IMAGES ── */}
         {event.image_urls?.length > 0 && (
-          <div
-            className="px-3 pb-3 pt-0"
-          >
-            <div className={`grid gap-1.5 ${event.image_urls.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
-              {event.image_urls.map((url, idx) => (
-                <img
-                  key={idx}
-                  src={url}
-                  alt=""
-                  className="w-full rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                  style={{
-                    maxHeight: event.image_urls.length === 1 ? "180px" : "100px",
-                    border: "1px solid rgba(255,255,255,0.06)"
-                  }}
-                  onClick={() => setLightboxUrl(url)}
-                />
-              ))}
-            </div>
+          <div className="px-3 pb-3">
+            {event.image_urls.length === 1 ? (
+              <div
+                className="w-full h-32 rounded-lg overflow-hidden mt-0"
+                style={{ border: "1px solid rgba(255,255,255,0.06)" }}
+                onClick={() => setLightboxUrl(event.image_urls[0])}
+              >
+                <img src={event.image_urls[0]} alt="" className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity" />
+              </div>
+            ) : (
+              <div className="flex gap-1.5 overflow-x-auto pb-0.5">
+                {event.image_urls.map((url, idx) => (
+                  <div
+                    key={idx}
+                    className="w-20 h-20 rounded-md overflow-hidden shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
+                    style={{ border: "1px solid rgba(255,255,255,0.06)" }}
+                    onClick={() => setLightboxUrl(url)}
+                  >
+                    <img src={url} alt="" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
