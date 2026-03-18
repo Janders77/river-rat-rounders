@@ -514,29 +514,6 @@ export default function DirectorDashboard() {
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="mb-6 rounded-xl border border-gray-800 bg-gray-900/40 p-4">
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Quick Actions</h2>
-          <div className="flex flex-wrap gap-2">
-            <Button size="sm" onClick={() => { setActiveTab("sessions"); setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 100); }}
-              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3">
-              <Plus className="w-3.5 h-3.5 mr-1" /> Add Player
-            </Button>
-            <Button size="sm" onClick={() => setActiveTab("record")}
-              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3">
-              <Trophy className="w-3.5 h-3.5 mr-1" /> Record Game
-            </Button>
-            <Button size="sm" onClick={() => setActiveTab("sessions")}
-              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3">
-              🃏 Hand of the Week
-            </Button>
-            <Button size="sm" onClick={() => navigate(createPageUrl("Leaderboard"))}
-              className="bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 rounded-lg text-xs px-3">
-              <Users className="w-3.5 h-3.5 mr-1" /> View Leaderboard
-            </Button>
-          </div>
-        </div>
-
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="bg-gray-800 border-gray-700 mb-6 grid grid-cols-3 gap-1 w-full h-auto p-1">
             {hasPermission(directorRole, "canManageSessions") && (
