@@ -255,40 +255,40 @@ export default function Leaderboard() {
 
         {/* ── COLUMN HEADER ── */}
         {!loading && leaderboard.length > 0 && (
-          <div className="flex items-center px-2 mb-1">
+          <div className="flex items-center px-3 mb-2">
             <div className="w-6 shrink-0" />
             <div className="w-8 shrink-0" />
             <div className="flex-1" />
-            <div className="flex items-center gap-3 shrink-0">
-              <span className="text-[9px] text-gray-700 uppercase tracking-widest w-5 text-center">W</span>
-              <div className="w-px h-2.5 bg-gray-800" />
-              <span className="text-[9px] text-gray-700 uppercase tracking-widest w-10 text-right">PTS</span>
+            <div className="flex items-center gap-4 shrink-0">
+              <span className="text-xs text-gray-700 uppercase tracking-widest w-6 text-center font-medium">W</span>
+              <div className="w-px h-3 bg-gray-800" />
+              <span className="text-xs text-gray-700 uppercase tracking-widest w-12 text-right font-medium">PTS</span>
             </div>
           </div>
         )}
 
         {/* ── ROWS ── */}
         {loading ? (
-          <div className="space-y-1 mt-1">
+          <div className="space-y-2 mt-2">
             {Array(10).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-11 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }} />
+              <Skeleton key={i} className="h-14 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }} />
             ))}
           </div>
         ) : leaderboard.length === 0 ? (
           <div className="text-center py-16">
-            <Trophy className="w-8 h-8 mx-auto mb-2 text-gray-800" />
-            <p className="text-gray-600 text-sm">
+            <Trophy className="w-10 h-10 mx-auto mb-3 text-gray-800" />
+            <p className="text-gray-600 text-base">
               {selectedLocation ? `No games at ${selectedLocation} this quarter` : "No games recorded this period"}
             </p>
           </div>
         ) : (
-          <div className="space-y-px">
+          <div className="space-y-1">
             {leaderboard.map((entry, index) => {
               const medal = MEDAL[index];
               return (
                 <div
                   key={entry.id}
-                  className="flex items-center gap-2 px-2 py-2 rounded-lg transition-all duration-100"
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-100 min-h-[48px]"
                   style={medal ? {
                     background: "rgba(255,255,255,0.025)",
                     border: `1px solid ${index === 0 ? "rgba(234,179,8,0.16)" : index === 1 ? "rgba(148,163,184,0.12)" : "rgba(194,120,80,0.14)"}`,
@@ -299,7 +299,7 @@ export default function Leaderboard() {
                   }}
                 >
                   {/* Rank */}
-                  <div className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-black shrink-0 ${
+                  <div className={`w-6 h-6 rounded flex items-center justify-center text-xs font-black shrink-0 ${
                     medal ? `${medal.bg} border ${medal.border} ${medal.num}` : "text-gray-700"
                   }`}>
                     {index + 1}
@@ -310,14 +310,14 @@ export default function Leaderboard() {
                     <img
                       src={entry.image}
                       alt={entry.name}
-                      className="w-7 h-7 rounded-full object-cover shrink-0"
+                      className="w-8 h-8 rounded-full object-cover shrink-0"
                       style={{ border: medal
                         ? `1.5px solid ${index === 0 ? "rgba(234,179,8,0.35)" : index === 1 ? "rgba(148,163,184,0.25)" : "rgba(194,120,80,0.3)"}`
                         : "1.5px solid rgba(255,255,255,0.06)" }}
                     />
                   ) : (
                     <div
-                      className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0"
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
                       style={{ background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.07)", color: "#6b7280" }}
                     >
                       {entry.name?.[0]}
@@ -326,7 +326,7 @@ export default function Leaderboard() {
 
                   {/* Name */}
                   <div className="flex-1 min-w-0">
-                    <span className={`font-semibold text-sm truncate block leading-none ${
+                    <span className={`font-semibold text-base truncate block leading-none ${
                       index < 3 ? "text-white" : "text-gray-400"
                     }`}>
                       {entry.name}
@@ -334,16 +334,16 @@ export default function Leaderboard() {
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center gap-3 shrink-0">
+                  <div className="flex items-center gap-4 shrink-0">
                     <span
-                      className="font-bold text-xs tabular-nums w-5 text-center"
+                      className="font-bold text-sm tabular-nums w-6 text-center"
                       style={{ color: entry.wins > 0 ? "#34d399" : "#1f2937" }}
                     >
                       {entry.wins}
                     </span>
-                    <div className="w-px h-3 bg-gray-800/80" />
+                    <div className="w-px h-4 bg-gray-800/80" />
                     <span
-                      className="font-black text-sm tabular-nums w-10 text-right"
+                      className="font-black text-lg tabular-nums w-12 text-right"
                       style={{ color: index === 0 ? "#f87171" : index < 3 ? "#fca5a5" : "#dc2626" }}
                     >
                       {entry.points}
