@@ -73,15 +73,25 @@ export default function Home() {
           <div className="space-y-6">
             <PlayerSignIn />
 
-            <Link to={createPageUrl("JoinTheLeague")} className={btnClass}>
-              <UserPlus className="w-5 h-5 text-red-400" />
-              Join the League
+            <Link to={createPageUrl("JoinTheLeague")} className={cardClass}>
+              <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+                <UserPlus className="w-5 h-5 text-red-400" />
+              </div>
+              <div className="text-left">
+                <div className="font-semibold text-white text-base">Join the League</div>
+                <div className="text-gray-400 text-sm">Pay your dues and join the action</div>
+              </div>
             </Link>
 
             {navLinks.map((link) => (
-              <Link key={link.title} to={link.url} className={btnClass}>
-                <link.icon className="w-5 h-5 text-red-400" />
-                {link.title}
+              <Link key={link.title} to={link.url} className={cardClass}>
+                <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
+                  <link.icon className={`w-5 h-5 ${link.iconColor}`} />
+                </div>
+                <div className="text-left">
+                  <div className="font-semibold text-white text-base group-hover:text-white">{link.title}</div>
+                  <div className="text-gray-400 text-sm">{link.description}</div>
+                </div>
               </Link>
             ))}
 
