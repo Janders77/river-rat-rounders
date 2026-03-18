@@ -200,7 +200,30 @@ export default function Locations() {
             <MapPin className="w-10 h-10 mx-auto mb-3 text-gray-800" />
             <p className="text-gray-600 text-sm">No locations added yet</p>
           </div>
-        ) : (
+        ) : (() => {
+          const fixedOrder = [
+            "Tavern 018 Sun",
+            "East End Bar & Grill",
+            "Habana Club",
+            "Tavern 018 Wed",
+            "Meddlesome Brewery",
+            "MFS Brewing"
+          ];
+          
+          const orderedLocations = [...locations].sort((a, b) => {
+            const aIndex = fixedOrder.indexOf((a.name || "").trim());
+            const bIndex = fixedOrder.indexOf((b.name || "").trim());
+
+            if (aIndex === -1 && bIndex === -1) {
+              return (a.order ?? 9999) - (b.order ?? 9999);
+            }
+            if (aIndex === -1) return 1;
+            if (bIndex === -1) return -1;
+
+            return aIndex - bIndex;
+          });
+
+          return (
           <DragDropContext onDragEnd={isAdmin ? handleDragEnd : undefined}>
             <Droppable droppableId="locations" type="LOCATION" isDropDisabled={!isAdmin}>
               {(provided) => (
@@ -209,7 +232,7 @@ export default function Locations() {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {locations.map((loc, index) => (
+                  {orderedLocations.map((loc, index) => (
                     <Draggable key={loc.id} draggableId={loc.id} index={index} isDragDisabled={!isAdmin}>
                       {(provided, snapshot) => (
                         <div
