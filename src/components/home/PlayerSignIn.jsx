@@ -288,7 +288,10 @@ export default function PlayerSignIn() {
         </div>
 
         {signed && (
-          <span className="text-xs font-bold tracking-widest text-red-400 animate-[openTextPulse_2.8s_ease-in-out_infinite] shrink-0 mt-0.5 whitespace-nowrap">🟢 OPEN</span>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-xs font-medium text-green-400 tracking-wide">LIVE</span>
+          </div>
         )}
 
         {!signed && !loading && <ChevronRight className="w-5 h-5 text-white/20 shrink-0 mt-0.5" />}
