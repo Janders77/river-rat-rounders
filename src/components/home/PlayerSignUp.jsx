@@ -33,15 +33,17 @@ export default function PlayerSignUp() {
     return (
       <button
         onClick={() => setExpanded(true)}
-        className="w-full flex items-center gap-4 p-5 rounded-xl border border-red-900/40 bg-gradient-to-r from-red-900/20 to-red-950/60 hover:border-red-700/70 hover:from-red-700/40 hover:to-red-800/50 hover:bg-red-800/30 transition-all duration-200 group"
+        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 group"
+        style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(220,38,38,0.22)" }}
       >
-        <div className="w-12 h-12 bg-gray-900/60 rounded-lg flex items-center justify-center shrink-0">
-          <UserPlus className="w-6 h-6 text-red-400" />
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(220,38,38,0.12)", border: "1px solid rgba(220,38,38,0.2)" }}>
+          <UserPlus className="w-3.5 h-3.5 text-red-400" />
         </div>
-        <div className="text-left">
-          <div className="font-semibold text-white text-lg">New Player? Sign Up</div>
-          <div className="text-gray-400 text-sm">Request to join the River Rat Rounders</div>
+        <div className="flex-1 text-left">
+          <div className="font-semibold text-white text-sm leading-tight">New Player? Sign Up</div>
+          <div className="text-gray-600 text-xs mt-0.5">Request to join the River Rat Rounders</div>
         </div>
+        <svg className="w-3.5 h-3.5 text-gray-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
       </button>
     );
   }
