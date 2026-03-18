@@ -269,10 +269,15 @@ export default function PlayerSignIn() {
 
   return (
     <div
-      className={`rounded-xl transition-all overflow-hidden ${!signed && !loading ? "cursor-pointer" : ""}`}
+      className={`relative rounded-xl transition-all overflow-hidden ${!signed && !loading ? "cursor-pointer" : ""}`}
       style={signed ? { background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.18)" } : PRIMARY_CARD}
       onClick={!signed && !loading ? () => handleSignIn(firstSession) : undefined}
     >
+      {signed && (
+        <div className="absolute top-2 right-2 rounded-full border border-red-500/20 bg-red-500/5 px-2 py-0.5 animate-pulse">
+          <span className="text-[10px] font-semibold tracking-wide text-red-300">OPEN</span>
+        </div>
+      )}
       <div className="flex items-center gap-3 px-3 py-2.5">
         <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
           {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <LogIn className="w-5 h-5 text-white/80" />}
