@@ -203,8 +203,8 @@ export default function PlayerProfile() {
         </div>
 
         {/* User Information Section */}
-        <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-8 mb-8">
-          <h2 className="text-lg font-semibold text-white mb-4">Account Information</h2>
+        <div className="bg-gray-900/40 border border-gray-800/70 rounded-xl p-6 mb-5">
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Account Information</h2>
           <div className="space-y-4">
             <div>
               <label className="text-gray-400 text-sm">Full Name</label>
@@ -308,29 +308,29 @@ export default function PlayerProfile() {
 
         {/* Win History Section */}
         {playerData && (
-          <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-8 mb-8">
-            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              🏆 Win History
+          <div className="bg-gray-900/40 border border-gray-800/70 rounded-xl p-6 mb-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Win History</h2>
               {!winsLoading && (
-                <span className="text-sm font-normal text-gray-400">({winHistory.length} win{winHistory.length !== 1 ? 's' : ''})</span>
+                <span className="text-xs text-gray-600 font-medium">{winHistory.length} win{winHistory.length !== 1 ? 's' : ''}</span>
               )}
-            </h2>
+            </div>
             {winsLoading ? (
               <div className="text-gray-500 text-sm">Loading...</div>
             ) : winHistory.length === 0 ? (
               <div className="text-gray-500 text-sm">No wins recorded yet.</div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-0 divide-y divide-gray-800/60">
                 {winHistory.map(game => (
-                  <div key={game.id} className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
+                  <div key={game.id} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
                     <div>
                       <div className="text-white text-sm font-medium">{game.game_type || 'Game'}</div>
-                      <div className="text-gray-400 text-xs">
+                      <div className="text-gray-500 text-xs mt-0.5">
                         {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
                         {game.location ? ` · ${game.location}` : ''}
                       </div>
                     </div>
-                    <div className="text-red-400 font-bold text-sm">{game.points_awarded || 1000} pts</div>
+                    <span className="text-red-400 font-bold text-sm tabular-nums">{game.points_awarded || 1000} pts</span>
                   </div>
                 ))}
               </div>
@@ -340,8 +340,8 @@ export default function PlayerProfile() {
 
         {/* Games Played Section */}
         {playerData && (
-          <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-6 mb-8">
-            <h2 className="text-lg font-semibold text-white mb-3">🂡🂭 Games Played</h2>
+          <div className="bg-gray-900/40 border border-gray-800/70 rounded-xl p-6 mb-5">
+            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Games Played</h2>
             {gamesLoading ? (
               <div className="text-gray-500 text-sm">Loading...</div>
             ) : (
@@ -364,25 +364,28 @@ export default function PlayerProfile() {
                   const isExpanded = expandedLocations[location] || false;
 
                   return (
-                    <div key={location} className="border border-gray-800/50 rounded-lg overflow-hidden">
+                    <div key={location} className="border border-gray-800/60 rounded-lg overflow-hidden">
                       <button
                         onClick={() => setExpandedLocations(prev => ({ ...prev, [location]: !prev[location] }))}
-                        className="w-full flex items-center justify-between p-3 hover:bg-gray-900/30 transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-800/30 transition-colors"
                       >
-                        <div className="flex items-center gap-2 flex-1 text-left">
-                          <span className="text-gray-500 text-sm">{isExpanded ? '▼' : '▶'}</span>
+                        <div className="flex items-center gap-3 flex-1 text-left">
+                          <span className={`text-[10px] transition-transform ${isExpanded ? 'rotate-90' : ''} text-gray-600`}>▶</span>
                           <div className="flex-1">
                             <div className="text-white font-medium text-sm">{location}</div>
-                            <div className="text-gray-400 text-xs">{stats.games} game{stats.games !== 1 ? 's' : ''}</div>
+                            {stats.games > 0 && <div className="text-gray-600 text-xs">{stats.games} game{stats.games !== 1 ? 's' : ''}</div>}
                           </div>
                         </div>
-                        <div className="text-red-400 font-bold text-sm">{stats.points} pts</div>
+                        <div className="flex items-center gap-2">
+                          {stats.points > 0 && <span className="text-red-400 font-bold text-sm tabular-nums">{stats.points} pts</span>}
+                          {stats.games === 0 && <span className="text-gray-700 text-xs">—</span>}
+                        </div>
                       </button>
 
                       {isExpanded && (
-                        <div className="bg-gray-900/20 border-t border-gray-800/50 p-3 space-y-2">
+                        <div className="border-t border-gray-800/50 divide-y divide-gray-800/40">
                           {locationGames.length === 0 ? (
-                            <div className="text-gray-500 text-sm py-2">No recorded games at this location</div>
+                            <div className="text-gray-600 text-xs px-4 py-3">No recorded games at this location</div>
                           ) : (
                             locationGames.map(game => {
                               const playerIds = game.player_ids || [];
@@ -391,14 +394,14 @@ export default function PlayerProfile() {
                               const placementLabel = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'][placement] || `${placement + 1}th`;
 
                               return (
-                                <div key={game.id} className="flex items-center justify-between text-xs p-2 hover:bg-gray-800/30 rounded">
-                                  <div className="text-gray-400">
+                                <div key={game.id} className="flex items-center justify-between px-4 py-2 text-xs bg-gray-900/20">
+                                  <span className="text-gray-400">
                                     {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}
                                     {game.game_type && ` · ${game.game_type}`}
-                                  </div>
+                                  </span>
                                   <div className="flex items-center gap-2">
-                                    <span className="bg-red-900/30 text-red-300 rounded px-1.5 py-0.5">{placementLabel}</span>
-                                    <span className="text-red-400 font-bold">{points} pts</span>
+                                    <span className="bg-gray-800 text-gray-300 rounded px-2 py-0.5 font-medium">{placementLabel}</span>
+                                    <span className="text-red-400 font-bold tabular-nums">{points} pts</span>
                                   </div>
                                 </div>
                               );

@@ -518,28 +518,28 @@ export default function DirectorDashboard() {
           <div className="w-full flex flex-wrap justify-center gap-3 mb-6">
             {hasPermission(directorRole, "canManageSessions") && (
               <button onClick={() => setActiveTab("sessions")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border font-medium text-sm transition-all ${activeTab === "sessions" ? "border-red-500 text-red-400 bg-red-900/15" : "border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white"}`}>
-                <CalendarPlus className="w-4 h-4" /> Sessions
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium text-sm transition-all ${activeTab === "sessions" ? "border-red-600/60 text-red-400 bg-red-900/20" : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200 bg-gray-900/40"}`}>
+                <CalendarPlus className="w-3.5 h-3.5" /> Sessions
               </button>
             )}
             {hasPermission(directorRole, "canRecordGames") && (
               <button onClick={() => setActiveTab("record")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border font-medium text-sm transition-all ${activeTab === "record" ? "border-red-500 text-red-400 bg-red-900/15" : "border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white"}`}>
-                <Plus className="w-4 h-4" /> Record Game
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium text-sm transition-all ${activeTab === "record" ? "border-red-600/60 text-red-400 bg-red-900/20" : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200 bg-gray-900/40"}`}>
+                <Plus className="w-3.5 h-3.5" /> Record
               </button>
             )}
             {hasPermission(directorRole, "canApproveRequests") && (
               <button onClick={() => setActiveTab("requests")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border font-medium text-sm transition-all ${activeTab === "requests" ? "border-red-500 text-red-400 bg-red-900/15" : "border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white"}`}>
-                <Mail className="w-4 h-4" /> Requests
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium text-sm transition-all ${activeTab === "requests" ? "border-red-600/60 text-red-400 bg-red-900/20" : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200 bg-gray-900/40"}`}>
+                <Mail className="w-3.5 h-3.5" /> Requests
                 {inviteRequests.length > 0 && (
-                  <span className="bg-red-500 text-white text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
+                  <span className="bg-red-600 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
                 )}
               </button>
             )}
             <button onClick={() => setActiveTab("history")}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border font-medium text-sm transition-all ${activeTab === "history" ? "border-red-500 text-red-400 bg-red-900/15" : "border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white"}`}>
-              <Trophy className="w-4 h-4" /> Games
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium text-sm transition-all ${activeTab === "history" ? "border-red-600/60 text-red-400 bg-red-900/20" : "border-gray-700/60 text-gray-400 hover:border-gray-500 hover:text-gray-200 bg-gray-900/40"}`}>
+              <Trophy className="w-3.5 h-3.5" /> Games
             </button>
           </div>
 
