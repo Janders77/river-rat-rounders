@@ -515,7 +515,7 @@ export default function DirectorDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <div className="w-full flex flex-wrap justify-center gap-2 mb-6">
+          <div className="w-full flex flex-wrap justify-center gap-3 mb-6">
             {hasPermission(directorRole, "canManageSessions") && (
               <button onClick={() => setActiveTab("sessions")}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border font-medium text-sm transition-all ${activeTab === "sessions" ? "border-red-500 text-red-400 bg-red-900/15" : "border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white"}`}>
