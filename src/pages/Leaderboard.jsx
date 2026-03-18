@@ -153,19 +153,18 @@ export default function Leaderboard() {
       <div className="relative w-full px-4 pt-6 pb-10">
 
         {/* ── HEADER ── */}
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-            <Trophy className="w-6 h-6 text-white/80" />
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+            <Trophy className="w-5 h-5 text-white/80" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight leading-none">Leaderboard</h1>
-            <p className="text-sm text-gray-600 mt-0.5 leading-none">Season standings · live results</p>
+            <h1 className="text-lg font-semibold text-white tracking-tight leading-none">Leaderboard</h1>
+            <p className="text-xs text-white/50 mt-1 leading-none">Season standings · live results</p>
           </div>
         </div>
 
         {/* ── CONTROLS BLOCK ── */}
-        <div className="flex flex-col items-center gap-3 mb-5"
-          style={{ padding: "14px 16px", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px" }}>
+        <div className="flex flex-col items-center gap-3 mb-4 w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3">
 
           {/* Quarter tabs */}
           <div className="inline-flex rounded-lg p-1 gap-1 w-full"
@@ -177,7 +176,7 @@ export default function Leaderboard() {
                 <button
                   key={q}
                   onClick={() => setSelectedQuarter(q)}
-                  className={`flex-1 py-2 rounded-md text-sm font-bold tracking-wide transition-all duration-150 min-h-[40px] ${
+                  className={`flex-1 py-2 rounded-lg text-sm font-bold tracking-wide transition-all duration-150 min-h-[44px] ${
                     active ? "text-white" : "text-gray-600 hover:text-gray-400"
                   }`}
                   style={active ? {
@@ -195,10 +194,8 @@ export default function Leaderboard() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md text-sm font-medium transition-all min-h-[44px]"
+                className="flex items-center justify-center gap-2 w-full h-12 rounded-lg text-sm font-medium transition-all border border-white/10 bg-white/[0.05]"
                 style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
                   color: selectedLocation ? "#e2e8f0" : "#6b7280"
                 }}
               >
@@ -235,17 +232,15 @@ export default function Leaderboard() {
         {!loading && (topPoints || topWins) && (
           <div className="flex gap-3 mb-4">
             {topPoints && (
-              <div className="flex-1 flex items-center justify-between px-4 py-3 rounded-lg"
-                style={{ background: "rgba(220,38,38,0.07)", border: "1px solid rgba(220,38,38,0.15)" }}>
-                <span className="text-xs text-gray-600 uppercase tracking-widest font-bold">PTS</span>
+              <div className="flex-1 flex items-center justify-between px-4 py-3 rounded-lg border border-red-500/20 bg-red-500/5">
+                <span className="text-xs text-white/50 uppercase tracking-widest font-bold">PTS</span>
                 <span className="text-white text-sm font-semibold truncate mx-2">{topPoints.name.split(' ')[0]}</span>
                 <span className="text-base font-black tabular-nums shrink-0" style={{ color: "#f87171" }}>{topPoints.points}</span>
               </div>
             )}
             {topWins && (
-              <div className="flex-1 flex items-center justify-between px-4 py-3 rounded-lg"
-                style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
-                <span className="text-xs text-gray-600 uppercase tracking-widest font-bold">W</span>
+              <div className="flex-1 flex items-center justify-between px-4 py-3 rounded-lg border border-green-500/20 bg-green-500/5">
+                <span className="text-xs text-white/50 uppercase tracking-widest font-bold">W</span>
                 <span className="text-white text-sm font-semibold truncate mx-2">{topWins.name.split(' ')[0]}</span>
                 <span className="text-base font-black tabular-nums shrink-0" style={{ color: "#34d399" }}>{topWins.wins}</span>
               </div>
@@ -288,7 +283,7 @@ export default function Leaderboard() {
               return (
                 <div
                   key={entry.id}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-100 min-h-[48px]"
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-100 min-h-[52px]"
                   style={medal ? {
                     background: "rgba(255,255,255,0.025)",
                     border: `1px solid ${index === 0 ? "rgba(234,179,8,0.16)" : index === 1 ? "rgba(148,163,184,0.12)" : "rgba(194,120,80,0.14)"}`,
