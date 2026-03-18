@@ -167,10 +167,10 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex gap-3">
+          <div className="w-full flex flex-col items-center gap-4">
+            <div className="flex justify-center gap-3 flex-wrap">
               {getAllQuarters().map(q => {
-                const label = q.split('-')[1]; // "Q1", "Q2", etc.
+                const label = q.split('-')[1];
                 return (
                   <button
                     key={q}
@@ -187,32 +187,34 @@ export default function Leaderboard() {
               })}
             </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-3 border-gray-800 text-gray-300 hover:text-white text-base px-6 py-3">
-                  <MapPin className="w-5 h-5" />
-                  {selectedLocation || "Overall"}
-                  <ChevronDown className="w-5 h-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-gray-900 border-gray-800">
-                <DropdownMenuItem
-                  onClick={() => setSelectedLocation(null)}
-                  className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
-                >
-                  Overall
-                </DropdownMenuItem>
-                {ALL_LOCATIONS.map(loc => (
+            <div className="flex justify-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-3 border-gray-800 text-gray-300 hover:text-white text-base px-6 py-3">
+                    <MapPin className="w-5 h-5" />
+                    {selectedLocation || "Overall"}
+                    <ChevronDown className="w-5 h-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="bg-gray-900 border-gray-800">
                   <DropdownMenuItem
-                    key={loc}
-                    onClick={() => setSelectedLocation(loc)}
-                    className={`text-white ${selectedLocation === loc ? "bg-red-700/20" : ""}`}
+                    onClick={() => setSelectedLocation(null)}
+                    className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
                   >
-                    {loc}
+                    Overall
                   </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  {ALL_LOCATIONS.map(loc => (
+                    <DropdownMenuItem
+                      key={loc}
+                      onClick={() => setSelectedLocation(loc)}
+                      className={`text-white ${selectedLocation === loc ? "bg-red-700/20" : ""}`}
+                    >
+                      {loc}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
 
