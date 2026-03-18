@@ -1,79 +1,120 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createClientFromRequest } from "npm:@base44/sdk@0.8.20";
+
+function escapeRegex(input: string) {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\\\$&");
+}
+
+function normalizeQuery(raw: unknown) {
+  return String(raw ?? "").trim();
+}
 
 Deno.serve(async (req) => {
+  const base44 = createClientFromRequest(req);
+
   try {
-    const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!user) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    const body = await req.json();
-    const query = (body.query || '').trim();
+    const role = (user.role || "").toLowerCase();
+    if (role !== "admin" && role !== "director") {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
 
-    if (query.length < 1) {
+    const body = await req.json().catch(() => ({} as any));
+    const queryRaw = normalizeQuery(body.query);
+
+    // Require at least 2 characters to avoid expensive scans.
+    if (queryRaw.length < 2) {
       return Response.json({ players: [] });
     }
 
-    const isNumeric = /^\d+$/.test(query);
+    const results: any[] = [];
 
-    let results = [];
-
-    if (isNumeric) {
-      // Exact match on player_number (integer field)
-      results = await base44.asServiceRole.entities.Player.filter(
-        { player_number: parseInt(query, 10) }, null, 5
-      ).catch(() => []);
+    // Numeric: match player_number exactly
+    if (/^\d+$/.test(queryRaw)) {
+      const n = parseInt(queryRaw, 10);
+      if (Number.isFinite(n)) {
+        const matches = await base44.asServiceRole.entities.Player.filter(
+          { player_number: n },
+          null,
+          5,
+        ).catch(() => []);
+        results.push(...matches);
+      }
     } else {
-      const parts = query.split(/\s+/);
-      const hasSpace = parts.length >= 2;
+      const parts = queryRaw.split(/\s+/).filter(Boolean);
+      const queries: Promise<any[]>[] = [];
 
-      let queries;
-      if (hasSpace) {
-        const first = parts[0];
-        const rest = parts.slice(1).join(' ');
-        queries = [
+      if (parts.length >= 2) {
+        const first = escapeRegex(parts[0]);
+        const rest = escapeRegex(parts.slice(1).join(" "));
+        queries.push(
           base44.asServiceRole.entities.Player.filter(
-            { first_name: { $regex: first, $options: 'i' }, last_name: { $regex: rest, $options: 'i' } }, null, 20
+            { first_name: { $regex: first, $options: "i" }, last_name: { $regex: rest, $options: "i" } },
+            null,
+            5,
           ).catch(() => []),
           base44.asServiceRole.entities.Player.filter(
-            { first_name: { $regex: rest, $options: 'i' }, last_name: { $regex: first, $options: 'i' } }, null, 20
+            { first_name: { $regex: rest, $options: "i" }, last_name: { $regex: first, $options: "i" } },
+            null,
+            5,
           ).catch(() => []),
-        ];
+        );
       } else {
-        queries = [
+        const token = escapeRegex(queryRaw);
+        queries.push(
           base44.asServiceRole.entities.Player.filter(
-            { first_name: { $regex: query, $options: 'i' } }, null, 20
+            { first_name: { $regex: token, $options: "i" } },
+            null,
+            5,
           ).catch(() => []),
           base44.asServiceRole.entities.Player.filter(
-            { last_name: { $regex: query, $options: 'i' } }, null, 20
+            { last_name: { $regex: token, $options: "i" } },
+            null,
+            5,
           ).catch(() => []),
-        ];
+          base44.asServiceRole.entities.Player.filter(
+            { email: { $regex: token, $options: "i" } },
+            null,
+            5,
+          ).catch(() => []),
+        );
       }
 
-      const all = await Promise.all(queries);
-      results = all.flat();
+      const arrays = await Promise.all(queries);
+      for (const a of arrays) results.push(...a);
     }
 
-    // Deduplicate, build display_name at runtime, sort alphabetically
-    const seen = new Set();
-    const players = [];
+    // Dedupe and sanitize
+    const seen = new Set<string>();
+    const players: any[] = [];
+
     for (const p of results) {
-      if (!seen.has(p.id)) {
-        seen.add(p.id);
-        players.push({
-          id: p.id,
-          first_name: p.first_name || '',
-          last_name: p.last_name || '',
-          display_name: `${p.first_name || ''} ${p.last_name || ''}`.trim() || 'Unknown Player',
-          player_number: p.player_number ?? null,
-          email: p.email || '',
-        });
-      }
+      const id = String(p?.id ?? "");
+      if (!id || seen.has(id)) continue;
+      seen.add(id);
+
+      const first_name = (p?.first_name ?? "").trim();
+      const last_name = (p?.last_name ?? "").trim();
+      const display_name = `${first_name} ${last_name}`.trim() || (p?.display_name ?? "").trim();
+
+      players.push({
+        id,
+        first_name: first_name || null,
+        last_name: last_name || null,
+        display_name,
+        player_number: typeof p?.player_number === "number" ? p.player_number : null,
+        email: (p?.email ?? "").trim().toLowerCase(),
+      });
     }
 
-    players.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    players.sort((a, b) => (a.display_name || "").localeCompare(b.display_name || "", "en", { sensitivity: "base" }));
 
-    return Response.json({ players: players.slice(0, 20) });
-  } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ players });
+  } catch (err) {
+    console.error("searchPlayers error:", err);
+    return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 });
