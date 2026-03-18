@@ -671,8 +671,7 @@ export default function DirectorDashboard() {
                         )}
 
                         {isHotwExpanded && (
-                          <div className="border-t border-white/5 pt-2 flex flex-col gap-2">
-                            <p className="text-xs text-white/40 uppercase tracking-wide">🃏 Hand of the Week</p>
+                          <div className="border-t border-white/10 pt-2.5 flex flex-col gap-2">
                             <Select value="__none__" onValueChange={async (pid) => {
                               if (pid === "__none__" || handIds.includes(pid)) return;
                               const playerRecord = playersById[pid];
@@ -696,9 +695,9 @@ export default function DirectorDashboard() {
                               </SelectContent>
                             </Select>
                             {handIds.length > 0 && (
-                              <div className="flex flex-wrap gap-1">
+                              <div className="flex flex-wrap gap-1.5">
                                 {handIds.map(pid => (
-                                  <span key={pid} className="flex items-center gap-1 bg-white/5 border border-white/10 text-white/70 text-xs rounded-full px-2 py-0.5">
+                                  <span key={pid} className="flex items-center gap-2 bg-white/5 border border-white/10 text-white/70 text-xs rounded-full px-2.5 py-1">
                                     {nameById(pid)}
                                     <button onClick={async () => {
                                       const playerRecord = playersById[pid];
@@ -710,7 +709,7 @@ export default function DirectorDashboard() {
                                       const newIds = handIds.filter(id => id !== pid);
                                       await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
                                       setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
-                                    }} className="ml-0.5 hover:text-white">×</button>
+                                    }} className="hover:text-white">✕</button>
                                   </span>
                                 ))}
                               </div>
