@@ -659,7 +659,7 @@ export default function DirectorDashboard() {
                                         </span>
                                       )}
                                     </div>
-                                    <span className="text-xs font-medium text-white/50 shrink-0">#{index + 1}</span>
+                                    <span className="text-xs font-medium text-white/50 shrink-0">{index + 1}.</span>
                                     <span className="text-sm text-white/85 truncate">{nameById(pid)}</span>
                                   </div>
                                   <button
