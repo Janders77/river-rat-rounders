@@ -110,3 +110,14 @@
     text-rendering: optimizeLegibility;
   }
 }
+
+@keyframes openPulse {
+  0%, 100% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
