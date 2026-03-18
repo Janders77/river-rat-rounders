@@ -36,8 +36,8 @@ export default function PlayerSignUp() {
         className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 group"
         style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)" }}
       >
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(220,38,38,0.12)", border: "1px solid rgba(220,38,38,0.2)" }}>
-          <UserPlus className="w-3.5 h-3.5 text-red-400" />
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
+          <UserPlus className="w-4 h-4 text-white/70" />
         </div>
         <div className="flex-1 text-left">
           <div className="font-semibold text-white text-sm leading-tight">New Player? Sign Up</div>

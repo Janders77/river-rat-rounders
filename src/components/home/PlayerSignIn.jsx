@@ -247,8 +247,8 @@ export default function PlayerSignIn() {
   if (isLoading) {
     return (
       <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl" style={PRIMARY_CARD}>
-        <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(220,38,38,0.1)" }}>
-          <Loader2 className="w-5 h-5 text-red-400 animate-spin" />
+        <div className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
+          <Loader2 className="w-5 h-5 text-white/70 animate-spin" />
         </div>
         <div className="flex flex-col">
           <span className="text-white font-semibold text-sm">Sign In to Today's Game</span>
