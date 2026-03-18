@@ -258,31 +258,34 @@ export default function PlayerSignIn() {
     );
   }
 
+  const firstSession = sessions[0];
+  if (!firstSession) return null;
+
+  const signed = isSignedIn(firstSession);
+  const loading = signingIn === firstSession.id;
+  const signedInIds = getSignedInIds(firstSession);
+
   return (
-    <div className="flex flex-col gap-2">
-      {/* Section label */}
-      <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl" style={PRIMARY_CARD}>
+    <div
+      className={`rounded-xl transition-all ${!signed && !loading ? "cursor-pointer" : ""}`}
+      style={signed ? { background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.18)" } : PRIMARY_CARD}
+      onClick={!signed && !loading ? () => handleSignIn(firstSession) : undefined}
+    >
+      <div className="flex items-center gap-3 px-3 py-2.5">
         <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
-          <LogIn className="w-5 h-5 text-white/80" />
+          {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <LogIn className="w-5 h-5 text-white/80" />}
         </div>
-        <div className="flex flex-col">
-          <span className="text-white font-semibold text-sm">Sign In to Tonight's Game</span>
-          <span className="text-xs text-white/40 mt-0.5">{sessions.length} open session{sessions.length !== 1 ? "s" : ""} available</span>
+        <div className="flex flex-col flex-1 min-w-0">
+          <span className={`font-semibold text-sm leading-tight ${signed ? "text-green-400" : "text-white"}`}>
+            {signed ? "You're signed in!" : "Sign In to Tonight's Game"}
+          </span>
+          <span className="text-xs text-white/40 mt-0.5 truncate">
+            {firstSession.location} · {new Date(firstSession.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+            {firstSession.game_type && ` · ${firstSession.game_type}`}
+          </span>
         </div>
+        {!signed && !loading && <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />}
       </div>
-      {sessions.map((session) => (
-        <SessionRow
-          key={session.id}
-          session={session}
-          playersById={playersById}
-          getSignedInIds={getSignedInIds}
-          isSignedIn={isSignedIn}
-          signingIn={signingIn}
-          handleSignIn={handleSignIn}
-          handleRemovePlayer={handleRemovePlayer}
-          isDirector={isDirector}
-        />
-      ))}
     </div>
   );
 }
