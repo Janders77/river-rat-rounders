@@ -8,10 +8,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 const emptyForm = { name: "", address: "", game_time: "", description: "", image_url: "" };
 
-const CARD = {
-  background: "rgba(255,255,255,0.03)",
-  border: "1px solid rgba(255,255,255,0.08)",
-};
+const CARD = "w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3";
 
 function LocationForm({ initial, onSave, onCancel, title }) {
   const [form, setForm] = useState(initial || emptyForm);
@@ -36,33 +33,33 @@ function LocationForm({ initial, onSave, onCancel, title }) {
   };
 
   return (
-    <div className="rounded-xl mb-6 p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}>
-      <h2 className="text-white font-semibold text-base mb-4">{title}</h2>
+    <div className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 mb-4">
+      <h2 className="text-base font-semibold text-white mb-3">{title}</h2>
       <form onSubmit={handleSubmit} className="space-y-3">
         <Input
           placeholder="Venue Name *"
           value={form.name}
           onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
           required
-          className="bg-black/20 border-white/10 text-white placeholder:text-white/30"
+          className="h-12 px-4 text-base rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder:text-white/30"
         />
         <Input
           placeholder="Address"
           value={form.address}
           onChange={e => setForm(p => ({ ...p, address: e.target.value }))}
-          className="bg-black/20 border-white/10 text-white placeholder:text-white/30"
+          className="h-12 px-4 text-base rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder:text-white/30"
         />
         <Input
           placeholder="Game Time (e.g. Every Sunday at 7:00 PM)"
           value={form.game_time}
           onChange={e => setForm(p => ({ ...p, game_time: e.target.value }))}
-          className="bg-black/20 border-white/10 text-white placeholder:text-white/30"
+          className="h-12 px-4 text-base rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder:text-white/30"
         />
         <Textarea
           placeholder="Additional info..."
           value={form.description}
           onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
-          className="bg-black/20 border-white/10 text-white placeholder:text-white/30 h-20"
+          className="h-24 px-4 py-3 text-base rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder:text-white/30"
         />
 
         <div>
@@ -88,15 +85,13 @@ function LocationForm({ initial, onSave, onCancel, title }) {
           <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
         </div>
 
-        <div className="flex gap-2 pt-1">
+        <div className="flex gap-3 pt-1">
           <button type="button" onClick={onCancel}
-            className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)" }}>
+            className="flex-1 h-12 px-4 rounded-xl text-sm font-medium transition-colors border border-white/10 bg-white/[0.05] text-white/65 hover:text-white hover:bg-white/[0.08]">
             Cancel
           </button>
           <button type="submit" disabled={saving}
-            className="flex-1 py-2.5 rounded-lg text-sm font-semibold text-white transition-all"
-            style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
+            className="flex-1 h-12 px-4 rounded-xl text-sm font-medium transition-all border border-white/10 bg-white/[0.08] text-white hover:bg-white/[0.12]">
             {saving ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Save"}
           </button>
         </div>
@@ -163,24 +158,23 @@ export default function Locations() {
       <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
 
-      <div className="relative max-w-md mx-auto px-4 pt-5 pb-10">
+      <div className="relative w-full px-4 pt-6 pb-10">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-2.5">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
               <MapPin className="w-5 h-5 text-white/80" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-white tracking-tight leading-none">Locations</h1>
-              <p className="text-[10px] text-gray-600 mt-0.5 leading-none">Where we play</p>
+              <h1 className="text-lg font-semibold text-white tracking-tight leading-none">Locations</h1>
+              <p className="text-xs text-white/50 mt-1 leading-none">Where we play</p>
             </div>
           </div>
           {isAdmin && !showAddForm && !editingId && (
             <button
               onClick={() => setShowAddForm(true)}
-              className="w-10 h-10 flex items-center justify-center rounded-lg transition-colors"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+              className="w-10 h-10 flex items-center justify-center rounded-lg transition-colors border border-white/10 bg-white/[0.05]"
             >
               <Plus className="w-5 h-5 text-white/80" />
             </button>
@@ -251,14 +245,14 @@ export default function Locations() {
                                     onCancel={() => setEditingId(null)}
                                   />
                                 ) : (
-                                  <div className="rounded-xl overflow-hidden" style={CARD}>
+                                  <div className="rounded-xl overflow-hidden border border-white/10 bg-white/[0.05]">
                                     {loc.image_url && (
                                       <img src={loc.image_url} alt={loc.name} className="w-full h-36 object-cover" />
                                     )}
-                                    <div className="px-3.5 py-3">
+                                    <div className="px-4 py-3">
                                       {/* Name row */}
                                       <div className="flex items-start justify-between gap-2 mb-2">
-                                        <span className="text-white font-semibold text-sm leading-tight">{loc.name}</span>
+                                        <span className="text-base font-semibold text-white leading-tight">{loc.name}</span>
                                         {isAdmin && (
                                           <div className="flex gap-1 shrink-0 mt-0.5">
                                             <button
@@ -278,23 +272,23 @@ export default function Locations() {
                                       </div>
 
                                       {/* Metadata */}
-                                      <div className="flex flex-col gap-1">
+                                      <div className="flex flex-col gap-2">
                                         {loc.address && (
-                                          <div className="flex items-start gap-1.5">
-                                            <MapPin className="w-3 h-3 text-white/30 shrink-0 mt-0.5" />
-                                            <span className="text-xs text-white/40 leading-snug">{loc.address}</span>
+                                          <div className="flex items-start gap-2">
+                                            <MapPin className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
+                                            <span className="text-sm text-white/65 leading-snug">{loc.address}</span>
                                           </div>
                                         )}
                                         {loc.game_time && (
-                                          <div className="flex items-center gap-1.5">
-                                            <Clock className="w-3 h-3 text-white/30 shrink-0" />
-                                            <span className="text-xs text-white/40">{loc.game_time}</span>
+                                          <div className="flex items-center gap-2">
+                                            <Clock className="w-4 h-4 text-white/30 shrink-0" />
+                                            <span className="text-sm text-white/65">{loc.game_time}</span>
                                           </div>
                                         )}
                                       </div>
 
                                       {loc.description && (
-                                        <p className="text-white/30 text-xs mt-2 leading-relaxed">{loc.description}</p>
+                                        <p className="text-white/50 text-sm mt-2 leading-relaxed">{loc.description}</p>
                                       )}
                                     </div>
                                   </div>
