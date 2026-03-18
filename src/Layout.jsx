@@ -78,6 +78,32 @@ const navigationItems = [
   },
 ];
 
+const NAV_GROUPS = [
+  {
+    items: [
+      { title: "Home", url: createPageUrl("Home"), icon: Home },
+      { title: "My Profile", url: createPageUrl("PlayerProfile"), icon: Trophy },
+      { title: "Leaderboard", url: createPageUrl("Leaderboard"), icon: Trophy },
+      { title: "Game History", url: createPageUrl("GameHistory"), icon: History },
+      { title: "Winners Gallery", url: createPageUrl("WinnersGallery"), icon: Image },
+    ]
+  },
+  {
+    items: [
+      { title: "Calendar", url: createPageUrl("LeagueCalendar"), icon: CalendarDays },
+      { title: "Locations", url: createPageUrl("Locations"), icon: MapPin },
+      { title: "Community", url: createPageUrl("Community"), icon: Users },
+    ]
+  },
+  {
+    items: [
+      { title: "Player Database", url: createPageUrl("PlayerDatabase"), icon: Database, adminOnly: true },
+      { title: "Director", url: createPageUrl("DirectorSignIn"), icon: ShieldAlert },
+      { title: "Manage Directors", url: createPageUrl("DirectorManagement"), icon: ShieldAlert },
+    ]
+  },
+];
+
 function LayoutInner({ children }) {
   const location = useLocation();
   const { setOpenMobile } = useSidebar();
@@ -91,8 +117,6 @@ function LayoutInner({ children }) {
     const fetchUser = async () => {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
-      
-      // Use localStorage playerEmail (player-level login) if available, fall back to auth email
       const playerEmail = localStorage.getItem("playerEmail") || currentUser.email;
       const players = await base44.entities.Player.filter({ email: playerEmail });
       if (players.length > 0) {
@@ -116,6 +140,8 @@ function LayoutInner({ children }) {
     }
   };
 
+  const isActive = (url) => location.pathname === url;
+
   return (
     <>
       <style>{`
@@ -131,121 +157,116 @@ function LayoutInner({ children }) {
         }
       `}</style>
       <div className="min-h-screen flex w-full text-gray-100" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-        <Sidebar className="border-r border-gray-700/60" style={{background: "linear-gradient(180deg, #111118 0%, #1e1e2a 30%, #181820 70%, #0d0d14 100%)", backdropFilter: "blur(8px)"}}>
-          <SidebarHeader className="border-b border-gray-700/40 p-5" style={{background: "linear-gradient(135deg, rgba(30,30,42,0.95) 0%, rgba(15,15,22,0.98) 100%)", boxShadow: "0 4px 24px rgba(0,0,0,0.30), 0 1px 0 rgba(255,255,255,0.05)"}}>
-            <div className="flex items-center justify-between w-full gap-2">
-              <button onClick={handleLogoClick} className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-90 transition-opacity">
-                <div style={{filter: "drop-shadow(0 0 10px rgba(220,38,38,0.5)) drop-shadow(0 0 20px rgba(220,38,38,0.2))"}}>
-                  <img
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/44bb87bed_riverratslogo_black1PDF.pdf"
-                    alt="River Rat Rounders"
-                    className="w-11 h-11 rounded-lg object-cover flex-shrink-0"
-                    onError={(e) => { e.target.style.display='none'; }}
-                  />
-                </div>
+        <Sidebar className="border-r border-white/5" style={{background: "#0e0e16", backdropFilter: "blur(8px)"}}>
+
+          {/* Brand Header */}
+          <SidebarHeader className="px-3 pt-4 pb-3 border-b border-white/5">
+            <div className="flex items-center gap-2.5">
+              <button onClick={handleLogoClick} className="flex items-center gap-2.5 flex-1 min-w-0 hover:opacity-80 transition-opacity">
+                <img
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/44bb87bed_riverratslogo_black1PDF.pdf"
+                  alt="River Rat Rounders"
+                  className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
+                  onError={(e) => { e.target.style.display='none'; }}
+                />
                 <div className="text-left min-w-0">
-                  <h2 className="font-bold text-lg text-red-500 leading-tight" style={{textShadow: "0 0 12px rgba(220,38,38,0.4)"}}>River Rat Rounders</h2>
-                  <p className="text-[10px] text-gray-500 mt-0.5 truncate">Memphis' Freeroll Bar Poker League</p>
+                  <h2 className="font-bold text-sm text-white leading-tight truncate">River Rat Rounders</h2>
+                  <p className="text-[10px] text-white/25 leading-tight truncate">Memphis' Freeroll Bar Poker</p>
                 </div>
               </button>
               {profileImageUrl && (
-                <div className="flex-shrink-0">
-                  <img
-                    src={profileImageUrl}
-                    alt="Profile"
-                    className="w-9 h-9 rounded-full object-cover border-2 border-green-700/60 shadow-lg"
-                    style={{boxShadow: "0 0 8px rgba(34,197,94,0.3)"}}
-                  />
-                </div>
+                <img
+                  src={profileImageUrl}
+                  alt="Profile"
+                  className="w-7 h-7 rounded-full object-cover flex-shrink-0"
+                  style={{ border: "1px solid rgba(255,255,255,0.12)" }}
+                />
               )}
             </div>
           </SidebarHeader>
-          
-          <SidebarContent className="p-3" style={{background: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%)"}}>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {showSecret && (
-                    <SidebarMenuItem key="break-time-bump">
-                      <SidebarMenuButton 
-                        asChild 
-                        className={`relative overflow-hidden transition-all duration-200 rounded-lg mb-1 ${
-                          location.pathname === createPageUrl("BreakTimeBump")
-                            ? 'bg-gradient-to-r from-gray-500/30 to-gray-600/20 text-gray-100 border-l-2 border-gray-400' 
-                            : 'text-gray-500 hover:text-gray-100 hover:bg-gray-700/30 hover:border-l-2 hover:border-gray-500 border-l-2 border-transparent'
-                        }`}
-                      >
-                        <Link to={createPageUrl("BreakTimeBump")} onClick={() => setOpenMobile(false)} className="flex items-center gap-3 px-4 py-3">
-                          <Zap className="w-5 h-5" />
-                          <span className="font-medium">Break Time Bump</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )}
-                  {navigationItems.map((item) => {
-                    if (item.adminOnly && user?.role !== "admin") {
-                      return null;
-                    }
-                    return (
-                      <SidebarMenuItem key={item.title}>
-                        <Link to={item.url} onClick={() => setOpenMobile(false)} className="block w-full">
-                          <SidebarMenuButton 
-                            className={`group relative overflow-hidden transition-all duration-200 rounded-lg mb-1 w-full ${
-                              location.pathname === item.url 
-                                ? 'bg-gradient-to-r from-gray-500/30 to-gray-600/20 text-gray-100 border-l-2 border-gray-400' 
-                                : 'text-gray-500 hover:text-gray-100 hover:bg-gray-700/30 hover:border-l-2 hover:border-gray-500 border-l-2 border-transparent'
-                            }`}
-                          >
-                            <item.icon className="w-6 h-6" />
-                            <span className="font-medium text-lg">{item.title}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                    );
-                  })}
-                  <SidebarMenuItem key="user-welcome" className="mt-auto pt-4 border-t border-gray-800">
-                    {player && (
-                      <div className="px-4 py-3 text-gray-500 text-sm">
-                        Welcome, <span className="text-gray-500 font-medium">{player.first_name} {player.last_name}</span>
-                      </div>
-                    )}
-                  </SidebarMenuItem>
-                  <SidebarMenuItem key="sign-out">
-                    <SidebarMenuButton 
-                      onClick={() => {
-                        localStorage.removeItem("playerEmail");
-                        localStorage.removeItem("playerName");
-                        setOpenMobile(false);
-                        window.location.href = createPageUrl("Home");
-                      }}
-                      className="hover:bg-red-900/30 transition-all duration-200 rounded-lg text-red-400"
+
+          {/* Nav Content */}
+          <SidebarContent className="px-2 py-2 flex flex-col gap-0 overflow-y-auto">
+
+            {/* Secret: Break Time Bump */}
+            {showSecret && (
+              <Link
+                to={createPageUrl("BreakTimeBump")}
+                onClick={() => setOpenMobile(false)}
+                className={`w-full flex items-center gap-2.5 rounded-lg px-3 py-2 mb-0.5 transition-all text-sm ${
+                  isActive(createPageUrl("BreakTimeBump"))
+                    ? "bg-white/10 text-white font-medium"
+                    : "text-white/40 hover:text-white/80 hover:bg-white/5"
+                }`}
+              >
+                <Zap className="w-4 h-4 shrink-0" />
+                <span>Break Time Bump</span>
+              </Link>
+            )}
+
+            {NAV_GROUPS.map((group, gi) => (
+              <React.Fragment key={gi}>
+                {gi > 0 && <div className="my-1.5 mx-1 border-t border-white/5" />}
+                {group.items.map((item) => {
+                  if (item.adminOnly && user?.role !== "admin") return null;
+                  const active = isActive(item.url);
+                  return (
+                    <Link
+                      key={item.title}
+                      to={item.url}
+                      onClick={() => setOpenMobile(false)}
+                      className={`w-full flex items-center gap-2.5 rounded-lg px-3 py-2 mb-0.5 transition-all text-sm ${
+                        active
+                          ? "bg-white/8 text-white font-medium"
+                          : "text-white/45 hover:text-white/80 hover:bg-white/4"
+                      }`}
+                      style={active ? { background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.08)" } : {}}
                     >
-                      <LogOut className="w-5 h-5" />
-                      <span className="font-medium">Sign Out</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem key="copyright">
-                    <div className="px-4 pt-1 pb-3 text-[9px] text-gray-600 text-center whitespace-nowrap">
-                      © {new Date().getFullYear()} River Rat Rounders
-                    </div>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+                      <item.icon className={`w-4 h-4 shrink-0 ${active ? "text-white/90" : "text-white/35"}`} />
+                      <span>{item.title}</span>
+                    </Link>
+                  );
+                })}
+              </React.Fragment>
+            ))}
+
+            {/* Footer */}
+            <div className="mt-auto pt-3 border-t border-white/5 mx-1">
+              {player && (
+                <p className="text-[10px] text-white/25 px-3 pb-2 truncate">
+                  {player.first_name} {player.last_name}
+                </p>
+              )}
+              <button
+                onClick={() => {
+                  localStorage.removeItem("playerEmail");
+                  localStorage.removeItem("playerName");
+                  setOpenMobile(false);
+                  window.location.href = createPageUrl("Home");
+                }}
+                className="w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-white/35 hover:text-white/65 hover:bg-white/4 transition-all"
+              >
+                <LogOut className="w-4 h-4 shrink-0" />
+                <span>Sign Out</span>
+              </button>
+              <p className="text-[9px] text-white/15 text-center py-2">
+                © {new Date().getFullYear()} River Rat Rounders
+              </p>
+            </div>
           </SidebarContent>
         </Sidebar>
 
         <main className="flex-1 flex flex-col">
-          <header className="border-b border-red-900/40 px-6 py-4 lg:hidden flex items-center justify-center relative" style={{background: "linear-gradient(to right, rgba(127,29,29,0.2), rgba(127,29,29,0.6))"}}>
-            <SidebarTrigger className="hover:bg-gray-800 w-12 h-12 rounded-lg transition-colors flex items-center justify-center absolute left-6">
-              <Menu className="w-5 h-5" />
+          <header className="border-b border-white/5 px-4 py-3 lg:hidden flex items-center justify-center relative" style={{background: "rgba(14,14,22,0.95)"}}>
+            <SidebarTrigger className="hover:bg-white/5 w-9 h-9 rounded-lg transition-colors flex items-center justify-center absolute left-4">
+              <Menu className="w-4 h-4 text-white/60" />
             </SidebarTrigger>
-            <h1 className="text-xl font-bold text-white">River Rat Rounders</h1>
-            <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity absolute right-6">
+            <h1 className="text-sm font-semibold text-white/80">River Rat Rounders</h1>
+            <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity absolute right-4">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/a6c1792b1_red2012-2.jpg"
                 alt="River Rat Rounders"
-                className="w-12 h-12 rounded-full object-cover shadow-lg"
+                className="w-8 h-8 rounded-full object-cover"
               />
             </a>
           </header>
