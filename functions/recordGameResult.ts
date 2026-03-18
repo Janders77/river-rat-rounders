@@ -85,6 +85,11 @@ Deno.serve(async (req) => {
       recorded_by: user.email ?? user.id ?? "unknown",
     });
 
+    // Award card guard to winner
+    await base44.entities.Player.update(resolvedId, {
+      card_guards: (winnerPlayer.card_guards ?? 0) + 1,
+    });
+
     // Upsert QuarterlyStats — look up by player_id first, then player_email
     let stats = await base44.entities.QuarterlyStats.filter({
       quarter: currentQuarter,
