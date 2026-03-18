@@ -132,9 +132,28 @@ export default function Locations() {
   const loadData = async () => {
     setLoading(true);
     const [locs, user] = await Promise.all([
-      base44.entities.Location.list("display_order"),
+      base44.entities.Location.list(),
       base44.auth.me().catch(() => null)
     ]);
+    
+    const fixedOrder = [
+      "Tavern 018 Sun",
+      "East End Grill",
+      "Habana Club",
+      "Tavern 018 Wed",
+      "Meddlesome",
+      "MFS Brewing"
+    ];
+    
+    locs.sort((a, b) => {
+      const aIndex = fixedOrder.indexOf(a.name);
+      const bIndex = fixedOrder.indexOf(b.name);
+      if (aIndex === -1 && bIndex === -1) return 0;
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+      return aIndex - bIndex;
+    });
+    
     setLocations(locs);
     setIsAdmin(user?.role === "admin");
     setLoading(false);
