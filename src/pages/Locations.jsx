@@ -228,7 +228,7 @@ export default function Locations() {
                   {...provided.droppableProps}
                 >
                   {locations.map((loc, index) => (
-                    <Draggable key={loc.id} draggableId={loc.id} index={index} isDragDisabled={!isAdmin || loc.name === "Tavern 018 Wednesday"}>
+                    <Draggable key={loc.id} draggableId={loc.id} index={index} isDragDisabled={!isAdmin}>
                       {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
