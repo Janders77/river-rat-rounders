@@ -78,18 +78,18 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
   return (
     <div
       onClick={() => isAdmin && setEditing(true)}
-      className={`w-full rounded-xl px-3.5 py-3 flex items-center gap-3 transition-colors min-w-0 ${isAdmin ? "cursor-pointer" : ""}`}
-      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
+      className={`w-full rounded-xl px-3 py-2.5 flex items-center gap-3 ${isAdmin ? "cursor-pointer" : ""}`}
+      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
     >
       {/* Avatar */}
-      <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-xs font-bold text-white/50"
-        style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
-        {initials || <span style={{ fontSize: 10 }}>{player.player_number ?? "?"}</span>}
+      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-xs font-bold text-white/40"
+        style={{ background: "rgba(255,255,255,0.06)" }}>
+        {initials || "?"}
       </div>
 
-      {/* Info */}
+      {/* Text column */}
       <div className="flex flex-col flex-1 min-w-0">
-        <div className="flex items-center gap-1.5 min-w-0">
+        <div className="flex items-center gap-1.5">
           <span className="text-white font-medium text-sm truncate">
             {player.first_name} {player.last_name}
           </span>
@@ -97,25 +97,25 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
             <span className="text-[10px] text-amber-400/70 shrink-0">🛡️{player.card_guards}</span>
           )}
         </div>
-        <div className="flex items-center gap-1.5 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 text-xs text-white/35">
           {player.player_number != null && (
-            <span className="text-[10px] text-white/25 font-mono shrink-0">#{player.player_number}</span>
+            <span className="shrink-0 font-mono">#{player.player_number}</span>
           )}
-          <span className="text-xs text-white/30 truncate">{player.email}</span>
+          <span className="truncate">{player.email}</span>
         </div>
       </div>
 
       {/* Actions */}
       {isAdmin && (
-        <div className="flex items-center gap-2 shrink-0" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-1.5 shrink-0" onClick={e => e.stopPropagation()}>
           <Link to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
             className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors text-white/20 hover:text-white/60"
-            style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+            style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
             <Eye className="w-3.5 h-3.5" />
           </Link>
           <button onClick={() => onDelete(player.id)}
             className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors text-white/20 hover:text-red-400"
-            style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+            style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
