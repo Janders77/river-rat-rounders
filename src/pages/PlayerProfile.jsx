@@ -297,9 +297,16 @@ export default function PlayerProfile() {
                   <label className="text-gray-400 text-sm">Player #</label>
                   <div className="text-white font-medium">{playerData.player_number || "N/A"}</div>
                 </div>
-                <div>
+                <div className="flex items-center justify-between">
                   <label className="text-gray-400 text-sm">Card Guards</label>
-                  <div className="text-white font-medium">{playerData.card_guards || 0}</div>
+                  <div className="flex items-center gap-2">
+                    <div className="text-white font-medium">{playerData.card_guards || 0}</div>
+                    {playerData.card_guards > 0 && (
+                      <div className="px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                        <span className="text-xs font-semibold text-amber-400">♠</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </>
             )}
