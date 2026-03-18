@@ -144,31 +144,33 @@ export default function Leaderboard() {
   return (
     <div
       className="min-h-screen"
-      style={{ background: "linear-gradient(160deg, #16161f 0%, #1e1e2a 55%, #16161f 100%)" }}
+      style={{ background: "linear-gradient(160deg, #13131b 0%, #1a1a24 55%, #13131b 100%)" }}
     >
       {/* ── TOP GLOW ── */}
-      <div className="absolute inset-x-0 top-0 h-48 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.10), transparent 70%)" }} />
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
 
-      <div className="relative max-w-lg mx-auto px-4 pt-6 pb-12">
+      <div className="relative max-w-md mx-auto px-4 pt-5 pb-10">
 
-        {/* ── TITLE ── */}
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-8 h-8 rounded-lg bg-red-600/15 border border-red-600/25 flex items-center justify-center">
-            <Trophy className="w-4 h-4 text-red-400" />
+        {/* ── HEADER ── */}
+        <div className="flex items-center gap-2.5 mb-4">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+            style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.2)" }}>
+            <Trophy className="w-3.5 h-3.5 text-red-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight leading-none">Leaderboard</h1>
-            <p className="text-[11px] text-gray-600 mt-0.5 leading-none">Season standings · live results</p>
+            <h1 className="text-lg font-bold text-white tracking-tight leading-none">Leaderboard</h1>
+            <p className="text-[10px] text-gray-600 mt-0.5 leading-none">Season standings · live results</p>
           </div>
         </div>
 
-        {/* ── QUARTER TABS ── */}
-        <div className="flex justify-center mb-3">
-          <div
-            className="inline-flex rounded-xl p-1 gap-0.5"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
-          >
+        {/* ── CONTROLS BLOCK ── */}
+        <div className="flex flex-col items-center gap-2 mb-4"
+          style={{ padding: "10px 12px", background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px" }}>
+
+          {/* Quarter tabs */}
+          <div className="inline-flex rounded-lg p-0.5 gap-0.5 w-full"
+            style={{ background: "rgba(255,255,255,0.05)" }}>
             {getAllQuarters().map(q => {
               const label = q.split('-')[1];
               const active = selectedQuarter === q;
@@ -176,14 +178,12 @@ export default function Leaderboard() {
                 <button
                   key={q}
                   onClick={() => setSelectedQuarter(q)}
-                  className={`px-5 py-2 rounded-lg text-sm font-bold tracking-wide transition-all duration-150 min-w-[52px] ${
-                    active
-                      ? "text-white"
-                      : "text-gray-600 hover:text-gray-400"
+                  className={`flex-1 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all duration-150 ${
+                    active ? "text-white" : "text-gray-600 hover:text-gray-400"
                   }`}
                   style={active ? {
                     background: "linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%)",
-                    boxShadow: "0 2px 8px rgba(185,28,28,0.4)"
+                    boxShadow: "0 1px 6px rgba(185,28,28,0.35)"
                   } : {}}
                 >
                   {label}
@@ -191,23 +191,21 @@ export default function Leaderboard() {
               );
             })}
           </div>
-        </div>
 
-        {/* ── LOCATION DROPDOWN ── */}
-        <div className="flex justify-center mb-4">
+          {/* Location dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded-md text-xs font-medium transition-all"
                 style={{
                   background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.09)",
-                  color: selectedLocation ? "#f1f5f9" : "#6b7280"
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: selectedLocation ? "#e2e8f0" : "#6b7280"
                 }}
               >
-                <MapPin className="w-3.5 h-3.5 text-red-500/70" />
-                <span>{selectedLocation || "All Locations"}</span>
-                <ChevronDown className="w-3.5 h-3.5 opacity-40 ml-1" />
+                <MapPin className="w-3 h-3 text-red-500/60 shrink-0" />
+                <span className="truncate">{selectedLocation || "All Locations"}</span>
+                <ChevronDown className="w-3 h-3 opacity-40 shrink-0" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -236,31 +234,21 @@ export default function Leaderboard() {
 
         {/* ── STAT CHIPS ── */}
         {!loading && (topPoints || topWins) && (
-          <div className="flex justify-center gap-2 mb-5 flex-wrap">
+          <div className="flex gap-2 mb-3">
             {topPoints && (
-              <div
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
-                style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.18)" }}
-              >
-                <span className="text-gray-500 uppercase tracking-widest text-[9px] font-bold">PTS LEADER</span>
-                <span className="text-white font-bold">{topPoints.name}</span>
-                <span
-                  className="font-black tabular-nums"
-                  style={{ color: "#f87171" }}
-                >{topPoints.points}</span>
+              <div className="flex-1 flex items-center justify-between px-2.5 py-1.5 rounded-lg"
+                style={{ background: "rgba(220,38,38,0.07)", border: "1px solid rgba(220,38,38,0.15)" }}>
+                <span className="text-[9px] text-gray-600 uppercase tracking-widest font-bold">PTS</span>
+                <span className="text-white text-xs font-semibold truncate mx-1.5">{topPoints.name.split(' ')[0]}</span>
+                <span className="text-xs font-black tabular-nums shrink-0" style={{ color: "#f87171" }}>{topPoints.points}</span>
               </div>
             )}
             {topWins && (
-              <div
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
-                style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.18)" }}
-              >
-                <span className="text-gray-500 uppercase tracking-widest text-[9px] font-bold">WIN LEADER</span>
-                <span className="text-white font-bold">{topWins.name}</span>
-                <span
-                  className="font-black tabular-nums"
-                  style={{ color: "#34d399" }}
-                >{topWins.wins}W</span>
+              <div className="flex-1 flex items-center justify-between px-2.5 py-1.5 rounded-lg"
+                style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
+                <span className="text-[9px] text-gray-600 uppercase tracking-widest font-bold">W</span>
+                <span className="text-white text-xs font-semibold truncate mx-1.5">{topWins.name.split(' ')[0]}</span>
+                <span className="text-xs font-black tabular-nums shrink-0" style={{ color: "#34d399" }}>{topWins.wins}</span>
               </div>
             )}
           </div>
@@ -268,58 +256,53 @@ export default function Leaderboard() {
 
         {/* ── COLUMN HEADER ── */}
         {!loading && leaderboard.length > 0 && (
-          <div className="flex items-center px-3 mb-1">
-            <div className="w-7 shrink-0" />
-            <div className="w-9 shrink-0" />
+          <div className="flex items-center px-2 mb-1">
+            <div className="w-6 shrink-0" />
+            <div className="w-8 shrink-0" />
             <div className="flex-1" />
-            <div className="flex items-center gap-4 shrink-0 pr-0.5">
-              <span className="text-[9px] text-gray-700 uppercase tracking-widest w-6 text-center">W</span>
-              <div className="w-px h-3 bg-gray-800" />
-              <span className="text-[9px] text-gray-700 uppercase tracking-widest w-12 text-right">PTS</span>
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="text-[9px] text-gray-700 uppercase tracking-widest w-5 text-center">W</span>
+              <div className="w-px h-2.5 bg-gray-800" />
+              <span className="text-[9px] text-gray-700 uppercase tracking-widest w-10 text-right">PTS</span>
             </div>
           </div>
         )}
 
         {/* ── ROWS ── */}
         {loading ? (
-          <div className="space-y-1.5 mt-1">
+          <div className="space-y-1 mt-1">
             {Array(10).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-13 rounded-xl" style={{ background: "rgba(255,255,255,0.04)" }} />
+              <Skeleton key={i} className="h-11 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }} />
             ))}
           </div>
         ) : leaderboard.length === 0 ? (
-          <div className="text-center py-20">
-            <Trophy className="w-10 h-10 mx-auto mb-3 text-gray-800" />
+          <div className="text-center py-16">
+            <Trophy className="w-8 h-8 mx-auto mb-2 text-gray-800" />
             <p className="text-gray-600 text-sm">
-              {selectedLocation
-                ? `No games at ${selectedLocation} this quarter`
-                : "No games recorded this period"}
+              {selectedLocation ? `No games at ${selectedLocation} this quarter` : "No games recorded this period"}
             </p>
           </div>
         ) : (
-          <div className="space-y-1">
+          <div className="space-y-px">
             {leaderboard.map((entry, index) => {
               const medal = MEDAL[index];
               return (
                 <div
                   key={entry.id}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all duration-100"
+                  className="flex items-center gap-2 px-2 py-2 rounded-lg transition-all duration-100"
                   style={medal ? {
-                    background: `rgba(255,255,255,0.03)`,
-                    border: `1px solid ${index === 0 ? "rgba(234,179,8,0.18)" : index === 1 ? "rgba(148,163,184,0.14)" : "rgba(194,120,80,0.16)"}`,
+                    background: "rgba(255,255,255,0.025)",
+                    border: `1px solid ${index === 0 ? "rgba(234,179,8,0.16)" : index === 1 ? "rgba(148,163,184,0.12)" : "rgba(194,120,80,0.14)"}`,
+                    marginBottom: "2px",
                   } : {
-                    background: "rgba(255,255,255,0.02)",
-                    border: "1px solid rgba(255,255,255,0.05)",
+                    background: "rgba(255,255,255,0.015)",
+                    border: "1px solid rgba(255,255,255,0.04)",
                   }}
                 >
                   {/* Rank */}
-                  <div
-                    className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-black shrink-0 ${
-                      medal
-                        ? `${medal.bg} border ${medal.border} ${medal.num}`
-                        : "text-gray-700"
-                    }`}
-                  >
+                  <div className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-black shrink-0 ${
+                    medal ? `${medal.bg} border ${medal.border} ${medal.num}` : "text-gray-700"
+                  }`}>
                     {index + 1}
                   </div>
 
@@ -328,13 +311,15 @@ export default function Leaderboard() {
                     <img
                       src={entry.image}
                       alt={entry.name}
-                      className="w-8 h-8 rounded-full object-cover shrink-0"
-                      style={{ border: medal ? `1.5px solid ${index === 0 ? "rgba(234,179,8,0.4)" : index === 1 ? "rgba(148,163,184,0.3)" : "rgba(194,120,80,0.35)"}` : "1.5px solid rgba(255,255,255,0.07)" }}
+                      className="w-7 h-7 rounded-full object-cover shrink-0"
+                      style={{ border: medal
+                        ? `1.5px solid ${index === 0 ? "rgba(234,179,8,0.35)" : index === 1 ? "rgba(148,163,184,0.25)" : "rgba(194,120,80,0.3)"}`
+                        : "1.5px solid rgba(255,255,255,0.06)" }}
                     />
                   ) : (
                     <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                      style={{ background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.07)", color: "#9ca3af" }}
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0"
+                      style={{ background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.07)", color: "#6b7280" }}
                     >
                       {entry.name?.[0]}
                     </div>
@@ -342,27 +327,25 @@ export default function Leaderboard() {
 
                   {/* Name */}
                   <div className="flex-1 min-w-0">
-                    <span
-                      className={`font-semibold text-sm truncate block leading-tight ${
-                        index < 3 ? "text-white" : "text-gray-300"
-                      }`}
-                    >
+                    <span className={`font-semibold text-sm truncate block leading-none ${
+                      index < 3 ? "text-white" : "text-gray-400"
+                    }`}>
                       {entry.name}
                     </span>
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center gap-4 shrink-0">
+                  <div className="flex items-center gap-3 shrink-0">
                     <span
-                      className="font-bold text-sm tabular-nums w-6 text-center"
-                      style={{ color: entry.wins > 0 ? "#34d399" : "#374151" }}
+                      className="font-bold text-xs tabular-nums w-5 text-center"
+                      style={{ color: entry.wins > 0 ? "#34d399" : "#1f2937" }}
                     >
                       {entry.wins}
                     </span>
-                    <div className="w-px h-4 bg-gray-800/80" />
+                    <div className="w-px h-3 bg-gray-800/80" />
                     <span
-                      className="font-black text-sm tabular-nums w-12 text-right"
-                      style={{ color: index === 0 ? "#f87171" : index < 3 ? "#fca5a5" : "#ef4444" }}
+                      className="font-black text-sm tabular-nums w-10 text-right"
+                      style={{ color: index === 0 ? "#f87171" : index < 3 ? "#fca5a5" : "#dc2626" }}
                     >
                       {entry.points}
                     </span>
