@@ -256,7 +256,7 @@ export default function Leaderboard() {
             </p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2 mt-2">
             {leaderboard.map((entry, index) => (
               <div
                 key={entry.id}
