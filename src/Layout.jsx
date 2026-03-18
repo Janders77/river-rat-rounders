@@ -98,7 +98,7 @@ function LayoutInner({ children }) {
         }
       `}</style>
       <div className="min-h-screen flex w-full text-gray-100" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-        <Sidebar className="border-r border-white/5" style={{background: "#0e0e16", backdropFilter: "blur(8px)"}}>
+        <Sidebar className="border-r border-white/8" style={{background: "#0d0d14"}}>
 
           {/* Brand Header */}
           <SidebarHeader className="px-3 pt-4 pb-3 border-b border-white/5">
