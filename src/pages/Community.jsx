@@ -93,7 +93,9 @@ export default function Community() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <Megaphone className="w-7 h-7 text-red-400" />
+            <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center">
+              <Megaphone className="w-5 h-5 text-white/80" />
+            </div>
             <h1 className="text-2xl font-bold text-white">Community Board</h1>
           </div>
           {!showForm && (
