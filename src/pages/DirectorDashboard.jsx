@@ -744,18 +744,18 @@ export default function DirectorDashboard() {
                 <span className="text-white font-medium">Open a New Game</span>
               </div>
               <form onSubmit={handleCreateSession} className="flex flex-col gap-2">
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2 sm:gap-3">
+                  <div className="flex flex-col gap-1 w-full min-w-0">
                     <label className="text-[10px] text-white/40 uppercase tracking-wide">Date</label>
                     <input type="date" value={newSession.session_date}
                       onChange={e => setNewSession({...newSession, session_date: e.target.value})}
-                      className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white [color-scheme:dark] outline-none"
+                      className="w-full h-12 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white [color-scheme:dark] outline-none min-w-0"
                       required />
                   </div>
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-col gap-1 w-full min-w-0">
                     <label className="text-[10px] text-white/40 uppercase tracking-wide">Type</label>
                     <Select value={newSession.game_type || "__none__"} onValueChange={v => setNewSession({...newSession, game_type: v === "__none__" ? "" : v})}>
-                      <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-lg h-9 text-sm"><SelectValue placeholder="Type" /></SelectTrigger>
+                      <SelectTrigger className="w-full h-12 bg-white/5 border-white/10 text-white rounded-lg text-sm min-w-0"><SelectValue placeholder="Type" /></SelectTrigger>
                       <SelectContent className="bg-gray-900 border-gray-700 text-white">
                         <SelectItem value="__none__" disabled className="text-gray-400">Select type</SelectItem>
                         {["Main Game","Turbo"].map(t => <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>)}
