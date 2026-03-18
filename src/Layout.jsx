@@ -175,7 +175,7 @@ function LayoutInner({ children }) {
             {/* Footer */}
             <div className="mt-auto pt-3 border-t border-white/5 mx-1">
               {player && (
-                <p className="text-[10px] text-white/25 px-3 pb-2 truncate">
+                <p className="text-[10px] text-white/45 px-3 pb-2 truncate">
                   {player.first_name} {player.last_name}
                 </p>
               )}
