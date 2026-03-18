@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { getPlayerDisplayName, buildPlayersById } from "@/utils/playerUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy, MapPin, ChevronDown } from "lucide-react";
-import { createPageUrl } from "@/utils";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,11 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// Points by placement index (0=1st, 1=2nd, ...)
 const PLACEMENT_POINTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
 
-// Canonical location list — always show all venues in the dropdown
-// regardless of whether a game has been recorded there yet
 const ALL_LOCATIONS = [
   "Tavern 018 Sunday",
   "Tavern 018 Wednesday",
@@ -47,6 +41,12 @@ function getAllQuarters() {
   return [1, 2, 3, 4].map(q => `${year}-Q${q}`);
 }
 
+const MEDAL = {
+  0: { bg: "bg-yellow-500/10", border: "border-yellow-500/30", text: "text-yellow-400", num: "text-yellow-300" },
+  1: { bg: "bg-slate-400/10", border: "border-slate-400/25", text: "text-slate-300", num: "text-slate-300" },
+  2: { bg: "bg-orange-700/10", border: "border-orange-600/25", text: "text-orange-400", num: "text-orange-300" },
+};
+
 export default function Leaderboard() {
   const [allGames, setAllGames] = useState([]);
   const [playerRecords, setPlayerRecords] = useState([]);
@@ -70,7 +70,6 @@ export default function Leaderboard() {
     setIsLoading(false);
   };
 
-  // After stats are compiled, fetch any missing player records
   useEffect(() => {
     const { startDate, endDate } = getQuarterDateRange(selectedQuarter);
     const filteredForThisEffect = allGames.filter(g => {
@@ -79,17 +78,11 @@ export default function Leaderboard() {
       if (selectedLocation && g.location !== selectedLocation) return false;
       return true;
     });
-
     const referencedIds = new Set();
     filteredForThisEffect.forEach(game => {
-      const playerIds = game.player_ids || [];
-      playerIds.forEach(pid => {
-        if (pid) referencedIds.add(pid);
-      });
+      (game.player_ids || []).forEach(pid => { if (pid) referencedIds.add(pid); });
     });
-
     const missingIds = Array.from(referencedIds).filter(id => !playersById[id]);
-
     if (missingIds.length > 0) {
       setIsFetchingMissingPlayers(true);
       base44.entities.Player.filter({ id: { $in: missingIds } }, null, missingIds.length)
@@ -105,7 +98,6 @@ export default function Leaderboard() {
     }
   }, [selectedQuarter, selectedLocation, allGames, playersById]);
 
-  // Filter games by quarter date range and optional location
   const filteredGames = useMemo(() => {
     const { startDate, endDate } = getQuarterDateRange(selectedQuarter);
     return allGames.filter(g => {
@@ -116,23 +108,19 @@ export default function Leaderboard() {
     });
   }, [allGames, selectedQuarter, selectedLocation]);
 
-  // Compile points + wins from filtered games
   const compiledStats = useMemo(() => {
     const statsMap = {};
     filteredGames.forEach(game => {
-      const playerIds = game.player_ids || [];
-      playerIds.forEach((pid, index) => {
+      (game.player_ids || []).forEach((pid, index) => {
         if (!pid) return;
         if (!statsMap[pid]) statsMap[pid] = { points: 0, wins: 0 };
         statsMap[pid].points += PLACEMENT_POINTS[index] || 0;
-        // Use winner_player_id to determine wins, not array position
         if (game.winner_player_id === pid) statsMap[pid].wins += 1;
       });
     });
     return statsMap;
   }, [filteredGames]);
 
-  // Build sorted leaderboard rows
   const leaderboard = useMemo(() => {
     return Object.entries(compiledStats)
       .map(([pid, stats]) => {
@@ -141,7 +129,6 @@ export default function Leaderboard() {
           id: pid,
           name: player ? getPlayerDisplayName(player) : 'Unknown Player',
           image: player?.profile_picture || null,
-          email: player?.email || null,
           ...stats,
         };
       })
@@ -152,160 +139,237 @@ export default function Leaderboard() {
   const topPoints = leaderboard[0] || null;
   const topWins = [...leaderboard].sort((a, b) => b.wins - a.wins)[0] || null;
 
+  const loading = isLoading || isFetchingMissingPlayers;
+
   return (
-    <div className="min-h-screen p-6 relative" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(circle at top, rgba(220,38,38,0.08), transparent 40%)"}} />
-      <div className="max-w-7xl mx-auto relative">
-        {/* Unified header + filters block */}
-        <div className="w-full flex flex-col items-center gap-4 mb-6">
-          {/* Title */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gray-900/60 rounded-lg flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-red-400" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-white leading-tight">Leaderboard</h1>
-              <p className="text-gray-500 text-sm">Live from recorded game results</p>
-            </div>
-          </div>
+    <div
+      className="min-h-screen"
+      style={{ background: "linear-gradient(160deg, #16161f 0%, #1e1e2a 55%, #16161f 100%)" }}
+    >
+      {/* ── TOP GLOW ── */}
+      <div className="absolute inset-x-0 top-0 h-48 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.10), transparent 70%)" }} />
 
-          {/* Quarter tabs — segmented control */}
-          <div className="w-full flex justify-center">
-            <div className="inline-flex bg-gray-900/70 border border-gray-800 rounded-xl p-1 gap-0.5">
-              {getAllQuarters().map(q => {
-                const label = q.split('-')[1];
-                return (
-                  <button
-                    key={q}
-                    onClick={() => setSelectedQuarter(q)}
-                    className={`px-5 py-2 rounded-lg font-semibold text-sm transition-all duration-200 min-w-[52px] ${
-                      selectedQuarter === q
-                        ? 'bg-gradient-to-br from-red-700 to-red-900 text-white shadow-sm'
-                        : 'text-gray-500 hover:text-gray-200'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+      <div className="relative max-w-lg mx-auto px-4 pt-6 pb-12">
 
-          {/* Location dropdown */}
-          <div className="w-full flex justify-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="mx-auto gap-2 border-gray-700 bg-gray-800/60 text-gray-300 hover:text-white hover:border-gray-500 text-sm px-4 py-2 h-9">
-                  <MapPin className="w-4 h-4" />
-                  {selectedLocation || "All Locations"}
-                  <ChevronDown className="w-4 h-4 opacity-60" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="bg-gray-900 border-gray-800">
-                <DropdownMenuItem
-                  onClick={() => setSelectedLocation(null)}
-                  className={`text-white ${selectedLocation === null ? "bg-red-700/20" : ""}`}
-                >
-                  All Locations
-                </DropdownMenuItem>
-                {ALL_LOCATIONS.map(loc => (
-                  <DropdownMenuItem
-                    key={loc}
-                    onClick={() => setSelectedLocation(loc)}
-                    className={`text-white ${selectedLocation === loc ? "bg-red-700/20" : ""}`}
-                  >
-                    {loc}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+        {/* ── TITLE ── */}
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-8 h-8 rounded-lg bg-red-600/15 border border-red-600/25 flex items-center justify-center">
+            <Trophy className="w-4 h-4 text-red-400" />
           </div>
-
-          {/* Stat chips — always rendered here, inside the unified block */}
-          {!isLoading && !isFetchingMissingPlayers && (topPoints || topWins) && (
-            <div className="w-full flex justify-center gap-3 flex-wrap">
-              {topPoints && (
-                <div className="flex items-center gap-2 bg-red-900/20 border border-red-700/30 rounded-full px-4 py-1.5 text-sm">
-                  <span className="text-red-400 font-medium">Most Points</span>
-                  <span className="text-white font-bold">{topPoints.name}</span>
-                  <span className="text-red-300">{topPoints.points} pts</span>
-                </div>
-              )}
-              {topWins && (
-                <div className="flex items-center gap-2 bg-emerald-900/20 border border-emerald-500/30 rounded-full px-4 py-1.5 text-sm">
-                  <span className="text-emerald-400 font-medium">Most Wins</span>
-                  <span className="text-white font-bold">{topWins.name}</span>
-                  <span className="text-emerald-300">{topWins.wins} wins</span>
-                </div>
-              )}
-            </div>
-          )}
+          <div>
+            <h1 className="text-xl font-bold text-white tracking-tight leading-none">Leaderboard</h1>
+            <p className="text-[11px] text-gray-600 mt-0.5 leading-none">Season standings · live results</p>
+          </div>
         </div>
 
-        {isLoading || isFetchingMissingPlayers ? (
-          <div className="space-y-3">
+        {/* ── QUARTER TABS ── */}
+        <div className="flex justify-center mb-3">
+          <div
+            className="inline-flex rounded-xl p-1 gap-0.5"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+          >
+            {getAllQuarters().map(q => {
+              const label = q.split('-')[1];
+              const active = selectedQuarter === q;
+              return (
+                <button
+                  key={q}
+                  onClick={() => setSelectedQuarter(q)}
+                  className={`px-5 py-2 rounded-lg text-sm font-bold tracking-wide transition-all duration-150 min-w-[52px] ${
+                    active
+                      ? "text-white"
+                      : "text-gray-600 hover:text-gray-400"
+                  }`}
+                  style={active ? {
+                    background: "linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%)",
+                    boxShadow: "0 2px 8px rgba(185,28,28,0.4)"
+                  } : {}}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── LOCATION DROPDOWN ── */}
+        <div className="flex justify-center mb-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.09)",
+                  color: selectedLocation ? "#f1f5f9" : "#6b7280"
+                }}
+              >
+                <MapPin className="w-3.5 h-3.5 text-red-500/70" />
+                <span>{selectedLocation || "All Locations"}</span>
+                <ChevronDown className="w-3.5 h-3.5 opacity-40 ml-1" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="center"
+              className="border-gray-800/80"
+              style={{ background: "#1a1a24" }}
+            >
+              <DropdownMenuItem
+                onClick={() => setSelectedLocation(null)}
+                className={`text-sm ${!selectedLocation ? "text-red-400 font-semibold" : "text-gray-300"}`}
+              >
+                All Locations
+              </DropdownMenuItem>
+              {ALL_LOCATIONS.map(loc => (
+                <DropdownMenuItem
+                  key={loc}
+                  onClick={() => setSelectedLocation(loc)}
+                  className={`text-sm ${selectedLocation === loc ? "text-red-400 font-semibold" : "text-gray-300"}`}
+                >
+                  {loc}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {/* ── STAT CHIPS ── */}
+        {!loading && (topPoints || topWins) && (
+          <div className="flex justify-center gap-2 mb-5 flex-wrap">
+            {topPoints && (
+              <div
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
+                style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.18)" }}
+              >
+                <span className="text-gray-500 uppercase tracking-widest text-[9px] font-bold">PTS LEADER</span>
+                <span className="text-white font-bold">{topPoints.name}</span>
+                <span
+                  className="font-black tabular-nums"
+                  style={{ color: "#f87171" }}
+                >{topPoints.points}</span>
+              </div>
+            )}
+            {topWins && (
+              <div
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
+                style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.18)" }}
+              >
+                <span className="text-gray-500 uppercase tracking-widest text-[9px] font-bold">WIN LEADER</span>
+                <span className="text-white font-bold">{topWins.name}</span>
+                <span
+                  className="font-black tabular-nums"
+                  style={{ color: "#34d399" }}
+                >{topWins.wins}W</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── COLUMN HEADER ── */}
+        {!loading && leaderboard.length > 0 && (
+          <div className="flex items-center px-3 mb-1">
+            <div className="w-7 shrink-0" />
+            <div className="w-9 shrink-0" />
+            <div className="flex-1" />
+            <div className="flex items-center gap-4 shrink-0 pr-0.5">
+              <span className="text-[9px] text-gray-700 uppercase tracking-widest w-6 text-center">W</span>
+              <div className="w-px h-3 bg-gray-800" />
+              <span className="text-[9px] text-gray-700 uppercase tracking-widest w-12 text-right">PTS</span>
+            </div>
+          </div>
+        )}
+
+        {/* ── ROWS ── */}
+        {loading ? (
+          <div className="space-y-1.5 mt-1">
             {Array(10).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-16 bg-gray-800" />
+              <Skeleton key={i} className="h-13 rounded-xl" style={{ background: "rgba(255,255,255,0.04)" }} />
             ))}
           </div>
         ) : leaderboard.length === 0 ? (
-          <div className="text-center py-16 text-gray-500">
-            <Trophy className="w-16 h-16 mx-auto mb-4 opacity-20" />
-            <p className="text-lg">
+          <div className="text-center py-20">
+            <Trophy className="w-10 h-10 mx-auto mb-3 text-gray-800" />
+            <p className="text-gray-600 text-sm">
               {selectedLocation
-                ? `No recorded games for ${selectedLocation} in this quarter`
-                : "No games recorded for this period"}
+                ? `No games at ${selectedLocation} this quarter`
+                : "No games recorded this period"}
             </p>
           </div>
         ) : (
-          <div className="space-y-1.5 mt-2">
-            {leaderboard.map((entry, index) => (
-              <div
-                key={entry.id}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-150 ${
-                  index === 0 ? 'border-yellow-600/25 bg-yellow-950/20' :
-                  index === 1 ? 'border-gray-600/25 bg-gray-800/20' :
-                  index === 2 ? 'border-orange-700/25 bg-orange-950/15' :
-                  'border-gray-800/50 hover:border-gray-700/60 hover:bg-gray-800/20'
-                }`}
-              >
-                {/* Rank badge */}
-                <div className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold shrink-0 ${
-                  index === 0 ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-600/30' :
-                  index === 1 ? 'bg-gray-600/20 text-gray-300 border border-gray-600/30' :
-                  index === 2 ? 'bg-orange-700/15 text-orange-400 border border-orange-700/30' :
-                  'bg-gray-800/60 text-gray-500'
-                }`}>
-                  {index + 1}
+          <div className="space-y-1">
+            {leaderboard.map((entry, index) => {
+              const medal = MEDAL[index];
+              return (
+                <div
+                  key={entry.id}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all duration-100"
+                  style={medal ? {
+                    background: `rgba(255,255,255,0.03)`,
+                    border: `1px solid ${index === 0 ? "rgba(234,179,8,0.18)" : index === 1 ? "rgba(148,163,184,0.14)" : "rgba(194,120,80,0.16)"}`,
+                  } : {
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px solid rgba(255,255,255,0.05)",
+                  }}
+                >
+                  {/* Rank */}
+                  <div
+                    className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-black shrink-0 ${
+                      medal
+                        ? `${medal.bg} border ${medal.border} ${medal.num}`
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {index + 1}
+                  </div>
+
+                  {/* Avatar */}
+                  {entry.image ? (
+                    <img
+                      src={entry.image}
+                      alt={entry.name}
+                      className="w-8 h-8 rounded-full object-cover shrink-0"
+                      style={{ border: medal ? `1.5px solid ${index === 0 ? "rgba(234,179,8,0.4)" : index === 1 ? "rgba(148,163,184,0.3)" : "rgba(194,120,80,0.35)"}` : "1.5px solid rgba(255,255,255,0.07)" }}
+                    />
+                  ) : (
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                      style={{ background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.07)", color: "#9ca3af" }}
+                    >
+                      {entry.name?.[0]}
+                    </div>
+                  )}
+
+                  {/* Name */}
+                  <div className="flex-1 min-w-0">
+                    <span
+                      className={`font-semibold text-sm truncate block leading-tight ${
+                        index < 3 ? "text-white" : "text-gray-300"
+                      }`}
+                    >
+                      {entry.name}
+                    </span>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="flex items-center gap-4 shrink-0">
+                    <span
+                      className="font-bold text-sm tabular-nums w-6 text-center"
+                      style={{ color: entry.wins > 0 ? "#34d399" : "#374151" }}
+                    >
+                      {entry.wins}
+                    </span>
+                    <div className="w-px h-4 bg-gray-800/80" />
+                    <span
+                      className="font-black text-sm tabular-nums w-12 text-right"
+                      style={{ color: index === 0 ? "#f87171" : index < 3 ? "#fca5a5" : "#ef4444" }}
+                    >
+                      {entry.points}
+                    </span>
+                  </div>
                 </div>
-                {/* Avatar */}
-                {entry.image ? (
-                  <img src={entry.image} alt={entry.name} className="w-9 h-9 rounded-full object-cover border border-gray-700/60 shrink-0" />
-                ) : (
-                  <div className="w-9 h-9 rounded-full bg-gray-800 border border-gray-700/40 flex items-center justify-center text-white text-sm font-semibold shrink-0">
-                    {entry.name?.[0]}
-                  </div>
-                )}
-                {/* Name */}
-                <div className="flex-1 min-w-0">
-                  <div className={`font-semibold truncate ${index < 3 ? 'text-white' : 'text-gray-200'}`}>
-                    {entry.name}
-                  </div>
-                </div>
-                {/* Stats */}
-                <div className="flex items-center gap-4 shrink-0">
-                  <div className="text-center">
-                    <div className="text-[10px] text-gray-600 uppercase tracking-wider leading-none mb-0.5">W</div>
-                    <div className="text-emerald-400 font-bold text-base leading-tight">{entry.wins}</div>
-                  </div>
-                  <div className="w-px h-5 bg-gray-800" />
-                  <div className="text-center min-w-[48px]">
-                    <div className="text-[10px] text-gray-600 uppercase tracking-wider leading-none mb-0.5">PTS</div>
-                    <div className="text-red-400 font-bold text-base leading-tight">{entry.points}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
