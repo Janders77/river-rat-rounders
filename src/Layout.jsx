@@ -136,9 +136,10 @@ function LayoutInner({ children }) {
                 onClick={() => setOpenMobile(false)}
                 className={`w-full flex items-center gap-2.5 rounded-lg px-3 py-2 mb-0.5 transition-all text-sm ${
                   isActive(createPageUrl("BreakTimeBump"))
-                    ? "bg-white/10 text-white font-medium"
-                    : "text-white/40 hover:text-white/80 hover:bg-white/5"
+                    ? "text-white font-semibold"
+                    : "text-white/75 hover:text-white hover:bg-white/5"
                 }`}
+              style={isActive(createPageUrl("BreakTimeBump")) ? { background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.14)" } : {}}
               >
                 <Zap className="w-4 h-4 shrink-0" />
                 <span>Break Time Bump</span>
