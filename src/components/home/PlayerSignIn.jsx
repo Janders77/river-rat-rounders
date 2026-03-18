@@ -300,15 +300,15 @@ export default function PlayerSignIn() {
       {signed && (
         <>
           <button
-            className="w-full flex items-center justify-between px-3 py-2 border-t transition-colors hover:bg-white/[0.02]"
+            className="w-full flex items-center justify-between px-4 py-3 border-t transition-colors hover:bg-white/[0.02] min-h-[44px]"
             style={{ borderColor: "rgba(255,255,255,0.08)" }}
             onClick={e => { e.stopPropagation(); setDropdownOpen(!dropdownOpen); }}
           >
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-white">Players signed in</span>
-              <span className="text-xs text-white/50">({signedInIds.length})</span>
+              <span className="text-base font-medium text-white">Players signed in</span>
+              <span className="text-sm text-white/50">({signedInIds.length})</span>
             </div>
-            <ChevronDown className={`w-4 h-4 text-white/50 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
+            <ChevronDown className={`w-5 h-5 text-white/50 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
           </button>
 
           {dropdownOpen && (
@@ -318,23 +318,23 @@ export default function PlayerSignIn() {
                   const player = playersById[pid];
                   const hasProfilePic = player?.profile_picture;
                   return (
-                    <div key={pid} className="flex items-center gap-3 px-3 py-2">
-                      <div className="w-7 h-7 rounded-full bg-white/5 overflow-hidden flex items-center justify-center shrink-0">
+                    <div key={pid} className="flex items-center gap-3 px-4 py-3 min-h-[44px]">
+                      <div className="w-8 h-8 rounded-full bg-white/5 overflow-hidden flex items-center justify-center shrink-0">
                         {hasProfilePic ? (
                           <img src={player.profile_picture} alt={getPlayerDisplayName(player)} className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-[11px] font-medium text-white/70">
+                          <span className="text-xs font-medium text-white/70">
                             {(player?.first_name?.[0] || "").toUpperCase()}{(player?.last_name?.[0] || "").toUpperCase()}
                           </span>
                         )}
                       </div>
-                      <span className="text-xs font-medium text-white/50 shrink-0">{index + 1}.</span>
-                      <span className="text-sm text-white/85 truncate">{player ? getPlayerDisplayName(player) : "Loading..."}</span>
+                      <span className="text-sm font-medium text-white/50 shrink-0">{index + 1}.</span>
+                      <span className="text-base text-white/85 truncate">{player ? getPlayerDisplayName(player) : "Loading..."}</span>
                     </div>
                   );
                 })
               ) : (
-                <div className="px-3 py-2 text-sm text-white/60">No other players signed in yet</div>
+                <div className="px-4 py-3 text-base text-white/60">No other players signed in yet</div>
               )}
             </div>
           )}
