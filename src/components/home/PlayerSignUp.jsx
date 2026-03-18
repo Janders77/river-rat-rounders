@@ -59,7 +59,7 @@ export default function PlayerSignUp() {
   }
 
   return (
-    <div className="w-full p-5 rounded-xl border border-red-600/40 bg-gradient-to-r from-red-600/20 to-red-700/10">
+    <div className="w-full p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(220,38,38,0.22)" }}>
       <div className="flex items-center gap-3 mb-4">
         <UserPlus className="w-5 h-5 text-red-400" />
         <span className="font-semibold text-white">New Player Sign Up</span>
