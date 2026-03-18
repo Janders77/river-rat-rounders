@@ -132,7 +132,7 @@ export default function Locations() {
   const loadData = async () => {
     setLoading(true);
     const [locs, user] = await Promise.all([
-      base44.entities.Location.list("created_date"),
+      base44.entities.Location.list("display_order"),
       base44.auth.me().catch(() => null)
     ]);
     setLocations(locs);
