@@ -286,33 +286,35 @@ export default function PlayerSignIn() {
             {firstSession.game_type && ` · ${firstSession.game_type}`}
           </span>
         </div>
-        {signed && signedInIds.length > 1 && (
-          <button
-            className="text-white/40 hover:text-white/70 transition-colors shrink-0 p-1"
-            onClick={e => { e.stopPropagation(); setDropdownOpen(!dropdownOpen); }}
-          >
-            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
-          </button>
-        )}
         {!signed && !loading && <ChevronRight className="w-4 h-4 text-white/20 shrink-0" />}
       </div>
 
-      {signed && dropdownOpen && signedInIds.length > 1 && (
-        <div className="border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-          <div className="px-3 pt-2 pb-2 text-xs text-white/40">Players signed in ({signedInIds.length})</div>
-          <div className="flex flex-col gap-0.5 px-1">
-            {otherPlayers.map(player => (
-              <div key={player.id} className="flex items-center gap-2 py-1.5 px-2 rounded text-sm text-white/70 hover:bg-white/5">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold shrink-0" style={{ background: "rgba(255,255,255,0.08)" }}>
+      {signed && (
+        <button
+          className="w-full mt-2 pt-2 px-3 border-t flex items-center justify-between text-sm text-white/80 hover:text-white/90 transition-colors"
+          style={{ borderColor: "rgba(255,255,255,0.1)" }}
+          onClick={e => { e.stopPropagation(); setDropdownOpen(!dropdownOpen); }}
+        >
+          <span>Players signed in ({signedInIds.length})</span>
+          <ChevronDown className={`w-4 h-4 text-white/60 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
+        </button>
+      )}
+
+      {signed && dropdownOpen && (
+        <div className="mt-2 flex flex-col divide-y divide-white/5" style={{ divideColor: "rgba(255,255,255,0.05)" }}>
+          {otherPlayers.map(player => (
+            <div key={player.id} className="flex items-center justify-between py-2 px-3 text-sm text-white/80">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-xs text-white/70 shrink-0">
                   {(player.first_name?.[0] || "").toUpperCase()}{(player.last_name?.[0] || "").toUpperCase()}
                 </div>
-                <span className="truncate flex-1 text-white/80">{getPlayerDisplayName(player)}</span>
+                <span className="truncate">{getPlayerDisplayName(player)}</span>
               </div>
-            ))}
-            {otherPlayers.length === 0 && (
-              <div className="py-2 px-2 text-xs text-white/30">No other players signed in yet</div>
-            )}
-          </div>
+            </div>
+          ))}
+          {otherPlayers.length === 0 && (
+            <div className="py-2 px-3 text-xs text-white/30">No other players signed in yet</div>
+          )}
         </div>
       )}
     </div>
