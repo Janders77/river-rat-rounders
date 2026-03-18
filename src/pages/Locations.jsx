@@ -162,7 +162,7 @@ export default function Locations() {
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
               <MapPin className="w-5 h-5 text-white/80" />
             </div>
             <div>
@@ -173,7 +173,7 @@ export default function Locations() {
           {isAdmin && !showAddForm && !editingId && (
             <button
               onClick={() => setShowAddForm(true)}
-              className="w-9 h-9 flex items-center justify-center rounded-lg transition-colors"
+              className="w-10 h-10 flex items-center justify-center rounded-lg transition-colors"
               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
             >
               <Plus className="w-5 h-5 text-white/80" />

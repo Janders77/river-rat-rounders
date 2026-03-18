@@ -30,7 +30,7 @@ function NavTile({ icon: Icon, title, desc, url }) {
       style={CARD}
     >
       <div
-        className="w-9 h-9 flex items-center justify-center rounded-lg shrink-0"
+        className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0"
         style={{ background: "rgba(255,255,255,0.06)" }}
       >
         <Icon className="w-5 h-5 text-white/80" />
