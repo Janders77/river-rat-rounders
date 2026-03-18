@@ -46,13 +46,13 @@ function NavTile({ icon: Icon, title, desc, url }) {
 
 function Brand() {
   return (
-    <div className="flex flex-col items-center pt-4 pb-2">
+    <div className="flex flex-col items-center pt-6 pb-3">
       <img
         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/8de2d69e1_ChatGPTImageMar2202603_07_22PM.png"
         alt="River Rat Rounders"
-        className="w-40 object-contain"
+        className="w-48 object-contain"
       />
-      <p className="text-white/30 text-xs tracking-wide mt-1">Memphis' Freeroll Bar Poker League</p>
+      <p className="text-white/30 text-sm tracking-wide mt-2">Memphis' Freeroll Bar Poker League</p>
     </div>
   );
 }
