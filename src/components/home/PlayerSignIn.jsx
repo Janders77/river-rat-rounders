@@ -52,76 +52,62 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const signedInIds = getSignedInIds(session);
+  const signed = isSignedIn(session);
+  const loading = signingIn === session.id;
 
   return (
-    <div className="rounded-xl overflow-hidden" style={CARD}>
-      {/* Header row */}
-      <div className="flex items-center gap-3 px-3 py-2.5 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+    <div
+      className={`rounded-xl overflow-hidden transition-all ${!signed && !loading ? "cursor-pointer" : ""}`}
+      style={signed ? { background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.18)" } : CARD}
+      onClick={!signed && !loading ? () => handleSignIn(session) : undefined}
+    >
+      <div className="flex items-center gap-3 px-3 py-2.5">
         <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
-          <MapPin className="w-5 h-5 text-white/80" />
+          {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <MapPin className="w-5 h-5 text-white/80" />}
         </div>
         <div className="flex flex-col flex-1 min-w-0">
-          <span className="text-white font-medium text-sm leading-tight">{session.location}</span>
-          <span className="text-xs text-white/40 mt-0.5">
+          <span className={`font-medium text-sm leading-tight ${signed ? "text-green-400" : "text-white"}`}>
+            {signed ? "You're signed in!" : session.location}
+          </span>
+          <span className="text-xs text-white/40 mt-0.5 truncate">
+            {signed ? session.location + " · " : ""}
             {new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
             {session.game_type && ` · ${session.game_type}`}
           </span>
         </div>
-        <span className="text-[10px] font-bold tracking-widest text-red-400 uppercase shrink-0 animate-pulse">OPEN</span>
-      </div>
 
-      {/* Player count toggle */}
-      <div ref={anchorRef}>
-        <button
-          className="flex items-center justify-between w-full px-4 py-2.5 text-xs text-white/40 hover:text-white/70 transition-colors"
-          onClick={() => setOpen(o => !o)}
-        >
-          <span className="flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5" />
-            {signedInIds.length} player{signedInIds.length !== 1 ? "s" : ""} signed in
-          </span>
+        {/* Player count + chevron */}
+        <div className="flex items-center gap-1.5 shrink-0" ref={anchorRef}>
           {signedInIds.length > 0 && (
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+            <button
+              className="flex items-center gap-1 text-[10px] text-white/30 hover:text-white/60 transition-colors"
+              onClick={e => { e.stopPropagation(); setOpen(o => !o); }}
+            >
+              <Users className="w-3 h-3" />
+              <span>{signedInIds.length}</span>
+              <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+            </button>
           )}
-        </button>
-
-        {open && signedInIds.length > 0 && (
-          <PortalDropdown anchorRef={anchorRef} onClose={() => setOpen(false)}>
-            {signedInIds.map((pid, index) => (
-              <div key={pid} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 border-b border-gray-800/60 last:border-0 hover:bg-gray-800/40">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-                <span className="truncate flex-1">{index + 1}. {getPlayerDisplayName(playersById[pid])}</span>
-                {isDirector && (
-                  <button onClick={() => handleRemovePlayer(session, pid)}
-                    className="shrink-0 text-gray-600 hover:text-red-400 transition-colors">
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-            ))}
-          </PortalDropdown>
-        )}
+          {!signed && !loading && <ChevronRight className="w-4 h-4 text-white/20" />}
+        </div>
       </div>
 
-      {/* Sign in button */}
-      <div className="px-4 pb-3">
-        {isSignedIn(session) ? (
-          <div className="flex items-center justify-center gap-2 text-green-400 font-medium text-sm py-2 rounded-lg" style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}>
-            <CheckCircle2 className="w-4 h-4" />
-            You're signed in!
-          </div>
-        ) : (
-          <Button
-            onClick={() => handleSignIn(session)}
-            disabled={signingIn === session.id}
-            className="w-full bg-red-700 hover:bg-red-600 text-white text-sm font-semibold"
-          >
-            {signingIn === session.id
-              ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Signing in...</>
-              : <><LogIn className="w-4 h-4 mr-2" />Sign In</>}
-          </Button>
-        )}
-      </div>
+      {open && signedInIds.length > 0 && (
+        <PortalDropdown anchorRef={anchorRef} onClose={() => setOpen(false)}>
+          {signedInIds.map((pid, index) => (
+            <div key={pid} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 border-b border-gray-800/60 last:border-0 hover:bg-gray-800/40">
+              <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+              <span className="truncate flex-1">{index + 1}. {getPlayerDisplayName(playersById[pid])}</span>
+              {isDirector && (
+                <button onClick={e => { e.stopPropagation(); handleRemovePlayer(session, pid); }}
+                  className="shrink-0 text-gray-600 hover:text-red-400 transition-colors">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </PortalDropdown>
+      )}
     </div>
   );
 }
