@@ -312,6 +312,7 @@ export default function Locations() {
             })()}
           </>
         )}
-    </div>
-  );
-}
+        </div>
+        </div>
+        );
+        }
