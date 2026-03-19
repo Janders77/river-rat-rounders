@@ -756,7 +756,7 @@ export default function DirectorDashboard() {
                   <div className="flex flex-col gap-1 w-full min-w-0">
                     <label className="text-[10px] text-white/40 uppercase tracking-wide">Type</label>
                     <Select value={newSession.game_type || "__none__"} onValueChange={v => setNewSession({...newSession, game_type: v === "__none__" ? "" : v})}>
-                      <SelectTrigger className="w-full h-12 bg-white/5 border-white/10 text-white rounded-lg text-sm min-w-0"><SelectValue placeholder="Type" /></SelectTrigger>
+                      <SelectTrigger className="w-full h-9 bg-white/5 border-white/10 text-white rounded-lg text-sm min-w-0"><SelectValue placeholder="Type" /></SelectTrigger>
                       <SelectContent className="bg-gray-900 border-gray-700 text-white">
                         <SelectItem value="__none__" disabled className="text-gray-400">Select type</SelectItem>
                         {["Main Game","Turbo"].map(t => <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>)}
