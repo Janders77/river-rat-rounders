@@ -753,8 +753,8 @@ export default function DirectorDashboard() {
                       value={newSession.session_date}
                       onChange={e => setNewSession({...newSession, session_date: e.target.value})}
                       required
-                      className="w-full min-w-0 h-9 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white [color-scheme:dark] outline-none"
-                      style={{ boxSizing: "border-box" }}
+                      className="w-full min-w-0 max-w-full h-9 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white [color-scheme:dark] outline-none"
+                      style={{ boxSizing: "border-box", maxWidth: "100%" }}
                     />
                   </div>
                   <div className="flex flex-col gap-1">
