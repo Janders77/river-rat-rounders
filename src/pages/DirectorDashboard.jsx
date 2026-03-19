@@ -749,7 +749,7 @@ export default function DirectorDashboard() {
                     <label className="text-[10px] text-white/40 uppercase tracking-wide">Date</label>
                     <input type="date" value={newSession.session_date}
                       onChange={e => setNewSession({...newSession, session_date: e.target.value})}
-                      className="w-full h-12 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white [color-scheme:dark] outline-none min-w-0 box-border"
+                      className="w-full h-9 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white [color-scheme:dark] outline-none min-w-0 box-border"
                       style={{ maxWidth: "100%" }}
                       required />
                   </div>
