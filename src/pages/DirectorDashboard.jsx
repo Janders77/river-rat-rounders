@@ -743,14 +743,13 @@ export default function DirectorDashboard() {
                 <div className={ICON_BOX}><Plus className="w-5 h-5 text-white/80" /></div>
                 <span className="text-white font-medium">Open a New Game</span>
               </div>
-              <form onSubmit={handleCreateSession} className="flex flex-col gap-2">
+              <form onSubmit={handleCreateSession} className="flex flex-col gap-3">
                 <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2 sm:gap-3">
                   <div className="flex flex-col gap-1 w-full min-w-0">
                     <label className="text-[10px] text-white/40 uppercase tracking-wide">Date</label>
                     <input type="date" value={newSession.session_date}
                       onChange={e => setNewSession({...newSession, session_date: e.target.value})}
                       className="w-full h-9 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white [color-scheme:dark] outline-none min-w-0 box-border"
-                      style={{ maxWidth: "100%" }}
                       required />
                   </div>
                   <div className="flex flex-col gap-1 w-full min-w-0">
@@ -764,10 +763,10 @@ export default function DirectorDashboard() {
                     </Select>
                   </div>
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 w-full">
                   <label className="text-[10px] text-white/40 uppercase tracking-wide">Location</label>
                   <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
-                    <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-lg h-9 text-sm"><SelectValue placeholder="Select location" /></SelectTrigger>
+                    <SelectTrigger className="w-full h-9 bg-white/5 border-white/10 text-white rounded-lg text-sm"><SelectValue placeholder="Select location" /></SelectTrigger>
                     <SelectContent className="bg-gray-900 border-gray-700 text-white">
                       <SelectItem value="__none__" disabled className="text-gray-400">Select location</SelectItem>
                       {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc =>
@@ -777,7 +776,7 @@ export default function DirectorDashboard() {
                   </Select>
                 </div>
                 <button type="submit" disabled={isCreatingSession || !newSession.location}
-                  className="w-full rounded-lg border border-white/15 bg-white/8 py-2 text-white text-sm font-medium transition-all disabled:opacity-40"
+                  className="w-full h-9 rounded-lg border border-white/15 text-white text-sm font-medium transition-all disabled:opacity-40"
                   style={{ background: "rgba(255,255,255,0.07)" }}>
                   {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Open Game"}
                 </button>
