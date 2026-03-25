@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
+import { externalApi } from "@/functions/externalApi";
 import { Input } from "@/components/ui/input";
 import { UserPlus, Upload, Users, Search, Loader2 } from "lucide-react";
 import { createPageUrl } from "@/utils";
@@ -49,14 +50,18 @@ export default function PlayerDatabase() {
   const handleAdd = async (e) => {
     e.preventDefault();
     setAdding(true);
-    await base44.entities.Player.create({
-      player_number: form.player_number ? parseInt(form.player_number) : undefined,
-      first_name: form.first_name.trim(),
-      last_name: form.last_name.trim(),
-      email: form.email.trim().toLowerCase(),
-      card_guards: form.card_guards ? parseInt(form.card_guards) : 0,
-      date_joined: form.date_joined || undefined,
-    });
+    const fullName = `${form.first_name.trim()} ${form.last_name.trim()}`.trim();
+    await Promise.all([
+      base44.entities.Player.create({
+        player_number: form.player_number ? parseInt(form.player_number) : undefined,
+        first_name: form.first_name.trim(),
+        last_name: form.last_name.trim(),
+        email: form.email.trim().toLowerCase(),
+        card_guards: form.card_guards ? parseInt(form.card_guards) : 0,
+        date_joined: form.date_joined || undefined,
+      }),
+      externalApi({ action: "createPlayer", params: { name: fullName } }).catch(e => console.warn("External API createPlayer failed:", e)),
+    ]);
     setForm({ player_number: "", first_name: "", last_name: "", email: "", card_guards: "", date_joined: "" });
     setShowForm(false);
     setAdding(false);

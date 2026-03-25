@@ -11,6 +11,7 @@ import EditGameModal from "@/components/director/EditGameModal";
 import LiveStatusIndicator from "@/components/LiveStatusIndicator";
 import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, getEffectiveHandOfWeekIds, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
 import { searchPlayers } from "@/functions/searchPlayers";
+import { externalApi } from "@/functions/externalApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -315,6 +316,26 @@ export default function DirectorDashboard() {
     if (currentSessionId) {
       await GameSession.update(currentSessionId, { is_open: false, signed_in_player_ids: [], signed_in_players: [] });
     }
+
+    // Push to external API: create game → submit results → finalize
+    try {
+      const extGame = await externalApi({ action: "createGame", params: { location: gameData.location } });
+      if (extGame?.id) {
+        const POINTS_MAP = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
+        for (let i = 0; i < filledIds.length; i++) {
+          const pid = filledIds[i];
+          const playerRec = playersById[pid];
+          const extPlayerId = playerRec?.player_number;
+          if (extPlayerId) {
+            await externalApi({ action: "createResult", params: { game_id: extGame.id, player_id: extPlayerId, points: POINTS_MAP[i] || 0 } });
+          }
+        }
+        await externalApi({ action: "finalizeGame", params: { game_id: extGame.id } });
+      }
+    } catch (extErr) {
+      console.warn("External API sync failed (non-blocking):", extErr);
+    }
+
     setPlacements(Array(9).fill(""));
     setGameData({ game_date: new Date().toISOString().split('T')[0], game_type: "Main Game", location: "", notes: "" });
     setCurrentSessionId(null);
