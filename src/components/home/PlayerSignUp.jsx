@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UserPlus, Loader2, CheckCircle2 } from "lucide-react";
+import { UserPlus, Loader2, CheckCircle2, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
@@ -33,17 +33,16 @@ export default function PlayerSignUp() {
     return (
       <button
         onClick={() => setExpanded(true)}
-        className="w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-150 group min-h-[44px]"
-        style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)" }}
+        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 min-h-[48px] border border-white/10 bg-white/[0.05]"
       >
-        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
+        <div className="w-10 h-10 flex items-center justify-center rounded-lg shrink-0 bg-white/5">
           <UserPlus className="w-5 h-5 text-white/80" />
         </div>
-        <div className="flex-1 text-left">
-          <div className="font-semibold text-white text-base leading-tight">New Player? Sign Up</div>
-          <div className="text-gray-600 text-sm mt-0.5">Request to join the River Rat Rounders</div>
+        <div className="flex flex-col flex-1 min-w-0 text-left">
+          <span className="text-base font-semibold text-white leading-tight">New Player? Sign Up</span>
+          <span className="text-sm text-white/65 mt-0.5">Request to join the River Rat Rounders</span>
         </div>
-        <svg className="w-5 h-5 text-gray-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+        <ChevronRight className="w-5 h-5 text-white/20 shrink-0" />
       </button>
     );
   }
