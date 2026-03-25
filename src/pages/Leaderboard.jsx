@@ -17,9 +17,13 @@ export default function Leaderboard() {
 
   const loadData = async () => {
     setIsLoading(true);
-    const res = await externalApi({ action: "getLeaderboard" });
-    // SDK wraps response in { data: [...] }
-    const data = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+    const raw = await externalApi({ action: "getLeaderboard" });
+    const data =
+      Array.isArray(raw) ? raw :
+      Array.isArray(raw?.data) ? raw.data :
+      Array.isArray(raw?.leaderboard) ? raw.leaderboard :
+      Array.isArray(raw?.items) ? raw.items :
+      [];
     const sorted = data.slice().sort((a, b) => a.rank - b.rank);
     setLeaderboard(sorted);
     setIsLoading(false);
