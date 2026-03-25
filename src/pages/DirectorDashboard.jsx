@@ -766,16 +766,16 @@ export default function DirectorDashboard() {
               </div>
               <form onSubmit={handleCreateSession} className="flex flex-col gap-3">
                 {/* Date + Type row — stacked on mobile, 2-col on sm+ */}
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 overflow-hidden">
-                  <div className="flex flex-col gap-1 min-w-0">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1 min-w-0 overflow-hidden">
                     <label className="text-[10px] text-white/40 uppercase tracking-wide">Date</label>
                     <input
                       type="date"
                       value={newSession.session_date}
                       onChange={e => setNewSession({...newSession, session_date: e.target.value})}
                       required
-                      className="w-full min-w-0 max-w-full h-9 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white [color-scheme:dark] outline-none"
-                      style={{ boxSizing: "border-box", maxWidth: "100%" }}
+                      className="w-full h-9 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white [color-scheme:dark] outline-none"
+                      style={{ boxSizing: "border-box" }}
                     />
                   </div>
                   <div className="flex flex-col gap-1">
