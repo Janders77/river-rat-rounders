@@ -764,45 +764,59 @@ export default function DirectorDashboard() {
                 <div className={ICON_BOX}><Plus className="w-5 h-5 text-white/80" /></div>
                 <span className="text-white font-medium">Open a New Game</span>
               </div>
-              <form onSubmit={handleCreateSession} className="flex flex-col gap-2">
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Date</label>
-                  <input
-                    type="date"
-                    value={newSession.session_date}
-                    onChange={e => setNewSession({...newSession, session_date: e.target.value})}
-                    required
-                    className="w-full h-9 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white [color-scheme:dark] outline-none"
-                  />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Type</label>
-                  <Select value={newSession.game_type || "__none__"} onValueChange={v => setNewSession({...newSession, game_type: v === "__none__" ? "" : v})}>
-                    <SelectTrigger className="w-full h-9 bg-white/5 border-white/10 text-white rounded-lg text-sm">
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-700 text-white">
-                      <SelectItem value="__none__" disabled className="text-gray-400">Select type</SelectItem>
-                      {["Main Game","Turbo"].map(t => <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Location</label>
-                  <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
-                    <SelectTrigger className="w-full h-9 bg-white/5 border-white/10 text-white rounded-lg text-sm">
-                      <SelectValue placeholder="Select location" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-700 text-white">
-                      <SelectItem value="__none__" disabled className="text-gray-400">Select location</SelectItem>
-                      {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc =>
-                        <SelectItem key={loc} value={loc} className="text-white">{loc}</SelectItem>
-                      )}
-                    </SelectContent>
-                  </Select>
+              <form onSubmit={handleCreateSession} className="flex flex-col gap-3 w-full min-w-0">
+                <div className="flex flex-col gap-4 w-full min-w-0">
+                  {/* DATE */}
+                  <div className="w-full min-w-0 overflow-hidden">
+                    <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.18em] text-white/45">
+                      DATE
+                    </label>
+                    <div className="w-full min-w-0 overflow-hidden rounded-2xl">
+                      <input
+                        type="date"
+                        value={newSession.session_date}
+                        onChange={e => setNewSession({...newSession, session_date: e.target.value})}
+                        required
+                        className="block w-full min-w-0 max-w-full h-12 rounded-2xl border border-white/10 bg-white/[0.04] px-4 text-base text-white box-border appearance-none [color-scheme:dark] outline-none"
+                        style={{ width: "100%", minWidth: 0, maxWidth: "100%", boxSizing: "border-box", WebkitAppearance: "none", appearance: "none" }}
+                      />
+                    </div>
+                  </div>
+                  {/* TYPE */}
+                  <div className="w-full min-w-0 overflow-hidden">
+                    <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.18em] text-white/45">
+                      TYPE
+                    </label>
+                    <Select value={newSession.game_type || "__none__"} onValueChange={v => setNewSession({...newSession, game_type: v === "__none__" ? "" : v})}>
+                      <SelectTrigger className="w-full h-12 min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 text-base text-white">
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                        <SelectItem value="__none__" disabled className="text-gray-400">Select type</SelectItem>
+                        {["Main Game","Turbo"].map(t => <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {/* LOCATION */}
+                  <div className="w-full min-w-0 overflow-hidden">
+                    <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.18em] text-white/45">
+                      LOCATION
+                    </label>
+                    <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
+                      <SelectTrigger className="w-full h-12 min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 text-base text-white">
+                        <SelectValue placeholder="Select location" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                        <SelectItem value="__none__" disabled className="text-gray-400">Select location</SelectItem>
+                        {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc =>
+                          <SelectItem key={loc} value={loc} className="text-white">{loc}</SelectItem>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 <button type="submit" disabled={isCreatingSession || !newSession.location}
-                  className="w-full h-9 rounded-lg border border-white/15 text-white text-sm font-medium transition-all disabled:opacity-40"
+                  className="w-full h-12 rounded-2xl border border-white/15 text-white text-sm font-medium transition-all disabled:opacity-40"
                   style={{ background: "rgba(255,255,255,0.07)" }}>
                   {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Open Game"}
                 </button>
