@@ -275,6 +275,7 @@ export default function PlayerSignIn() {
         borderColor: "rgba(34,197,94,0.55)",
         backgroundColor: "rgba(34,197,94,0.08)",
         boxShadow: "0 0 20px 4px rgba(34,197,94,0.18)",
+        animation: "greenPulse 3s ease-in-out infinite",
       }}
       onClick={!signed && !loading ? () => handleSignIn(firstSession) : undefined}
     >
