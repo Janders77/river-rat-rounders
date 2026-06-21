@@ -45,7 +45,7 @@ export default function Leaderboard() {
     const raw = await externalApi({ action: "getLeaderboard", params: { quarter } });
     const data = Array.isArray(raw?.leaderboard) ? raw.leaderboard :
                  Array.isArray(raw) ? raw : [];
-    setLeaderboard(data.slice().sort((a, b) => a.rank - b.rank));
+    setLeaderboard(data.slice().sort((a, b) => a.rank - b.rank).slice(0, 60));
     setIsLoading(false);
   };
 
