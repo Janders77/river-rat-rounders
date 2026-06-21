@@ -103,9 +103,9 @@ export default function Home() {
 
   /* ── LOGGED OUT ── */
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative px-4" style={BG}>
+    <div className="min-h-screen flex flex-col items-center relative px-4 pt-8" style={BG}>
       <div className="absolute inset-0 pointer-events-none" style={GLOW} />
-      <div className="safe-top safe-bottom relative w-full max-w-md flex flex-col gap-6">
+      <div className="relative w-full max-w-md flex flex-col gap-6">
         <Brand />
         <LoginCard onLoginSuccess={() => {
           const email = localStorage.getItem("playerEmail");
