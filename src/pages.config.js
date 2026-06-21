@@ -60,6 +60,7 @@ import LeagueCalendar from './pages/LeagueCalendar';
 import LocationLeaderboard from './pages/LocationLeaderboard';
 import Locations from './pages/Locations';
 import PayMyDues from './pages/PayMyDues';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import PlayerDatabase from './pages/PlayerDatabase';
 import PlayerProfile from './pages/PlayerProfile';
 import RecordGame from './pages/RecordGame';
@@ -81,6 +82,7 @@ export const PAGES = {
     "LocationLeaderboard": LocationLeaderboard,
     "Locations": Locations,
     "PayMyDues": PayMyDues,
+    "PrivacyPolicy": PrivacyPolicy,
     "PlayerDatabase": PlayerDatabase,
     "PlayerProfile": PlayerProfile,
     "RecordGame": RecordGame,

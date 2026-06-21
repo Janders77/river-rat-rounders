@@ -2,11 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
+import { externalApi } from "@/functions/externalApi";
+import { getEffectivePlayerIds } from "@/utils/playerUtils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload, Loader2, CheckCircle2, AlertCircle, ArrowLeft, Edit2, X, KeyRound, MapPin, Gamepad2 } from "lucide-react";
+import { Upload, Loader2, CheckCircle2, AlertCircle, Edit2, X, KeyRound, Trophy } from "lucide-react";
 
 const PLACEMENT_POINTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
+
+function formatQuarter(q) {
+  if (!q) return "";
+  const [year, qPart] = q.split("-");
+  const num = qPart?.replace("Q", "");
+  const months = { "1": "Jan–Mar", "2": "Apr–Jun", "3": "Jul–Sep", "4": "Oct–Dec" };
+  return `${months[num] || qPart} ${year}`;
+}
 
 export default function PlayerProfile() {
   const [user, setUser] = useState(null);
@@ -28,8 +38,10 @@ export default function PlayerProfile() {
   const [gamesPlayed, setGamesPlayed] = useState([]);
   const [gamesLoading, setGamesLoading] = useState(false);
   const [expandedLocations, setExpandedLocations] = useState({});
+  const [quarterlyStats, setQuarterlyStats] = useState([]);
+  const [currentQuarter, setCurrentQuarter] = useState(null);
 
-  const ALL_LOCATIONS = ["Tavern 018 Sun", "East End Bar & Grill", "Habana Club", "Tavern 018 Wed", "Meddlesome Brewery", "MFS Brewing"];
+  const ALL_LOCATIONS = ["Tavern 018 Sun", "East End Bar & Grill", "Fridas", "Tavern 018 Wed", "Meddlesome Brewery", "MFS Brewing"];
 
   useEffect(() => {
     loadUserData();
@@ -67,7 +79,11 @@ export default function PlayerProfile() {
       // Load all games where this player appears in player_ids (not just wins)
       setGamesLoading(true);
       const allGames = await base44.entities.Game.list('-game_date', 500);
-      const playerGames = allGames.filter(g => g.player_ids && g.player_ids.includes(p.id));
+      const allPlayers = await base44.entities.Player.list();
+      const playerGames = allGames.filter(g => {
+        const playerIds = getEffectivePlayerIds(g, allPlayers);
+        return playerIds.includes(p.id);
+      });
       setGamesPlayed(playerGames);
       setGamesLoading(false);
       // Always prefer the Player entity name over the auth user name
@@ -80,6 +96,14 @@ export default function PlayerProfile() {
       setProfileImageUrl(imageUrl);
       
       setUser({ ...currentUser, email: emailToLoad });
+
+      // Load quarterly stats for this player
+      try {
+        const qRes = await externalApi({ action: "getPlayerQuarterlyStats", params: { player_id: p.id } });
+        setQuarterlyStats(qRes?.stats || []);
+        const cqRes = await externalApi({ action: "getAvailableQuarters" });
+        setCurrentQuarter(cqRes?.current || null);
+      } catch {}
     } else {
       setUser(currentUser);
       // Even in fallback, don't show email as name
@@ -120,16 +144,19 @@ export default function PlayerProfile() {
     setImageUploadStatus("loading");
     setImageFile(file);
 
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    
-    if (playerData) {
-      await base44.entities.Player.update(playerData.id, { profile_picture: file_url });
-      setPlayerData(prev => ({ ...prev, profile_picture: file_url }));
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      if (playerData) {
+        await base44.entities.Player.update(playerData.id, { profile_picture: file_url });
+        setPlayerData(prev => ({ ...prev, profile_picture: file_url }));
+      }
+      setProfileImageUrl(file_url);
+      setImageUploadStatus("done");
+      setTimeout(() => setImageUploadStatus("idle"), 3000);
+    } catch {
+      setImageUploadStatus("error");
+      setTimeout(() => setImageUploadStatus("idle"), 3000);
     }
-    setProfileImageUrl(file_url);
-    setImageUploadStatus("done");
-    
-    setTimeout(() => setImageUploadStatus("idle"), 3000);
   };
 
   if (loading) {
@@ -149,16 +176,23 @@ export default function PlayerProfile() {
   }
 
   return (
-    <div className="min-h-screen p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-between gap-3 mb-8">
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold text-white">Player Profile</h1>
+    <div className="min-h-screen relative overflow-x-hidden" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none" style={{background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)"}} />
+      <div className="relative max-w-md mx-auto w-full px-4 pt-5 pb-10 flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-3 mb-2">
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+              <Upload className="w-5 h-5 text-white/80" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-white tracking-tight leading-none">Player Profile</h1>
+              <p className="text-base text-white/40 mt-0.5 leading-none">Your stats and account info</p>
+            </div>
           </div>
           {isOwnProfile && (
             <button onClick={() => setShowPasswordModal(true)}
-              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-300 transition-colors border border-gray-700 hover:border-gray-500 rounded-lg px-3 py-1.5">
-              <KeyRound className="w-3.5 h-3.5" /> Change Password
+              className="flex items-center gap-1.5 text-base text-white/40 hover:text-white/70 transition-colors border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5">
+              <KeyRound className="w-3.5 h-3.5" /> Password
             </button>
           )}
         </div>
@@ -196,18 +230,23 @@ export default function PlayerProfile() {
             )}
           </div>
           {imageUploadStatus === "done" && (
-            <p className="text-green-400 text-sm mt-4 flex items-center justify-center gap-1">
+            <p className="text-green-400 text-base mt-4 flex items-center justify-center gap-1">
               <CheckCircle2 className="w-4 h-4" /> Photo updated
+            </p>
+          )}
+          {imageUploadStatus === "error" && (
+            <p className="text-red-400 text-base mt-4 flex items-center justify-center gap-1">
+              <AlertCircle className="w-4 h-4" /> Upload failed, try again
             </p>
           )}
         </div>
 
         {/* User Information Section */}
-        <div className="bg-gray-900/40 border border-gray-800/70 rounded-xl p-6 mb-5">
-          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Account Information</h2>
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4 mb-3">
+          <h2 className="text-base font-semibold text-gray-400 uppercase tracking-wider mb-4">Account Information</h2>
           <div className="space-y-4">
             <div>
-              <label className="text-gray-400 text-sm">Full Name</label>
+              <label className="text-gray-400 text-base">Full Name</label>
               {editingName && isOwnProfile ? (
                 <div className="flex gap-2 mt-2">
                   <Input
@@ -219,6 +258,7 @@ export default function PlayerProfile() {
                   />
                   <Button
                     onClick={async () => {
+                      if (!isOwnProfile) return;
                       const trimmed = fullName.trim();
                       const nameParts = trimmed.split(/\s+/);
                       if (nameParts.length < 2 || !nameParts[0] || !nameParts[1]) {
@@ -252,7 +292,8 @@ export default function PlayerProfile() {
                   </Button>
                   <Button
                     onClick={() => {
-                      setFullName(user.full_name);
+                      const playerName = [playerData?.first_name, playerData?.last_name].filter(Boolean).join(" ").trim();
+                      setFullName(playerName);
                       setEditingName(false);
                     }}
                     variant="outline"
@@ -277,33 +318,33 @@ export default function PlayerProfile() {
                 </div>
               )}
               {nameUpdateStatus === "done" && (
-                <p className="text-green-400 text-sm mt-2 flex items-center gap-1">
+                <p className="text-green-400 text-base mt-2 flex items-center gap-1">
                   <CheckCircle2 className="w-4 h-4" /> Name updated
                 </p>
               )}
               {nameUpdateStatus === "error" && (
-                <p className="text-red-400 text-sm mt-2 flex items-center gap-1">
+                <p className="text-red-400 text-base mt-2 flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" /> Please enter both a first and last name
                 </p>
               )}
             </div>
             <div>
-              <label className="text-gray-400 text-sm">Email</label>
+              <label className="text-gray-400 text-base">Email</label>
               <div className="text-white font-medium">{user.email}</div>
             </div>
             {playerData && (
               <>
                 <div>
-                  <label className="text-gray-400 text-sm">Player #</label>
+                  <label className="text-gray-400 text-base">Player #</label>
                   <div className="text-white font-medium">{playerData.player_number || "N/A"}</div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <label className="text-gray-400 text-sm">Card Guards</label>
+                  <label className="text-gray-400 text-base">Card Guards</label>
                   <div className="flex items-center gap-2">
                     <div className="text-white font-medium">{playerData.card_guards || 0}</div>
                     {playerData.card_guards > 0 && (
                       <div className="px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                        <span className="text-xs font-semibold text-amber-400">♠</span>
+                        <span className="text-base font-semibold text-amber-400">♠</span>
                       </div>
                     )}
                   </div>
@@ -313,31 +354,44 @@ export default function PlayerProfile() {
           </div>
         </div>
 
-        {/* Win History Section */}
+        {/* Card Guards (Tournament Wins) + Quarterly Stats */}
         {playerData && (
-          <div className="bg-gray-900/40 border border-gray-800/70 rounded-xl p-6 mb-5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Win History</h2>
-              {!winsLoading && (
-                <span className="text-xs text-gray-600 font-medium">{winHistory.length} win{winHistory.length !== 1 ? 's' : ''}</span>
-              )}
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            {/* Trophy wins header */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Trophy className="w-4 h-4 text-amber-400" />
+                <span className="text-base font-semibold text-white">Tournament Wins</span>
+              </div>
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                <span className="text-amber-400 font-black text-lg leading-none">{playerData.card_guards || 0}</span>
+                <span className="text-amber-400 text-base leading-none">♠</span>
+              </div>
             </div>
+            <p className="text-[11px] text-white/30 mb-4 leading-relaxed">
+              Each ♠ card guard represents a 1st place tournament win. Card guards are awarded automatically when you win a game.
+            </p>
+
+            {/* Win history list */}
             {winsLoading ? (
-              <div className="text-gray-500 text-sm">Loading...</div>
+              <div className="text-white/30 text-base">Loading wins...</div>
             ) : winHistory.length === 0 ? (
-              <div className="text-gray-500 text-sm">No wins recorded yet.</div>
+              <div className="text-white/25 text-base">No wins recorded yet.</div>
             ) : (
-              <div className="space-y-0 divide-y divide-gray-800/60">
+              <div className="space-y-1">
                 {winHistory.map(game => (
-                  <div key={game.id} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
+                  <div key={game.id} className="flex items-center justify-between py-1.5 border-b border-white/5 last:border-0">
                     <div>
-                      <div className="text-white text-sm font-medium">{game.game_type || 'Game'}</div>
-                      <div className="text-gray-500 text-xs mt-0.5">
+                      <div className="text-white/80 text-base font-medium">{game.game_type || 'Tournament'}</div>
+                      <div className="text-white/30 text-base">
                         {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
                         {game.location ? ` · ${game.location}` : ''}
                       </div>
                     </div>
-                    <span className="text-red-400 font-bold text-sm tabular-nums">{game.points_awarded || 1000} pts</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-amber-400 text-base">♠</span>
+                      <span className="text-red-400 font-bold text-base tabular-nums">{game.points_awarded || 1000} pts</span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -345,12 +399,38 @@ export default function PlayerProfile() {
           </div>
         )}
 
+        {/* Quarterly Points Breakdown */}
+        {playerData && quarterlyStats.length > 0 && (
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <p className="text-base text-white/30 font-semibold uppercase tracking-wider mb-3">Quarterly Points</p>
+            <div className="space-y-2">
+              {quarterlyStats.map(stat => {
+                const isCurrent = stat.quarter === currentQuarter;
+                return (
+                  <div key={stat.quarter} className={`flex items-center justify-between py-2 px-3 rounded-lg ${isCurrent ? 'bg-red-500/5 border border-red-500/20' : 'bg-white/[0.03]'}`}>
+                    <div>
+                      <div className="text-white/70 text-base font-medium">{formatQuarter(stat.quarter)}</div>
+                      {isCurrent && <div className="text-[9px] text-red-400 font-semibold uppercase tracking-wide">Current Quarter</div>}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {stat.wins > 0 && (
+                        <span className="text-amber-400 text-base font-bold">{stat.wins}♠</span>
+                      )}
+                      <span className="text-red-400 font-black text-base tabular-nums">{stat.points} pts</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Games Played Section */}
         {playerData && (
-          <div className="bg-gray-900/40 border border-gray-800/70 rounded-xl p-6 mb-5">
-            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Games Played</h2>
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4 mb-3">
+            <h2 className="text-base font-semibold text-gray-400 uppercase tracking-wider mb-4">Games Played</h2>
             {gamesLoading ? (
-              <div className="text-gray-500 text-sm">Loading...</div>
+              <div className="text-gray-500 text-base">Loading...</div>
             ) : (
               <div className="space-y-1">
                 {ALL_LOCATIONS.map(location => {
@@ -359,7 +439,7 @@ export default function PlayerProfile() {
                     .sort((a, b) => new Date(b.game_date) - new Date(a.game_date));
                   
                   const stats = locationGames.reduce((acc, game) => {
-                    const playerIds = game.player_ids || [];
+                    const playerIds = getEffectivePlayerIds(game, playerData ? [playerData] : []);
                     const placement = playerIds.indexOf(playerData.id);
                     if (placement >= 0) {
                       acc.games += 1;
@@ -377,31 +457,31 @@ export default function PlayerProfile() {
                         className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-800/30 transition-colors"
                       >
                         <div className="flex items-center gap-3 flex-1 text-left">
-                          <span className={`text-[10px] transition-transform ${isExpanded ? 'rotate-90' : ''} text-gray-600`}>▶</span>
+                          <span className={`text-base transition-transform ${isExpanded ? 'rotate-90' : ''} text-gray-600`}>▶</span>
                           <div className="flex-1">
-                            <div className="text-white font-medium text-sm">{location}</div>
-                            {stats.games > 0 && <div className="text-gray-600 text-xs">{stats.games} game{stats.games !== 1 ? 's' : ''}</div>}
+                            <div className="text-white font-medium text-base">{location}</div>
+                            {stats.games > 0 && <div className="text-gray-600 text-base">{stats.games} game{stats.games !== 1 ? 's' : ''}</div>}
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          {stats.points > 0 && <span className="text-red-400 font-bold text-sm tabular-nums">{stats.points} pts</span>}
-                          {stats.games === 0 && <span className="text-gray-700 text-xs">—</span>}
+                          {stats.points > 0 && <span className="text-red-400 font-bold text-base tabular-nums">{stats.points} pts</span>}
+                          {stats.games === 0 && <span className="text-gray-700 text-base">—</span>}
                         </div>
                       </button>
 
                       {isExpanded && (
                         <div className="border-t border-gray-800/50 divide-y divide-gray-800/40">
                           {locationGames.length === 0 ? (
-                            <div className="text-gray-600 text-xs px-4 py-3">No recorded games at this location</div>
+                            <div className="text-gray-600 text-base px-4 py-3">No recorded games at this location</div>
                           ) : (
                             locationGames.map(game => {
-                              const playerIds = game.player_ids || [];
+                              const playerIds = getEffectivePlayerIds(game, playerData ? [playerData] : []);
                               const placement = playerIds.indexOf(playerData.id);
                               const points = PLACEMENT_POINTS[placement] || 0;
                               const placementLabel = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'][placement] || `${placement + 1}th`;
 
                               return (
-                                <div key={game.id} className="flex items-center justify-between px-4 py-2 text-xs bg-gray-900/20">
+                                <div key={game.id} className="flex items-center justify-between px-4 py-2 text-base bg-gray-900/20">
                                   <span className="text-gray-400">
                                     {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}
                                     {game.game_type && ` · ${game.game_type}`}
@@ -420,7 +500,7 @@ export default function PlayerProfile() {
                   );
                 })}
                 {gamesPlayed.length === 0 && (
-                  <div className="text-gray-500 text-sm py-4 text-center">No recorded games yet.</div>
+                  <div className="text-gray-500 text-base py-4 text-center">No recorded games yet.</div>
                 )}
               </div>
             )}
@@ -442,26 +522,26 @@ export default function PlayerProfile() {
               </div>
               <form onSubmit={handlePasswordChange} className="space-y-4">
                 <div>
-                  <label className="text-gray-400 text-xs block mb-1.5">New Password</label>
+                  <label className="text-gray-400 text-base block mb-1.5">New Password</label>
                   <Input type="password" placeholder="Enter new password" value={newPassword}
                     onChange={e => setNewPassword(e.target.value)}
                     className="bg-gray-800 border-gray-700 text-white"
                     disabled={passwordStatus === "loading"} />
                 </div>
                 <div>
-                  <label className="text-gray-400 text-xs block mb-1.5">Confirm Password</label>
+                  <label className="text-gray-400 text-base block mb-1.5">Confirm Password</label>
                   <Input type="password" placeholder="Confirm new password" value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
                     className="bg-gray-800 border-gray-700 text-white"
                     disabled={passwordStatus === "loading"} />
                 </div>
                 {passwordStatus === "done" && (
-                  <p className="text-green-400 text-sm flex items-center gap-2">
+                  <p className="text-green-400 text-base flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4" /> Password updated!
                   </p>
                 )}
                 {passwordStatus === "error" && (
-                  <p className="text-red-400 text-sm flex items-center gap-2">
+                  <p className="text-red-400 text-base flex items-center gap-2">
                     <AlertCircle className="w-4 h-4" /> Passwords do not match or are empty
                   </p>
                 )}
@@ -480,7 +560,7 @@ export default function PlayerProfile() {
             </div>
           </div>
         )}
-          </div>
-          </div>
-          );
-          }
+      </div>
+    </div>
+  );
+}

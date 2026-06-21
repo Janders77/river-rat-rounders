@@ -19,14 +19,14 @@ export default function PlayerFilters({ filters, setFilters }) {
     <div className="mb-4 rounded-lg bg-gray-800/50 border border-gray-700">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 py-3 text-white text-sm font-semibold"
+        className="w-full flex items-center justify-between px-4 py-3 text-white text-base font-semibold"
       >
         <span>Advanced Filters {hasActiveFilters && <span className="text-amber-400 ml-1">●</span>}</span>
         <div className="flex items-center gap-2">
           {hasActiveFilters && (
             <button
               onClick={(e) => { e.stopPropagation(); clearFilters(); }}
-              className="text-gray-400 hover:text-red-400 flex items-center gap-1 text-xs"
+              className="text-gray-400 hover:text-red-400 flex items-center gap-1 text-base"
             >
               <X className="w-3 h-3" /> Clear
             </button>
@@ -40,7 +40,7 @@ export default function PlayerFilters({ filters, setFilters }) {
         <div className="grid grid-cols-1 gap-4">
         {/* Card Guards Filter */}
         <div className="space-y-2">
-          <label className="text-gray-300 text-xs font-medium">Card Guards</label>
+          <label className="text-gray-300 text-base font-medium">Card Guards</label>
           <div className="flex gap-2">
             <input
               type="checkbox"
@@ -91,7 +91,7 @@ export default function PlayerFilters({ filters, setFilters }) {
 
         {/* Date Joined Filter */}
         <div className="space-y-2">
-          <label className="text-gray-300 text-xs font-medium">Date Joined</label>
+          <label className="text-gray-300 text-base font-medium">Date Joined</label>
           <div className="flex gap-2">
             <input
               type="checkbox"
@@ -139,7 +139,7 @@ export default function PlayerFilters({ filters, setFilters }) {
                       }))
                     }
                     placeholder="Start date"
-                    className="bg-gray-900 border-gray-700 text-white h-9 text-sm"
+                    className="bg-gray-900 border-gray-700 text-white h-9 text-base"
                   />
                   <Input
                     type="date"
@@ -151,7 +151,7 @@ export default function PlayerFilters({ filters, setFilters }) {
                       }))
                     }
                     placeholder="End date"
-                    className="bg-gray-900 border-gray-700 text-white h-9 text-sm"
+                    className="bg-gray-900 border-gray-700 text-white h-9 text-base"
                   />
                 </div>
               )}
@@ -165,7 +165,7 @@ export default function PlayerFilters({ filters, setFilters }) {
                       dateFilter: { ...prev.dateFilter, specificDate: e.target.value }
                     }))
                   }
-                  className="bg-gray-900 border-gray-700 text-white h-9 text-sm"
+                  className="bg-gray-900 border-gray-700 text-white h-9 text-base"
                 />
               )}
             </div>

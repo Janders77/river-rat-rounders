@@ -49,39 +49,41 @@ export default function DirectorSignIn() {
   };
 
   return (
-    <div className="min-h-screen p-6 flex items-center justify-center">
-      <Card className="w-full max-w-md bg-transparent border border-red-500/40 backdrop-blur-sm">
-        <CardHeader>
-          <div className="w-9 h-9 bg-white/5 rounded-lg flex items-center justify-center mb-4">
+    <div className="min-h-screen relative overflow-x-hidden flex items-center justify-center" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none" style={{background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)"}} />
+      <div className="relative w-full max-w-md px-4 flex flex-col gap-3">
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
             <Lock className="w-5 h-5 text-white/80" />
           </div>
-          <CardTitle className="text-white text-2xl">Director Access</CardTitle>
-          <p className="text-gray-400 text-sm mt-2">Enter the director code to access the dashboard</p>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Input
-                type="password"
-                placeholder="Enter director code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className="bg-gray-900 border-gray-700 text-white text-center text-lg tracking-widest"
-                autoFocus
-              />
-            </div>
+          <div>
+            <h1 className="text-lg font-bold text-white tracking-tight leading-none">Director Access</h1>
+            <p className="text-base text-white/40 mt-0.5 leading-none">Enter the director code</p>
+          </div>
+        </div>
+
+        <div className="w-full rounded-xl border border-white/10 bg-white/5 p-4 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <Input
+              type="password"
+              placeholder="Enter director code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              className="bg-white/5 border-white/10 text-white text-center text-lg tracking-widest"
+              autoFocus
+            />
 
             {error && (
               <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex gap-3">
                 <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-                <p className="text-red-400 text-sm">{error}</p>
+                <p className="text-red-400 text-base">{error}</p>
               </div>
             )}
 
             <Button
               type="submit"
               disabled={!code || isSubmitting}
-              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold"
+              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold rounded-xl"
             >
               {isSubmitting ? "Verifying..." : "Access Dashboard"}
             </Button>
@@ -90,12 +92,12 @@ export default function DirectorSignIn() {
           <Button
             onClick={() => navigate(createPageUrl("Home"))}
             variant="outline"
-            className="w-full border-gray-700 text-gray-300 hover:bg-gray-900"
+            className="w-full border-white/10 text-white/50 hover:bg-white/5 rounded-xl"
           >
             Back to Home
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

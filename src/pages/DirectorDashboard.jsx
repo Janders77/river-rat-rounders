@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Game } from "@/entities/Game";
 import { User } from "@/entities/User";
@@ -24,8 +24,10 @@ import { ShieldAlert, Plus, Trophy, Loader2, Users, Trash2, CalendarPlus, ImageP
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
-const POINTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
-const PLACE_LABELS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
+const MAIN_POINTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
+const MAIN_LABELS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
+const TURBO_POINTS = [500, 250];
+const TURBO_LABELS = ["1st", "2nd"];
 
 export default function DirectorDashboard() {
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ export default function DirectorDashboard() {
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmittingRef = React.useRef(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteStatus, setInviteStatus] = useState("");
   const [players, setPlayers] = useState([]);
@@ -45,6 +48,10 @@ export default function DirectorDashboard() {
     location: "",
     notes: ""
   });
+  const isTurbo = gameData.game_type === "Turbo Game";
+  const POINTS = isTurbo ? TURBO_POINTS : MAIN_POINTS;
+  const PLACE_LABELS = isTurbo ? TURBO_LABELS : MAIN_LABELS;
+
   const [currentSessionId, setCurrentSessionId] = useState(null);
   // placements now store player IDs
   const [placements, setPlacements] = useState(Array(9).fill(""));
@@ -60,6 +67,8 @@ export default function DirectorDashboard() {
     game_type: "Main Game"
   });
   const [isCreatingSession, setIsCreatingSession] = useState(false);
+  const isCreatingRef = useRef(false);
+  const [locations, setLocations] = useState([]);
   const [inviteRequests, setInviteRequests] = useState([]);
   const [playerSearch, setPlayerSearch] = useState("");
   const [photos, setPhotos] = useState([]);
@@ -82,6 +91,11 @@ export default function DirectorDashboard() {
   const [editingGame, setEditingGame] = useState(null);
 
   const playersById = useMemo(() => buildPlayersById(players), [players]);
+  const userByEmail = useMemo(() => {
+    const map = new Map();
+    users.forEach(u => { if (u.email) map.set(u.email.trim().toLowerCase(), u); });
+    return map;
+  }, [users]);
 
   // Set of all player IDs we've already attempted to fetch (via games or sessions effects)
   const fetchedPlayerIdSet = useMemo(() => new Set(players.map(p => p.id)), [players]);
@@ -148,26 +162,26 @@ export default function DirectorDashboard() {
   useEffect(() => { loadAll(); }, []);
 
   useEffect(() => {
-    const openSession = sessions.find(s => s.is_open);
-    if (openSession) {
-      setGameData(prev => ({
-        ...prev,
-        location: openSession.location,
-        game_type: openSession.game_type || "Main Game",
-        game_date: openSession.session_date || prev.game_date
-      }));
-      setCurrentSessionId(openSession.id);
-    }
-  }, [sessions]);
+    const openSessions = sessions.filter(s => s.is_open);
+    if (openSessions.length === 0) return;
+    const session = openSessions.find(s => s.id === currentSessionId) || openSessions[0];
+    setGameData(prev => ({
+      ...prev,
+      location: session.location,
+      game_type: session.game_type || "Main Game",
+      game_date: session.session_date || prev.game_date
+    }));
+    if (session.id !== currentSessionId) setCurrentSessionId(session.id);
+  }, [sessions]); // intentionally omits currentSessionId to avoid loop
 
   useEffect(() => {
     const unsubSessions = base44.entities.GameSession.subscribe((event) => {
-      if (event.type === 'create') setSessions(prev => [event.data, ...prev]);
+      if (event.type === 'create') setSessions(prev => prev.some(s => s.id === event.id) ? prev : [event.data, ...prev]);
       else if (event.type === 'update') setSessions(prev => prev.map(s => s.id === event.id ? event.data : s));
       else if (event.type === 'delete') setSessions(prev => prev.filter(s => s.id !== event.id));
     });
     const unsubGames = base44.entities.Game.subscribe((event) => {
-      if (event.type === 'create') setGames(prev => [event.data, ...prev]);
+      if (event.type === 'create') setGames(prev => prev.some(g => g.id === event.id) ? prev : [event.data, ...prev]);
       else if (event.type === 'update') setGames(prev => prev.map(g => g.id === event.id ? event.data : g));
       else if (event.type === 'delete') setGames(prev => prev.filter(g => g.id !== event.id));
     });
@@ -230,18 +244,20 @@ export default function DirectorDashboard() {
 
     setDirectorRole(directorRecord.role);
     setActiveTab(hasPermission(directorRecord.role, "canManageSessions") ? "sessions" : "record");
-    const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests] = await Promise.all([
+    const [fetchedUsers, fetchedGames, fetchedSessions, fetchedPhotos, fetchedRequests, fetchedLocations] = await Promise.all([
       User.list(),
       Game.list("-created_date", 20),
       GameSession.list("-session_date", 20),
       WinnerPhoto.list("-created_date", 50),
       InviteRequest.filter({ status: "pending" }, "-created_date", 50),
+      base44.entities.Location.list("display_order"),
     ]);
     setUsers(fetchedUsers);
     setGames(fetchedGames);
     setSessions(fetchedSessions);
     setPhotos(fetchedPhotos);
     setInviteRequests(fetchedRequests);
+    setLocations(fetchedLocations);
 
     // Fetch all Player records referenced in open sessions immediately
     const openSessions = fetchedSessions.filter(s => s.is_open);
@@ -260,87 +276,93 @@ export default function DirectorDashboard() {
 
   const handleRecordGame = async (e) => {
     e.preventDefault();
-    const filledIds = placements.filter(p => p !== "");
+    if (isSubmittingRef.current) return;
+    const filledIds = placements.slice(0, PLACE_LABELS.length).filter(p => p !== "");
     if (filledIds.length < 2 || !placements[0]) {
       alert("Please assign at least 1st and 2nd place");
       return;
     }
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
-    const winnerPlayer = playersById[placements[0]];
-    const winnerName = getPlayerDisplayName(winnerPlayer);
-    const winnerEmail = winnerPlayer?.email || "";
-
-    await Game.create({
-      ...gameData,
-      player_ids: filledIds,
-      players: filledIds.map(id => getPlayerById(players, id)?.email || id), // legacy compat
-      winner_player_id: placements[0],
-      winner_email: winnerEmail, // legacy compat
-      winner_name: winnerName,
-      points_awarded: POINTS[0],
-    });
-
-    // Award winner a card guard in the Player database
-    if (winnerPlayer) {
-      await base44.entities.Player.update(winnerPlayer.id, {
-        card_guards: (winnerPlayer.card_guards || 0) + 1,
-      });
-    }
-
-    // Update QuarterlyStats for all placed players (1st–9th)
-    const gameDate = new Date(gameData.game_date + 'T12:00:00');
-    const quarter = `${gameDate.getFullYear()}-Q${Math.floor(gameDate.getMonth() / 3) + 1}`;
-    for (let i = 0; i < filledIds.length; i++) {
-      const pid = filledIds[i];
-      const pts = POINTS[i] || 0;
-      const isWin = i === 0;
-      const playerRec = playersById[pid];
-      const existing = await base44.entities.QuarterlyStats.filter({ quarter, player_id: pid });
-      if (existing.length > 0) {
-        await base44.entities.QuarterlyStats.update(existing[0].id, {
-          points: (existing[0].points || 0) + pts,
-          wins: (existing[0].wins || 0) + (isWin ? 1 : 0),
-        });
-      } else {
-        await base44.entities.QuarterlyStats.create({
-          quarter,
-          player_id: pid,
-          player_email: playerRec?.email || "",
-          player_name: playerRec ? getPlayerDisplayName(playerRec) : "",
-          points: pts,
-          wins: isWin ? 1 : 0,
-        });
-      }
-    }
-
-    if (currentSessionId) {
-      await GameSession.update(currentSessionId, { is_open: false, signed_in_player_ids: [], signed_in_players: [] });
-    }
-
-    // Push to external API: create game → submit results → finalize
     try {
-      const extGame = await externalApi({ action: "createGame", params: { location: gameData.location } });
-      if (extGame?.id) {
-        const POINTS_MAP = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
-        for (let i = 0; i < filledIds.length; i++) {
-          const pid = filledIds[i];
-          const playerRec = playersById[pid];
-          const extPlayerId = playerRec?.player_number;
-          if (extPlayerId) {
-            await externalApi({ action: "createResult", params: { game_id: extGame.id, player_id: extPlayerId, points: POINTS_MAP[i] || 0 } });
-          }
-        }
-        await externalApi({ action: "finalizeGame", params: { game_id: extGame.id } });
-      }
-    } catch (extErr) {
-      console.warn("External API sync failed (non-blocking):", extErr);
-    }
+      const winnerPlayer = playersById[placements[0]];
+      const winnerName = getPlayerDisplayName(winnerPlayer);
+      const winnerEmail = winnerPlayer?.email || "";
 
-    setPlacements(Array(9).fill(""));
-    setGameData({ game_date: new Date().toISOString().split('T')[0], game_type: "Main Game", location: "", notes: "" });
-    setCurrentSessionId(null);
-    setIsSubmitting(false);
-    setShowWinnerPhotoModal(true);
+      await Game.create({
+        ...gameData,
+        player_ids: filledIds,
+        players: filledIds.map(id => getPlayerById(players, id)?.email || id), // legacy compat
+        winner_player_id: placements[0],
+        winner_email: winnerEmail, // legacy compat
+        winner_name: winnerName,
+        points_awarded: POINTS[0],
+      });
+
+      // Award winner a card guard in the Player database
+      if (winnerPlayer) {
+        await base44.entities.Player.update(winnerPlayer.id, {
+          card_guards: (winnerPlayer.card_guards || 0) + 1,
+        });
+      }
+
+      // Update QuarterlyStats for all placed players (1st–9th)
+      const gameDate = new Date(gameData.game_date + 'T12:00:00');
+      const quarter = `${gameDate.getFullYear()}-Q${Math.floor(gameDate.getMonth() / 3) + 1}`;
+      for (let i = 0; i < filledIds.length; i++) {
+        const pid = filledIds[i];
+        const pts = POINTS[i] || 0;
+        const isWin = i === 0;
+        const playerRec = playersById[pid];
+        const existing = await base44.entities.QuarterlyStats.filter({ quarter, player_id: pid });
+        if (existing.length > 0) {
+          await base44.entities.QuarterlyStats.update(existing[0].id, {
+            points: (existing[0].points || 0) + pts,
+            wins: (existing[0].wins || 0) + (isWin ? 1 : 0),
+          });
+        } else {
+          await base44.entities.QuarterlyStats.create({
+            quarter,
+            player_id: pid,
+            player_email: playerRec?.email || "",
+            player_name: playerRec ? getPlayerDisplayName(playerRec) : "",
+            points: pts,
+            wins: isWin ? 1 : 0,
+          });
+        }
+      }
+
+      if (currentSessionId) {
+        await GameSession.update(currentSessionId, { is_open: false, signed_in_player_ids: [], signed_in_players: [] });
+      }
+
+      // Push to external API: create game → submit results → finalize
+      try {
+        const extGame = await externalApi({ action: "createGame", params: { location: gameData.location } });
+        if (extGame?.id) {
+          const POINTS_MAP = [1000, 750, 600, 500, 400, 300, 200, 100, 50];
+          for (let i = 0; i < filledIds.length; i++) {
+            const pid = filledIds[i];
+            const playerRec = playersById[pid];
+            const extPlayerId = playerRec?.player_number;
+            if (extPlayerId) {
+              await externalApi({ action: "createResult", params: { game_id: extGame.id, player_id: extPlayerId, points: POINTS_MAP[i] || 0 } });
+            }
+          }
+          await externalApi({ action: "finalizeGame", params: { game_id: extGame.id } });
+        }
+      } catch (extErr) {
+        console.warn("External API sync failed (non-blocking):", extErr);
+      }
+
+      setPlacements(Array(9).fill(""));
+      setGameData({ game_date: new Date().toISOString().split('T')[0], game_type: "Main Game", location: "", notes: "" });
+      setCurrentSessionId(null);
+      setShowWinnerPhotoModal(true);
+    } finally {
+      isSubmittingRef.current = false;
+      setIsSubmitting(false);
+    }
   };
 
   const handleInvite = async (e) => {
@@ -417,20 +439,54 @@ export default function DirectorDashboard() {
 
   const handleCreateSession = async (e) => {
     e.preventDefault();
+    if (isCreatingRef.current) return;
+    isCreatingRef.current = true;
     setIsCreatingSession(true);
-    await GameSession.create({ ...newSession, is_open: true, signed_in_player_ids: [], signed_in_players: [] });
-    setNewSession({ session_date: new Date().toISOString().split('T')[0], location: "", game_type: "Main Game" });
-    const updated = await GameSession.list("-session_date", 20);
-    setSessions(updated);
-    setIsCreatingSession(false);
+    try {
+      const freshSessions = await GameSession.list("-session_date", 100);
+      const conflict = freshSessions.find(
+        s => s.is_open && s.game_type === newSession.game_type && s.location === newSession.location
+      );
+      if (conflict) {
+        alert(`A ${newSession.game_type} at ${newSession.location} is already open. Close it before opening another.`);
+        return;
+      }
+      const created = await GameSession.create({
+        ...newSession,
+        is_open: true,
+        signed_in_player_ids: [],
+        signed_in_players: [],
+      });
+      setSessions(prev => [created, ...prev]);
+      setNewSession({ session_date: getLocalDateString(), location: "", game_type: "Main Game" });
+    } catch (err) {
+      alert(err.message || "Failed to open game.");
+    } finally {
+      isCreatingRef.current = false;
+      setIsCreatingSession(false);
+    }
   };
 
   const handleToggleSession = async (session) => {
+    if (session.is_open) {
+      // Require a recorded game before ending the session
+      const recorded = games.some(
+        g => g.location === session.location && g.game_date === session.session_date
+      );
+      if (!recorded) {
+        alert("You must record the game results before ending this session. Go to the \"Record Game\" tab to submit placements first.");
+        return;
+      }
+    }
     await GameSession.update(session.id, { is_open: !session.is_open });
     setSessions(prev => prev.map(s => s.id === session.id ? { ...s, is_open: !s.is_open } : s));
   };
 
-  const handleDeleteSession = (sessionId) => setSessions(prev => prev.filter(s => s.id !== sessionId));
+  const handleDeleteSession = async (sessionId) => {
+    if (!confirm("Delete this session? All player sign-ins will be lost.")) return;
+    await GameSession.delete(sessionId);
+    setSessions(prev => prev.filter(s => s.id !== sessionId));
+  };
 
   const handleUploadPhoto = async (e) => {
     e.preventDefault();
@@ -456,7 +512,8 @@ export default function DirectorDashboard() {
       return;
     }
 
-    const openSession = sessions.find(s => s.is_open);
+    const openSession = (currentSessionId && sessions.find(s => s.id === currentSessionId && s.is_open))
+      || sessions.find(s => s.is_open);
     if (!openSession) {
       setDirSignInStatus("error");
       setDirSignInMessage("No open game session. Open a game first.");
@@ -529,7 +586,7 @@ export default function DirectorDashboard() {
   const CARD_HEADER = "flex items-center gap-3";
   const ICON_BOX = "w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center shrink-0";
   const tabBtn = (tab) =>
-    `flex-1 rounded-lg border py-2 text-sm text-center transition-all ${
+    `flex-1 rounded-lg border py-2 text-base text-center transition-all ${
       activeTab === tab
         ? "border-white/20 bg-white/10 text-white font-semibold"
         : "border-white/10 bg-white/5 text-white/50 hover:text-white/80"
@@ -537,7 +594,7 @@ export default function DirectorDashboard() {
 
   return (
     <>
-    <div className="min-h-screen relative overflow-x-hidden" style={{ background: "linear-gradient(170deg, #14141c 0%, #1a1a26 60%, #14141c 100%)" }}>
+    <div className="min-h-screen relative overflow-x-hidden" style={{ background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)" }}>
       <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
 
@@ -551,7 +608,7 @@ export default function DirectorDashboard() {
             </div>
             <div>
               <h1 className="text-lg font-bold text-white tracking-tight leading-none">Director Dashboard</h1>
-              <p className="text-[10px] text-white/30 mt-0.5 leading-none">Tournament Directors only</p>
+              <p className="text-base text-white/30 mt-0.5 leading-none">Tournament Directors only</p>
             </div>
           </div>
         </div>
@@ -595,8 +652,8 @@ export default function DirectorDashboard() {
               {sessions.filter(s => s.is_open).length === 0 ? (
               <div className="flex flex-col items-center py-4 gap-1">
                 <CalendarPlus className="w-5 h-5 text-white/15" />
-                <p className="text-white/50 text-sm">No open games</p>
-                <p className="text-white/25 text-xs">Start a new game below</p>
+                <p className="text-white/50 text-base">No open games</p>
+                <p className="text-white/25 text-base">Start a new game below</p>
               </div>
               ) : (
               <div className="flex flex-col gap-2">
@@ -616,7 +673,7 @@ export default function DirectorDashboard() {
                        <div className="flex items-center justify-between gap-2">
                          <div className="flex items-center gap-2 flex-1 min-w-0">
                              <LiveStatusIndicator />
-                             <span className="font-medium text-white text-sm truncate">{session.location}</span>
+                             <span className="font-medium text-white text-base truncate">{session.location}</span>
                            </div>
                         <button onClick={() => handleDeleteSession(session.id)}
                           className="w-7 h-7 flex items-center justify-center rounded-lg text-white/20 hover:text-red-400 transition-colors shrink-0"
@@ -626,32 +683,45 @@ export default function DirectorDashboard() {
                       </div>
 
                       {/* Metadata row */}
-                      <div className="text-xs text-white/40">
+                      <div className="text-base text-white/40">
                         {session.session_date ? new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", {month: "short", day: "numeric"}) : ''} · {session.game_type}
                       </div>
 
                       {/* Primary actions grid */}
                       <div className="grid grid-cols-2 gap-2">
                         <button
-                          className="text-xs px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
+                          className="text-base px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
                           onClick={() => { setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 50); }}>
                           + Add Player
                         </button>
                         <button
-                          className="text-xs px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
+                          className="text-base px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
                           onClick={() => setActiveTab("record")}>
                           Record Game
                         </button>
                         <button
-                          className={`text-xs px-3 py-2 rounded-lg border transition-colors text-center ${isHotwExpanded ? 'border-white/20 bg-white/10 text-white' : 'border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8'}`}
+                          className={`text-base px-3 py-2 rounded-lg border transition-colors text-center ${isHotwExpanded ? 'border-white/20 bg-white/10 text-white' : 'border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8'}`}
                           onClick={() => setExpandedSessions(prev => ({ ...prev, [`hotw_${session.id}`]: !prev[`hotw_${session.id}`] }))}>
-                          🃏 Hand of Week
+                          🃏 HOTW
                         </button>
-                        <button
-                          className="text-xs px-3 py-2 rounded-lg border border-red-500/20 bg-red-500/5 text-red-300 hover:text-red-200 hover:bg-red-500/10 transition-colors text-center"
-                          onClick={() => handleToggleSession(session)}>
-                          {session.is_open ? "End Game" : "Reopen"}
-                        </button>
+                        {(() => {
+                          const hasRecordedGame = games.some(
+                            g => g.location === session.location && g.game_date === session.session_date
+                          );
+                          const canEnd = !session.is_open || hasRecordedGame;
+                          return (
+                            <button
+                              className={`text-base px-3 py-2 rounded-lg border transition-colors text-center ${
+                                session.is_open && !hasRecordedGame
+                                  ? 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
+                                  : 'border-red-500/20 bg-red-500/5 text-red-300 hover:text-red-200 hover:bg-red-500/10'
+                              }`}
+                              title={session.is_open && !hasRecordedGame ? "Record game results first before ending this session" : ""}
+                              onClick={() => handleToggleSession(session)}>
+                              {session.is_open ? (hasRecordedGame ? "End Game" : "⚠ Record First") : "Reopen"}
+                            </button>
+                          );
+                        })()}
                       </div>
 
                         {/* Players Signed In section */}
@@ -660,8 +730,8 @@ export default function DirectorDashboard() {
                           onClick={() => setExpandedSessions(prev => ({ ...prev, [session.id]: !prev[session.id] }))}
                         >
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-white">Players signed in</span>
-                            <span className="text-xs text-white/50">({signedInIds.length})</span>
+                            <span className="text-base font-medium text-white">Players signed in</span>
+                            <span className="text-base text-white/50">({signedInIds.length})</span>
                           </div>
                           <ChevronDown className={`w-4 h-4 text-white/50 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
                         </button>
@@ -669,7 +739,7 @@ export default function DirectorDashboard() {
                         {isExpanded && (
                           <div className="flex flex-col divide-y" style={{ divideColor: "rgba(255,255,255,0.05)" }}>
                             {signedInIds.length === 0 ? (
-                              <div className="py-2.5 text-sm text-white/60">No players signed in yet</div>
+                              <div className="py-2.5 text-base text-white/60">No players signed in yet</div>
                             ) : signedInIds.map((pid, index) => {
                               const player = playersById[pid];
                               const hasProfilePic = player?.profile_picture;
@@ -685,8 +755,8 @@ export default function DirectorDashboard() {
                                         </span>
                                       )}
                                     </div>
-                                    <span className="text-xs font-medium text-white/50 shrink-0">{index + 1}.</span>
-                                    <span className="text-sm text-white/85 truncate">{nameById(pid)}</span>
+                                    <span className="text-base font-medium text-white/50 shrink-0">{index + 1}.</span>
+                                    <span className="text-base text-white/85 truncate">{nameById(pid)}</span>
                                   </div>
                                   <button
                                     onClick={async (e) => {
@@ -707,41 +777,74 @@ export default function DirectorDashboard() {
 
                         {isHotwExpanded && (
                           <div className="border-t border-white/10 pt-2.5 flex flex-col gap-2">
+                            <p className="text-sm text-white/40">Select a player to award +50 pts. Can be awarded multiple times.</p>
                             <Select value="__none__" onValueChange={async (pid) => {
-                              if (pid === "__none__" || handIds.includes(pid)) return;
+                              if (pid === "__none__") return;
                               const playerRecord = playersById[pid];
+                              const now = new Date();
+                              const quarter = `${now.getFullYear()}-Q${Math.floor(now.getMonth() / 3) + 1}`;
+                              // Award 50 pts to QuarterlyStats
+                              const existing = await base44.entities.QuarterlyStats.filter({ quarter, player_id: pid });
+                              if (existing.length > 0) {
+                                await base44.entities.QuarterlyStats.update(existing[0].id, {
+                                  points: (existing[0].points || 0) + 50,
+                                });
+                              } else {
+                                await base44.entities.QuarterlyStats.create({
+                                  quarter,
+                                  player_id: pid,
+                                  player_email: playerRecord?.email || "",
+                                  player_name: playerRecord ? getPlayerDisplayName(playerRecord) : "",
+                                  points: 50,
+                                  wins: 0,
+                                });
+                              }
+                              // Also update legacy User.total_points
                               const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
                               if (user) {
                                 await base44.entities.User.update(user.id, { total_points: (user.total_points || 0) + 50 });
                                 setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: (u.total_points || 0) + 50 } : u));
                               }
+                              // Allow duplicates — same player can receive HOTW multiple times
                               const newIds = [...handIds, pid];
                               await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
                               setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
                             }}>
-                              <SelectTrigger className="bg-white/5 border-white/10 text-white text-sm h-9">
-                                <SelectValue placeholder="Add player..." />
+                              <SelectTrigger className="bg-white/5 border-white/10 text-white text-base h-9">
+                                <SelectValue placeholder="Award HOTW to..." />
                               </SelectTrigger>
                               <SelectContent className="bg-gray-900 border-gray-700">
-                                <SelectItem value="__none__" disabled className="text-gray-500">Add player...</SelectItem>
-                                {signedInSearchIndex.filter(e => !handIds.includes(e.id)).map(e => (
+                                <SelectItem value="__none__" disabled className="text-gray-500">Award HOTW to...</SelectItem>
+                                {signedInSearchIndex.map(e => (
                                   <SelectItem key={e.id} value={e.id} className="text-white">{e.displayName}</SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
                             {handIds.length > 0 && (
                               <div className="flex flex-wrap gap-1.5">
-                                {handIds.map(pid => (
-                                  <span key={pid} className="flex items-center gap-2 bg-white/5 border border-white/10 text-white/70 text-xs rounded-full px-2.5 py-1">
-                                    {nameById(pid)}
+                                {handIds.map((pid, idx) => (
+                                  <span key={idx} className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-300 text-base rounded-full px-2.5 py-1">
+                                    🃏 {nameById(pid)} <span className="text-amber-400/60 text-sm">+50</span>
                                     <button onClick={async () => {
                                       const playerRecord = playersById[pid];
+                                      const now = new Date();
+                                      const quarter = `${now.getFullYear()}-Q${Math.floor(now.getMonth() / 3) + 1}`;
+                                      // Deduct 50 pts from QuarterlyStats
+                                      const existing = await base44.entities.QuarterlyStats.filter({ quarter, player_id: pid });
+                                      if (existing.length > 0) {
+                                        await base44.entities.QuarterlyStats.update(existing[0].id, {
+                                          points: Math.max(0, (existing[0].points || 0) - 50),
+                                        });
+                                      }
+                                      // Also update legacy User.total_points
                                       const user = users.find(u => u.email?.trim().toLowerCase() === playerRecord?.email?.trim().toLowerCase());
                                       if (user) {
                                         await base44.entities.User.update(user.id, { total_points: Math.max(0, (user.total_points || 0) - 50) });
                                         setUsers(prev => prev.map(u => u.id === user.id ? { ...u, total_points: Math.max(0, (u.total_points || 0) - 50) } : u));
                                       }
-                                      const newIds = handIds.filter(id => id !== pid);
+                                      // Remove only one instance of this player's ID
+                                      const newIds = [...handIds];
+                                      newIds.splice(idx, 1);
                                       await GameSession.update(session.id, { hand_of_week_player_ids: newIds });
                                       setSessions(prev => prev.map(s => s.id === session.id ? { ...s, hand_of_week_player_ids: newIds } : s));
                                     }} className="hover:text-white">✕</button>
@@ -793,7 +896,7 @@ export default function DirectorDashboard() {
                       </SelectTrigger>
                       <SelectContent className="bg-gray-900 border-gray-700 text-white">
                         <SelectItem value="__none__" disabled className="text-gray-400">Select type</SelectItem>
-                        {["Main Game","Turbo"].map(t => <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>)}
+                        {["Main Game", "Turbo Game"].map(t => <SelectItem key={t} value={t} className="text-white">{t}</SelectItem>)}
                       </SelectContent>
                     </Select>
                   </div>
@@ -808,15 +911,15 @@ export default function DirectorDashboard() {
                       </SelectTrigger>
                       <SelectContent className="bg-gray-900 border-gray-700 text-white">
                         <SelectItem value="__none__" disabled className="text-gray-400">Select location</SelectItem>
-                        {["Tavern 018 Sunday","Tavern 018 Wednesday","East End Grill","Habana Club","Meddlesome"].map(loc =>
-                          <SelectItem key={loc} value={loc} className="text-white">{loc}</SelectItem>
+                        {locations.map(loc =>
+                          <SelectItem key={loc.id} value={loc.name} className="text-white">{loc.name}</SelectItem>
                         )}
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <button type="submit" disabled={isCreatingSession || !newSession.location}
-                  className="w-full h-12 rounded-2xl border border-white/15 text-white text-sm font-medium transition-all disabled:opacity-40"
+                  className="w-full h-12 rounded-2xl border border-white/15 text-white text-base font-medium transition-all disabled:opacity-40"
                   style={{ background: "rgba(255,255,255,0.07)" }}>
                   {isCreatingSession ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Open Game"}
                 </button>
@@ -836,7 +939,7 @@ export default function DirectorDashboard() {
                     placeholder="Search player name or #..."
                     value={dirSignInSearch}
                     onChange={e => { setDirSignInSearch(e.target.value); if (dirSignInSelectedPlayer) setDirSignInSelectedPlayer(null); }}
-                    className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/25 outline-none"
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-base text-white placeholder:text-white/25 outline-none"
                     autoComplete="off"
                   />
                   {dirSignInSearchLoading && (
@@ -845,7 +948,7 @@ export default function DirectorDashboard() {
                     </div>
                   )}
                   {!dirSignInSelectedPlayer && !dirSignInSearchLoading && dirSignInSearch.trim().length >= 1 && dirSignInResults.length === 0 && (
-                    <div className="absolute z-50 w-full mt-1 rounded-lg border border-white/10 bg-gray-900 p-3 text-white/40 text-sm text-center shadow-lg">
+                    <div className="absolute z-50 w-full mt-1 rounded-lg border border-white/10 bg-gray-900 p-3 text-white/40 text-base text-center shadow-lg">
                       No players found
                     </div>
                   )}
@@ -853,7 +956,7 @@ export default function DirectorDashboard() {
                     <div className="absolute z-50 w-full mt-1 rounded-lg border border-white/10 bg-gray-900 overflow-hidden max-h-48 overflow-y-auto shadow-lg">
                       {dirSignInResults.map(p => (
                         <button key={p.id} type="button"
-                          className="w-full text-left px-3 py-2 hover:bg-white/5 text-sm text-white border-b border-white/5 last:border-0"
+                          className="w-full text-left px-3 py-2 hover:bg-white/5 text-base text-white border-b border-white/5 last:border-0"
                           onMouseDown={() => { setDirSignInSelectedPlayer(p); setDirSignInSearch(p.display_name); setDirSignInResults([]); }}>
                           {p.display_name}{p.player_number != null ? ` (#${p.player_number})` : ''}
                         </button>
@@ -861,8 +964,8 @@ export default function DirectorDashboard() {
                     </div>
                   )}
                   {dirSignInSelectedPlayer && (
-                    <div className="mt-1 flex items-center justify-between text-sm px-1">
-                      <span className="text-green-400 text-xs">✓ {dirSignInSelectedPlayer.display_name}</span>
+                    <div className="mt-1 flex items-center justify-between text-base px-1">
+                      <span className="text-green-400 text-base">✓ {dirSignInSelectedPlayer.display_name}</span>
                       <button type="button" onClick={() => { setDirSignInSelectedPlayer(null); setDirSignInSearch(""); setDirSignInResults([]); }} className="text-white/25 hover:text-red-400 ml-2">
                         <X className="w-3.5 h-3.5" />
                       </button>
@@ -870,12 +973,12 @@ export default function DirectorDashboard() {
                   )}
                 </div>
                 <button type="submit" disabled={dirSignInStatus === "loading"}
-                  className="w-full rounded-lg border border-white/15 py-2 text-white text-sm font-medium transition-all"
+                  className="w-full rounded-lg border border-white/15 py-2 text-white text-base font-medium transition-all"
                   style={{ background: "rgba(255,255,255,0.07)" }}>
                   {dirSignInStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Sign In Player"}
                 </button>
                 {dirSignInMessage && (
-                  <p className={`text-xs text-center ${dirSignInStatus === "success" ? "text-green-400" : "text-red-400"}`}>
+                  <p className={`text-base text-center ${dirSignInStatus === "success" ? "text-green-400" : "text-red-400"}`}>
                     {dirSignInMessage}
                   </p>
                 )}
@@ -890,8 +993,8 @@ export default function DirectorDashboard() {
             <div className={CARD}>
               <div className="flex flex-col items-center py-6 gap-1.5">
                 <Trophy className="w-5 h-5 text-white/15" />
-                <p className="text-white/50 text-sm">No open game session</p>
-                <p className="text-white/25 text-xs">Open a game in the Sessions tab first</p>
+                <p className="text-white/50 text-base">No open game session</p>
+                <p className="text-white/25 text-base">Open a game in the Sessions tab first</p>
               </div>
             </div>
           ) : (
@@ -900,31 +1003,31 @@ export default function DirectorDashboard() {
                 <div className={CARD_HEADER}>
                   <div className={ICON_BOX}><Trophy className="w-5 h-5 text-white/80" /></div>
                   <div className="min-w-0">
-                    <p className="text-white font-medium text-sm leading-tight truncate">
+                    <p className="text-white font-medium text-base leading-tight truncate">
                       Record Game — {sessions.find(s => s.is_open)?.location}
                     </p>
-                    <p className="text-white/35 text-xs mt-0.5">
+                    <p className="text-white/35 text-base mt-0.5">
                       {sessions.find(s => s.is_open)?.game_type} · {getEffectiveSignedInIds(sessions.find(s => s.is_open) || {}, players).length} signed in
                     </p>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Game Date</label>
+                  <label className="text-base text-white/40 uppercase tracking-wide">Game Date</label>
                   <input type="date" value={gameData.game_date}
                     onChange={e => setGameData({...gameData, game_date: e.target.value})}
-                    className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white [color-scheme:dark] outline-none"
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-base text-white [color-scheme:dark] outline-none"
                     required />
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Placements</label>
-                  <p className="text-[10px] text-white/25">1st=1000pts · 2nd=750pts · … · 9th=50pts</p>
+                  <label className="text-base text-white/40 uppercase tracking-wide">Placements</label>
+                  <p className="text-base text-white/25">{isTurbo ? "1st=500pts · 2nd=250pts" : "1st=1000pts · 2nd=750pts · … · 9th=50pts"}</p>
                   <div className="flex flex-col gap-1.5 mt-1">
                     {PLACE_LABELS.map((label, i) => (
                       <div key={i} className="flex items-center gap-2">
-                        <div className="w-8 text-xs font-bold text-right shrink-0 text-white/40">{label}</div>
-                        <div className="text-xs text-white/25 w-14 shrink-0">{POINTS[i]}pts</div>
+                        <div className="w-8 text-base font-bold text-right shrink-0 text-white/40">{label}</div>
+                        <div className="text-base text-white/25 w-14 shrink-0">{POINTS[i]}pts</div>
                         <div className="relative flex-1">
                           <input
                             placeholder={`${label} place…`}
@@ -936,7 +1039,7 @@ export default function DirectorDashboard() {
                             }}
                             onFocus={() => { const u = [...showPlacementSuggestions]; u[i] = true; setShowPlacementSuggestions(u); }}
                             onBlur={() => setTimeout(() => { const u = [...showPlacementSuggestions]; u[i] = false; setShowPlacementSuggestions(u); }, 150)}
-                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white placeholder:text-white/20 outline-none"
+                            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-base text-white placeholder:text-white/20 outline-none"
                           />
                           {placements[i] && (
                             <button type="button" onClick={() => {
@@ -950,7 +1053,7 @@ export default function DirectorDashboard() {
                             <div className="absolute z-50 w-full mt-1 rounded-lg border border-white/10 bg-gray-900 overflow-hidden shadow-lg">
                               {getPlacementSuggestions(i).map(entry => (
                                 <button key={entry.id} type="button"
-                                  className="w-full text-left px-3 py-2 hover:bg-white/5 text-sm text-white border-b border-white/5 last:border-0"
+                                  className="w-full text-left px-3 py-2 hover:bg-white/5 text-base text-white border-b border-white/5 last:border-0"
                                   onMouseDown={() => {
                                     const u = [...placements];
                                     for (let j = 0; j < u.length; j++) { if (u[j] === entry.id) u[j] = ""; }
@@ -970,15 +1073,15 @@ export default function DirectorDashboard() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] text-white/40 uppercase tracking-wide">Notes (optional)</label>
+                  <label className="text-base text-white/40 uppercase tracking-wide">Notes (optional)</label>
                   <textarea value={gameData.notes}
                     onChange={e => setGameData({...gameData, notes: e.target.value})}
-                    className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/20 outline-none h-16 resize-none"
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-base text-white placeholder:text-white/20 outline-none h-16 resize-none"
                     placeholder="Any notes…" />
                 </div>
 
                 <button type="submit" disabled={isSubmitting}
-                  className="w-full rounded-lg border border-white/15 py-2 text-white text-sm font-semibold transition-all"
+                  className="w-full rounded-lg border border-white/15 py-2 text-white text-base font-semibold transition-all"
                   style={{ background: "rgba(255,255,255,0.07)" }}>
                   {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Record Game"}
                 </button>
@@ -995,14 +1098,14 @@ export default function DirectorDashboard() {
               <div className="flex items-center gap-2">
                 <span className="text-white font-medium">Pending Requests</span>
                 {inviteRequests.length > 0 && (
-                  <span className="text-[10px] font-bold bg-red-600/80 text-white rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
+                  <span className="text-base font-bold bg-red-600/80 text-white rounded-full px-1.5 py-0.5 leading-none">{inviteRequests.length}</span>
                 )}
               </div>
             </div>
             {inviteRequests.length === 0 ? (
               <div className="flex flex-col items-center py-6 gap-1">
                 <Mail className="w-5 h-5 text-white/15" />
-                <p className="text-white/50 text-sm">No pending requests</p>
+                <p className="text-white/50 text-base">No pending requests</p>
               </div>
             ) : (
               <div className="flex flex-col gap-2">
@@ -1010,17 +1113,17 @@ export default function DirectorDashboard() {
                   <div key={req.id} className="flex items-center justify-between gap-3 rounded-xl border border-white/8 bg-white/3 px-3 py-2.5"
                     style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
                     <div className="min-w-0">
-                      <p className="text-white text-sm font-medium truncate">{req.first_name} {req.last_name}</p>
-                      <p className="text-white/35 text-xs truncate">{req.email}</p>
+                      <p className="text-white text-base font-medium truncate">{req.first_name} {req.last_name}</p>
+                      <p className="text-white/35 text-base truncate">{req.email}</p>
                     </div>
                     <div className="flex gap-1.5 shrink-0">
                       <button onClick={() => handleApproveRequest(req)}
-                        className="text-xs px-2.5 py-1.5 rounded-lg border border-white/15 bg-white/8 text-white font-medium transition-colors hover:bg-white/15"
+                        className="text-base px-2.5 py-1.5 rounded-lg border border-white/15 bg-white/8 text-white font-medium transition-colors hover:bg-white/15"
                         style={{ background: "rgba(255,255,255,0.07)" }}>
                         Approve
                       </button>
                       <button onClick={() => handleDeclineRequest(req)}
-                        className="text-xs px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/3 text-white/50 transition-colors hover:text-white/80">
+                        className="text-base px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/3 text-white/50 transition-colors hover:text-white/80">
                         Decline
                       </button>
                     </div>
@@ -1041,7 +1144,7 @@ export default function DirectorDashboard() {
             {games.length === 0 ? (
               <div className="flex flex-col items-center py-6 gap-1">
                 <Trophy className="w-5 h-5 text-white/15" />
-                <p className="text-white/50 text-sm">No games recorded yet</p>
+                <p className="text-white/50 text-base">No games recorded yet</p>
               </div>
             ) : (
               <div className="flex flex-col gap-2">
@@ -1054,8 +1157,8 @@ export default function DirectorDashboard() {
                       <div className="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-white/3 transition-colors"
                         onClick={() => setExpandedGameId(isExpanded ? null : game.id)}>
                         <div className="flex-1 min-w-0">
-                          <p className="text-white text-sm font-medium truncate">{game.game_type} {game.location && `· ${game.location}`}</p>
-                          <p className="text-white/35 text-xs">
+                          <p className="text-white text-base font-medium truncate">{game.game_type} {game.location && `· ${game.location}`}</p>
+                          <p className="text-white/35 text-base">
                             {game.game_date ? new Date(game.game_date + 'T12:00:00').toLocaleDateString() : ''} · Winner: {resolveGameWinner(game)}
                           </p>
                         </div>
@@ -1076,7 +1179,7 @@ export default function DirectorDashboard() {
                               </button>
                             </>
                           )}
-                          <span className="text-white/20 text-xs" onClick={() => setExpandedGameId(isExpanded ? null : game.id)}>
+                          <span className="text-white/20 text-base" onClick={() => setExpandedGameId(isExpanded ? null : game.id)}>
                             {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                           </span>
                         </div>
@@ -1084,9 +1187,9 @@ export default function DirectorDashboard() {
                       {isExpanded && (
                         <div className="px-3 pb-3 border-t border-white/5 pt-2 flex flex-col gap-0.5">
                           {placementIds.length === 0 ? (
-                            <p className="text-white/25 text-xs">No placement data.</p>
+                            <p className="text-white/25 text-base">No placement data.</p>
                           ) : placementIds.map((pid, i) => (
-                            <div key={pid} className="flex items-center gap-2 text-xs">
+                            <div key={pid} className="flex items-center gap-2 text-base">
                               <span className="text-white/25 w-5 text-right shrink-0">{i + 1}.</span>
                               <span className={i === 0 ? 'text-yellow-400 font-semibold' : 'text-white/60'}>{nameById(pid)}</span>
                               <span className="text-white/20 ml-auto">{POINTS[i] ? `${POINTS[i]}pts` : ''}</span>

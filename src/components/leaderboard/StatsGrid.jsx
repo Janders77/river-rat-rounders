@@ -37,7 +37,7 @@ export default function StatsGrid({ stats }) {
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-gray-400 text-sm font-medium mb-2">{stat.title}</p>
+                <p className="text-gray-400 text-base font-medium mb-2">{stat.title}</p>
                 <p className="text-3xl font-bold text-white">{stat.value}</p>
               </div>
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg`}>

@@ -125,24 +125,25 @@ export default function LocationLeaderboard() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-green-900/30">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
+    <div className="min-h-screen relative overflow-x-hidden" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none" style={{background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)"}} />
+      <div className="relative max-w-md mx-auto w-full px-4 pt-5 pb-10">
+        <div className="mb-3">
           <Link
             to={createPageUrl("Leaderboard")}
-            className="flex items-center gap-2 text-amber-400 hover:text-amber-300 mb-6 font-medium transition-colors"
+            className="flex items-center gap-1.5 text-white/40 hover:text-white/70 mb-4 text-base transition-colors"
           >
-            <ChevronLeft className="w-5 h-5" />
-            Back to Overall Leaderboard
+            <ChevronLeft className="w-4 h-4" />
+            Back to Leaderboard
           </Link>
 
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg">
-              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/db52ea530_red2012-2.jpg" alt="River Rat Rounders" className="w-full h-full object-cover" />
+          <div className="flex items-center gap-2.5 mb-4">
+            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+              <Trophy className="w-5 h-5 text-white/80" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">{locationName}</h1>
-              <p className="text-gray-400">Location Leaderboard</p>
+              <h1 className="text-lg font-bold text-white tracking-tight leading-none">{locationName || "Location"}</h1>
+              <p className="text-base text-white/40 mt-0.5 leading-none">Location leaderboard</p>
             </div>
           </div>
 
@@ -154,8 +155,8 @@ export default function LocationLeaderboard() {
                   onClick={() => setSelectedQuarter(q)}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     selectedQuarter === q
-                      ? 'bg-amber-500 text-black'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                      ? 'bg-red-500/20 border border-red-500/40 text-red-300'
+                      : 'bg-white/5 border border-white/10 text-white/50 hover:text-white/80'
                   }`}
                 >
                   {q}
@@ -165,7 +166,7 @@ export default function LocationLeaderboard() {
             <Select value={location || ""} onValueChange={(value) => {
               window.location.href = `${createPageUrl("LocationLeaderboard")}?location=${encodeURIComponent(value)}`;
             }}>
-              <SelectTrigger className="w-56 bg-gray-800 border-gray-700">
+              <SelectTrigger className="w-44 h-8 text-base bg-white/5 border-white/10 text-white">
                 <MapPin className="w-4 h-4 mr-2" />
                 <SelectValue placeholder="Select Location" />
               </SelectTrigger>
@@ -183,7 +184,7 @@ export default function LocationLeaderboard() {
         {isLoading ? (
           <div className="space-y-3">
             {Array(10).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-16 bg-gray-800" />
+              <Skeleton key={i} className="h-14 rounded-xl" style={{background:"rgba(255,255,255,0.04)"}} />
             ))}
           </div>
         ) : getSortedPlayers().length === 0 ? (
@@ -197,10 +198,10 @@ export default function LocationLeaderboard() {
               <Link
                 key={player.id}
                 to={`${createPageUrl("PlayerProfile")}?email=${player.email}`}
-                className="glass-link flex items-center justify-between p-4 rounded-lg border border-gray-800 hover:border-amber-500/50 transition-all group"
+                className="flex items-center justify-between p-3 rounded-xl border border-white/10 bg-white/5 hover:border-white/20 transition-all group"
               >
                 <div className="flex items-center gap-4 flex-1">
-                  <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center text-gray-900 font-bold text-sm shrink-0 min-w-8">
+                  <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center text-gray-900 font-bold text-base shrink-0 min-w-8">
                     {index + 1}
                   </div>
                   {(() => {
@@ -209,7 +210,7 @@ export default function LocationLeaderboard() {
                     return imageUrl ? (
                       <img src={imageUrl} alt={getPlayerName(player)} className="w-9 h-9 rounded-full object-cover border-2 border-gray-700 shrink-0" />
                     ) : (
-                      <div className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold shrink-0">
+                      <div className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-base font-bold shrink-0">
                         {getPlayerName(player)[0]?.toUpperCase() || "?"}
                       </div>
                     );
@@ -218,13 +219,13 @@ export default function LocationLeaderboard() {
                     {getPlayerName(player)}
                   </div>
                 </div>
-                <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-6 text-base">
                   <div className="text-right">
-                    <div className="text-gray-400 text-xs">Wins</div>
+                    <div className="text-gray-400 text-base">Wins</div>
                     <div className="text-emerald-400 font-bold text-lg">{player.locationWins}</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-gray-400 text-xs">Points</div>
+                    <div className="text-gray-400 text-base">Points</div>
                     <div className="text-amber-400 font-bold text-lg">{player.locationPoints}</div>
                   </div>
                 </div>

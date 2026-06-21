@@ -40,7 +40,7 @@ export default function PlayerSignUp() {
         </div>
         <div className="flex flex-col flex-1 min-w-0 text-left">
           <span className="text-base font-semibold text-white leading-tight">New Player? Sign Up</span>
-          <span className="text-sm text-white/65 mt-0.5">Request to join the River Rat Rounders</span>
+          <span className="text-base text-white/65 mt-0.5">Request to join the River Rat Rounders</span>
         </div>
         <ChevronRight className="w-5 h-5 text-white/20 shrink-0" />
       </button>
@@ -52,7 +52,7 @@ export default function PlayerSignUp() {
       <div className="w-full flex flex-col items-center gap-4 p-6 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)" }}>
         <CheckCircle2 className="w-12 h-12 text-green-400" />
         <p className="text-white font-semibold text-base">Request Sent!</p>
-        <p className="text-gray-400 text-sm">The director will send you an invite to join soon.</p>
+        <p className="text-gray-400 text-base">The director will send you an invite to join soon.</p>
       </div>
     );
   }

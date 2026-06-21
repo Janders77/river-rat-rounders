@@ -122,17 +122,19 @@ export default function LeagueCalendar() {
   });
 
   return (
-    <div className="min-h-screen p-3 sm:p-6" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen relative overflow-x-hidden" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+        style={{background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)"}} />
+      <div className="max-w-md mx-auto w-full px-4 pt-5 pb-10 flex flex-col gap-3">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0">
               <CalendarDays className="w-5 h-5 text-white/80" />
             </div>
             <div className="min-w-0">
-              <h1 className="text-xl sm:text-3xl font-bold text-white">League Calendar</h1>
-              <p className="text-gray-400 text-xs sm:text-sm">Upcoming events & games</p>
+              <h1 className="text-lg font-bold text-white tracking-tight leading-none">League Calendar</h1>
+              <p className="text-base text-gray-600 mt-0.5 leading-none">Upcoming events & games</p>
             </div>
           </div>
           {isAdmin && !showForm && (
@@ -150,7 +152,7 @@ export default function LeagueCalendar() {
 
         {/* Form */}
         {showForm && isAdmin && (
-          <Card className="bg-[#1A1B20] border-gray-700 mb-8">
+          <Card className="bg-white/5 border-white/10 mb-8">
             <CardContent className="pt-6 space-y-4">
               <h2 className="text-white font-semibold text-lg mb-2">
                 {editingEvent ? "Edit Event" : "New Event"}
@@ -163,7 +165,7 @@ export default function LeagueCalendar() {
               />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-gray-400 text-xs mb-1 block">Date *</label>
+                  <label className="text-gray-400 text-base mb-1 block">Date *</label>
                   <Input
                     type="date"
                     value={form.event_date}
@@ -172,7 +174,7 @@ export default function LeagueCalendar() {
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 text-xs mb-1 block">Time</label>
+                  <label className="text-gray-400 text-base mb-1 block">Time</label>
                   <Input
                     placeholder="e.g. 7:00 PM"
                     value={form.event_time}
@@ -212,8 +214,8 @@ export default function LeagueCalendar() {
               />
               {/* Image Upload */}
               <div>
-                <label className="text-gray-400 text-xs mb-2 block">Event Images</label>
-                <label className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-dashed border-gray-600 hover:border-red-500 text-gray-400 hover:text-red-400 transition-colors w-fit text-sm ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
+                <label className="text-gray-400 text-base mb-2 block">Event Images</label>
+                <label className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-dashed border-gray-600 hover:border-red-500 text-gray-400 hover:text-red-400 transition-colors w-fit text-base ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
                   <Upload className="w-4 h-4" />
                   {uploadingImage ? "Uploading..." : "Upload Images"}
                   <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
@@ -331,7 +333,7 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-1">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="font-semibold text-sm text-white">{event.title}</span>
+                  <span className="font-semibold text-base text-white">{event.title}</span>
                   <Badge className={`text-[9px] border px-1 py-0 ${EVENT_TYPE_COLORS[event.event_type] || EVENT_TYPE_COLORS["Other"]}`}>
                     {event.event_type}
                   </Badge>
@@ -349,37 +351,38 @@ function EventCard({ event, isAdmin, onEdit, onDelete, highlight }) {
               </div>
               <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1">
                 {event.event_time && (
-                  <div className="flex items-center gap-1 text-gray-400 text-xs">
+                  <div className="flex items-center gap-1 text-gray-400 text-base">
                     <Clock className="w-3 h-3 flex-shrink-0" /><span>{event.event_time}</span>
                   </div>
                 )}
                 {event.location && (
-                  <div className="flex items-center gap-1 text-gray-400 text-xs">
+                  <div className="flex items-center gap-1 text-gray-400 text-base">
                     <MapPin className="w-3 h-3 flex-shrink-0" /><span className="truncate">{event.location}</span>
                   </div>
                 )}
               </div>
               {event.address && (
-                <div className="text-gray-500 text-[10px] mt-0.5 truncate">{event.address}</div>
+                <div className="text-gray-500 text-base mt-0.5 truncate">{event.address}</div>
               )}
               {event.description && (
-                <p className="text-gray-400 text-xs mt-1">{event.description}</p>
-              )}
-              {event.image_urls?.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {event.image_urls.map((url, idx) => (
-                    <img
-                      key={idx}
-                      src={url}
-                      alt=""
-                      className="max-w-[100px] rounded-lg border border-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
-                      onClick={() => setLightboxUrl(url)}
-                    />
-                  ))}
-                </div>
+                <p className="text-gray-400 text-base mt-1">{event.description}</p>
               )}
             </div>
           </div>
+          {event.image_urls?.length > 0 && (
+            <div className={`mt-3 grid gap-2 ${event.image_urls.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
+              {event.image_urls.map((url, idx) => (
+                <img
+                  key={idx}
+                  src={url}
+                  alt=""
+                  className="w-full rounded-lg border border-gray-700/60 cursor-pointer hover:opacity-80 transition-opacity object-cover"
+                  style={{ maxHeight: "220px" }}
+                  onClick={() => setLightboxUrl(url)}
+                />
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </>

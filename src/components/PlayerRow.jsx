@@ -61,12 +61,12 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
         </div>
         <div className="flex gap-2 justify-end">
           <button onClick={handleCancel} disabled={saving}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white/40 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base text-white/40 transition-colors"
             style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
             <X className="w-3.5 h-3.5" /> Cancel
           </button>
           <button onClick={handleSave} disabled={saving}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base font-semibold text-white transition-colors"
             style={{ background: "rgba(255,200,100,0.15)", border: "1px solid rgba(255,200,100,0.25)" }}>
             <Check className="w-3.5 h-3.5" /> {saving ? "Saving…" : "Save"}
           </button>
@@ -82,7 +82,7 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
       style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
     >
       {/* Avatar */}
-      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-xs font-bold text-white/40"
+      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-base font-bold text-white/40"
         style={{ background: "rgba(255,255,255,0.06)" }}>
         {initials || "?"}
       </div>
@@ -90,14 +90,14 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
       {/* Text column */}
       <div className="flex flex-col flex-1 min-w-0">
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-white font-medium text-sm truncate min-w-0">
+          <span className="text-white font-medium text-base truncate min-w-0">
             {player.first_name} {player.last_name}
           </span>
           {player.card_guards > 0 && (
-            <span className="text-[10px] text-amber-400/70 shrink-0">🛡️{player.card_guards}</span>
+            <span className="text-base text-amber-400/70 shrink-0">🛡️{player.card_guards}</span>
           )}
         </div>
-        <div className="flex items-center gap-2 min-w-0 text-xs text-white/35">
+        <div className="flex items-center gap-2 min-w-0 text-base text-white/35">
           {player.player_number != null && (
             <span className="shrink-0 font-mono">#{player.player_number}</span>
           )}

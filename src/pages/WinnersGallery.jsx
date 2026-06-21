@@ -26,7 +26,7 @@ export default function WinnersGallery() {
            </div>
            <div>
              <h1 className="text-lg font-semibold text-white leading-tight">Winners Gallery</h1>
-             <p className="text-xs text-white/50 mt-0.5">Celebrating our champions</p>
+             <p className="text-base text-white/50 mt-0.5">Celebrating our champions</p>
            </div>
          </div>
 
@@ -40,7 +40,7 @@ export default function WinnersGallery() {
          ) : photos.length === 0 ? (
            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-8 text-center">
              <Trophy className="w-8 h-8 mx-auto mb-2 text-white/20" />
-             <p className="text-sm text-white/60">No winners posted yet</p>
+             <p className="text-base text-white/60">No winners posted yet</p>
            </div>
          ) : (
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -57,11 +57,11 @@ export default function WinnersGallery() {
                  />
                  {/* Premium gradient overlay */}
                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-3">
-                   <div className="text-white text-sm font-semibold truncate">
+                   <div className="text-white text-base font-semibold truncate">
                      {photo.winner_name || "Winner"}
                    </div>
                    {(photo.location || photo.game_date) && (
-                     <div className="text-white/50 text-xs mt-1 truncate">
+                     <div className="text-white/50 text-base mt-1 truncate">
                        {photo.location}
                        {photo.location && photo.game_date ? " · " : ""}
                        {photo.game_date && new Date(photo.game_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
@@ -93,7 +93,7 @@ export default function WinnersGallery() {
                 </div>
               )}
               {(selected.location || selected.game_date) && (
-                <div className="text-gray-400 text-sm mt-1">
+                <div className="text-gray-400 text-base mt-1">
                   {selected.location}{selected.location && selected.game_date ? " · " : ""}
                   {selected.game_date && new Date(selected.game_date).toLocaleDateString()}
                 </div>

@@ -11,14 +11,14 @@ export const DIRECTOR_ROLES = {
   "Tournament Director": {
     canRecordGames: true,
     canManageSessions: true,
-    canManagePlayers: true,
+    canManagePlayers: false,
     canUploadPhotos: true,
     canManageDirectors: false,
     canApproveRequests: true,
   },
   "Assistant Director": {
     canRecordGames: true,
-    canManageSessions: false,
+    canManageSessions: true,
     canManagePlayers: false,
     canUploadPhotos: false,
     canManageDirectors: false,

@@ -91,7 +91,7 @@ export default function Community() {
   const rejectedPosts = posts.filter(p => p.status === "rejected");
 
   return (
-    <div className="min-h-screen relative" style={{ background: "linear-gradient(170deg, #14141c 0%, #1a1a26 60%, #14141c 100%)" }}>
+    <div className="min-h-screen relative" style={{ background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)" }}>
       <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
 
@@ -105,7 +105,7 @@ export default function Community() {
             </div>
             <div>
               <h1 className="text-lg font-bold text-white tracking-tight leading-none">Community Board</h1>
-              <p className="text-[10px] text-gray-600 mt-0.5 leading-none">Player ads & announcements</p>
+              <p className="text-base text-gray-600 mt-0.5 leading-none">Player ads & announcements</p>
             </div>
           </div>
           {!showForm && (
@@ -147,7 +147,7 @@ export default function Community() {
               <div>
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="post-image" />
                 <label htmlFor="post-image"
-                  className="flex items-center gap-2 cursor-pointer text-xs px-3 py-2 rounded-lg w-fit transition-colors"
+                  className="flex items-center gap-2 cursor-pointer text-base px-3 py-2 rounded-lg w-fit transition-colors"
                   style={{ border: "1px dashed rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.35)" }}>
                   {imageUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
                   {form.image_url ? "Image uploaded ✓" : "Upload image"}
@@ -155,12 +155,12 @@ export default function Community() {
               </div>
               <div className="flex gap-2 pt-1">
                 <button type="button" onClick={() => setShowForm(false)}
-                  className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                  className="flex-1 py-2.5 rounded-lg text-base font-medium transition-colors"
                   style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)" }}>
                   Cancel
                 </button>
                 <button type="submit" disabled={submitting}
-                  className="flex-1 py-2.5 rounded-lg text-sm font-semibold text-white transition-all"
+                  className="flex-1 py-2.5 rounded-lg text-base font-semibold text-white transition-all"
                   style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
                   {submitting ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Submit for Approval"}
                 </button>
@@ -179,7 +179,7 @@ export default function Community() {
             {/* Admin: Pending Posts */}
             {isAdmin && pendingPosts.length > 0 && (
               <div>
-                <p className="text-[10px] text-white/25 uppercase tracking-widest font-semibold mb-2 px-0.5">
+                <p className="text-base text-white/25 uppercase tracking-widest font-semibold mb-2 px-0.5">
                   Pending · {pendingPosts.length}
                 </p>
                 <div className="flex flex-col gap-2">
@@ -193,7 +193,7 @@ export default function Community() {
             {/* Approved Posts */}
             <div>
               {isAdmin && (
-                <p className="text-[10px] text-white/25 uppercase tracking-widest font-semibold mb-2 px-0.5">
+                <p className="text-base text-white/25 uppercase tracking-widest font-semibold mb-2 px-0.5">
                   Approved · {approvedPosts.length}
                 </p>
               )}
@@ -202,8 +202,8 @@ export default function Community() {
                   <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center mb-1">
                     <Megaphone className="w-5 h-5 text-white/20" />
                   </div>
-                  <p className="text-white/50 text-sm font-medium">No posts yet</p>
-                  <p className="text-white/25 text-xs">Be the first to advertise</p>
+                  <p className="text-white/50 text-base font-medium">No posts yet</p>
+                  <p className="text-white/25 text-base">Be the first to advertise</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -217,7 +217,7 @@ export default function Community() {
             {/* Admin: Rejected Posts */}
             {isAdmin && rejectedPosts.length > 0 && (
               <div>
-                <p className="text-[10px] text-white/25 uppercase tracking-widest font-semibold mb-2 px-0.5">
+                <p className="text-base text-white/25 uppercase tracking-widest font-semibold mb-2 px-0.5">
                   Rejected · {rejectedPosts.length}
                 </p>
                 <div className="flex flex-col gap-2">
@@ -246,7 +246,7 @@ function PostCard({ post, isAdmin, onApprove, onReject, onDelete }) {
       <div className="px-3.5 py-3 flex flex-col gap-1.5">
         {/* Title row */}
         <div className="flex items-start justify-between gap-2">
-          <span className="text-white font-semibold text-sm leading-tight">{post.title}</span>
+          <span className="text-white font-semibold text-base leading-tight">{post.title}</span>
           {isAdmin && (
             <div className="flex gap-1 shrink-0">
               {post.status !== "approved" && (
@@ -270,18 +270,18 @@ function PostCard({ post, isAdmin, onApprove, onReject, onDelete }) {
         </div>
 
         {/* Body */}
-        <p className="text-white/50 text-xs leading-relaxed">{post.body}</p>
+        <p className="text-white/50 text-base leading-relaxed">{post.body}</p>
 
         {/* Contact */}
         {post.contact_info && (
           <div className="flex items-center gap-1.5 mt-0.5">
             <Phone className="w-3 h-3 text-white/25 shrink-0" />
-            <span className="text-white/40 text-xs">{post.contact_info}</span>
+            <span className="text-white/40 text-base">{post.contact_info}</span>
           </div>
         )}
 
         {/* Author */}
-        <p className="text-white/20 text-[10px] mt-0.5">By {post.author_name || "Unknown Player"}</p>
+        <p className="text-white/20 text-base mt-0.5">By {post.author_name || "Unknown Player"}</p>
       </div>
     </div>
   );

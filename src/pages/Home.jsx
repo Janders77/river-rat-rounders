@@ -33,7 +33,7 @@ function NavTile({ icon: Icon, title, desc, url }) {
       </div>
       <div className="flex flex-col flex-1 min-w-0">
         <span className="text-base font-semibold text-white leading-tight">{title}</span>
-        <span className="text-sm text-white/65 mt-0.5">{desc}</span>
+        <span className="text-base text-white/65 mt-0.5">{desc}</span>
       </div>
       <ChevronRight className="w-5 h-5 text-white/20 shrink-0" />
     </Link>
@@ -42,20 +42,20 @@ function NavTile({ icon: Icon, title, desc, url }) {
 
 function Brand() {
   return (
-    <div className="flex flex-col items-center pt-8 pb-4">
+    <div className="flex flex-col items-center pt-6 pb-3 sm:pt-8 sm:pb-4">
       <img
         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/8de2d69e1_ChatGPTImageMar2202603_07_22PM.png"
         alt="River Rat Rounders"
-        className="w-48 object-contain"
+        className="w-40 max-w-[72vw] object-contain sm:w-48"
       />
-      <p className="text-white/50 text-sm tracking-wide mt-3">Memphis' Freeroll Bar Poker League</p>
+      <p className="mt-3 px-3 text-center text-base tracking-wide text-white/50">Memphis' Freeroll Bar Poker League</p>
     </div>
   );
 }
 
 function Divider({ label }) {
   return (
-    <div className="w-full flex items-center gap-4 text-xs text-white/50 uppercase tracking-widest font-medium">
+    <div className="w-full flex items-center gap-4 text-base text-white/50 uppercase tracking-widest font-medium">
       <div className="flex-1 h-px border-t border-white/10" />
       <span>{label}</span>
       <div className="flex-1 h-px border-t border-white/10" />
@@ -105,7 +105,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative px-4" style={BG}>
       <div className="absolute inset-0 pointer-events-none" style={GLOW} />
-      <div className="relative w-full flex flex-col gap-8 max-w-md">
+      <div className="safe-top safe-bottom relative w-full max-w-md flex flex-col gap-6">
         <Brand />
         <LoginCard onLoginSuccess={() => {
           const email = localStorage.getItem("playerEmail");

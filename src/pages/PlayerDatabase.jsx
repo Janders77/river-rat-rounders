@@ -16,13 +16,18 @@ export default function PlayerDatabase() {
   const [csvError, setCsvError] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [totalCount, setTotalCount] = useState(null);
+  const [page, setPage] = useState(0);
   const fileInputRef = useRef();
+  const PAGE_SIZE = 100;
 
   useEffect(() => {
     const checkAdmin = async () => {
       try {
         const user = await base44.auth.me();
-        if (user?.role !== "admin") { window.location.href = createPageUrl("Home"); return; }
+        const playerEmail = localStorage.getItem("playerEmail") || user?.email;
+        const directorRecords = await base44.entities.Director.filter({ email: playerEmail });
+        const isHeadDirector = directorRecords.some(d => d.role === "Head Director");
+        if (!isHeadDirector) { window.location.href = createPageUrl("Home"); return; }
         setIsAdmin(true);
       } catch { window.location.href = createPageUrl("Home"); }
     };
@@ -30,17 +35,8 @@ export default function PlayerDatabase() {
   }, []);
 
   const loadPlayers = async () => {
-    let allPlayers = [];
-    let skip = 0;
-    const batchSize = 1000;
-    while (true) {
-      const batch = await base44.entities.Player.list("player_number", batchSize, skip);
-      allPlayers = allPlayers.concat(batch);
-      if (batch.length < batchSize) break;
-      skip += batchSize;
-    }
-    const newest = allPlayers.length > 0 ? allPlayers[allPlayers.length - 1].player_number : allPlayers.length;
-    setTotalCount(newest);
+    const allPlayers = await base44.entities.Player.list("player_number", null, 0);
+    setTotalCount(allPlayers.length);
     setPlayers(allPlayers);
     setLoading(false);
   };
@@ -126,9 +122,11 @@ export default function PlayerDatabase() {
   const filtered = players.filter(p =>
     `${p.player_number} ${p.first_name} ${p.last_name} ${p.email}`.toLowerCase().includes(search.toLowerCase())
   );
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginated = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden" style={{ background: "linear-gradient(170deg, #14141c 0%, #1a1a26 60%, #14141c 100%)" }}>
+    <div className="min-h-screen relative overflow-x-hidden" style={{ background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)" }}>
       <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
 
@@ -142,7 +140,7 @@ export default function PlayerDatabase() {
             </div>
             <div>
               <h1 className="text-lg font-bold text-white tracking-tight leading-none">Player Database</h1>
-              <p className="text-[10px] text-gray-600 mt-0.5 leading-none">{totalCount ?? players.length} players</p>
+              <p className="text-base text-gray-600 mt-0.5 leading-none">{totalCount ?? players.length} players</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -167,7 +165,7 @@ export default function PlayerDatabase() {
         </div>
 
         {csvError && (
-          <div className="mb-4 p-3 rounded-lg text-xs" style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.2)", color: "rgba(255,100,100,0.9)" }}>
+          <div className="mb-4 p-3 rounded-lg text-base" style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.2)", color: "rgba(255,100,100,0.9)" }}>
             {csvError}
           </div>
         )}
@@ -201,12 +199,12 @@ export default function PlayerDatabase() {
               </div>
               <div className="flex gap-2 pt-1">
                 <button type="button" onClick={() => setShowForm(false)}
-                  className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                  className="flex-1 py-2.5 rounded-lg text-base font-medium transition-colors"
                   style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)" }}>
                   Cancel
                 </button>
                 <button type="submit" disabled={adding}
-                  className="flex-1 py-2.5 rounded-lg text-sm font-semibold text-white transition-all"
+                  className="flex-1 py-2.5 rounded-lg text-base font-semibold text-white transition-all"
                   style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
                   {adding ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Add Player"}
                 </button>
@@ -221,8 +219,8 @@ export default function PlayerDatabase() {
           <input
             placeholder="Search players…"
             value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm text-white/80 placeholder:text-white/20 outline-none transition-colors"
+            onChange={e => { setSearch(e.target.value); setPage(0); }}
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl text-base text-white/80 placeholder:text-white/20 outline-none transition-colors"
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
           />
         </div>
@@ -237,12 +235,12 @@ export default function PlayerDatabase() {
             <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center mb-1">
               <Users className="w-5 h-5 text-white/20" />
             </div>
-            <p className="text-white/50 text-sm font-medium">No players found</p>
-            <p className="text-white/25 text-xs">{search ? "Try a different search" : "Add a player to get started"}</p>
+            <p className="text-white/50 text-base font-medium">No players found</p>
+            <p className="text-white/25 text-base">{search ? "Try a different search" : "Add a player to get started"}</p>
           </div>
         ) : (
           <div className="flex flex-col gap-1.5 w-full">
-            {filtered.map((player) => (
+            {paginated.map((player) => (
               <PlayerRow
                 key={player.id}
                 player={player}
@@ -251,6 +249,29 @@ export default function PlayerDatabase() {
                 onUpdate={handleUpdate}
               />
             ))}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between pt-3 pb-1">
+                <button
+                  onClick={() => setPage(p => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  className="px-4 py-2 rounded-lg text-base text-white/50 disabled:opacity-30 transition-colors"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                >
+                  Previous
+                </button>
+                <span className="text-base text-white/30">
+                  {page + 1} / {totalPages} &nbsp;·&nbsp; {filtered.length} players
+                </span>
+                <button
+                  onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                  disabled={page === totalPages - 1}
+                  className="px-4 py-2 rounded-lg text-base text-white/50 disabled:opacity-30 transition-colors"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

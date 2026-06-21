@@ -15,14 +15,20 @@ export default function JoinTheLeague() {
   };
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-white mb-2">Join the League</h1>
-          <p className="text-gray-400">Please read and agree to the terms and conditions before proceeding.</p>
+    <div className="min-h-screen relative overflow-x-hidden" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none" style={{background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)"}} />
+      <div className="relative max-w-md mx-auto w-full px-4 pt-5 pb-10 flex flex-col gap-3">
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+            <ExternalLink className="w-5 h-5 text-white/80" />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold text-white tracking-tight leading-none">Join the League</h1>
+            <p className="text-base text-white/40 mt-0.5 leading-none">Read and agree to terms before proceeding</p>
+          </div>
         </div>
 
-        <div className="bg-[#1A1B20] border border-gray-700 rounded-xl p-6 mb-6 max-h-[60vh] overflow-y-auto space-y-5 text-sm text-gray-300 leading-relaxed">
+        <div className="w-full rounded-xl border border-white/10 bg-white/5 p-4 max-h-[55vh] overflow-y-auto space-y-5 text-base text-white/70 leading-relaxed">
 
           <div>
             <h2 className="text-red-400 font-bold text-base mb-2">RRR Mission Statement</h2>
@@ -118,16 +124,16 @@ export default function JoinTheLeague() {
 
         {/* Agreement Checkbox */}
         <div
-          className="flex items-start gap-3 mb-6 cursor-pointer select-none"
+          className="flex items-start gap-3 cursor-pointer select-none w-full rounded-xl border border-white/10 bg-white/5 p-4"
           onClick={() => setAgreed(!agreed)}
         >
           <div className="mt-0.5 shrink-0">
             {agreed
-              ? <CheckSquare className="w-6 h-6 text-red-400" />
-              : <Square className="w-6 h-6 text-gray-500" />
+              ? <CheckSquare className="w-5 h-5 text-red-400" />
+              : <Square className="w-5 h-5 text-white/40" />
             }
           </div>
-          <p className="text-gray-300 text-sm">
+          <p className="text-white/70 text-base">
             I have read and agree to all of the River Rat Rounders terms and conditions listed above.
           </p>
         </div>
@@ -136,10 +142,10 @@ export default function JoinTheLeague() {
         <Button
           onClick={handleProceed}
           disabled={!agreed}
-          className={`w-full py-6 text-base font-bold flex items-center justify-center gap-2 transition-all ${
+          className={`w-full py-5 text-base font-bold flex items-center justify-center gap-2 transition-all rounded-xl ${
             agreed
               ? "bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40"
-              : "bg-gray-700 text-gray-500 cursor-not-allowed"
+              : "bg-white/5 border border-white/10 text-white/30 cursor-not-allowed"
           }`}
         >
           <ExternalLink className="w-5 h-5" />

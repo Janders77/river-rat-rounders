@@ -1,0 +1,19 @@
+{
+  "appId": "com.riverratrounders.app",
+  "appName": "River Rat Rounders",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#1a1a22",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "dark",
+      "backgroundColor": "#1a1a22"
+    }
+  }
+}

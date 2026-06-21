@@ -39,7 +39,7 @@ export default function PlayerRankCard({ player, rank, onClick }) {
             <h3 className="font-bold text-lg text-white truncate group-hover:text-amber-400 transition-colors">
               {`${player.first_name || ""} ${player.last_name || ""}`.trim() || player.full_name || "Unknown Player"}
             </h3>
-            <div className="flex items-center gap-4 text-sm text-gray-400 mt-1">
+            <div className="flex items-center gap-4 text-base text-gray-400 mt-1">
               <span className="flex items-center gap-1">
                 <TrendingUp className="w-4 h-4" />
                 {player.total_points || 0} pts
@@ -52,7 +52,7 @@ export default function PlayerRankCard({ player, rank, onClick }) {
           {player.current_streak > 0 && (
             <div className="flex items-center gap-2 px-3 py-1 bg-orange-500/20 rounded-full border border-orange-500/30">
               <Flame className="w-4 h-4 text-orange-400" />
-              <span className="text-orange-400 font-bold text-sm">{player.current_streak}</span>
+              <span className="text-orange-400 font-bold text-base">{player.current_streak}</span>
             </div>
           )}
 
@@ -60,7 +60,7 @@ export default function PlayerRankCard({ player, rank, onClick }) {
             <div className="text-2xl font-bold text-white">
               {player.wins || 0}
             </div>
-            <div className="text-xs text-gray-500">wins</div>
+            <div className="text-base text-gray-500">wins</div>
           </div>
         </div>
       </Card>

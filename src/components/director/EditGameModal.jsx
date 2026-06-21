@@ -29,6 +29,18 @@ export default function EditGameModal({ game, playersById, onClose, onSaved }) {
     return p ? getPlayerDisplayName(p) : pid;
   };
 
+  const getOrCreateUserByPlayer = async (player) => {
+    if (!player?.email) return null;
+    const normalizedEmail = player.email.trim().toLowerCase();
+    const existingUsers = await base44.entities.User.filter({ email: normalizedEmail });
+    if (existingUsers[0]) return existingUsers[0];
+    return base44.users.inviteUser(normalizedEmail, "user", {
+      full_name: getPlayerDisplayName(player),
+      first_name: player.first_name,
+      last_name: player.last_name,
+    });
+  };
+
   const handleSearchChange = async (index, value) => {
     const s = [...searches]; s[index] = value; setSearches(s);
     const p = [...placements]; p[index] = ""; setPlacements(p);
@@ -75,6 +87,7 @@ export default function EditGameModal({ game, playersById, onClose, onSaved }) {
       const pid = oldIds[i];
       const oldPts = POINTS[i] || 0;
       const wasWin = i === 0;
+      const playerRec = localPlayersById[pid];
       const existing = await base44.entities.QuarterlyStats.filter({ quarter: oldQuarter, player_id: pid });
       if (existing.length > 0) {
         const rec = existing[0];
@@ -85,6 +98,16 @@ export default function EditGameModal({ game, playersById, onClose, onSaved }) {
         } else {
           await base44.entities.QuarterlyStats.update(rec.id, { points: newPts, wins: newWins });
         }
+      }
+
+      const user = await getOrCreateUserByPlayer(playerRec);
+      if (user) {
+        await base44.entities.User.update(user.id, {
+          games_played: Math.max(0, (user.games_played || 0) - 1),
+          total_points: Math.max(0, (user.total_points || 0) - oldPts),
+          wins: Math.max(0, (user.wins || 0) - (wasWin ? 1 : 0)),
+          current_streak: 0,
+        });
       }
     }
 
@@ -122,6 +145,18 @@ export default function EditGameModal({ game, playersById, onClose, onSaved }) {
           wins: isWin ? 1 : 0,
         });
       }
+
+      const user = await getOrCreateUserByPlayer(playerRec);
+      if (user) {
+        const nextStreak = isWin ? (user.current_streak || 0) + 1 : 0;
+        await base44.entities.User.update(user.id, {
+          games_played: (user.games_played || 0) + 1,
+          total_points: (user.total_points || 0) + pts,
+          wins: (user.wins || 0) + (isWin ? 1 : 0),
+          current_streak: nextStreak,
+          best_streak: isWin ? Math.max(user.best_streak || 0, nextStreak) : (user.best_streak || 0),
+        });
+      }
     }
 
     setIsSaving(false);
@@ -136,7 +171,7 @@ export default function EditGameModal({ game, playersById, onClose, onSaved }) {
             <h2 className="text-white font-bold text-lg flex items-center gap-2">
               <Trophy className="w-4 h-4 text-red-400" /> Correct Game
             </h2>
-            <p className="text-gray-500 text-xs mt-0.5">
+            <p className="text-gray-500 text-base mt-0.5">
               {game.game_date} · {game.location} · {game.game_type}
             </p>
           </div>
@@ -146,15 +181,15 @@ export default function EditGameModal({ game, playersById, onClose, onSaved }) {
         </div>
 
         <div className="p-5 space-y-3">
-          <p className="text-xs text-gray-500 mb-1">1st=1000pts, 2nd=750pts … 9th=50pts. QuarterlyStats will be updated automatically.</p>
+          <p className="text-base text-gray-500 mb-1">1st=1000pts, 2nd=750pts … 9th=50pts. QuarterlyStats will be updated automatically.</p>
           {PLACE_LABELS.map((label, i) => (
             <div key={i} className="flex items-center gap-2">
-              <span className="text-gray-500 text-xs w-7 text-right shrink-0">{label}</span>
-              <span className="text-gray-700 text-xs w-14 shrink-0">{POINTS[i]}pts</span>
+              <span className="text-gray-500 text-base w-7 text-right shrink-0">{label}</span>
+              <span className="text-gray-700 text-base w-14 shrink-0">{POINTS[i]}pts</span>
               <div className="relative flex-1">
                 {placements[i] ? (
                   <div className="flex items-center gap-2 bg-gray-800 rounded-lg px-3 py-1.5">
-                    <span className="text-white text-sm flex-1">{nameFor(placements[i])}</span>
+                    <span className="text-white text-base flex-1">{nameFor(placements[i])}</span>
                     <button type="button" onClick={() => clearSlot(i)} className="text-gray-500 hover:text-red-400">
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -167,7 +202,7 @@ export default function EditGameModal({ game, playersById, onClose, onSaved }) {
                         placeholder={`Search ${label}...`}
                         value={searches[i]}
                         onChange={e => handleSearchChange(i, e.target.value)}
-                        className="bg-gray-800 border-gray-700 text-white text-sm pl-8 h-8 rounded-lg"
+                        className="bg-gray-800 border-gray-700 text-white text-base pl-8 h-8 rounded-lg"
                       />
                       {searchLoading[i] && (
                         <Loader2 className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 animate-spin text-gray-500" />
@@ -177,7 +212,7 @@ export default function EditGameModal({ game, playersById, onClose, onSaved }) {
                       <div className="absolute z-50 w-full mt-0.5 bg-gray-900 border border-gray-700 rounded-lg shadow-xl max-h-36 overflow-y-auto">
                         {suggestions[i].map(p => (
                           <button key={p.id} type="button"
-                            className="w-full text-left px-3 py-1.5 hover:bg-gray-800 text-white text-sm border-b border-gray-800 last:border-0"
+                            className="w-full text-left px-3 py-1.5 hover:bg-gray-800 text-white text-base border-b border-gray-800 last:border-0"
                             onMouseDown={() => selectPlayer(i, p)}>
                             {p.display_name}{p.player_number != null ? ` (#${p.player_number})` : ''}
                           </button>

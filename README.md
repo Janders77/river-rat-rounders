@@ -1,39 +1,40 @@
-**Welcome to your Base44 project** 
+# River Rat Rounders
 
-**About**
+This repo now includes both:
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+- a Vite frontend in the project root
+- a local Python backend in [`backend/`](./backend)
 
-This project contains everything you need to run your app locally.
+## Frontend
 
-**Edit the code in your local development environment**
-
-Any change pushed to the repo will also be reflected in the Base44 Builder.
-
-**Prerequisites:** 
-
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
-
-```
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=your_backend_url
-
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
+```bash
+npm install
+npm run dev
 ```
 
-Run the app: `npm run dev`
+## Backend
 
-**Publish your changes**
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
 
-Open [Base44.com](http://Base44.com) and click on Publish.
+## Local integration
 
-**Docs & Support**
+The frontend defaults to the local API adapter:
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+```bash
+VITE_USE_LOCAL_API=true
+VITE_API_BASE_URL=/api
+```
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+Vite proxies `/api` and `/uploads` to `http://localhost:8000`.
+
+If you want to switch back to Base44 later, set:
+
+```bash
+VITE_USE_LOCAL_API=false
+```

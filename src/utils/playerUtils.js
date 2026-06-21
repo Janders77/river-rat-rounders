@@ -37,12 +37,18 @@ export const getPlayerByEmail = (players, email) =>
 // Fast name lookup using pre-built map
 export const getPlayerNameById = (playerId, playersById) =>
   playersById?.[playerId]
-    ? `${playersById[playerId].first_name || ""} ${playersById[playerId].last_name || ""}`.trim() || "Unknown Player"
+    ? getPlayerDisplayName(playersById[playerId])
     : "Unknown Player";
 
 export const getPlayerDisplayName = (player) => {
   if (!player) return "Unknown Player";
-  return `${player.first_name || ""} ${player.last_name || ""}`.trim() || "Unknown Player";
+  return (
+    `${player.first_name || ""} ${player.last_name || ""}`.trim() ||
+    player.full_name ||
+    player.display_name ||
+    player.email ||
+    "Unknown Player"
+  );
 };
 
 // Resolve a player name from ID first, then fall back to email lookup

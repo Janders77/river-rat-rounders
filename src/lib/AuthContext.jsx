@@ -21,6 +21,13 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoadingPublicSettings(true);
       setAuthError(null);
+
+      if (base44.mode === "local") {
+        setAppPublicSettings({ id: "local", public_settings: { auth_required: false } });
+        await checkUserAuth();
+        setIsLoadingPublicSettings(false);
+        return;
+      }
       
       // First, check app public settings (with token if available)
       // This will tell us if auth is required, user not registered, etc.

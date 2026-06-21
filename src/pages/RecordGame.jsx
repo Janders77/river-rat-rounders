@@ -32,7 +32,17 @@ export default function RecordGame() {
   const PLACE_LABELS = isTurbo ? ["1st", "2nd"] : ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th"];
 
   useEffect(() => {
-    loadUsers();
+    const guardAndLoad = async () => {
+      const directorAccess = localStorage.getItem("directorAccess");
+      const accessTime = localStorage.getItem("directorAccessTime");
+      const FOUR_HOURS = 4 * 60 * 60 * 1000;
+      if (!directorAccess || !accessTime || Date.now() - parseInt(accessTime) > FOUR_HOURS) {
+        navigate(createPageUrl("Home"));
+        return;
+      }
+      loadUsers();
+    };
+    guardAndLoad();
   }, []);
 
   const loadUsers = async () => {
@@ -101,26 +111,21 @@ export default function RecordGame() {
   };
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Plus className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-white">Record New Game</h1>
-              <p className="text-gray-400">Log a poker session and update rankings</p>
-            </div>
+    <div className="min-h-screen relative overflow-x-hidden" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none" style={{background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)"}} />
+      <div className="relative max-w-md mx-auto w-full px-4 pt-5 pb-10 flex flex-col gap-3">
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
+            <Plus className="w-5 h-5 text-white/80" />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold text-white tracking-tight leading-none">Record New Game</h1>
+            <p className="text-base text-white/40 mt-0.5 leading-none">Log a poker session and update rankings</p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <Card className="bg-[#1A1B20] border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Game Details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <div className="w-full rounded-xl border border-white/10 bg-white/5 p-4 space-y-4">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="game_date" className="text-gray-300">Game Date</Label>
@@ -129,7 +134,7 @@ export default function RecordGame() {
                     type="date"
                     value={gameData.game_date}
                     onChange={(e) => setGameData({...gameData, game_date: e.target.value})}
-                    className="bg-gray-900 border-gray-700 text-white"
+                    className="bg-white/5 border-white/10 text-white"
                     required
                   />
                 </div>
@@ -140,10 +145,10 @@ export default function RecordGame() {
                     value={gameData.game_type}
                     onValueChange={(value) => setGameData({...gameData, game_type: value})}
                   >
-                    <SelectTrigger className="bg-gray-900 border-gray-700 text-white">
+                    <SelectTrigger className="bg-white/5 border-white/10 text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-700">
+                    <SelectContent className="bg-[#2a2a35] border-white/10">
                       <SelectItem value="Texas Hold'em">Texas Hold'em</SelectItem>
                       <SelectItem value="Omaha">Omaha</SelectItem>
                       <SelectItem value="Seven Card Stud">Seven Card Stud</SelectItem>
@@ -160,7 +165,7 @@ export default function RecordGame() {
                     type="text"
                     value={gameData.location}
                     onChange={(e) => setGameData({...gameData, location: e.target.value})}
-                    className="bg-gray-900 border-gray-700 text-white"
+                    className="bg-white/5 border-white/10 text-white"
                     placeholder="e.g. Mike's Garage, The Basement..."
                   />
                 </div>
@@ -170,14 +175,14 @@ export default function RecordGame() {
 
               <div className="space-y-2">
                 <Label className="text-gray-300">Placements</Label>
-                <p className="text-xs text-gray-500">Assign players to their finishing positions. Points: 1st=1000, 2nd=900 … 9th=100</p>
+                <p className="text-base text-gray-500">Assign players to their finishing positions. Points: 1st=1000, 2nd=900 … 9th=100</p>
                 <div className="space-y-2">
                   {PLACE_LABELS.map((label, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className={`w-10 text-sm font-bold text-right shrink-0 ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-gray-300' : i === 2 ? 'text-amber-700' : 'text-gray-500'}`}>
+                      <div className={`w-10 text-base font-bold text-right shrink-0 ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-gray-300' : i === 2 ? 'text-amber-700' : 'text-gray-500'}`}>
                         {label}
                       </div>
-                      <div className="text-xs text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
+                      <div className="text-base text-gray-600 w-16 shrink-0">{POINTS[i]} pts</div>
                       <Select
                         value={placements[i]}
                         onValueChange={(val) => {
@@ -190,10 +195,10 @@ export default function RecordGame() {
                           setPlacements(updated);
                         }}
                       >
-                        <SelectTrigger className="bg-gray-900 border-gray-700 text-white flex-1">
+                        <SelectTrigger className="bg-white/5 border-white/10 text-white flex-1">
                           <SelectValue placeholder={`Select ${label} place`} />
                         </SelectTrigger>
-                        <SelectContent className="bg-gray-900 border-gray-700">
+                        <SelectContent className="bg-[#2a2a35] border-white/10">
                           <SelectItem value={null}>— None —</SelectItem>
                           {users.map((user) => (
                             <SelectItem key={user.email} value={user.email}>
@@ -213,18 +218,17 @@ export default function RecordGame() {
                   id="notes"
                   value={gameData.notes}
                   onChange={(e) => setGameData({...gameData, notes: e.target.value})}
-                  className="bg-gray-900 border-gray-700 text-white h-24"
+                  className="bg-white/5 border-white/10 text-white h-24"
                   placeholder="Any memorable moments or notes about the game..."
                 />
               </div>
-            </CardContent>
-          </Card>
+          </div>
 
-          <div className="flex gap-4 mt-6">
+          <div className="flex gap-3">
             <Button
               type="button"
               variant="outline"
-              className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800"
+              className="flex-1 border-white/10 text-white/50 hover:bg-white/5 rounded-xl"
               onClick={() => navigate(createPageUrl("Leaderboard"))}
               disabled={isSubmitting}
             >
@@ -232,19 +236,13 @@ export default function RecordGame() {
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white"
+              className="flex-1 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white rounded-xl"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Recording...
-                </>
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Recording...</>
               ) : (
-                <>
-                  <Trophy className="w-4 h-4 mr-2" />
-                  Record Game
-                </>
+                <><Trophy className="w-4 h-4 mr-2" />Record Game</>
               )}
             </Button>
           </div>

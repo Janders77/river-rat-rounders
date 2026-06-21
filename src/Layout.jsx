@@ -2,7 +2,9 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { Trophy, Plus, History, Menu, Home, ShieldAlert, Image, Zap, CalendarDays, Database, MapPin, LogOut, Users } from "lucide-react";
+import { Trophy, User, History, Menu, Home, ShieldAlert, Image, Zap, CalendarDays, Database, MapPin, LogOut, Users } from "lucide-react";
+
+
 import {
   Sidebar,
   SidebarContent,
@@ -26,7 +28,7 @@ const navigationItems = [
   {
     title: "My Profile",
     url: createPageUrl("PlayerProfile"),
-    icon: Trophy,
+    icon: User,
   },
   {
     title: "Leaderboard",
@@ -64,19 +66,33 @@ const navigationItems = [
     title: "Player Database",
     url: createPageUrl("PlayerDatabase"),
     icon: Database,
-    adminOnly: true,
+    headDirectorOnly: true,
   },
   {
     title: "Director",
     url: createPageUrl("DirectorSignIn"),
     icon: ShieldAlert,
+    directorOnly: true,
   },
   {
     title: "Manage Directors",
     url: createPageUrl("DirectorManagement"),
     icon: ShieldAlert,
+    headDirectorOnly: true,
   },
 ];
+
+function MenuButton() {
+  const { toggleSidebar } = useSidebar();
+  return (
+    <button
+      onClick={toggleSidebar}
+      className="w-14 h-14 rounded-xl flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/8 transition-colors"
+    >
+      <Menu className="w-7 h-7" />
+    </button>
+  );
+}
 
 function LayoutInner({ children }) {
   const location = useLocation();
@@ -85,23 +101,26 @@ function LayoutInner({ children }) {
   const [showSecret, setShowSecret] = React.useState(false);
   const [user, setUser] = React.useState(null);
   const [player, setPlayer] = React.useState(null);
-  const [profileImageUrl, setProfileImageUrl] = React.useState("");
+  const [isHeadDirector, setIsHeadDirector] = React.useState(false);
+  const [isDirector, setIsDirector] = React.useState(false);
 
   React.useEffect(() => {
     const fetchUser = async () => {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
-      
+
       // Use localStorage playerEmail (player-level login) if available, fall back to auth email
       const playerEmail = localStorage.getItem("playerEmail") || currentUser.email;
       const players = await base44.entities.Player.filter({ email: playerEmail });
       if (players.length > 0) {
         setPlayer(players[0]);
-        setProfileImageUrl(players[0].profile_picture || "");
       } else {
         setPlayer(null);
-        setProfileImageUrl("");
       }
+
+      const directorRecords = await base44.entities.Director.filter({ email: playerEmail });
+      setIsDirector(directorRecords.length > 0);
+      setIsHeadDirector(directorRecords.some(d => d.role === "Head Director"));
     };
     fetchUser();
   }, []);
@@ -118,112 +137,81 @@ function LayoutInner({ children }) {
 
   return (
     <>
-      <style>{`
-        :root {
-          --background: 230 15% 11%;
-          --foreground: 60 5% 90%;
-          --primary: 220 10% 50%;
-          --primary-foreground: 0 0% 100%;
-          --card: 230 15% 14%;
-          --card-foreground: 60 5% 90%;
-          --border: 230 15% 22%;
-          --accent: 220 10% 40%;
-        }
-      `}</style>
-      <div className="min-h-screen flex w-full text-gray-100" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
-        <Sidebar className="border-r border-gray-700/60" style={{background: "linear-gradient(180deg, #111118 0%, #1e1e2a 30%, #181820 70%, #0d0d14 100%)", backdropFilter: "blur(8px)"}}>
-          <SidebarHeader className="border-b border-gray-700/40 p-5" style={{background: "linear-gradient(135deg, rgba(30,30,42,0.95) 0%, rgba(15,15,22,0.98) 100%)", boxShadow: "0 4px 24px rgba(0,0,0,0.30), 0 1px 0 rgba(255,255,255,0.05)"}}>
-            <div className="flex items-center justify-between w-full gap-2">
-              <button onClick={handleLogoClick} className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-90 transition-opacity">
-                <div style={{filter: "drop-shadow(0 0 10px rgba(220,38,38,0.5)) drop-shadow(0 0 20px rgba(220,38,38,0.2))"}}>
-                  <img
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/44bb87bed_riverratslogo_black1PDF.pdf"
-                    alt="River Rat Rounders"
-                    className="w-11 h-11 rounded-lg object-cover flex-shrink-0"
-                    onError={(e) => { e.target.style.display='none'; }}
-                  />
-                </div>
-                <div className="text-left min-w-0">
-                  <h2 className="font-bold text-lg text-red-500 leading-tight" style={{textShadow: "0 0 12px rgba(220,38,38,0.4)"}}>River Rat Rounders</h2>
-                  <p className="text-[10px] text-gray-500 mt-0.5 truncate">Memphis' Freeroll Bar Poker League</p>
-                </div>
+      <div className="h-screen flex w-full overflow-hidden text-gray-100" style={{background: "linear-gradient(135deg, #1a1a22 0%, #22222e 50%, #1a1a22 100%)"}}>
+        <Sidebar className="border-r border-white/5" style={{background: "#000000"}}>
+          <SidebarHeader className="px-5 pb-4" style={{background: "#000000", paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.5rem)"}}>
+            <div className="flex flex-col items-center pl-4">
+              <button onClick={handleLogoClick} className="hover:opacity-90 transition-opacity">
+                <img src="/logo.png" alt="River Rat Rounders" className="w-32 h-32 object-contain" />
               </button>
-              {profileImageUrl && (
-                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-1 ring-white/10 bg-black/20">
-                  <img
-                    src={profileImageUrl}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="p-3" style={{background: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%)"}}>
+          <SidebarContent className="px-3 pt-4 pb-3" style={{background: "#000000"}}>
             <SidebarGroup>
               <SidebarGroupContent>
-                <SidebarMenu>
+                <SidebarMenu className="flex flex-col items-center">
                   {showSecret && (
-                    <SidebarMenuItem key="break-time-bump">
-                      <SidebarMenuButton 
-                        asChild 
-                        className={`relative overflow-hidden transition-all duration-200 rounded-lg mb-1 ${
+                    <SidebarMenuItem key="break-time-bump" className="w-full">
+                      <SidebarMenuButton
+                        asChild
+                        className={`relative overflow-hidden transition-all duration-200 rounded-lg mb-0.5 ${
                           location.pathname === createPageUrl("BreakTimeBump")
-                            ? 'bg-gradient-to-r from-gray-500/30 to-gray-600/20 text-gray-100 border-l-2 border-gray-400' 
-                            : 'text-gray-500 hover:text-gray-100 hover:bg-gray-700/30 hover:border-l-2 hover:border-gray-500 border-l-2 border-transparent'
+                            ? 'bg-red-500/10 text-white border-l-2 border-red-500'
+                            : 'text-gray-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent'
                         }`}
                       >
-                        <Link to={createPageUrl("BreakTimeBump")} onClick={() => setOpenMobile(false)} className="flex items-center gap-3 px-4 py-3">
-                          <Zap className="w-5 h-5" />
-                          <span className="font-medium">Break Time Bump</span>
+                        <Link to={createPageUrl("BreakTimeBump")} onClick={() => setOpenMobile(false)} className="flex items-center justify-center gap-3 px-4 py-3">
+                          <Zap className="w-6 h-6" />
+                          <span className="font-medium text-base">Break Time Bump</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   )}
                   {navigationItems.map((item) => {
-                    if (item.adminOnly && user?.role !== "admin") {
-                      return null;
-                    }
+                    if (item.adminOnly && user?.role !== "admin") return null;
+                    if (item.headDirectorOnly && !isHeadDirector) return null;
+                    if (item.directorOnly && !isDirector) return null;
                     return (
-                      <SidebarMenuItem key={item.title}>
+                      <SidebarMenuItem key={item.title} className="w-full">
                         <Link to={item.url} onClick={() => setOpenMobile(false)} className="block w-full">
-                          <SidebarMenuButton 
-                            className={`group relative overflow-hidden transition-all duration-200 rounded-lg mb-1 w-full ${
-                              location.pathname === item.url 
-                                ? 'bg-gradient-to-r from-gray-500/30 to-gray-600/20 text-gray-100 border-l-2 border-gray-400' 
-                                : 'text-gray-500 hover:text-gray-100 hover:bg-gray-700/30 hover:border-l-2 hover:border-gray-500 border-l-2 border-transparent'
+                          <SidebarMenuButton
+                            className={`group relative overflow-hidden transition-all duration-200 rounded-lg mb-1 w-full justify-center gap-3 ${
+                              location.pathname === item.url
+                                ? 'bg-red-500/10 text-white border-l-2 border-red-500'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent'
                             }`}
                           >
-                            <item.icon className="w-6 h-6" />
+                            <item.icon className={`w-6 h-6 shrink-0 ${location.pathname === item.url ? 'text-red-400' : ''}`} />
                             <span className="font-medium text-lg">{item.title}</span>
                           </SidebarMenuButton>
                         </Link>
                       </SidebarMenuItem>
                     );
                   })}
-                  <SidebarMenuItem key="user-welcome" className="mt-auto pt-4 border-t border-gray-800">
+                  <SidebarMenuItem key="user-welcome" className="w-full mt-auto pt-4 border-t border-white/10">
                     {player && (
-                      <div className="px-4 py-3 text-gray-500 text-sm">
-                        Welcome, <span className="text-gray-500 font-medium">{player.first_name} {player.last_name}</span>
+                      <div className="px-4 py-2 text-center">
+                        <span className="text-gray-500 text-xs uppercase tracking-widest">Signed in as</span>
+                        <p className="text-white font-semibold text-lg mt-0.5">{player.first_name} {player.last_name}</p>
                       </div>
                     )}
                   </SidebarMenuItem>
-                  <SidebarMenuItem key="sign-out">
-                    <SidebarMenuButton 
+                  <SidebarMenuItem key="sign-out" className="w-full">
+                    <SidebarMenuButton
                       onClick={() => {
                         localStorage.removeItem("playerEmail");
                         localStorage.removeItem("playerName");
                         setOpenMobile(false);
                         window.location.href = createPageUrl("Home");
                       }}
-                      className="hover:bg-red-900/30 transition-all duration-200 rounded-lg text-red-400"
+                      className="hover:bg-red-900/30 transition-all duration-200 rounded-lg text-red-400 justify-center gap-3"
                     >
-                      <LogOut className="w-5 h-5" />
-                      <span className="font-medium">Sign Out</span>
+                      <LogOut className="w-6 h-6" />
+                      <span className="font-medium text-lg">Sign Out</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                  <SidebarMenuItem key="copyright">
+                  <SidebarMenuItem key="copyright" className="w-full">
                     <div className="px-4 pt-1 pb-3 text-[9px] text-gray-600 text-center whitespace-nowrap">
                       © {new Date().getFullYear()} River Rat Rounders
                     </div>
@@ -234,24 +222,32 @@ function LayoutInner({ children }) {
           </SidebarContent>
         </Sidebar>
 
-        <main className="flex-1 flex flex-col">
-          <header className="border-b border-red-900/40 px-6 py-4 lg:hidden flex items-center justify-center relative" style={{background: "linear-gradient(to right, rgba(127,29,29,0.2), rgba(127,29,29,0.6))"}}>
-            <SidebarTrigger className="hover:bg-gray-800 w-12 h-12 rounded-lg transition-colors flex items-center justify-center absolute left-6">
+        <main className="flex-1 min-w-0 flex flex-col overflow-hidden">
+          {/* Desktop-only top header (sidebar trigger) */}
+          <header className="safe-top sticky top-0 z-30 border-b border-red-900/40 px-3 py-3 hidden lg:hidden xl:hidden flex items-center justify-center relative backdrop-blur-md" style={{background: "linear-gradient(to right, rgba(127,29,29,0.45), rgba(127,29,29,0.78))"}}>
+            <SidebarTrigger className="hover:bg-gray-800/80 w-11 h-11 rounded-xl transition-colors flex items-center justify-center absolute left-3">
               <Menu className="w-5 h-5" />
             </SidebarTrigger>
-            <h1 className="text-xl font-bold text-white">River Rat Rounders</h1>
-            <a href="https://www.riverratrounders.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity absolute right-6">
+            <h1 className="px-12 text-center text-base font-bold tracking-tight text-white sm:text-lg">River Rat Rounders</h1>
+          </header>
+
+          {/* Mobile top bar */}
+          <header className="sticky top-0 z-30 flex lg:hidden flex-col border-b border-white/8 backdrop-blur-md" style={{background: "rgba(15,15,22,0.92)", paddingTop: "env(safe-area-inset-top, 0px)"}}>
+            <div className="flex items-center justify-between px-4 py-1.5">
+              <MenuButton />
+              <span className="text-sm font-semibold text-white uppercase" style={{fontFamily: "'Georgia', 'Times New Roman', serif", letterSpacing: "0.12em", textShadow: "0 0 8px rgba(220,38,38,0.9), 0 0 20px rgba(220,38,38,0.6), 0 0 40px rgba(220,38,38,0.3)"}}>River Rat Rounders</span>
               <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68e020a2bd66e7722fa0934d/a6c1792b1_red2012-2.jpg"
+                src="/logo.png"
                 alt="River Rat Rounders"
-                className="w-12 h-12 rounded-full object-cover shadow-lg"
+                className="w-9 h-9 object-contain flex-shrink-0"
               />
-            </a>
+            </div>
           </header>
 
           <div className="flex-1 overflow-auto">
             {children}
           </div>
+
         </main>
       </div>
     </>

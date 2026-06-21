@@ -30,7 +30,7 @@ export default function VenueStats({ games }) {
       <CardContent className="space-y-3">
         {venues.map(([name, stats], index) => (
           <div key={name} className="flex items-center gap-4 p-3 bg-gray-900/50 rounded-lg border border-gray-800">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-base font-bold ${
               index === 0 ? 'bg-amber-500/20 text-amber-400' :
               index === 1 ? 'bg-gray-400/20 text-gray-300' :
               index === 2 ? 'bg-amber-700/20 text-amber-700' :
@@ -41,7 +41,7 @@ export default function VenueStats({ games }) {
             <div className="flex-1 min-w-0">
               <div className="text-white font-medium truncate">{name}</div>
             </div>
-            <div className="flex items-center gap-4 text-sm text-gray-400">
+            <div className="flex items-center gap-4 text-base text-gray-400">
               <span className="flex items-center gap-1">
                 <Gamepad2 className="w-4 h-4" />
                 {stats.games}

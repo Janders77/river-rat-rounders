@@ -38,7 +38,7 @@ function PortalDropdown({ anchorRef, children, onClose }) {
 
   return ReactDOM.createPortal(
     <div style={{
-      position: "absolute", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999,
+      position: "absolute", top: pos.top, left: Math.max(12, pos.left), width: Math.min(pos.width, window.innerWidth - 24), zIndex: 9999,
       maxHeight: "320px", overflowY: "auto", background: "#111827",
       border: "1px solid #374151", borderRadius: "0 0 12px 12px",
       boxShadow: "0 16px 40px rgba(0,0,0,0.6)",
@@ -69,7 +69,7 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
           <span className={`font-semibold text-base leading-tight ${signed ? "text-green-400" : "text-white"}`}>
             {signed ? "You're signed in!" : session.location}
           </span>
-          <span className="text-xs text-white/50 mt-1 truncate">
+          <span className="text-base text-white/50 mt-1 truncate">
             {signed ? session.location + " · " : ""}
             {new Date(session.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
             {session.game_type && ` · ${session.game_type}`}
@@ -80,7 +80,7 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
         <div className="flex items-center gap-1.5 shrink-0" ref={anchorRef}>
           {signedInIds.length > 0 && (
             <button
-              className="flex items-center gap-1 text-[10px] text-white/30 hover:text-white/60 transition-colors"
+              className="flex items-center gap-1 text-base text-white/30 hover:text-white/60 transition-colors"
               onClick={e => { e.stopPropagation(); setOpen(o => !o); }}
             >
               <Users className="w-3 h-3" />
@@ -95,7 +95,7 @@ function SessionRow({ session, playersById, getSignedInIds, isSignedIn, signingI
       {open && signedInIds.length > 0 && (
         <PortalDropdown anchorRef={anchorRef} onClose={() => setOpen(false)}>
           {signedInIds.map((pid, index) => (
-            <div key={pid} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 border-b border-gray-800/60 last:border-0 hover:bg-gray-800/40">
+            <div key={pid} className="flex items-center gap-2 px-4 py-2 text-base text-gray-300 border-b border-gray-800/60 last:border-0 hover:bg-gray-800/40">
               <div className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
               <span className="truncate flex-1">{index + 1}. {getPlayerDisplayName(playersById[pid])}</span>
               {isDirector && (
@@ -239,7 +239,7 @@ export default function PlayerSignIn() {
         </div>
         <div className="flex flex-col">
           <span className="text-base font-semibold text-white">Sign In to Today's Game</span>
-          <span className="text-xs text-white/50 mt-1">Loading sessions...</span>
+          <span className="text-base text-white/50 mt-1">Loading sessions...</span>
         </div>
       </div>
     );
@@ -253,7 +253,7 @@ export default function PlayerSignIn() {
         </div>
         <div className="flex flex-col">
           <span className="text-base font-semibold text-white">Sign In to Today's Game</span>
-          <span className="text-xs text-white/50 mt-1">No open sessions right now. Check back later.</span>
+          <span className="text-base text-white/50 mt-1">No open sessions right now. Check back later.</span>
         </div>
       </div>
     );
@@ -268,21 +268,27 @@ export default function PlayerSignIn() {
   const otherPlayers = signedInIds.filter(id => id !== currentPlayerId).map(id => playersById[id]).filter(Boolean);
 
   return (
+    <>
     <div
-      className={`relative w-full rounded-xl overflow-hidden transition-all border ${!signed && !loading ? "cursor-pointer" : ""} ${signed ? "border-green-500/20 bg-green-500/5" : "border-white/10 bg-white/[0.05]"}`}
+      className={`relative w-full rounded-xl overflow-hidden transition-all border ${!signed && !loading ? "cursor-pointer" : ""}`}
+      style={{
+        borderColor: "rgba(34,197,94,0.55)",
+        backgroundColor: "rgba(34,197,94,0.08)",
+        boxShadow: "0 0 20px 4px rgba(34,197,94,0.18)",
+      }}
       onClick={!signed && !loading ? () => handleSignIn(firstSession) : undefined}
     >
       {/* Top Section: Icon, Text, OPEN */}
-      <div className="flex items-start gap-4 px-4 py-4 min-h-[56px]">
+      <div className="flex items-start gap-3 px-4 py-4 min-h-[56px] sm:gap-4">
         <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
           {loading ? <Loader2 className="w-5 h-5 text-white/80 animate-spin" /> : signed ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <LogIn className="w-5 h-5 text-white/80" />}
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="text-base font-semibold text-white truncate leading-tight">
+          <div className="text-[15px] font-semibold text-white leading-tight sm:text-base">
             {signed ? "You're signed in!" : "Sign In to Tonight's Game"}
           </div>
-          <div className="mt-1 text-sm text-white/65 truncate">
+          <div className="mt-1 text-base text-white/65 sm:text-base">
             {firstSession.location} · {new Date(firstSession.session_date + 'T12:00:00').toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
             {firstSession.game_type && ` · ${firstSession.game_type}`}
           </div>
@@ -297,13 +303,13 @@ export default function PlayerSignIn() {
       {signed && (
         <>
           <button
-            className="w-full flex items-center justify-between px-4 py-3 border-t transition-colors hover:bg-white/[0.02] min-h-[44px]"
+            className="w-full flex items-center justify-between px-4 py-3 border-t transition-colors hover:bg-white/[0.02] min-h-[48px]"
             style={{ borderColor: "rgba(255,255,255,0.08)" }}
             onClick={e => { e.stopPropagation(); setDropdownOpen(!dropdownOpen); }}
           >
             <div className="flex items-center gap-2">
-              <span className="text-base font-medium text-white">Players signed in</span>
-              <span className="text-sm text-white/50">({signedInIds.length})</span>
+              <span className="text-base font-medium text-white sm:text-base">Players signed in</span>
+              <span className="text-base text-white/50 sm:text-base">({signedInIds.length})</span>
             </div>
             <ChevronDown className={`w-5 h-5 text-white/50 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
           </button>
@@ -315,28 +321,29 @@ export default function PlayerSignIn() {
                   const player = playersById[pid];
                   const hasProfilePic = player?.profile_picture;
                   return (
-                    <div key={pid} className="flex items-center gap-3 px-4 py-3 min-h-[44px]">
+                    <div key={pid} className="flex items-center gap-3 px-4 py-3 min-h-[48px]">
                       <div className="w-8 h-8 rounded-full bg-white/5 overflow-hidden flex items-center justify-center shrink-0">
                         {hasProfilePic ? (
                           <img src={player.profile_picture} alt={getPlayerDisplayName(player)} className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-xs font-medium text-white/70">
+                          <span className="text-base font-medium text-white/70">
                             {(player?.first_name?.[0] || "").toUpperCase()}{(player?.last_name?.[0] || "").toUpperCase()}
                           </span>
                         )}
                       </div>
-                      <span className="text-sm font-medium text-white/50 shrink-0">{index + 1}.</span>
-                      <span className="text-base text-white/85 truncate">{player ? getPlayerDisplayName(player) : "Loading..."}</span>
+                      <span className="text-base font-medium text-white/50 shrink-0">{index + 1}.</span>
+                      <span className="min-w-0 flex-1 text-base text-white/85 sm:text-base truncate">{player ? getPlayerDisplayName(player) : "Loading..."}</span>
                     </div>
                   );
                 })
               ) : (
-                <div className="px-4 py-3 text-base text-white/60">No other players signed in yet</div>
+                <div className="px-4 py-3 text-base text-white/60 sm:text-base">No other players signed in yet</div>
               )}
             </div>
           )}
         </>
       )}
     </div>
+    </>
   );
 }
