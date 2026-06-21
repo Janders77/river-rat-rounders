@@ -234,8 +234,10 @@ function LayoutInner({ children }) {
           {/* Mobile top bar */}
           <header className="sticky top-0 z-30 flex lg:hidden flex-col border-b border-white/8 backdrop-blur-md" style={{background: "rgba(15,15,22,0.92)", paddingTop: "env(safe-area-inset-top, 0px)"}}>
             <div className="flex items-center justify-between px-4 py-1.5">
-              <MenuButton />
-              <span className="text-sm font-semibold text-white uppercase" style={{fontFamily: "'Georgia', 'Times New Roman', serif", letterSpacing: "0.12em", textShadow: "0 0 8px rgba(220,38,38,0.9), 0 0 20px rgba(220,38,38,0.6), 0 0 40px rgba(220,38,38,0.3)"}}>River Rat Rounders</span>
+              <div className="flex items-center gap-1">
+                <MenuButton />
+                <span className="text-sm font-semibold text-white uppercase" style={{fontFamily: "'Georgia', 'Times New Roman', serif", letterSpacing: "0.12em", textShadow: "0 0 8px rgba(220,38,38,0.9), 0 0 20px rgba(220,38,38,0.6), 0 0 40px rgba(220,38,38,0.3)"}}>River Rat Rounders</span>
+              </div>
               <img
                 src="/logo.png"
                 alt="River Rat Rounders"
