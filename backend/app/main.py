@@ -254,8 +254,12 @@ def entity_delete(entity_name: str, record_id: str, claims: dict = Depends(requi
     return {"ok": True}
 
 
+class RawUpsertPayload(BaseModel):
+    records: list
+
+
 @app.post("/api/admin/raw-upsert")
-def admin_raw_upsert(payload: list = Body(...), claims: dict = Depends(require_auth)):
+def admin_raw_upsert(payload: RawUpsertPayload, claims: dict = Depends(require_auth)):
     """Temporary migration endpoint — upserts raw records directly into Postgres."""
     if claims.get("role") not in ("admin", "director"):
         raise HTTPException(status_code=403, detail="Forbidden")
@@ -268,7 +272,7 @@ def admin_raw_upsert(payload: list = Body(...), claims: dict = Depends(require_a
     try:
         with conn:
             with conn.cursor() as cur:
-                for rec in payload:
+                for rec in payload.records:
                     cur.execute(
                         """INSERT INTO records (id, entity, data, created_at, updated_at)
                            VALUES (%s, %s, %s, %s, %s)
