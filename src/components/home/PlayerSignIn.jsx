@@ -295,8 +295,6 @@ export default function PlayerSignIn() {
           </div>
         </div>
 
-        {signed && <LiveStatusIndicator />}
-
         {!signed && !loading && <ChevronRight className="w-5 h-5 text-white/20 shrink-0 mt-0.5" />}
       </div>
 
