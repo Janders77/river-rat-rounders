@@ -690,9 +690,9 @@ export default function DirectorDashboard() {
                       {/* Primary actions grid */}
                       <div className="grid grid-cols-2 gap-2">
                         <button
-                          className="text-base px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
-                          onClick={() => { setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 50); }}>
-                          + Add Player
+                          className={`text-base px-3 py-2 rounded-lg border transition-colors text-center ${isHotwExpanded ? 'border-white/20 bg-white/10 text-white' : 'border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8'}`}
+                          onClick={() => setExpandedSessions(prev => ({ ...prev, [`hotw_${session.id}`]: !prev[`hotw_${session.id}`] }))}>
+                          🃏 HOTW
                         </button>
                         <button
                           className="text-base px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
@@ -700,9 +700,9 @@ export default function DirectorDashboard() {
                           Record Game
                         </button>
                         <button
-                          className={`text-base px-3 py-2 rounded-lg border transition-colors text-center ${isHotwExpanded ? 'border-white/20 bg-white/10 text-white' : 'border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8'}`}
-                          onClick={() => setExpandedSessions(prev => ({ ...prev, [`hotw_${session.id}`]: !prev[`hotw_${session.id}`] }))}>
-                          🃏 HOTW
+                          className="text-base px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
+                          onClick={() => { setTimeout(() => document.getElementById('dir-sign-in-search')?.focus(), 50); }}>
+                          + Add Player
                         </button>
                         {(() => {
                           const hasRecordedGame = games.some(
