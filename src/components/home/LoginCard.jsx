@@ -62,7 +62,7 @@ export default function LoginCard({ onLoginSuccess }) {
             {error}
           </div>
         )}
-        <p className="text-center text-base text-white/35">Demo login: admin or jay, password `Poker123`.</p>
+
         <Button
           type="submit"
           disabled={loading}
