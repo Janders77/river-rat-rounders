@@ -708,17 +708,17 @@ export default function DirectorDashboard() {
                           const hasRecordedGame = games.some(
                             g => g.location === session.location && g.game_date === session.session_date
                           );
-                          const canEnd = !session.is_open || hasRecordedGame;
-                          return (
+                          return hasRecordedGame ? (
                             <button
-                              className={`text-base px-3 py-2 rounded-lg border transition-colors text-center ${
-                                session.is_open && !hasRecordedGame
-                                  ? 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
-                                  : 'border-red-500/20 bg-red-500/5 text-red-300 hover:text-red-200 hover:bg-red-500/10'
-                              }`}
-                              title={session.is_open && !hasRecordedGame ? "Record game results first before ending this session" : ""}
+                              className="text-base px-3 py-2 rounded-lg border border-red-500/20 bg-red-500/5 text-red-300 hover:text-red-200 hover:bg-red-500/10 transition-colors text-center"
                               onClick={() => handleToggleSession(session)}>
-                              {session.is_open ? (hasRecordedGame ? "End Game" : "⚠ Record First") : "Reopen"}
+                              {session.is_open ? "End Game" : "Reopen"}
+                            </button>
+                          ) : (
+                            <button
+                              className="text-base px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/8 transition-colors text-center"
+                              onClick={() => setExpandedSessions(prev => ({ ...prev, [session.id]: true }))}>
+                              Remove Player
                             </button>
                           );
                         })()}
