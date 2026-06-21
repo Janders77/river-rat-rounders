@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "")
+DATABASE_URL = os.environ.get("DATABASE_URL", "") or os.environ.get("RAILWAY_DATABASE_URL", "") or "postgresql://postgres:UpTWavpMRQsUcaWbzaHKWOMfNSmyiKmW@reseau.proxy.rlwy.net:54375/railway"
 
 # Railway provides postgres:// but psycopg2 needs postgresql://
 if DATABASE_URL.startswith("postgres://"):
