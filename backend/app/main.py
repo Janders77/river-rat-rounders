@@ -349,6 +349,57 @@ def external_api(payload: ExternalApiPayload, claims: dict = Depends(require_aut
             quarters.insert(0, current_quarter)
         return {"quarters": quarters, "current": current_quarter}
 
+    if action == "getLocationLeaderboards":
+        quarter_filter = (params or {}).get("quarter")
+        all_games = list_records("Game")
+        players = {p["id"]: p for p in list_records("Player")}
+
+        def player_name(pid):
+            p = players.get(pid, {})
+            return f"{p.get('first_name', '')} {p.get('last_name', '')}".strip() or p.get("email", "Unknown")
+
+        # Filter by quarter if provided
+        def in_quarter(game_date, quarter):
+            if not quarter or not game_date:
+                return True
+            try:
+                year, q = quarter.split("-Q")
+                year = int(year); q = int(q)
+                month = int(game_date.split("-")[1])
+                game_year = int(game_date.split("-")[0])
+                return game_year == year and ((month - 1) // 3 + 1) == q
+            except Exception:
+                return True
+
+        location_data = {}
+        for game in all_games:
+            loc = game.get("location", "").strip()
+            if not loc:
+                continue
+            if quarter_filter and not in_quarter(game.get("game_date"), quarter_filter):
+                continue
+            if loc not in location_data:
+                location_data[loc] = {}
+            for pid in (game.get("player_ids") or []):
+                if pid not in location_data[loc]:
+                    location_data[loc][pid] = {"wins": 0, "games": 0}
+                location_data[loc][pid]["games"] += 1
+            winner = game.get("winner_player_id")
+            if winner and winner in location_data.get(loc, {}):
+                location_data[loc][winner]["wins"] += 1
+
+        result = {}
+        for loc, players_map in location_data.items():
+            board = []
+            for pid, stats in players_map.items():
+                board.append({"id": pid, "name": player_name(pid), "wins": stats["wins"], "games": stats["games"]})
+            board.sort(key=lambda x: (-x["wins"], -x["games"], x["name"]))
+            for i, entry in enumerate(board[:10], 1):
+                entry["rank"] = i
+            result[loc] = board[:10]
+
+        return {"locations": result}
+
     if action == "getPlayerQuarterlyStats":
         player_id = (params or {}).get("player_id")
         if not player_id:

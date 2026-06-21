@@ -3,16 +3,20 @@ import { externalApi } from "@/functions/externalApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy, ChevronDown } from "lucide-react";
 
-const MEDAL = {
-  0: { bg: "bg-yellow-500/10", border: "border-yellow-500/30", num: "text-yellow-300" },
-  1: { bg: "bg-slate-400/10", border: "border-slate-400/25", num: "text-slate-300" },
-  2: { bg: "bg-orange-700/10", border: "border-orange-600/25", num: "text-orange-300" },
-};
+const RANK_STYLES = [
+  { rowBg: "rgba(234,179,8,0.06)",  rowBorder: "rgba(234,179,8,0.20)",  rankColor: "#fbbf24", rankBg: "rgba(234,179,8,0.12)"  },
+  { rowBg: "rgba(148,163,184,0.04)", rowBorder: "rgba(148,163,184,0.14)", rankColor: "#cbd5e1", rankBg: "rgba(148,163,184,0.10)" },
+  { rowBg: "rgba(180,100,50,0.05)",  rowBorder: "rgba(194,120,80,0.16)",  rankColor: "#fdba74", rankBg: "rgba(194,120,80,0.10)"  },
+];
 
 function formatQuarter(q) {
   if (!q) return "";
   const [year, qPart] = q.split("-");
   return `${qPart} ${year}`;
+}
+
+function toTitleCase(name = "") {
+  return name.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
 }
 
 export default function Leaderboard() {
@@ -51,58 +55,47 @@ export default function Leaderboard() {
     loadLeaderboard(q);
   };
 
-  const topPoints = leaderboard[0] || null;
-  const topWins = [...leaderboard].sort((a, b) => b.wins - a.wins)[0] || null;
   const isCurrentQuarter = selectedQuarter === currentQuarter;
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden"
-      style={{ background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)" }}>
-      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.08), transparent 70%)" }} />
+    <div className="min-h-screen relative" style={{ background: "linear-gradient(135deg, #1a1a22 0%, #22222e 50%, #1a1a22 100%)" }}>
+      <div className="absolute inset-x-0 top-0 h-48 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.07), transparent 70%)" }} />
 
-      <div className="relative max-w-md mx-auto w-full px-4 pt-5 pb-10">
+      <div className="relative max-w-md mx-auto w-full px-4 pt-6 pb-12">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center shrink-0">
-              <Trophy className="w-5 h-5 text-white/80" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-white tracking-tight leading-none">Leaderboard</h1>
-              <p className="text-base text-white/40 mt-0.5 leading-none">
-                {selectedQuarter ? formatQuarter(selectedQuarter) : "Season standings"} · quarterly points
-              </p>
-            </div>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-xl font-bold text-white tracking-tight leading-none">Leaderboard</h1>
+            <p className="text-sm text-white/35 mt-1">{selectedQuarter ? formatQuarter(selectedQuarter) : "Season"} · Quarterly Points</p>
           </div>
 
           {/* Quarter Picker */}
           <div className="relative">
             <button
               onClick={() => setShowQuarterPicker(v => !v)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-base text-white/60 hover:text-white/90 hover:border-white/20 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-white/10 bg-white/[0.04] text-sm text-white/60 hover:text-white/90 hover:border-white/20 transition-colors"
             >
               {selectedQuarter ? formatQuarter(selectedQuarter) : "Quarter"}
               <ChevronDown className="w-3 h-3" />
               {isCurrentQuarter && (
-                <span className="ml-1 px-1 py-0.5 rounded bg-red-500/20 text-red-400 text-[9px] font-bold uppercase tracking-wide">Live</span>
+                <span className="ml-0.5 w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
               )}
             </button>
             {showQuarterPicker && (
-              <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] rounded-xl border border-white/10 bg-[#2a2a35] shadow-xl overflow-hidden">
+              <div className="absolute right-0 top-full mt-1.5 z-20 min-w-[130px] rounded-xl border border-white/10 overflow-hidden shadow-2xl"
+                style={{ background: "#1a1a22" }}>
                 {availableQuarters.map(q => (
                   <button
                     key={q}
                     onClick={() => handleQuarterChange(q)}
-                    className={`w-full text-left px-4 py-2.5 text-base transition-colors ${
-                      q === selectedQuarter
-                        ? "bg-red-500/10 text-red-400 font-semibold"
-                        : "text-white/60 hover:bg-white/5 hover:text-white/90"
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                      q === selectedQuarter ? "bg-white/8 text-white font-semibold" : "text-white/50 hover:bg-white/5 hover:text-white/80"
                     }`}
                   >
                     {formatQuarter(q)}
-                    {q === currentQuarter && <span className="ml-1 text-red-400">●</span>}
+                    {q === currentQuarter && <span className="ml-2 w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />}
                   </button>
                 ))}
               </div>
@@ -110,97 +103,71 @@ export default function Leaderboard() {
           </div>
         </div>
 
-        {/* Stat chips */}
-        {!isLoading && (topPoints || topWins) && (
-          <div className="flex gap-3 mb-4">
-            {topPoints && (
-              <div className="flex-1 flex items-center justify-between px-4 py-3 rounded-xl border border-red-500/20 bg-red-500/5">
-                <span className="text-base text-white/40 uppercase tracking-widest font-bold">Top Pts</span>
-                <span className="text-white text-base font-semibold truncate mx-2">{topPoints.name.split(' ')[0]}</span>
-                <span className="text-base font-black tabular-nums shrink-0" style={{ color: "#f87171" }}>{topPoints.points}</span>
-              </div>
-            )}
-            {topWins && (
-              <div className="flex-1 flex items-center justify-between px-4 py-3 rounded-xl border border-amber-500/20 bg-amber-500/5">
-                <span className="text-base text-white/40 uppercase tracking-widest font-bold">Wins ♠</span>
-                <span className="text-white text-base font-semibold truncate mx-2">{topWins.name.split(' ')[0]}</span>
-                <span className="text-base font-black tabular-nums shrink-0" style={{ color: "#fbbf24" }}>{topWins.wins}</span>
-              </div>
-            )}
-          </div>
-        )}
-
         {/* Column labels */}
         {!isLoading && leaderboard.length > 0 && (
-          <div className="flex items-center px-3 mb-1">
-            <div className="w-6 shrink-0" />
-            <div className="w-8 shrink-0" />
+          <div className="flex items-center px-3 mb-2">
+            <div className="w-7 shrink-0" />
+            <div className="w-9 shrink-0" />
             <div className="flex-1" />
-            <div className="flex items-center gap-4 shrink-0">
-              <span className="text-base text-white/20 uppercase tracking-widest w-8 text-center font-medium">Wins</span>
-              <div className="w-px h-3 bg-white/5" />
-              <span className="text-base text-white/20 uppercase tracking-widest w-12 text-right font-medium">Pts</span>
-            </div>
+            <span className="text-[10px] text-white/20 uppercase tracking-widest w-8 text-center font-medium">W</span>
+            <span className="text-[10px] text-white/20 uppercase tracking-widest w-14 text-right font-medium">PTS</span>
           </div>
         )}
 
         {/* Rows */}
         {isLoading ? (
-          <div className="space-y-2 mt-2">
-            {Array(10).fill(0).map((_, i) => (
+          <div className="space-y-2">
+            {Array(8).fill(0).map((_, i) => (
               <Skeleton key={i} className="h-14 rounded-xl" style={{ background: "rgba(255,255,255,0.04)" }} />
             ))}
           </div>
         ) : leaderboard.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center py-20">
             <Trophy className="w-10 h-10 mx-auto mb-3 text-white/10" />
-            <p className="text-white/30 text-base">No games recorded for {selectedQuarter ? formatQuarter(selectedQuarter) : "this quarter"}</p>
+            <p className="text-white/30 text-sm">No results for {selectedQuarter ? formatQuarter(selectedQuarter) : "this quarter"}</p>
           </div>
         ) : (
-          <div className="space-y-1">
+          <div className="flex flex-col gap-1.5">
             {leaderboard.map((entry) => {
-              const index = entry.rank - 1;
-              const medal = MEDAL[index];
+              const idx = entry.rank - 1;
+              const styles = RANK_STYLES[idx];
+              const isTop3 = idx < 3;
               return (
                 <div
                   key={entry.id}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-100 min-h-[52px]"
-                  style={medal ? {
-                    background: "rgba(255,255,255,0.025)",
-                    border: `1px solid ${index === 0 ? "rgba(234,179,8,0.16)" : index === 1 ? "rgba(148,163,184,0.12)" : "rgba(194,120,80,0.14)"}`,
-                  } : {
-                    background: "rgba(255,255,255,0.015)",
-                    border: "1px solid rgba(255,255,255,0.04)",
+                  className="flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-100"
+                  style={{
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px solid rgba(255,255,255,0.05)",
                   }}
                 >
-                  <div className={`w-6 h-6 rounded flex items-center justify-center text-base font-black shrink-0 ${
-                    medal ? `${medal.bg} border ${medal.border} ${medal.num}` : "text-white/20"
-                  }`}>
-                    {entry.rank}
+                  {/* Rank */}
+                  <div className="w-7 text-center shrink-0">
+                    <span className="text-sm font-bold tabular-nums text-white/30">{entry.rank}</span>
                   </div>
 
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-base font-bold shrink-0"
-                    style={{ background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.07)", color: "#6b7280" }}>
-                    {entry.name?.[0]}
+                  {/* Avatar */}
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.3)" }}>
+                    {toTitleCase(entry.name)?.[0]}
                   </div>
 
+                  {/* Name */}
                   <div className="flex-1 min-w-0">
-                    <span className={`font-semibold text-base truncate block leading-none ${index < 3 ? "text-white" : "text-white/50"}`}>
-                      {entry.name}
+                    <span className="text-sm font-semibold truncate block text-white/80">
+                      {toTitleCase(entry.name)}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-4 shrink-0">
-                    <span className="font-bold text-base tabular-nums w-8 text-center"
-                      style={{ color: entry.wins > 0 ? "#fbbf24" : "rgba(255,255,255,0.1)" }}>
-                      {entry.wins > 0 ? `${entry.wins}♠` : "—"}
-                    </span>
-                    <div className="w-px h-4" style={{ background: "rgba(255,255,255,0.06)" }} />
-                    <span className="font-black text-base tabular-nums w-12 text-right"
-                      style={{ color: index === 0 ? "#f87171" : index < 3 ? "#fca5a5" : "#dc2626" }}>
-                      {entry.points}
-                    </span>
-                  </div>
+                  {/* Wins */}
+                  <span className="text-sm tabular-nums w-8 text-center font-semibold text-white/30">
+                    {entry.wins > 0 ? entry.wins : "—"}
+                  </span>
+
+                  {/* Points */}
+                  <span className="text-sm font-black tabular-nums w-14 text-right text-white/70">
+                    {entry.points}
+                  </span>
                 </div>
               );
             })}

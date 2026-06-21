@@ -1,9 +1,64 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
+import { externalApi } from "@/functions/externalApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Clock, Plus, Trash2, Camera, Loader2, X, Pencil } from "lucide-react";
+import { MapPin, Clock, Plus, Trash2, Camera, Loader2, X, Pencil, ChevronDown, Trophy } from "lucide-react";
+
+function toTitleCase(name = "") {
+  return name.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+}
+
+function LocationLeaderboard({ locationName }) {
+  const [board, setBoard] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const load = async () => {
+    if (board) return;
+    setLoading(true);
+    const res = await externalApi({ action: "getLocationLeaderboards", params: {} });
+    setBoard((res?.locations?.[locationName]) || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  if (loading) return (
+    <div className="flex justify-center py-4">
+      <Loader2 className="w-4 h-4 text-white/30 animate-spin" />
+    </div>
+  );
+
+  if (!board || board.length === 0) return (
+    <p className="text-white/30 text-sm text-center py-4">No game history yet</p>
+  );
+
+  return (
+    <div className="flex flex-col gap-1 pt-1">
+      <div className="flex items-center px-1 mb-1">
+        <div className="w-6 shrink-0" />
+        <div className="w-8 shrink-0" />
+        <div className="flex-1" />
+        <span className="text-[10px] text-white/20 uppercase tracking-widest w-8 text-center">W</span>
+        <span className="text-[10px] text-white/20 uppercase tracking-widest w-12 text-right">Games</span>
+      </div>
+      {board.map(entry => (
+        <div key={entry.id} className="flex items-center gap-2 px-1 py-2 rounded-lg"
+          style={{ background: "rgba(255,255,255,0.02)" }}>
+          <span className="w-6 text-center text-xs font-bold text-white/20 tabular-nums">{entry.rank}</span>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.3)" }}>
+            {toTitleCase(entry.name)?.[0]}
+          </div>
+          <span className="flex-1 text-sm text-white/75 font-medium truncate">{toTitleCase(entry.name)}</span>
+          <span className="w-8 text-center text-sm text-white/40 tabular-nums">{entry.wins || "—"}</span>
+          <span className="w-12 text-right text-sm text-white/30 tabular-nums">{entry.games}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 const emptyForm = { name: "", address: "", game_time: "", description: "", image_url: "" };
 
@@ -105,6 +160,7 @@ export default function Locations() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [expandedLeaderboard, setExpandedLeaderboard] = useState(null);
 
 useEffect(() => { loadData(); }, []);
 
@@ -234,6 +290,24 @@ useEffect(() => { loadData(); }, []);
                         <p className="text-white/50 text-base mt-2 leading-relaxed">{loc.description}</p>
                       )}
                     </div>
+
+                    {/* Top 10 leaderboard toggle */}
+                    <button
+                      className="w-full flex items-center justify-between px-4 py-2.5 border-t border-white/8 hover:bg-white/[0.02] transition-colors"
+                      onClick={() => setExpandedLeaderboard(expandedLeaderboard === loc.id ? null : loc.id)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Trophy className="w-3.5 h-3.5 text-white/30" />
+                        <span className="text-sm text-white/50 font-medium">Top Players</span>
+                      </div>
+                      <ChevronDown className={`w-4 h-4 text-white/25 transition-transform duration-200 ${expandedLeaderboard === loc.id ? "rotate-180" : ""}`} />
+                    </button>
+
+                    {expandedLeaderboard === loc.id && (
+                      <div className="px-4 pb-3">
+                        <LocationLeaderboard locationName={loc.name} />
+                      </div>
+                    )}
                   </div>
                 )
               ))
