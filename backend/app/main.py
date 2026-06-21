@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi import Body, Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
@@ -255,7 +255,7 @@ def entity_delete(entity_name: str, record_id: str, claims: dict = Depends(requi
 
 
 @app.post("/api/admin/raw-upsert")
-def admin_raw_upsert(payload: list, claims: dict = Depends(require_auth)):
+def admin_raw_upsert(payload: list = Body(...), claims: dict = Depends(require_auth)):
     """Temporary migration endpoint — upserts raw records directly into Postgres."""
     if claims.get("role") not in ("admin", "director"):
         raise HTTPException(status_code=403, detail="Forbidden")
