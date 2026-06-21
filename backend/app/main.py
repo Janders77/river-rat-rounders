@@ -330,9 +330,10 @@ def external_api(payload: ExternalApiPayload, claims: dict = Depends(require_aut
 
         leaderboard = []
         for player_id, entry in totals.items():
+            player = players.get(player_id, {})
             if not entry["name"]:
-                player = players.get(player_id, {})
                 entry["name"] = f"{player.get('first_name', '')} {player.get('last_name', '')}".strip() or player.get("email", "Unknown Player")
+            entry["profile_picture"] = player.get("profile_picture", "")
             leaderboard.append(entry)
 
         leaderboard.sort(key=lambda item: (-item["points"], -item["wins"], item["name"]))
@@ -392,7 +393,8 @@ def external_api(payload: ExternalApiPayload, claims: dict = Depends(require_aut
         for loc, players_map in location_data.items():
             board = []
             for pid, stats in players_map.items():
-                board.append({"id": pid, "name": player_name(pid), "wins": stats["wins"], "games": stats["games"]})
+                p = players.get(pid, {})
+                board.append({"id": pid, "name": player_name(pid), "wins": stats["wins"], "games": stats["games"], "profile_picture": p.get("profile_picture", "")})
             board.sort(key=lambda x: (-x["wins"], -x["games"], x["name"]))
             for i, entry in enumerate(board[:10], 1):
                 entry["rank"] = i

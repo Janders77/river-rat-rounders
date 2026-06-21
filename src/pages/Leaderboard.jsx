@@ -147,9 +147,11 @@ export default function Leaderboard() {
                   </div>
 
                   {/* Avatar */}
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                  <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold shrink-0"
                     style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.3)" }}>
-                    {toTitleCase(entry.name)?.[0]}
+                    {entry.profile_picture
+                      ? <img src={entry.profile_picture} alt={entry.name} className="w-full h-full object-cover" />
+                      : toTitleCase(entry.name)?.[0]}
                   </div>
 
                   {/* Name */}

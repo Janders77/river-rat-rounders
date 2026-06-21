@@ -47,9 +47,11 @@ function LocationLeaderboard({ locationName }) {
         <div key={entry.id} className="flex items-center gap-2 px-1 py-2 rounded-lg"
           style={{ background: "rgba(255,255,255,0.02)" }}>
           <span className="w-6 text-center text-xs font-bold text-white/20 tabular-nums">{entry.rank}</span>
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+          <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold shrink-0"
             style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.3)" }}>
-            {toTitleCase(entry.name)?.[0]}
+            {entry.profile_picture
+              ? <img src={entry.profile_picture} alt={entry.name} className="w-full h-full object-cover" />
+              : toTitleCase(entry.name)?.[0]}
           </div>
           <span className="flex-1 text-sm text-white/75 font-medium truncate">{toTitleCase(entry.name)}</span>
           <span className="w-8 text-center text-sm text-white/40 tabular-nums">{entry.wins || "—"}</span>
