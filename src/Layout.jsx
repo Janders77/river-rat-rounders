@@ -103,6 +103,7 @@ function LayoutInner({ children }) {
   const [player, setPlayer] = React.useState(null);
   const [isHeadDirector, setIsHeadDirector] = React.useState(false);
   const [isDirector, setIsDirector] = React.useState(false);
+  const [isSignedInToGame, setIsSignedInToGame] = React.useState(false);
 
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -121,6 +122,14 @@ function LayoutInner({ children }) {
       const directorRecords = await base44.entities.Director.filter({ email: playerEmail });
       setIsDirector(directorRecords.length > 0);
       setIsHeadDirector(directorRecords.some(d => d.role === "Head Director"));
+
+      // Check if player is signed into any open game session
+      if (players.length > 0) {
+        const playerId = players[0].id;
+        const openSessions = await base44.entities.GameSession.filter({ is_open: true });
+        const signedIn = openSessions.some(s => (s.signed_in_player_ids || []).includes(playerId));
+        setIsSignedInToGame(signedIn);
+      }
     };
     fetchUser();
   }, []);
@@ -239,7 +248,7 @@ function LayoutInner({ children }) {
               <img
                 src="/logo.png"
                 alt="River Rat Rounders"
-                className="w-9 h-9 object-contain flex-shrink-0 ml-auto"
+                className={`w-9 h-9 object-contain flex-shrink-0 ml-auto${isSignedInToGame ? " logo-spin" : ""}`}
               />
             </div>
           </header>
