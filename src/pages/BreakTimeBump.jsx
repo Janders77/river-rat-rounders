@@ -31,7 +31,7 @@ export default function BreakTimeBump() {
 
         {/* Price */}
         <div className="w-full rounded-xl border border-red-500/20 bg-red-500/5 p-4 flex items-center justify-center gap-3">
-          <span className="text-2xl font-bold text-red-400">${BUMP_COST}.00</span>
+          <span className="text-2xl font-bold text-red-400">{BUMP_COST}.00</span>
           <Badge className="bg-red-900/30 text-red-300 border-red-700/40">Per Bump</Badge>
         </div>
 
