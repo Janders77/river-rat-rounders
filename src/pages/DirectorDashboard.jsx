@@ -906,7 +906,12 @@ export default function DirectorDashboard() {
                       LOCATION
                     </label>
                     <Select value={newSession.location || "__none__"} onValueChange={v => setNewSession({...newSession, location: v === "__none__" ? "" : v})}>
-                      <SelectTrigger className="w-full h-12 min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 text-base text-white">
+                      <SelectTrigger
+                        className="w-full h-12 min-w-0 rounded-2xl px-4 text-base text-white focus:ring-green-500/40"
+                        style={newSession.location
+                          ? { background: "linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(21,128,61,0.10) 100%)", border: "1px solid rgba(34,197,94,0.45)" }
+                          : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }
+                        }>
                         <SelectValue placeholder="Select location" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-900 border-gray-700 text-white">
