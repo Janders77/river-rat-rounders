@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
+import { imageToBase64 } from "@/lib/imageUpload";
 import { externalApi } from "@/functions/externalApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,7 +93,7 @@ function LocationForm({ initial, onSave, onCancel, title }) {
     const file = e.target.files[0];
     if (!file) return;
     setUploadingImage(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const file_url = await imageToBase64(file);
     setForm(prev => ({ ...prev, image_url: file_url }));
     setUploadingImage(false);
   };

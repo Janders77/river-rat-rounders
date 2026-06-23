@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { imageToBase64 } from "@/lib/imageUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -81,7 +82,7 @@ export default function Community() {
     const file = e.target.files?.[0];
     if (!file) return;
     setImageUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const file_url = await imageToBase64(file);
     setForm(f => ({ ...f, image_url: file_url }));
     setImageUploading(false);
   };

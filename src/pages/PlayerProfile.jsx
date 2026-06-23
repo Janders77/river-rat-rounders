@@ -145,12 +145,31 @@ export default function PlayerProfile() {
     setImageFile(file);
 
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const base64 = await new Promise((resolve, reject) => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+          const size = 256;
+          canvas.width = size;
+          canvas.height = size;
+          const scale = Math.max(size / img.width, size / img.height);
+          const x = (size - img.width * scale) / 2;
+          const y = (size - img.height * scale) / 2;
+          ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+          URL.revokeObjectURL(url);
+          resolve(canvas.toDataURL("image/jpeg", 0.8));
+        };
+        img.onerror = reject;
+        img.src = url;
+      });
+
       if (playerData) {
-        await base44.entities.Player.update(playerData.id, { profile_picture: file_url });
-        setPlayerData(prev => ({ ...prev, profile_picture: file_url }));
+        await base44.entities.Player.update(playerData.id, { profile_picture: base64 });
+        setPlayerData(prev => ({ ...prev, profile_picture: base64 }));
       }
-      setProfileImageUrl(file_url);
+      setProfileImageUrl(base64);
       setImageUploadStatus("done");
       setTimeout(() => setImageUploadStatus("idle"), 3000);
     } catch {

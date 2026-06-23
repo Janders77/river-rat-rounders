@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { base44 } from "@/api/base44Client";
+import { imageToBase64 } from "@/lib/imageUpload";
 import { Game } from "@/entities/Game";
 import { User } from "@/entities/User";
 import { GameSession } from "@/entities/GameSession";
@@ -512,7 +513,7 @@ export default function DirectorDashboard() {
     e.preventDefault();
     if (!photoFile) return;
     setIsUploadingPhoto(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file: photoFile });
+    const file_url = await imageToBase64(photoFile);
     await WinnerPhoto.create({ ...photoForm, photo_url: file_url });
     setPhotoForm({ title: "", winner_name: "", game_date: new Date().toISOString().split('T')[0], location: "" });
     setPhotoFile(null);

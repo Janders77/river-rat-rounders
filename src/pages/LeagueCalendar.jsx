@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { base44 } from "@/api/base44Client";
+import { imageToBase64 } from "@/lib/imageUpload";
 import { CalendarDays, Plus, MapPin, Clock, Trash2, Edit2, X, Check, Upload, Image } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -75,7 +76,7 @@ export default function LeagueCalendar() {
     setUploadingImage(true);
     const urls = [];
     for (const file of files) {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const file_url = await imageToBase64(file);
       urls.push(file_url);
     }
     setForm(prev => ({ ...prev, image_urls: [...(prev.image_urls || []), ...urls] }));
