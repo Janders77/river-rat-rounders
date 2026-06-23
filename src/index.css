@@ -12,7 +12,7 @@
     --card-foreground: 220 10% 88%;
     --popover: 230 15% 14%;
     --popover-foreground: 220 10% 88%;
-    --primary: 0 72% 51%;
+    --primary: 0 60% 28%;
     --primary-foreground: 0 0% 100%;
     --secondary: 230 12% 18%;
     --secondary-foreground: 220 10% 75%;
@@ -20,7 +20,7 @@
     --muted-foreground: 220 8% 55%;
     --accent: 230 12% 22%;
     --accent-foreground: 220 10% 88%;
-    --destructive: 0 72% 51%;
+    --destructive: 0 60% 35%;
     --destructive-foreground: 0 0% 100%;
     --border: 230 12% 22%;
     --input: 230 12% 18%;
@@ -33,7 +33,7 @@
     --radius: 0.625rem;
     --sidebar-background: 0 0% 0%;
     --sidebar-foreground: 220 10% 75%;
-    --sidebar-primary: 0 72% 51%;
+    --sidebar-primary: 0 60% 32%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 230 12% 16%;
     --sidebar-accent-foreground: 220 10% 88%;
@@ -43,6 +43,11 @@
 }
 
 
+
+/* Sidebar gradient override */
+[data-sidebar="sidebar"] {
+  background: linear-gradient(to bottom, #000000 0%, #3a0000 60%) !important;
+}
 
 @layer base {
   * {

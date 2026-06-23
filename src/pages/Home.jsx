@@ -103,7 +103,7 @@ export default function Home() {
 
   /* ── LOGGED OUT ── */
   return (
-    <div className="min-h-screen flex flex-col items-center relative px-4 pt-8" style={BG}>
+    <div className="min-h-screen flex flex-col items-center relative px-4 pt-8 pb-10" style={BG}>
       <div className="absolute inset-0 pointer-events-none" style={GLOW} />
       <div className="relative w-full max-w-md flex flex-col gap-6">
         <Brand />
@@ -111,6 +111,8 @@ export default function Home() {
           const email = localStorage.getItem("playerEmail");
           setLoggedInPlayer(email || null);
         }} />
+        <Divider label="New Player?" />
+        <PlayerSignUp />
       </div>
     </div>
   );

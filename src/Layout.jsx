@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { Trophy, User, History, Menu, Home, ShieldAlert, Image, Zap, CalendarDays, Database, MapPin, LogOut, Users } from "lucide-react";
 
 
@@ -97,6 +98,7 @@ function MenuButton() {
 function LayoutInner({ children }) {
   const location = useLocation();
   const { setOpenMobile } = useSidebar();
+  const { logout } = useAuth();
   const [logoClicks, setLogoClicks] = React.useState(0);
   const [showSecret, setShowSecret] = React.useState(false);
   const [user, setUser] = React.useState(null);
@@ -147,8 +149,8 @@ function LayoutInner({ children }) {
   return (
     <>
       <div className="h-screen flex w-full overflow-hidden text-gray-100" style={{background: "linear-gradient(135deg, #1a1a22 0%, #22222e 50%, #1a1a22 100%)"}}>
-        <Sidebar className="border-r border-white/5" style={{background: "#000000"}}>
-          <SidebarHeader className="px-5 pb-4" style={{background: "#000000", paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.5rem)"}}>
+        <Sidebar className="border-r border-white/5" style={{background: "transparent"}}>
+          <SidebarHeader className="px-5 pb-4" style={{background: "transparent", paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.5rem)"}}>
             <div className="flex flex-col items-center pl-4">
               <button onClick={handleLogoClick} className="hover:opacity-90 transition-opacity">
                 <img src="/logo.png" alt="River Rat Rounders" className="w-32 h-32 object-contain" />
@@ -156,7 +158,7 @@ function LayoutInner({ children }) {
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="px-3 pt-4 pb-3" style={{background: "#000000"}}>
+          <SidebarContent className="px-3 pt-4 pb-3" style={{background: "transparent"}}>
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="flex flex-col items-center">
@@ -166,8 +168,8 @@ function LayoutInner({ children }) {
                         asChild
                         className={`relative overflow-hidden transition-all duration-200 rounded-lg mb-0.5 ${
                           location.pathname === createPageUrl("BreakTimeBump")
-                            ? 'bg-red-500/10 text-white border-l-2 border-red-500'
-                            : 'text-gray-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent'
+                            ? 'text-white'
+                            : 'text-gray-400 hover:text-white hover:bg-white/5'
                         }`}
                       >
                         <Link to={createPageUrl("BreakTimeBump")} onClick={() => setOpenMobile(false)} className="flex items-center justify-center gap-3 px-4 py-3">
@@ -187,11 +189,11 @@ function LayoutInner({ children }) {
                           <SidebarMenuButton
                             className={`group relative overflow-hidden transition-all duration-200 rounded-lg mb-1 w-full justify-center gap-3 ${
                               location.pathname === item.url
-                                ? 'bg-red-500/10 text-white border-l-2 border-red-500'
-                                : 'text-gray-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent'
+                                ? 'text-white'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
                             }`}
                           >
-                            <item.icon className={`w-6 h-6 shrink-0 ${location.pathname === item.url ? 'text-red-400' : ''}`} />
+                            <item.icon className="w-6 h-6 shrink-0" />
                             <span className="font-medium text-lg">{item.title}</span>
                           </SidebarMenuButton>
                         </Link>
@@ -211,10 +213,9 @@ function LayoutInner({ children }) {
                       onClick={() => {
                         localStorage.removeItem("playerEmail");
                         localStorage.removeItem("playerName");
-                        setOpenMobile(false);
-                        window.location.href = createPageUrl("Home");
+                        logout(true);
                       }}
-                      className="hover:bg-red-900/30 transition-all duration-200 rounded-lg text-red-400 justify-center gap-3"
+                      className="hover:bg-red-900/30 transition-all duration-200 rounded-lg justify-center gap-3" style={{color: "hsl(var(--sidebar-primary))"}}
                     >
                       <LogOut className="w-6 h-6" />
                       <span className="font-medium text-lg">Sign Out</span>
@@ -241,7 +242,7 @@ function LayoutInner({ children }) {
           </header>
 
           {/* Mobile top bar */}
-          <header className="sticky top-0 z-30 flex lg:hidden flex-col border-b border-white/8 backdrop-blur-md" style={{background: "rgba(15,15,22,0.92)", paddingTop: "env(safe-area-inset-top, 0px)"}}>
+          <header className="sticky top-0 z-30 flex lg:hidden flex-col border-b border-white/8 backdrop-blur-md" style={{background: "linear-gradient(to right, rgba(0,0,0,0.97), rgba(40,0,0,0.97))", paddingTop: "env(safe-area-inset-top, 0px)"}}>
             <div className="relative flex items-center px-4 py-1.5">
               <MenuButton />
               <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-white uppercase" style={{fontFamily: "'Georgia', 'Times New Roman', serif", letterSpacing: "0.12em", textShadow: "0 0 8px rgba(220,38,38,0.9), 0 0 20px rgba(220,38,38,0.6), 0 0 40px rgba(220,38,38,0.3)"}}>River Rat Rounders</span>

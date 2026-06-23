@@ -377,6 +377,26 @@ export default function DirectorDashboard() {
   const handleApproveRequest = async (req) => {
     await base44.users.inviteUser(req.email, "user");
     await InviteRequest.update(req.id, { status: "approved" });
+
+    // Create player record if one doesn't already exist for this email
+    const existing = await base44.entities.Player.filter({ email: req.email });
+    if (!existing || existing.length === 0) {
+      const allPlayers = await base44.entities.Player.list("player_number", null, 0);
+      const maxNumber = (allPlayers || []).reduce(
+        (max, p) => Math.max(max, Number(p.player_number) || 0),
+        0
+      );
+      await base44.entities.Player.create({
+        email: req.email,
+        first_name: req.first_name || "",
+        last_name: req.last_name || "",
+        player_number: maxNumber + 1,
+        card_guards: 0,
+        date_joined: new Date().toISOString().slice(0, 10),
+        profile_picture: "",
+      });
+    }
+
     setInviteRequests(prev => prev.filter(r => r.id !== req.id));
   };
 
@@ -629,7 +649,7 @@ export default function DirectorDashboard() {
             <button onClick={() => setActiveTab("requests")} className={`${tabBtn("requests")} relative`}>
               Requests
               {inviteRequests.length > 0 && (
-                <span className="ml-1 inline-flex items-center justify-center bg-red-600 text-white text-[9px] font-bold rounded-full w-4 h-4 leading-none">{inviteRequests.length}</span>
+                <span className="ml-1 inline-flex items-center justify-center bg-red-900/80 text-red-200 text-[9px] font-bold rounded-full w-4 h-4 leading-none">{inviteRequests.length}</span>
               )}
             </button>
           )}

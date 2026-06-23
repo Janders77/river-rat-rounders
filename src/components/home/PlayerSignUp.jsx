@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
 import { InviteRequest } from "@/entities/InviteRequest";
 
-export default function PlayerSignUp() {
-  const [expanded, setExpanded] = useState(false);
+export default function PlayerSignUp({ defaultExpanded = false }) {
+  const [expanded, setExpanded] = useState(defaultExpanded);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -39,8 +39,8 @@ export default function PlayerSignUp() {
           <UserPlus className="w-5 h-5 text-white/80" />
         </div>
         <div className="flex flex-col flex-1 min-w-0 text-left">
-          <span className="text-base font-semibold text-white leading-tight">New Player? Sign Up</span>
-          <span className="text-base text-white/65 mt-0.5">Request to join the River Rat Rounders</span>
+          <span className="text-base font-semibold text-white leading-tight">New Players</span>
+          <span className="text-base text-white/65 mt-0.5">Request to join the league</span>
         </div>
         <ChevronRight className="w-5 h-5 text-white/20 shrink-0" />
       </button>

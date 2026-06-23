@@ -66,7 +66,7 @@ export default function LoginCard({ onLoginSuccess }) {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full h-12 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white shadow-lg shadow-red-900/40 transition-all duration-200 text-base font-semibold rounded-xl active:scale-[0.99]"
+          className="w-full h-12 text-white shadow-lg shadow-red-900/40 transition-all duration-200 text-base font-semibold rounded-xl active:scale-[0.99]"
         >
           {loading ? (
             <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Signing in...</>

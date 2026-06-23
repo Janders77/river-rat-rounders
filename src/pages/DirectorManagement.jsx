@@ -183,10 +183,10 @@ export default function DirectorManagement() {
                   <div className="min-w-0 flex-1 overflow-hidden">
                     <div className="text-white text-base font-medium truncate">{director.full_name || director.email}</div>
                     <div className="text-gray-400 text-base truncate">{director.email}</div>
-                    <Badge className={`mt-1 text-base ${
-                      director.role === "Head Director" ? "bg-red-600/20 border-red-500/50 text-red-300" :
-                      director.role === "Tournament Director" ? "bg-red-800/20 border-red-700/50 text-red-400" :
-                      "bg-gray-600/20 border-gray-500/50 text-gray-300"
+                    <Badge variant="outline" className={`mt-1 text-base ${
+                      director.role === "Head Director" ? "border-red-900/50 text-red-400/70" :
+                      director.role === "Tournament Director" ? "border-red-900/40 text-red-500/60" :
+                      "border-gray-600/40 text-gray-400"
                     }`}>
                       {director.role}
                     </Badge>
@@ -242,7 +242,7 @@ export default function DirectorManagement() {
                 <Button
                   type="submit"
                   disabled={isSubmitting || !newDirector.email}
-                  className="flex-1 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white"
+                  className="flex-1 bg-gradient-to-r from-red-900 to-red-950 hover:from-red-800 hover:to-red-900 text-white/90"
                 >
                   {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
                   Add Director
@@ -256,7 +256,7 @@ export default function DirectorManagement() {
         ) : (
           <Button
             onClick={() => setShowAddForm(true)}
-            className="mt-2 w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white rounded-xl"
+            className="mt-2 w-full bg-gradient-to-r from-red-900 to-red-950 hover:from-red-800 hover:to-red-900 text-white/90 rounded-xl"
           >
             <Plus className="w-4 h-4 mr-2" /> Add Director
           </Button>

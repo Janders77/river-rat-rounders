@@ -82,26 +82,25 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
       style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
     >
       {/* Avatar */}
-      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-base font-bold text-white/40"
+      <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center shrink-0 text-base font-bold text-white/40"
         style={{ background: "rgba(255,255,255,0.06)" }}>
-        {initials || "?"}
+        {player.profile_picture
+          ? <img src={player.profile_picture} alt={initials} className="w-full h-full object-cover" />
+          : (initials || "?")}
       </div>
 
       {/* Text column */}
       <div className="flex flex-col flex-1 min-w-0">
         <div className="flex items-center gap-1.5 min-w-0">
+          {player.player_number != null && (
+            <span className="text-white/40 font-mono text-base shrink-0">{player.player_number}</span>
+          )}
           <span className="text-white font-medium text-base truncate min-w-0">
             {player.first_name} {player.last_name}
           </span>
           {player.card_guards > 0 && (
             <span className="text-base text-amber-400/70 shrink-0">🛡️{player.card_guards}</span>
           )}
-        </div>
-        <div className="flex items-center gap-2 min-w-0 text-base text-white/35">
-          {player.player_number != null && (
-            <span className="shrink-0 font-mono">#{player.player_number}</span>
-          )}
-          <span className="truncate">{player.email}</span>
         </div>
       </div>
 

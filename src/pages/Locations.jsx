@@ -17,8 +17,22 @@ function LocationLeaderboard({ locationName }) {
   const load = async () => {
     if (board) return;
     setLoading(true);
-    const res = await externalApi({ action: "getLocationLeaderboards", params: {} });
-    setBoard((res?.locations?.[locationName]) || []);
+    const [res, players] = await Promise.all([
+      externalApi({ action: "getLocationLeaderboards", params: {} }),
+      base44.entities.Player.list("player_number", null, 0),
+    ]);
+    const raw = (res?.locations?.[locationName]) || [];
+
+    const numberByName = {};
+    (players || []).forEach(p => {
+      const full = `${p.first_name || ""} ${p.last_name || ""}`.trim().toLowerCase();
+      if (full) numberByName[full] = p.player_number;
+    });
+
+    setBoard(raw.map(entry => ({
+      ...entry,
+      player_number: numberByName[(entry.name || "").trim().toLowerCase()] ?? null,
+    })));
     setLoading(false);
   };
 
@@ -36,10 +50,11 @@ function LocationLeaderboard({ locationName }) {
 
   return (
     <div className="flex flex-col gap-1 pt-1">
-      <div className="flex items-center px-1 mb-1">
+      <div className="flex items-center gap-2 px-1 mb-1">
         <div className="w-6 shrink-0" />
         <div className="w-8 shrink-0" />
         <div className="flex-1" />
+        <span className="text-[10px] text-white/20 uppercase tracking-widest w-14 text-left">No</span>
         <span className="text-[10px] text-white/20 uppercase tracking-widest w-8 text-center">W</span>
         <span className="text-[10px] text-white/20 uppercase tracking-widest w-12 text-right">Games</span>
       </div>
@@ -54,6 +69,7 @@ function LocationLeaderboard({ locationName }) {
               : toTitleCase(entry.name)?.[0]}
           </div>
           <span className="flex-1 text-sm text-white/75 font-medium truncate">{toTitleCase(entry.name)}</span>
+          <span className="text-sm tabular-nums w-14 text-left text-white/30">{entry.player_number != null ? entry.player_number : "—"}</span>
           <span className="w-8 text-center text-sm text-white/40 tabular-nums">{entry.wins || "—"}</span>
           <span className="w-12 text-right text-sm text-white/30 tabular-nums">{entry.games}</span>
         </div>

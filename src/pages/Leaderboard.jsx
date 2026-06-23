@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { externalApi } from "@/functions/externalApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy, ChevronDown } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 const RANK_STYLES = [
   { rowBg: "rgba(234,179,8,0.06)",  rowBorder: "rgba(234,179,8,0.20)",  rankColor: "#fbbf24", rankBg: "rgba(234,179,8,0.12)"  },
@@ -42,10 +43,25 @@ export default function Leaderboard() {
 
   const loadLeaderboard = async (quarter) => {
     setIsLoading(true);
-    const raw = await externalApi({ action: "getLeaderboard", params: { quarter } });
+    const [raw, players] = await Promise.all([
+      externalApi({ action: "getLeaderboard", params: { quarter } }),
+      base44.entities.Player.list("player_number", null, 0),
+    ]);
     const data = Array.isArray(raw?.leaderboard) ? raw.leaderboard :
                  Array.isArray(raw) ? raw : [];
-    setLeaderboard(data.slice().sort((a, b) => a.rank - b.rank).slice(0, 60));
+
+    const numberByName = {};
+    (players || []).forEach(p => {
+      const full = `${p.first_name || ""} ${p.last_name || ""}`.trim().toLowerCase();
+      if (full) numberByName[full] = p.player_number;
+    });
+
+    const merged = data.slice().sort((a, b) => a.rank - b.rank).slice(0, 60).map(entry => ({
+      ...entry,
+      player_number: numberByName[(entry.name || "").trim().toLowerCase()] ?? null,
+    }));
+
+    setLeaderboard(merged);
     setIsLoading(false);
   };
 
@@ -105,10 +121,11 @@ export default function Leaderboard() {
 
         {/* Column labels */}
         {!isLoading && leaderboard.length > 0 && (
-          <div className="flex items-center px-3 mb-2">
+          <div className="flex items-center gap-3 px-3 mb-2">
             <div className="w-7 shrink-0" />
-            <div className="w-9 shrink-0" />
+            <div className="w-8 shrink-0" />
             <div className="flex-1" />
+            <span className="text-[10px] text-white/20 uppercase tracking-widest w-14 text-left font-medium">No</span>
             <span className="text-[10px] text-white/20 uppercase tracking-widest w-8 text-center font-medium">W</span>
             <span className="text-[10px] text-white/20 uppercase tracking-widest w-14 text-right font-medium">PTS</span>
           </div>
@@ -160,6 +177,11 @@ export default function Leaderboard() {
                       {toTitleCase(entry.name)}
                     </span>
                   </div>
+
+                  {/* Player Number */}
+                  <span className="text-sm tabular-nums w-14 text-left text-white/30">
+                    {entry.player_number != null ? entry.player_number : "—"}
+                  </span>
 
                   {/* Wins */}
                   <span className="text-sm tabular-nums w-8 text-center font-semibold text-white/30">
