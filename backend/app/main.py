@@ -292,7 +292,9 @@ async def upload_file(file: UploadFile = File(...), claims: dict = Depends(requi
     filename = f"{Path(original_name).stem}-{uuid.uuid4().hex[:8]}{suffix}"
     destination = uploads_dir / filename
     destination.write_bytes(await file.read())
-    return {"file_url": f"/uploads/{filename}"}
+    base_url = os.environ.get("API_BASE_URL", "").rstrip("/")
+    file_url = f"{base_url}/uploads/{filename}" if base_url else f"/uploads/{filename}"
+    return {"file_url": file_url}
 
 
 @app.post("/api/functions/external-api")
