@@ -499,8 +499,22 @@ export default function DirectorDashboard() {
         return;
       }
     }
-    await GameSession.update(session.id, { is_open: !session.is_open });
-    setSessions(prev => prev.map(s => s.id === session.id ? { ...s, is_open: !s.is_open } : s));
+    const nowOpen = !session.is_open;
+    await GameSession.update(session.id, { is_open: nowOpen });
+    // When closing a session, increment games_played for every signed-in player
+    if (!nowOpen) {
+      const ids = session.signed_in_player_ids || [];
+      await Promise.all(ids.map(async (pid) => {
+        const p = playersById[pid];
+        if (p) {
+          await base44.entities.Player.update(pid, { games_played: (p.games_played || 0) + 1 });
+        }
+      }));
+      setPlayers(prev => prev.map(p =>
+        ids.includes(p.id) ? { ...p, games_played: (p.games_played || 0) + 1 } : p
+      ));
+    }
+    setSessions(prev => prev.map(s => s.id === session.id ? { ...s, is_open: nowOpen } : s));
   };
 
   const handleDeleteSession = async (sessionId) => {
@@ -778,6 +792,9 @@ export default function DirectorDashboard() {
                                     </div>
                                     <span className="text-base font-medium text-white/50 shrink-0">{index + 1}.</span>
                                     <span className="text-base text-white/85 truncate">{nameById(pid)}</span>
+                                    {player?.games_played > 0 && (
+                                      <span className="text-xs text-white/30 shrink-0 tabular-nums">{player.games_played}g</span>
+                                    )}
                                   </div>
                                   <button
                                     onClick={async (e) => {

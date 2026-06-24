@@ -40,6 +40,9 @@ export default function PlayerProfile() {
   const [expandedLocations, setExpandedLocations] = useState({});
   const [quarterlyStats, setQuarterlyStats] = useState([]);
   const [currentQuarter, setCurrentQuarter] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editingGamesPlayed, setEditingGamesPlayed] = useState(false);
+  const [gamesPlayedInput, setGamesPlayedInput] = useState("");
 
   const ALL_LOCATIONS = ["Tavern 018 Sun", "East End Bar & Grill", "Fridas", "Tavern 018 Wed", "Meddlesome Brewery", "MFS Brewing"];
 
@@ -57,6 +60,7 @@ export default function PlayerProfile() {
       window.location.href = "/";
       return;
     }
+    setIsAdmin(currentUser?.role === "admin");
 
     // Use localStorage playerEmail (player-level login) as the "current" player
     const loggedInPlayerEmail = localStorage.getItem("playerEmail") || currentUser.email;
@@ -365,6 +369,40 @@ export default function PlayerProfile() {
                       <div className="px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20">
                         <span className="text-base font-semibold text-amber-400">♠</span>
                       </div>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <label className="text-gray-400 text-base">Games Played</label>
+                  <div className="flex items-center gap-2">
+                    {editingGamesPlayed && isAdmin ? (
+                      <>
+                        <Input
+                          type="number"
+                          value={gamesPlayedInput}
+                          onChange={e => setGamesPlayedInput(e.target.value)}
+                          className="w-20 h-7 text-base text-center bg-black/30 border-white/20 text-white p-1"
+                        />
+                        <button onClick={async () => {
+                          const val = parseInt(gamesPlayedInput);
+                          if (!isNaN(val) && val >= 0) {
+                            await base44.entities.Player.update(playerData.id, { games_played: val });
+                            setPlayerData(prev => ({ ...prev, games_played: val }));
+                          }
+                          setEditingGamesPlayed(false);
+                        }} className="text-green-400 hover:text-green-300 text-base px-1">✓</button>
+                        <button onClick={() => setEditingGamesPlayed(false)} className="text-white/30 hover:text-white/60 text-base px-1">✕</button>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-white font-medium">{playerData.games_played || 0}</div>
+                        {isAdmin && (
+                          <button onClick={() => { setGamesPlayedInput(String(playerData.games_played || 0)); setEditingGamesPlayed(true); }}
+                            className="text-white/20 hover:text-white/60 transition-colors">
+                            <Edit2 className="w-3 h-3" />
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
