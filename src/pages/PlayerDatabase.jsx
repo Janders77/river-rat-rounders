@@ -82,12 +82,12 @@ export default function PlayerDatabase() {
       const lines = ev.target.result.split("\n").map(l => l.trim()).filter(Boolean);
       const header = lines[0].toLowerCase().split(",").map(h => h.trim().replace(/\s+/g, "_"));
       const numIdx = header.indexOf("number");
-      const firstIdx = header.findIndex(h => h === "first_name" || h === "first");
-      const lastIdx = header.findIndex(h => h === "last_name" || h === "last");
+      const firstIdx = header.findIndex(h => ["first_name", "first", "name"].includes(h));
+      const lastIdx = header.findIndex(h => ["last_name", "last"].includes(h));
       const emailIdx = header.indexOf("email");
-      const guardsIdx = header.findIndex(h => h === "card_guards" || h === "guards");
-      const dateIdx = header.indexOf("day");
-      if (firstIdx === -1) { setCsvError("CSV must have a 'first_name' column."); return; }
+      const guardsIdx = header.findIndex(h => ["card_guards", "guards"].includes(h));
+      const dateIdx = header.findIndex(h => ["day", "date_joined", "date"].includes(h));
+      if (firstIdx === -1) { setCsvError("CSV must have a 'first_name' or 'name' column."); return; }
       const records = [];
       let skippedRows = 0;
       for (let i = 1; i < lines.length; i++) {
