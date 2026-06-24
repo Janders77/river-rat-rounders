@@ -85,7 +85,6 @@ export default function WinnersGallery() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-white leading-tight">Winners Gallery</h1>
-              <p className="text-base text-white/50 mt-0.5">Celebrating our champions</p>
             </div>
           </div>
           {isAdmin && !showForm && (
