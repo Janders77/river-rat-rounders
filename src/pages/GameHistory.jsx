@@ -161,15 +161,15 @@ export default function GameHistory() {
                       {placementIds.length > 0 ? (
                         <div className="space-y-1">
                           {placementIds.map((pid, i) => (
-                            <div key={pid} className="flex items-center gap-2 text-base">
-                              <span className="text-white/40 text-base w-6 text-right shrink-0">{PLACE_LABELS[i] || `${i+1}.`}</span>
-                              <span className={`flex-1 ${i === 0 ? 'text-white font-bold' : 'text-white/75'}`}>
-                                {playersMap[pid]?.player_number != null && (
-                                  <span className="text-white/30 font-mono mr-1">{playersMap[pid].player_number}</span>
-                                )}
+                            <div key={pid} className="flex items-center gap-2 text-sm">
+                              <span className="text-white/35 w-7 text-right shrink-0 tabular-nums">{PLACE_LABELS[i] || `${i+1}.`}</span>
+                              <span className={`flex-1 min-w-0 truncate ${i === 0 ? 'text-white font-bold' : 'text-white/80'}`}>
                                 {resolveName(pid)}
                               </span>
-                              <span className="text-white/40 text-base">{POINTS[i] ? `${POINTS[i]}` : ''}pts</span>
+                              {playersMap[pid]?.player_number != null && (
+                                <span className="text-white/25 font-mono text-xs shrink-0">{playersMap[pid].player_number}</span>
+                              )}
+                              <span className="text-white/35 w-16 text-right shrink-0 tabular-nums">{POINTS[i] ? `${POINTS[i]}pts` : ''}</span>
                             </div>
                           ))}
                         </div>
