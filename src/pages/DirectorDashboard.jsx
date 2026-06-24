@@ -175,6 +175,16 @@ export default function DirectorDashboard() {
     if (session.id !== currentSessionId) setCurrentSessionId(session.id);
   }, [sessions]); // intentionally omits currentSessionId to avoid loop
 
+  // Auto-save draft placements to the open session so other admins can see them live
+  useEffect(() => {
+    if (!currentSessionId) return;
+    const anyFilled = placements.some(p => p !== "");
+    const timer = setTimeout(async () => {
+      await GameSession.update(currentSessionId, { draft_placements: anyFilled ? placements : [] });
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [placements, currentSessionId]);
+
   useEffect(() => {
     const unsubSessions = base44.entities.GameSession.subscribe((event) => {
       if (event.type === 'create') setSessions(prev => prev.some(s => s.id === event.id) ? prev : [event.data, ...prev]);
@@ -334,7 +344,7 @@ export default function DirectorDashboard() {
       }
 
       if (currentSessionId) {
-        await GameSession.update(currentSessionId, { is_open: false, signed_in_player_ids: [], signed_in_players: [] });
+        await GameSession.update(currentSessionId, { is_open: false, signed_in_player_ids: [], signed_in_players: [], draft_placements: [] });
       }
 
       // Push to external API: create game → submit results → finalize
@@ -807,6 +817,26 @@ export default function DirectorDashboard() {
                                     className="text-white/20 hover:text-red-400 transition-colors shrink-0">
                                     <X className="w-3.5 h-3.5" />
                                   </button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* Live draft placements — visible to all admins in real time */}
+                        {session.is_open && session.draft_placements?.some(p => p) && (
+                          <div className="border-t border-white/10 pt-2.5 pb-1 flex flex-col gap-1">
+                            <div className="flex items-center gap-1.5 mb-1">
+                              <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                              <span className="text-[10px] text-amber-400/70 uppercase tracking-widest font-semibold">Recording in progress</span>
+                            </div>
+                            {session.draft_placements.map((pid, i) => {
+                              if (!pid) return null;
+                              const draftLabels = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th"];
+                              return (
+                                <div key={i} className="flex items-center gap-2 px-1 py-0.5">
+                                  <span className="text-xs text-white/30 w-6 text-right shrink-0">{draftLabels[i]}</span>
+                                  <span className="text-sm text-white/70 truncate">{nameById(pid)}</span>
                                 </div>
                               );
                             })}
