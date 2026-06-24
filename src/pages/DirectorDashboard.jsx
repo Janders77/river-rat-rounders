@@ -344,7 +344,7 @@ export default function DirectorDashboard() {
       }
 
       if (currentSessionId) {
-        await GameSession.update(currentSessionId, { is_open: false, signed_in_player_ids: [], signed_in_players: [], draft_placements: [] });
+        await GameSession.update(currentSessionId, { is_open: false, draft_placements: [] });
       }
 
       // Push to external API: create game → submit results → finalize
