@@ -5,6 +5,7 @@ import { imageToBase64 } from "@/lib/imageUpload";
 import { Trophy, X, Plus, Upload, Loader2, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const LOCATIONS = [
   "Tavern 018 Sun", "Tavern 018 Wed", "East End Bar & Grill",
@@ -130,14 +131,16 @@ export default function WinnersGallery() {
                 required
               />
 
-              <select
-                value={form.location}
-                onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
-                className="w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-base text-white outline-none [color-scheme:dark]"
-              >
-                <option value="">Select location</option>
-                {LOCATIONS.map(l => <option key={l} value={l}>{l}</option>)}
-              </select>
+              <Select value={form.location} onValueChange={v => setForm(f => ({ ...f, location: v }))}>
+                <SelectTrigger className="bg-black/20 border-white/10 text-white">
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1a1a2e] border-white/10 text-white">
+                  {LOCATIONS.map(l => (
+                    <SelectItem key={l} value={l} className="text-white">{l}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
               <div className="flex flex-col gap-1">
                 <label className="text-white/40 text-base">Game Date</label>
