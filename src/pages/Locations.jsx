@@ -56,13 +56,11 @@ function LocationLeaderboard({ locationName }) {
               ? <img src={entry.profile_picture} alt={entry.name} className="w-full h-full object-cover" />
               : toTitleCase(entry.name)?.[0]}
           </div>
-          <div className="flex-1 min-w-0">
-            <span className="text-sm text-white/75 font-medium truncate block">
-              {entry.player_number != null && (
-                <span className="text-white/30 font-mono mr-1">{entry.player_number}</span>
-              )}
-              {toTitleCase(entry.name)}
-            </span>
+          <div className="flex items-center gap-1.5 flex-1 min-w-0">
+            <span className="text-sm text-white/75 font-medium truncate">{toTitleCase(entry.name)}</span>
+            {entry.player_number != null && (
+              <span className="text-white/30 font-mono text-xs shrink-0">{entry.player_number}</span>
+            )}
           </div>
           <span className="text-sm tabular-nums w-14 text-right text-amber-400/70 font-medium">{entry.points != null ? entry.points.toLocaleString() : "—"}</span>
           <span className="w-8 text-center text-sm text-white/40 tabular-nums">{entry.wins ?? "—"}</span>

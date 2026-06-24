@@ -92,12 +92,12 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
       {/* Text column */}
       <div className="flex flex-col flex-1 min-w-0">
         <div className="flex items-center gap-1.5 min-w-0">
-          {player.player_number != null && (
-            <span className="text-white/40 font-mono text-base shrink-0">{player.player_number}</span>
-          )}
           <span className="text-white font-medium text-base truncate min-w-0">
             {player.first_name} {player.last_name}
           </span>
+          {player.player_number != null && (
+            <span className="text-white/30 font-mono text-sm shrink-0">{player.player_number}</span>
+          )}
           {player.card_guards > 0 && (
             <span className="text-base text-amber-400/70 shrink-0">🛡️{player.card_guards}</span>
           )}

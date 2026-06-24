@@ -125,7 +125,6 @@ export default function Leaderboard() {
             <div className="w-7 shrink-0" />
             <div className="w-8 shrink-0" />
             <div className="flex-1" />
-            <span className="text-[10px] text-white/20 uppercase tracking-widest w-14 text-left font-medium">No</span>
             <span className="text-[10px] text-white/20 uppercase tracking-widest w-8 text-center font-medium">W</span>
             <span className="text-[10px] text-white/20 uppercase tracking-widest w-14 text-right font-medium">PTS</span>
           </div>
@@ -171,17 +170,15 @@ export default function Leaderboard() {
                       : toTitleCase(entry.name)?.[0]}
                   </div>
 
-                  {/* Name */}
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-semibold truncate block text-white/80">
+                  {/* Name + Number */}
+                  <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                    <span className="text-sm font-semibold truncate text-white/80">
                       {toTitleCase(entry.name)}
                     </span>
+                    {entry.player_number != null && (
+                      <span className="text-white/25 font-mono text-xs shrink-0">{entry.player_number}</span>
+                    )}
                   </div>
-
-                  {/* Player Number */}
-                  <span className="text-sm tabular-nums w-14 text-left text-white/30">
-                    {entry.player_number != null ? entry.player_number : "—"}
-                  </span>
 
                   {/* Wins */}
                   <span className="text-sm tabular-nums w-8 text-center font-semibold text-white/30">

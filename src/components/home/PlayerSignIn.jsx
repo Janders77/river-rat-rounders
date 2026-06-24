@@ -331,10 +331,8 @@ export default function PlayerSignIn() {
                         )}
                       </div>
                       <span className="text-base font-medium text-white/50 shrink-0">{index + 1}.</span>
-                      <span className="min-w-0 flex-1 text-base text-white/85 sm:text-base truncate">
-                        {player?.player_number != null && <span className="text-white/30 font-mono mr-1">{player.player_number}</span>}
-                        {player ? getPlayerDisplayName(player) : "Loading..."}
-                      </span>
+                      <span className="min-w-0 flex-1 text-base text-white/85 truncate">{player ? getPlayerDisplayName(player) : "Loading..."}</span>
+                      {player?.player_number != null && <span className="text-white/30 font-mono text-xs shrink-0">{player.player_number}</span>}
                       {player?.games_played > 0 && (
                         <span className="text-xs text-white/30 shrink-0 tabular-nums">{player.games_played}g</span>
                       )}
