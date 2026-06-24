@@ -482,11 +482,23 @@ export default function DirectorDashboard() {
         alert(`A ${newSession.game_type} at ${newSession.location} is already open. Close it before opening another.`);
         return;
       }
+      // Auto-populate Turbo with all players from the open Main Game at the same location
+      let autoIds = [];
+      let autoEmails = [];
+      if (newSession.game_type === "Turbo") {
+        const mainSession = freshSessions.find(
+          s => s.is_open && s.game_type === "Main Game" && s.location === newSession.location
+        );
+        if (mainSession) {
+          autoIds = mainSession.signed_in_player_ids || [];
+          autoEmails = mainSession.signed_in_players || [];
+        }
+      }
       const created = await GameSession.create({
         ...newSession,
         is_open: true,
-        signed_in_player_ids: [],
-        signed_in_players: [],
+        signed_in_player_ids: autoIds,
+        signed_in_players: autoEmails,
       });
       setSessions(prev => [created, ...prev]);
       setNewSession({ session_date: getLocalDateString(), location: "", game_type: "Main Game" });
