@@ -399,6 +399,9 @@ def external_api(payload: ExternalApiPayload, claims: dict = Depends(require_aut
             except Exception:
                 return True
 
+        MAIN_PTS = [1000, 750, 600, 500, 400, 300, 200, 100, 50]
+        TURBO_PTS = [500, 250]
+
         location_data = {}
         for game in all_games:
             loc = game.get("location", "").strip()
@@ -408,10 +411,12 @@ def external_api(payload: ExternalApiPayload, claims: dict = Depends(require_aut
                 continue
             if loc not in location_data:
                 location_data[loc] = {}
-            for pid in (game.get("player_ids") or []):
+            pts_table = TURBO_PTS if game.get("game_type") == "Turbo" else MAIN_PTS
+            for idx, pid in enumerate(game.get("player_ids") or []):
                 if pid not in location_data[loc]:
-                    location_data[loc][pid] = {"wins": 0, "games": 0}
+                    location_data[loc][pid] = {"wins": 0, "games": 0, "points": 0}
                 location_data[loc][pid]["games"] += 1
+                location_data[loc][pid]["points"] += pts_table[idx] if idx < len(pts_table) else 0
             winner = game.get("winner_player_id")
             if winner and winner in location_data.get(loc, {}):
                 location_data[loc][winner]["wins"] += 1
@@ -421,8 +426,14 @@ def external_api(payload: ExternalApiPayload, claims: dict = Depends(require_aut
             board = []
             for pid, stats in players_map.items():
                 p = players.get(pid, {})
-                board.append({"id": pid, "name": player_name(pid), "wins": stats["wins"], "games": stats["games"], "profile_picture": p.get("profile_picture", "")})
-            board.sort(key=lambda x: (-x["wins"], -x["games"], x["name"]))
+                board.append({
+                    "id": pid, "name": player_name(pid),
+                    "wins": stats["wins"], "games": stats["games"],
+                    "points": stats["points"],
+                    "player_number": p.get("player_number"),
+                    "profile_picture": p.get("profile_picture", ""),
+                })
+            board.sort(key=lambda x: (-x["points"], -x["wins"], -x["games"], x["name"]))
             for i, entry in enumerate(board[:10], 1):
                 entry["rank"] = i
             result[loc] = board[:10]

@@ -164,6 +164,9 @@ export default function GameHistory() {
                             <div key={pid} className="flex items-center gap-2 text-base">
                               <span className="text-white/40 text-base w-6 text-right shrink-0">{PLACE_LABELS[i] || `${i+1}.`}</span>
                               <span className={`flex-1 ${i === 0 ? 'text-white font-bold' : 'text-white/75'}`}>
+                                {playersMap[pid]?.player_number != null && (
+                                  <span className="text-white/30 font-mono mr-1">{playersMap[pid].player_number}</span>
+                                )}
                                 {resolveName(pid)}
                               </span>
                               <span className="text-white/40 text-base">{POINTS[i] ? `${POINTS[i]}` : ''}pts</span>
