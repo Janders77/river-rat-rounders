@@ -54,9 +54,8 @@ export default function GameHistory() {
     return "Unknown Player";
   };
 
-  const filteredGames = filterVenue === "all"
-    ? games
-    : games.filter(g => g.location === filterVenue);
+  const filteredGames = (filterVenue === "all" ? games : games.filter(g => g.location === filterVenue))
+    .filter(g => g.winner_player_id || g.winner_name || (g.player_ids && g.player_ids.length > 0));
 
   return (
     <div className="min-h-screen relative overflow-x-hidden" style={{background: "linear-gradient(135deg, #2a2a35 0%, #3a3a48 50%, #2a2a35 100%)"}}>
@@ -123,14 +122,14 @@ export default function GameHistory() {
                   >
                     {/* Row 1: badge + date + venue */}
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-base font-semibold text-white/60">
+                      <span className="text-base font-semibold text-white">
                         {game.game_type || "Game"}
                       </span>
-                      <span className="text-gray-500 text-base">{dateStr}</span>
+                      <span className="text-white/50 text-base">{dateStr}</span>
                       {game.location && (
                         <>
-                          <span className="text-gray-700 text-base">·</span>
-                          <span className="text-gray-500 text-base flex items-center gap-1">
+                          <span className="text-white/30 text-base">·</span>
+                          <span className="text-white/50 text-base flex items-center gap-1">
                             <MapPin className="w-3 h-3" />{game.location}
                           </span>
                         </>
@@ -145,7 +144,7 @@ export default function GameHistory() {
                         <span className="text-emerald-400 text-base font-bold">+{game.points_awarded} pts</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-gray-600 text-base flex items-center gap-1">
+                        <span className="text-white/40 text-base flex items-center gap-1">
                           <Users className="w-3 h-3" />{playerCount}
                         </span>
                         {isExpanded
@@ -163,11 +162,11 @@ export default function GameHistory() {
                         <div className="space-y-1">
                           {placementIds.map((pid, i) => (
                             <div key={pid} className="flex items-center gap-2 text-base">
-                              <span className="text-gray-600 text-base w-6 text-right shrink-0">{PLACE_LABELS[i] || `${i+1}.`}</span>
-                              <span className={`flex-1 ${i === 0 ? 'text-white font-semibold' : 'text-gray-400'}`}>
+                              <span className="text-white/40 text-base w-6 text-right shrink-0">{PLACE_LABELS[i] || `${i+1}.`}</span>
+                              <span className={`flex-1 ${i === 0 ? 'text-white font-bold' : 'text-white/75'}`}>
                                 {resolveName(pid)}
                               </span>
-                              <span className="text-gray-600 text-base">{POINTS[i] ? `${POINTS[i]}` : ''}pts</span>
+                              <span className="text-white/40 text-base">{POINTS[i] ? `${POINTS[i]}` : ''}pts</span>
                             </div>
                           ))}
                         </div>
