@@ -297,6 +297,31 @@ async def upload_file(file: UploadFile = File(...), claims: dict = Depends(requi
     return {"file_url": file_url}
 
 
+@app.post("/api/admin/dedup-players")
+async def dedup_players(claims: dict = Depends(require_auth)):
+    if claims.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Admins only")
+    from .db import get_connection
+    conn = get_connection()
+    # For each player_number, keep the record with the lowest created_at, delete the rest
+    rows = conn.execute(
+        "SELECT id, json_extract(data, '$.player_number') as num, created_at FROM records WHERE entity='Player' ORDER BY num, created_at"
+    ).fetchall()
+    seen = {}
+    to_delete = []
+    for row in rows:
+        num = row["num"]
+        if num in seen:
+            to_delete.append(row["id"])
+        else:
+            seen[num] = row["id"]
+    for rid in to_delete:
+        conn.execute("DELETE FROM records WHERE id=?", (rid,))
+    conn.commit()
+    conn.close()
+    return {"deleted": len(to_delete), "remaining": len(seen)}
+
+
 @app.post("/api/functions/external-api")
 def external_api(payload: ExternalApiPayload, claims: dict = Depends(require_auth)):
     action = payload.action
