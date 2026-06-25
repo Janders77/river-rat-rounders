@@ -42,9 +42,9 @@ function LocationLeaderboard({ locationName }) {
         <div className="w-6 shrink-0" />
         <div className="w-8 shrink-0" />
         <div className="flex-1" />
-        <span className="text-[10px] text-white/20 uppercase tracking-widest w-16 text-right">Pts</span>
+        <span className="text-[10px] text-white/20 uppercase tracking-widest w-10 text-center">G</span>
         <span className="text-[10px] text-white/20 uppercase tracking-widest w-10 text-center">W</span>
-        <span className="text-[10px] text-white/20 uppercase tracking-widest w-10 text-right">G</span>
+        <span className="text-[10px] text-white/20 uppercase tracking-widest w-16 text-right">Pts</span>
       </div>
       {board.map(entry => (
         <div key={entry.id} className="flex items-center gap-2 px-1 py-2 rounded-lg"
@@ -62,9 +62,9 @@ function LocationLeaderboard({ locationName }) {
               <span className="text-white/30 font-mono text-xs shrink-0">{entry.player_number}</span>
             )}
           </div>
-          <span className="text-sm tabular-nums w-16 text-right text-amber-400/70 font-medium">{entry.points != null ? entry.points.toLocaleString() : "—"}</span>
+          <span className="w-10 text-center text-sm text-white/30 tabular-nums">{entry.games}</span>
           <span className="w-10 text-center text-sm text-white/40 tabular-nums">{entry.wins ?? "—"}</span>
-          <span className="w-10 text-right text-sm text-white/30 tabular-nums">{entry.games}</span>
+          <span className="text-sm tabular-nums w-16 text-right text-amber-400/70 font-medium">{entry.points != null ? entry.points.toLocaleString() : "—"}</span>
         </div>
       ))}
     </div>
