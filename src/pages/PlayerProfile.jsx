@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { externalApi } from "@/functions/externalApi";
 import { getEffectivePlayerIds } from "@/utils/playerUtils";
+import { isDuesPaid, DUES_PAID_NAME_CLASS } from "@/utils/duesUtils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload, Loader2, CheckCircle2, AlertCircle, Edit2, X, KeyRound, Trophy } from "lucide-react";
@@ -327,7 +328,7 @@ export default function PlayerProfile() {
                 </div>
               ) : (
                 <div className="flex items-center justify-between">
-                  <div className="text-white font-medium">{fullName || "—"}</div>
+                  <div className={`font-medium ${isDuesPaid(playerData) ? DUES_PAID_NAME_CLASS : "text-white"}`}>{fullName || "—"}</div>
                   {isOwnProfile && (
                     <Button
                       onClick={() => setEditingName(true)}

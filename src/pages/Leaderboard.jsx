@@ -3,6 +3,7 @@ import { externalApi } from "@/functions/externalApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy, ChevronDown } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { isDuesPaid, DUES_PAID_NAME_CLASS } from "@/utils/duesUtils";
 
 const RANK_STYLES = [
   { rowBg: "rgba(234,179,8,0.06)",  rowBorder: "rgba(234,179,8,0.20)",  rankColor: "#fbbf24", rankBg: "rgba(234,179,8,0.12)"  },
@@ -51,14 +52,19 @@ export default function Leaderboard() {
                  Array.isArray(raw) ? raw : [];
 
     const numberByName = {};
+    const duesQuarterByName = {};
     (players || []).forEach(p => {
       const full = `${p.first_name || ""} ${p.last_name || ""}`.trim().toLowerCase();
-      if (full) numberByName[full] = p.player_number;
+      if (full) {
+        numberByName[full] = p.player_number;
+        duesQuarterByName[full] = p.dues_paid_quarter;
+      }
     });
 
     const merged = data.slice().sort((a, b) => a.rank - b.rank).slice(0, 60).map(entry => ({
       ...entry,
       player_number: numberByName[(entry.name || "").trim().toLowerCase()] ?? null,
+      dues_paid_quarter: duesQuarterByName[(entry.name || "").trim().toLowerCase()] ?? null,
     }));
 
     setLeaderboard(merged);
@@ -172,7 +178,7 @@ export default function Leaderboard() {
 
                   {/* Name + Number */}
                   <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                    <span className="text-sm font-semibold truncate text-white/80">
+                    <span className={`text-sm font-semibold truncate ${isDuesPaid(entry) ? DUES_PAID_NAME_CLASS : "text-white/80"}`}>
                       {toTitleCase(entry.name)}
                     </span>
                     {entry.player_number != null && (

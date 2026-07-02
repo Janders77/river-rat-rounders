@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Game } from "@/entities/Game";
 import { base44 } from "@/api/base44Client";
 import { getEffectivePlayerIds, getPlayerDisplayName } from "@/utils/playerUtils";
+import { isDuesPaid, DUES_PAID_NAME_CLASS } from "@/utils/duesUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { History, Trophy, MapPin, Filter, ChevronDown, ChevronUp, Users } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -164,7 +165,7 @@ export default function GameHistory() {
                             <div key={pid} className="flex items-center gap-2 text-sm">
                               <span className="text-white/35 w-7 text-right shrink-0 tabular-nums">{PLACE_LABELS[i] || `${i+1}.`}</span>
                               <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                <span className={`truncate ${i === 0 ? 'text-white font-bold' : 'text-white/80'}`}>{resolveName(pid)}</span>
+                                <span className={`truncate ${i === 0 ? 'text-white font-bold' : (isDuesPaid(playersMap[pid]) ? DUES_PAID_NAME_CLASS : 'text-white/80')}`}>{resolveName(pid)}</span>
                                 {playersMap[pid]?.player_number != null && (
                                   <span className="text-white/25 font-mono text-xs shrink-0">{playersMap[pid].player_number}</span>
                                 )}

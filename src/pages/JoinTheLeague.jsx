@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckSquare, Square, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const PAYPAL_URL = "https://www.paypal.com/webapps/hermes?token=10M62691DD355105D&useraction=commit&rm=1&wpsFlowRedirectToXorouterSkipHermesStartTime=1772486683042&flowType=WPS&mfid=1772486682826_f69011947455e";
+import { createPageUrl } from "@/utils";
 
 export default function JoinTheLeague() {
   const [agreed, setAgreed] = useState(false);
+  const navigate = useNavigate();
 
   const handleProceed = () => {
     if (agreed) {
-      window.open(PAYPAL_URL, "_blank", "noopener,noreferrer");
+      navigate(createPageUrl("PayMyDues"));
     }
   };
 

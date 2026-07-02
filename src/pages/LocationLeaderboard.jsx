@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trophy, ChevronLeft, MapPin } from "lucide-react";
 import { createPageUrl } from "@/utils";
+import { isDuesPaid, DUES_PAID_NAME_CLASS } from "@/utils/duesUtils";
 import {
   Select,
   SelectContent,
@@ -215,7 +216,7 @@ export default function LocationLeaderboard() {
                       </div>
                     );
                   })()}
-                  <div className="text-white font-medium group-hover:text-amber-400 transition-colors">
+                  <div className={`font-medium group-hover:text-amber-400 transition-colors ${isDuesPaid(playerRecords.find(r => r.email === player.email)) ? DUES_PAID_NAME_CLASS : "text-white"}`}>
                     {getPlayerName(player)}
                   </div>
                 </div>

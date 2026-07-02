@@ -24,6 +24,11 @@ def utc_now():
     return datetime.now(timezone.utc).isoformat()
 
 
+def current_quarter(dt=None):
+    dt = dt or datetime.now(timezone.utc)
+    return f"{dt.year}-Q{(dt.month - 1) // 3 + 1}"
+
+
 def hash_password(plaintext: str) -> str:
     salt = secrets.token_hex(16)
     dk = hashlib.pbkdf2_hmac("sha256", plaintext.encode(), salt.encode(), 260_000)

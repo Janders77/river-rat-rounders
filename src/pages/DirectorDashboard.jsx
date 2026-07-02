@@ -11,6 +11,7 @@ import WinnerPhotoReminderModal from "@/components/director/WinnerPhotoReminderM
 import EditGameModal from "@/components/director/EditGameModal";
 import LiveStatusIndicator from "@/components/LiveStatusIndicator";
 import { getPlayerById, getPlayerByEmail, getPlayerDisplayName, getEffectiveSignedInIds, getEffectiveHandOfWeekIds, buildPlayersById, getPlayerNameById } from "@/utils/playerUtils";
+import { isDuesPaid, getCurrentQuarter, DUES_PAID_NAME_CLASS } from "@/utils/duesUtils";
 import { searchPlayers } from "@/functions/searchPlayers";
 import { externalApi } from "@/functions/externalApi";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ShieldAlert, Plus, Trophy, Loader2, Users, Trash2, CalendarPlus, ImagePlus, X, Mail, Search, ChevronDown, ChevronUp, Pencil } from "lucide-react";
+import { ShieldAlert, Plus, Trophy, Loader2, Users, Trash2, CalendarPlus, ImagePlus, X, Mail, Search, ChevronDown, ChevronUp, Pencil, DollarSign } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -90,6 +91,12 @@ export default function DirectorDashboard() {
   const [activeTab, setActiveTab] = useState("sessions");
   const [showWinnerPhotoModal, setShowWinnerPhotoModal] = useState(false);
   const [editingGame, setEditingGame] = useState(null);
+  const [duesSearch, setDuesSearch] = useState("");
+  const [duesSelectedPlayer, setDuesSelectedPlayer] = useState(null);
+  const [duesResults, setDuesResults] = useState([]);
+  const [duesSearchLoading, setDuesSearchLoading] = useState(false);
+  const [duesStatus, setDuesStatus] = useState("");
+  const [duesMessage, setDuesMessage] = useState("");
 
   const playersById = useMemo(() => buildPlayersById(players), [players]);
   const userByEmail = useMemo(() => {
@@ -218,6 +225,21 @@ export default function DirectorDashboard() {
     }, 300);
     return () => clearTimeout(timer);
   }, [dirSignInSearch, dirSignInSelectedPlayer]);
+
+  // Debounced server-backed typeahead for Paid Dues search
+  useEffect(() => {
+    if (duesSelectedPlayer) return;
+    const q = duesSearch.trim();
+    const minLen = /^\d+$/.test(q) ? 1 : 2;
+    if (q.length < minLen) { setDuesResults([]); return; }
+    const timer = setTimeout(async () => {
+      setDuesSearchLoading(true);
+      const res = await searchPlayers({ query: q });
+      setDuesResults(res.data?.players || []);
+      setDuesSearchLoading(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [duesSearch, duesSelectedPlayer]);
 
   const getPlacementSuggestions = (index) => {
     const q = placementSearches[index]?.trim().toLowerCase();
@@ -602,6 +624,38 @@ export default function DirectorDashboard() {
     setTimeout(() => { setDirSignInStatus(""); setDirSignInMessage(""); }, 3000);
   };
 
+  const handleMarkDuesPaid = async (e) => {
+    e.preventDefault();
+    const player = duesSelectedPlayer;
+    if (!player) {
+      setDuesStatus("error");
+      setDuesMessage("Please select a player from the search dropdown.");
+      return;
+    }
+
+    setDuesStatus("loading");
+    setDuesMessage("");
+    const quarter = getCurrentQuarter();
+    const paidAt = new Date().toISOString();
+    const updated = await base44.entities.Player.update(player.id, {
+      dues_paid_quarter: quarter,
+      dues_paid_at: paidAt,
+    });
+    setPlayers(prev => {
+      const existingIds = new Set(prev.map(p => p.id));
+      return existingIds.has(player.id)
+        ? prev.map(p => p.id === player.id ? { ...p, ...updated } : p)
+        : [...prev, updated];
+    });
+
+    setDuesStatus("success");
+    setDuesMessage(`${player.display_name}'s dues marked paid for ${quarter}.`);
+    setDuesSearch("");
+    setDuesSelectedPlayer(null);
+    setDuesResults([]);
+    setTimeout(() => { setDuesStatus(""); setDuesMessage(""); }, 3000);
+  };
+
   const handleDeletePhoto = async (photoId) => {
     if (!confirm("Delete this photo?")) return;
     await WinnerPhoto.delete(photoId);
@@ -693,6 +747,11 @@ export default function DirectorDashboard() {
           <button onClick={() => setActiveTab("history")} className={tabBtn("history")}>
             Games
           </button>
+          {hasPermission(directorRole, "canManagePlayers") && (
+            <button onClick={() => setActiveTab("dues")} className={tabBtn("dues")}>
+              Dues
+            </button>
+          )}
         </div>
 
         {/* ── SESSIONS TAB ── */}
@@ -813,7 +872,7 @@ export default function DirectorDashboard() {
                                       )}
                                     </div>
                                     <span className="text-base font-medium text-white/50 shrink-0">{index + 1}.</span>
-                                    <span className="text-base text-white/85 truncate">{nameById(pid)}</span>
+                                    <span className={`text-base truncate ${isDuesPaid(player) ? DUES_PAID_NAME_CLASS : "text-white/85"}`}>{nameById(pid)}</span>
                                     {player?.player_number != null && <span className="text-white/30 font-mono text-xs shrink-0">{player.player_number}</span>}
                                     {player?.games_played > 0 && (
                                       <span className="text-xs text-white/30 shrink-0 tabular-nums">{player.games_played}g</span>
@@ -1277,7 +1336,7 @@ export default function DirectorDashboard() {
                           ) : placementIds.map((pid, i) => (
                             <div key={pid} className="flex items-center gap-2 text-base">
                               <span className="text-white/25 w-5 text-right shrink-0">{i + 1}.</span>
-                              <span className={i === 0 ? 'text-yellow-400 font-semibold' : 'text-white/60'}>{nameById(pid)}</span>
+                              <span className={i === 0 ? 'text-yellow-400 font-semibold' : (isDuesPaid(playersById[pid]) ? DUES_PAID_NAME_CLASS : 'text-white/60')}>{nameById(pid)}</span>
                               <span className="text-white/20 ml-auto">{POINTS[i] ? `${POINTS[i]}pts` : ''}</span>
                             </div>
                           ))}
@@ -1288,6 +1347,70 @@ export default function DirectorDashboard() {
                 })}
               </div>
             )}
+          </div>
+        )}
+
+        {/* ── DUES TAB (Head Director only) ── */}
+        {activeTab === "dues" && hasPermission(directorRole, "canManagePlayers") && (
+          <div className={CARD}>
+            <div className={CARD_HEADER}>
+              <div className={ICON_BOX}><DollarSign className="w-5 h-5 text-white/80" /></div>
+              <span className="text-white font-medium">Mark Dues Paid</span>
+            </div>
+            <form onSubmit={handleMarkDuesPaid} className="flex flex-col gap-2">
+              <div className="relative">
+                <input
+                  placeholder="Search player name or #..."
+                  value={duesSearch}
+                  onChange={e => { setDuesSearch(e.target.value); if (duesSelectedPlayer) setDuesSelectedPlayer(null); }}
+                  className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-base text-white placeholder:text-white/25 outline-none"
+                  autoComplete="off"
+                />
+                {duesSearchLoading && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <Loader2 className="w-4 h-4 animate-spin text-white/30" />
+                  </div>
+                )}
+                {!duesSelectedPlayer && !duesSearchLoading && duesSearch.trim().length >= 1 && duesResults.length === 0 && (
+                  <div className="absolute z-50 w-full mt-1 rounded-lg border border-white/10 bg-gray-900 p-3 text-white/40 text-base text-center shadow-lg">
+                    No players found
+                  </div>
+                )}
+                {!duesSelectedPlayer && duesResults.length > 0 && (
+                  <div className="absolute z-50 w-full mt-1 rounded-lg border border-white/10 bg-gray-900 overflow-hidden max-h-48 overflow-y-auto shadow-lg">
+                    {duesResults.map(p => (
+                      <button key={p.id} type="button"
+                        className="w-full text-left px-3 py-2 hover:bg-white/5 text-base text-white border-b border-white/5 last:border-0 flex items-center justify-between gap-2"
+                        onMouseDown={() => { setDuesSelectedPlayer(p); setDuesSearch(p.display_name); setDuesResults([]); }}>
+                        <span>{p.display_name}{p.player_number != null ? ` (#${p.player_number})` : ''}</span>
+                        {isDuesPaid(p) && <span className={`text-xs ${DUES_PAID_NAME_CLASS}`}>paid</span>}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {duesSelectedPlayer && (
+                  <div className="mt-1 flex items-center justify-between text-base px-1">
+                    <span className="text-green-400 text-base">✓ {duesSelectedPlayer.display_name}</span>
+                    <button type="button" onClick={() => { setDuesSelectedPlayer(null); setDuesSearch(""); setDuesResults([]); }} className="text-white/25 hover:text-red-400 ml-2">
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+              {duesSelectedPlayer && isDuesPaid(duesSelectedPlayer) && (
+                <p className="text-base text-white/40">Already paid for {getCurrentQuarter()}.</p>
+              )}
+              <button type="submit" disabled={duesStatus === "loading"}
+                className="w-full rounded-lg border border-white/15 py-2 text-white text-base font-medium transition-all"
+                style={{ background: "rgba(255,255,255,0.07)" }}>
+                {duesStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Paid Dues"}
+              </button>
+              {duesMessage && (
+                <p className={`text-base text-center ${duesStatus === "success" ? "text-green-400" : "text-red-400"}`}>
+                  {duesMessage}
+                </p>
+              )}
+            </form>
           </div>
         )}
 

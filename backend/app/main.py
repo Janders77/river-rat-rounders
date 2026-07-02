@@ -4,17 +4,19 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fastapi import Body, Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi import Body, Depends, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.staticfiles import StaticFiles
 from jose import JWTError, jwt
 from pydantic import BaseModel, Field
 
+from . import paypal_client
 from .db import (
     ROOT,
     bulk_create_records,
     create_record,
+    current_quarter,
     delete_record,
     filter_records,
     get_record,
@@ -35,6 +37,7 @@ PUBLIC_PATHS = {
     "/api/health",
     "/api/auth/login",
     "/api/auth/login/director",
+    "/api/paypal/webhook",
     "/openapi.json",
     "/docs",
     "/redoc",
@@ -487,3 +490,95 @@ def search_players(payload: SearchPayload, claims: dict = Depends(require_auth))
         }
         for p in results
     ]
+
+
+# ── Dues / PayPal ─────────────────────────────────────────────────────────────
+
+def _player_from_claims(claims: dict) -> dict:
+    player = get_record("Player", claims["sub"])
+    if not player:
+        players = filter_records("Player", filters={"email": claims["email"]})
+        player = players[0] if players else None
+    if not player:
+        raise HTTPException(status_code=404, detail="Player not found")
+    return player
+
+
+class CaptureOrderPayload(BaseModel):
+    order_id: str
+
+
+@app.get("/api/dues/status")
+def dues_status(claims: dict = Depends(require_auth)):
+    player = _player_from_claims(claims)
+    quarter = current_quarter()
+    paid = player.get("dues_paid_quarter") == quarter
+    return {
+        "quarter": quarter,
+        "paid": paid,
+        "paid_at": player.get("dues_paid_at") if paid else None,
+        "amount": paypal_client.DUES_AMOUNT,
+        "currency": paypal_client.DUES_CURRENCY,
+    }
+
+
+@app.post("/api/paypal/create-order")
+async def paypal_create_order(claims: dict = Depends(require_auth)):
+    player = _player_from_claims(claims)
+    quarter = current_quarter()
+    if player.get("dues_paid_quarter") == quarter:
+        raise HTTPException(status_code=400, detail=f"Dues already paid for {quarter}")
+    try:
+        order = await paypal_client.create_order(player["id"], quarter)
+    except paypal_client.PayPalError as exc:
+        raise HTTPException(status_code=502, detail=str(exc))
+    return {"order_id": order["id"]}
+
+
+@app.post("/api/paypal/capture-order")
+async def paypal_capture_order(payload: CaptureOrderPayload, claims: dict = Depends(require_auth)):
+    player = _player_from_claims(claims)
+    try:
+        capture = await paypal_client.capture_order(payload.order_id)
+    except paypal_client.PayPalError as exc:
+        raise HTTPException(status_code=502, detail=str(exc))
+
+    if capture.get("status") != "COMPLETED":
+        raise HTTPException(status_code=402, detail="Payment not completed")
+    if paypal_client.order_custom_id(capture) != player["id"]:
+        raise HTTPException(status_code=403, detail="Order does not belong to this player")
+
+    quarter = current_quarter()
+    updated = update_record(
+        "Player",
+        player["id"],
+        {
+            "dues_paid_quarter": quarter,
+            "dues_paid_at": datetime.now(timezone.utc).isoformat(),
+            "dues_last_order_id": payload.order_id,
+        },
+    )
+    return {"quarter": quarter, "paid": True, "paid_at": updated["dues_paid_at"]}
+
+
+@app.post("/api/paypal/webhook")
+async def paypal_webhook(request: Request, body: dict = Body(...)):
+    verified = await paypal_client.verify_webhook_signature(dict(request.headers), body)
+    if not verified:
+        raise HTTPException(status_code=400, detail="Invalid webhook signature")
+
+    if body.get("event_type") == "PAYMENT.CAPTURE.COMPLETED":
+        resource = body.get("resource", {})
+        custom_id = resource.get("custom_id")
+        player = get_record("Player", custom_id) if custom_id else None
+        if player:
+            quarter = current_quarter()
+            update_record(
+                "Player",
+                custom_id,
+                {
+                    "dues_paid_quarter": quarter,
+                    "dues_paid_at": datetime.now(timezone.utc).isoformat(),
+                },
+            )
+    return {"ok": True}

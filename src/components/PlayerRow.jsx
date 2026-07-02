@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Input } from "@/components/ui/input";
 import { Trash2, Check, X, Eye } from "lucide-react";
+import { isDuesPaid, DUES_PAID_NAME_CLASS } from "@/utils/duesUtils";
 
 export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
   const [editing, setEditing] = useState(false);
@@ -92,7 +93,7 @@ export default function PlayerRow({ player, isAdmin, onDelete, onUpdate }) {
       {/* Text column */}
       <div className="flex flex-col flex-1 min-w-0">
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-white font-medium text-base truncate min-w-0">
+          <span className={`font-medium text-base truncate min-w-0 ${isDuesPaid(player) ? DUES_PAID_NAME_CLASS : "text-white"}`}>
             {player.first_name} {player.last_name}
           </span>
           {player.player_number != null && (
