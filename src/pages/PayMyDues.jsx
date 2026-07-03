@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { CreditCard, CheckCircle2, LogIn, Loader2, AlertCircle } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { getDuesStatus, createPaypalOrder, capturePaypalOrder } from "@/functions/dues";
@@ -110,6 +111,18 @@ export default function PayMyDues() {
               <span className="text-white font-semibold">${status?.amount}</span>.
             </p>
             <div ref={buttonsRef} />
+
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-white/10" />
+              <span className="text-white/30 text-base whitespace-nowrap">or scan to pay on your phone</span>
+              <div className="h-px flex-1 bg-white/10" />
+            </div>
+            <div className="flex justify-center">
+              <div className="bg-white p-3 rounded-xl">
+                <QRCodeSVG value={window.location.href} size={140} />
+              </div>
+            </div>
+
             {error && (
               <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex gap-3">
                 <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
