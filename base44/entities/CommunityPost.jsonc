@@ -1,0 +1,45 @@
+{
+  "name": "CommunityPost",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the post or advertisement"
+    },
+    "body": {
+      "type": "string",
+      "description": "Full post content / description"
+    },
+    "contact_info": {
+      "type": "string",
+      "description": "Phone, email, or website to contact"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Email of the player who submitted the post"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Display name of the author"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Approval status"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Optional image for the post"
+    }
+  },
+  "required": [
+    "title",
+    "body",
+    "author_email"
+  ]
+}

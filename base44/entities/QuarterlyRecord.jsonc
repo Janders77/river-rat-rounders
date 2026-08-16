@@ -1,0 +1,50 @@
+{
+  "name": "QuarterlyRecord",
+  "type": "object",
+  "properties": {
+    "quarter": {
+      "type": "string",
+      "description": "Quarter identifier (e.g., 2026-Q1)"
+    },
+    "most_points_player_id": {
+      "type": "string",
+      "description": "Player record ID of player with most points (primary)"
+    },
+    "most_points_player_email": {
+      "type": "string",
+      "description": "Legacy: email of player with most points"
+    },
+    "most_points_player_name": {
+      "type": "string",
+      "description": "Name of player with most points"
+    },
+    "most_points_total": {
+      "type": "integer",
+      "description": "Total points for the winner"
+    },
+    "most_wins_player_id": {
+      "type": "string",
+      "description": "Player record ID of player with most wins (primary)"
+    },
+    "most_wins_player_email": {
+      "type": "string",
+      "description": "Legacy: email of player with most wins"
+    },
+    "most_wins_player_name": {
+      "type": "string",
+      "description": "Name of player with most wins"
+    },
+    "most_wins_total": {
+      "type": "integer",
+      "description": "Total wins for the winner"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the quarter has ended and is finalized"
+    }
+  },
+  "required": [
+    "quarter"
+  ]
+}

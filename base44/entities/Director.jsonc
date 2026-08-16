@@ -1,0 +1,28 @@
+{
+  "name": "Director",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Email of the designated director"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Full name of the director"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "Head Director",
+        "Tournament Director",
+        "Assistant Director"
+      ],
+      "default": "Tournament Director",
+      "description": "Director role with specific permissions"
+    }
+  },
+  "required": [
+    "email",
+    "role"
+  ]
+}

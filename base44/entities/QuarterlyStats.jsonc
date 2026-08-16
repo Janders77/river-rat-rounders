@@ -1,0 +1,35 @@
+{
+  "name": "QuarterlyStats",
+  "type": "object",
+  "properties": {
+    "quarter": {
+      "type": "string",
+      "description": "Quarter identifier (e.g., 2026-Q1)"
+    },
+    "player_id": {
+      "type": "string",
+      "description": "Player record ID (primary relationship key)"
+    },
+    "player_email": {
+      "type": "string",
+      "description": "Legacy: email of the player (kept for backward compatibility)"
+    },
+    "player_name": {
+      "type": "string",
+      "description": "Denormalized player name for display"
+    },
+    "points": {
+      "type": "integer",
+      "default": 0,
+      "description": "Points accumulated in this quarter"
+    },
+    "wins": {
+      "type": "integer",
+      "default": 0,
+      "description": "Wins accumulated in this quarter"
+    }
+  },
+  "required": [
+    "quarter"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "InviteRequest",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "Player's first name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Player's last name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Player's email address"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "Status of the invite request"
+    }
+  },
+  "required": [
+    "first_name",
+    "last_name",
+    "email"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Location",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the venue"
+    },
+    "address": {
+      "type": "string",
+      "description": "Street address of the location"
+    },
+    "game_time": {
+      "type": "string",
+      "description": "Regular game time (e.g. Every Sunday 7:00 PM)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Additional info about the location"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Photo of the venue"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "WinnerPhoto",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Caption or title for the photo"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "URL of the uploaded winner photo"
+    },
+    "game_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the game"
+    },
+    "winner_name": {
+      "type": "string",
+      "description": "Name of the winner"
+    },
+    "location": {
+      "type": "string",
+      "description": "Venue where the game was played"
+    }
+  },
+  "required": [
+    "photo_url"
+  ]
+}

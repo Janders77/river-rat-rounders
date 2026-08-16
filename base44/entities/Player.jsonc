@@ -1,0 +1,44 @@
+{
+  "name": "Player",
+  "type": "object",
+  "properties": {
+    "player_number": {
+      "type": "integer",
+      "description": "Player's number/ID in the league"
+    },
+    "first_name": {
+      "type": "string",
+      "description": "Player's first name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Player's last name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Player's email address"
+    },
+    "password": {
+      "type": "string",
+      "description": "Player's password (hashed)"
+    },
+    "card_guards": {
+      "type": "integer",
+      "description": "Number of card guards the player has",
+      "default": 0
+    },
+    "date_joined": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the player joined the league"
+    },
+    "profile_picture": {
+      "type": "string",
+      "description": "URL of the player's profile picture"
+    }
+  },
+  "required": [
+    "first_name",
+    "email"
+  ]
+}

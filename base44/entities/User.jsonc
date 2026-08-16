@@ -1,0 +1,41 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "profile_image_url": {
+      "type": "string",
+      "description": "URL of the player's profile photo"
+    },
+    "total_points": {
+      "type": "integer",
+      "default": 0
+    },
+    "wins": {
+      "type": "integer",
+      "default": 0
+    },
+    "games_played": {
+      "type": "integer",
+      "default": 0
+    },
+    "current_streak": {
+      "type": "integer",
+      "default": 0
+    },
+    "best_streak": {
+      "type": "integer",
+      "default": 0
+    }
+  },
+  "required": [
+    "profile_image_url"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "name": "Game",
+  "type": "object",
+  "properties": {
+    "game_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the game was played"
+    },
+    "game_type": {
+      "type": "string",
+      "enum": [
+        "Texas Hold'em",
+        "Omaha",
+        "Seven Card Stud",
+        "Tournament",
+        "Cash Game",
+        "Main Game",
+        "Turbo"
+      ],
+      "default": "Main Game",
+      "description": "Type of poker game"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "Tavern 018 Sunday",
+        "Tavern 018 Wednesday",
+        "East End Grill",
+        "Habana Club",
+        "Meddlesome"
+      ],
+      "description": "Venue where the game was played"
+    },
+    "player_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of Player record IDs who participated (primary)"
+    },
+    "players": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Legacy: list of player emails who participated"
+    },
+    "winner_player_id": {
+      "type": "string",
+      "description": "Player record ID of the winning player (primary)"
+    },
+    "winner_email": {
+      "type": "string",
+      "description": "Legacy: email of the winning player"
+    },
+    "winner_name": {
+      "type": "string",
+      "description": "Resolved name of the winner (denormalized for display)"
+    },
+    "buy_in": {
+      "type": "number",
+      "description": "Buy-in amount"
+    },
+    "points_awarded": {
+      "type": "integer",
+      "description": "Points given to the winner"
+    },
+    "duration_minutes": {
+      "type": "integer",
+      "description": "How long the game lasted in minutes"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the game"
+    }
+  },
+  "required": [
+    "game_date",
+    "points_awarded"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "name": "GameSession",
+  "type": "object",
+  "properties": {
+    "session_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the session"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "Tavern 018 Sunday",
+        "Tavern 018 Wednesday",
+        "East End Grill",
+        "Habana Club",
+        "Meddlesome"
+      ],
+      "description": "Venue for this session"
+    },
+    "game_type": {
+      "type": "string",
+      "enum": [
+        "Main Game",
+        "Turbo"
+      ],
+      "default": "Main Game"
+    },
+    "is_open": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether players can still sign in"
+    },
+    "signed_in_player_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of Player record IDs who signed in (primary)"
+    },
+    "signed_in_players": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Legacy: list of player emails (kept for backward compatibility)"
+    },
+    "hand_of_week_player_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Player IDs of Hand of the Week players (primary)"
+    },
+    "hand_of_week_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Legacy: emails of Hand of the Week players"
+    },
+    "hand_of_week_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Legacy: names of Hand of the Week players"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "session_date",
+    "location"
+  ]
+}
